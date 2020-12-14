@@ -3,38 +3,31 @@ package matcher.patterns;
 public class ConflictPattern {
 
 	public boolean hasInvocations() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean hasFieldAccesses() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean hasSuperClasses() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean hasMethods() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean hasFields() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean hasConstructors() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean hasCompatibleMethods() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }
