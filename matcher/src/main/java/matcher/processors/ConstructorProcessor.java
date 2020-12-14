@@ -7,6 +7,7 @@ import matcher.entities.ConstructorInstance;
 import matcher.entities.MethodInvocationInstance;
 import matcher.entities.Type;
 import matcher.entities.Visibility;
+import matcher.patterns.ConflictPattern;
 import spoon.processing.AbstractProcessor;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtConstructor;
@@ -15,6 +16,11 @@ import spoon.reflect.visitor.filter.TypeFilter;
 public class ConstructorProcessor extends AbstractProcessor<CtConstructor<?>>{
 
 	private ConstructorInstance constructorInstance;
+	private ConflictPattern conflictPattern;
+	
+	public ConstructorProcessor(ConflictPattern conflicPattern) {
+		this.conflictPattern = conflicPattern;
+	}
 	
 	public ConstructorInstance getConstructorInstance() {
 		return constructorInstance;
@@ -29,7 +35,8 @@ public class ConstructorProcessor extends AbstractProcessor<CtConstructor<?>>{
 													   .map(p -> new Type(p.getType()))
 													   .collect(Collectors.toList());
 		constructorInstance = new ConstructorInstance(visibility, parameters);
-		processMethodInvocations(element);
+		if(conflictPattern.hasInvocations())
+			processMethodInvocations(element);
 	}
 
 	private void processMethodInvocations(CtConstructor<?> element) {
@@ -37,7 +44,7 @@ public class ConstructorProcessor extends AbstractProcessor<CtConstructor<?>>{
 		for(CtInvocation<?> invocation: invocations) {
 			MethodInvocationInstance mii = 
 					new MethodInvocationInstance(getInvocationQualifiedName(invocation));
-			constructorInstance.addMethodInvocation(mii);;
+			constructorInstance.addMethodInvocation(mii);
 		}
 	}
 
