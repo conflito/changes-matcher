@@ -52,5 +52,9 @@ public class ConstructorInstance {
 	private String parametersToString() {
 		return getParameters().toString().replace("[", "(").replace("]", ")");
 	}
+	
+	public void addMethodInvocation(MethodInvocationInstance invocation) {
+		this.invocations.add(invocation);
+	}
 
 }
