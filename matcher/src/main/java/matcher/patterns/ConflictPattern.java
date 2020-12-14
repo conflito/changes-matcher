@@ -7,4 +7,9 @@ public class ConflictPattern {
 		return false;
 	}
 
+	public boolean hasFieldAccesses() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
