@@ -71,6 +71,10 @@ public class MethodInstance {
 	public String getQualifiedName() {
 		return classInstance.getQualifiedName() + "." + getName() + parametersToString();
 	}
+	
+	public String getSimpleSignature() {
+		return getName() + parametersToString();
+	}
 
 	private String parametersToString() {
 		return getParameters().toString().replace("[", "(").replace("]", ")");
@@ -87,7 +91,11 @@ public class MethodInstance {
 		}
 		for(int i = 0; i < thisParameters.size(); i++) {
 			Type t1 = thisParameters.get(i);
+			if(t1.isPrimitive())
+				t1 = Type.primitiveToWrapper(t1);
 			Type t2 = mParameters.get(i);
+			if(t2.isPrimitive())
+				t2 = Type.primitiveToWrapper(t2);
 			if(!t1.isSubtypeOf(t2))
 				return false;
 		}
