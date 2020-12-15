@@ -5,50 +5,58 @@ import spoon.reflect.reference.CtTypeReference;
 
 public class Type {
 
-	private CtTypeReference<?> type;
+	private CtTypeReference<?> typeRef;
 
 	public Type(CtTypeReference<?> type) {
 		super();
-		this.type = type;
+		this.typeRef = type;
 	}
 
 	public String toString() {
-		return type.toString();
+		return typeRef.toString();
 	}
 	
 	public boolean isSubtypeOf(Type t) {
-		return type.isSubtypeOf(t.type);
+		return typeRef.isSubtypeOf(t.typeRef);
 	}
 	
 	public boolean isPrimitive() {
-		return type.isPrimitive();
+		return typeRef.isPrimitive();
+	}
+	
+	public boolean equals(Object o) {
+		return (this == o) || (o instanceof Type && typeRef.equals(((Type)o).typeRef));
+	}
+	
+	public int hashCode() {
+		return typeRef.hashCode();
 	}
 	
 	public static Type primitiveToWrapper(Type type) {
 		TypeFactory f = new TypeFactory();
-		Type result;
-		if(type.type.equals(f.INTEGER_PRIMITIVE)) {
+		Type result = null;
+		if(type.typeRef.equals(f.INTEGER_PRIMITIVE)) {
 			result = new Type(f.INTEGER);
 		}
-		else if(type.type.equals(f.BOOLEAN_PRIMITIVE)) {
+		else if(type.typeRef.equals(f.BOOLEAN_PRIMITIVE)) {
 			result = new Type(f.BOOLEAN);
 		}
-		else if(type.type.equals(f.BYTE_PRIMITIVE)) {
+		else if(type.typeRef.equals(f.BYTE_PRIMITIVE)) {
 			result = new Type(f.BYTE);
 		}
-		else if(type.type.equals(f.SHORT_PRIMITIVE)) {
+		else if(type.typeRef.equals(f.SHORT_PRIMITIVE)) {
 			result = new Type(f.SHORT);
 		}
-		else if(type.type.equals(f.CHARACTER_PRIMITIVE)) {
+		else if(type.typeRef.equals(f.CHARACTER_PRIMITIVE)) {
 			result = new Type(f.CHARACTER);
 		}
-		else if(type.type.equals(f.LONG_PRIMITIVE)) {
+		else if(type.typeRef.equals(f.LONG_PRIMITIVE)) {
 			result = new Type(f.LONG);
 		}
-		else if(type.type.equals(f.FLOAT_PRIMITIVE)) {
+		else if(type.typeRef.equals(f.FLOAT_PRIMITIVE)) {
 			result = new Type(f.FLOAT);
 		}
-		else{
+		else if(type.typeRef.equals(f.DOUBLE_PRIMITIVE)){
 			result = new Type(f.DOUBLE);
 		}
 		return result;
