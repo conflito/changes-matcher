@@ -1,6 +1,10 @@
 package matcher.entities;
 
-public class FieldInstance {
+import matcher.entities.deltas.Deletable;
+import matcher.entities.deltas.Insertable;
+import matcher.entities.deltas.Visible;
+
+public class FieldInstance implements Insertable, Deletable, Visible{
 
 	private String name;
 	

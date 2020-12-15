@@ -1,6 +1,9 @@
 package matcher.entities;
 
-public class FieldAccessInstance {
+import matcher.entities.deltas.Deletable;
+import matcher.entities.deltas.Insertable;
+
+public class FieldAccessInstance implements Insertable, Deletable{
 
 	private String qualifiedName;
 	

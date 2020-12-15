@@ -3,7 +3,12 @@ package matcher.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MethodInstance {
+import matcher.entities.deltas.Deletable;
+import matcher.entities.deltas.Holder;
+import matcher.entities.deltas.Insertable;
+import matcher.entities.deltas.Visible;
+
+public class MethodInstance implements Insertable, Deletable, Visible, Holder{
 
 	private String name;
 	

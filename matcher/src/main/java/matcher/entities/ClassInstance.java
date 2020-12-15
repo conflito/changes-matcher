@@ -8,9 +8,10 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import matcher.entities.deltas.Holder;
 import matcher.utils.Pair;
 
-public class ClassInstance {
+public class ClassInstance implements Holder{
 	
 	private String name;
 	
