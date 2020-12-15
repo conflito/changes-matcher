@@ -30,4 +30,24 @@ public class ConflictPattern {
 		return true;
 	}
 
+	public boolean hasFieldInserts() {
+		return true;
+	}
+
+	public boolean hasMethodInserts() {
+		return true;
+	}
+
+	public boolean hasConstructorInserts() {
+		return true;
+	}
+
+	public boolean hasInvocationInserts() {
+		return true;
+	}
+
+	public boolean hasFieldAccessInserts() {
+		return true;
+	}
+
 }
