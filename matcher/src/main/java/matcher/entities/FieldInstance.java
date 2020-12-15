@@ -38,7 +38,7 @@ public class FieldInstance implements Insertable, Deletable, Visible{
 	}
 	
 	public String getQualifiedName() {
-		return getName() + "." + classInstance.getQualifiedName();
+		return classInstance.getQualifiedName() + "." + getName();
 	}
 	
 	public boolean equals(Object o) {
