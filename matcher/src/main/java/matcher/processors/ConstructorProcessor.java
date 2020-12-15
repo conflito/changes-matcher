@@ -42,9 +42,11 @@ public class ConstructorProcessor extends AbstractProcessor<CtConstructor<?>>{
 	private void processMethodInvocations(CtConstructor<?> element) {
 		List<CtInvocation<?>> invocations = element.getElements(new TypeFilter(CtInvocation.class));
 		for(CtInvocation<?> invocation: invocations) {
-			MethodInvocationInstance mii = 
-					new MethodInvocationInstance(getInvocationQualifiedName(invocation));
-			constructorInstance.addMethodInvocation(mii);
+			if(!invocation.toString().equals("super()")) {
+				MethodInvocationInstance mii = 
+						new MethodInvocationInstance(getInvocationQualifiedName(invocation));
+				constructorInstance.addMethodInvocation(mii);
+			}
 		}
 	}
 
