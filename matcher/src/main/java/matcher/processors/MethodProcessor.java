@@ -82,11 +82,11 @@ public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
 		}
 	}
 
-	private String getInvocationQualifiedName(CtInvocation<?> invocation) {
+	public String getInvocationQualifiedName(CtInvocation<?> invocation) {
 		return invocation.getTarget().getType() + "." + invocation.getExecutable().getSignature();
 	}
 	
-	private String getFieldQualifiedName(CtFieldReference<?> field) {
+	public String getFieldQualifiedName(CtFieldReference<?> field) {
 		String fieldName = field.getSimpleName();
 		String classQualifiedName =  field.getFieldDeclaration().getTopLevelType().getQualifiedName();
 		return classQualifiedName + "." + fieldName;
