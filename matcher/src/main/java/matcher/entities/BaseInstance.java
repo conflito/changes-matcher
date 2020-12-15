@@ -15,5 +15,12 @@ public class BaseInstance {
 		classInstances.add(classInstance);
 	}
 	
+	public String toStringDebug() {
+		StringBuilder result = new StringBuilder();
+		for(ClassInstance c: classInstances) {
+			result.append(c.toStringDebug() + "\n");
+		}
+		return result.toString();
+	}
 	
 }
