@@ -73,7 +73,10 @@ public class ClassInstance {
 	}
 
 	public List<MethodInstance> getCompatibles(MethodInstance m){
-		return compatibleMethods.get(m);
+		List<MethodInstance> result = new ArrayList<>();
+		if(compatibleMethods.containsKey(m))
+			result = compatibleMethods.get(m);
+		return result;
 	}
 
 	public void setName(String name) {
@@ -143,4 +146,41 @@ public class ClassInstance {
 		return getQualifiedName().equals(o.getQualifiedName());
 	}
 	
+	public String toStringDebug() {
+		StringBuilder result = new StringBuilder();
+		if(getSuperClass().isPresent()) {
+			result.append(getSuperClass().get().toStringDebug());
+			result.append(getQualifiedName() + " extends " + getSuperClass().get().getQualifiedName());
+			result.append("\n");
+		}
+		for(FieldInstance f: getFields()) {
+			result.append(getQualifiedName() + " has field " + f.getVisibility() + " " + f.getName());
+			result.append("\n");
+		}
+		for(ConstructorInstance c: getConstructors()) {
+			result.append(getQualifiedName() + " has constructor " + c.getVisibility() + " " + c.getSimpleName());
+			result.append("\n");
+			for(MethodInvocationInstance mii: c.getInvocations()) {
+				result.append(c.getQualifiedName() + " invokes " + mii.getQualifiedName());
+				result.append("\n");
+			}
+		}
+		for(MethodInstance m: getMethods()) {
+			result.append(getQualifiedName() + " has method " + m.getVisibility() + " " + m.getSimpleSignature());
+			result.append("\n");
+			for(FieldAccessInstance fai: m.getFieldAccesses()) {
+				result.append(m.getQualifiedName() + " " + fai.getAccessType() + " " + fai.getQualifiedName());
+				result.append("\n");
+			}
+			for(MethodInvocationInstance mii: m.getInvocations()) {
+				result.append(m.getQualifiedName() + " invokes " + mii.getQualifiedName());
+				result.append("\n");
+			}
+			for(MethodInstance compatible: getCompatibles(m)) {
+				result.append(m.getQualifiedName() + " compatible with " + compatible.getQualifiedName());
+				result.append("\n");
+			}
+		}
+		return result.toString();
+	}
 }
