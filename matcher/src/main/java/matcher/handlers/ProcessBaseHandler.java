@@ -2,9 +2,8 @@ package matcher.handlers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import gumtree.spoon.AstComparator;
@@ -37,20 +36,21 @@ public class ProcessBaseHandler {
 		return result;
 	}
 	
-	private Set<CtClass<?>> getInvolvedClasses(CtClass<?> changedClass){
+	private List<CtClass<?>> getInvolvedClasses(CtClass<?> changedClass){
 		List<CtInvocation<?>> invocations = 
 				changedClass.getElements(new TypeFilter(CtInvocation.class));
 		invocations = invocations.stream()
 								 .filter(i -> !i.toString().equals("super()"))
 								 .collect(Collectors.toList());
-		Set<CtClass<?>> result = new TreeSet<>();
+		List<CtClass<?>> result = new ArrayList<>();
 		result.add(changedClass);
 		for(CtInvocation<?> i: invocations) {
 			CtClass<?> invokedClass = (CtClass<?>) i.getExecutable()
 													.getDeclaringType().getTypeDeclaration();
 			if(!invokedClass.equals(changedClass) && 
 			   !changedClass.getReference().isSubtypeOf(invokedClass.getReference()) &&
-			   !isFromJDK(invokedClass)) {
+			   !isFromJDK(invokedClass) &&
+			   !result.contains(invokedClass)) {
 				result.add(invokedClass);
 			}
 		}
