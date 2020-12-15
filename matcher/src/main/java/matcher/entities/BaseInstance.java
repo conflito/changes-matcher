@@ -12,7 +12,7 @@ public class BaseInstance {
 	}
 	
 	public void addClassInstance(ClassInstance classInstance) {
-		this.addClassInstance(classInstance);
+		classInstances.add(classInstance);
 	}
 	
 	
