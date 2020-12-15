@@ -105,4 +105,16 @@ public class MethodInstance {
 	public void addMethodInvocation(MethodInvocationInstance invocation) {
 		this.invocations.add(invocation);
 	}
+	
+	public boolean equals(Object o) {
+		return (this == o) || (o instanceof MethodInstance && equalsMethodInstance((MethodInstance)o));
+	}
+
+	private boolean equalsMethodInstance(MethodInstance o) {
+		return getQualifiedName().equals(o.getQualifiedName());
+	}
+	
+	public int hashCode() {
+		return getQualifiedName().hashCode();
+	}
 }

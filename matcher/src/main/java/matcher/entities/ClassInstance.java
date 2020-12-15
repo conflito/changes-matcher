@@ -134,4 +134,13 @@ public class ClassInstance {
 					  .map(MethodInstance::getQualifiedName)
 					  .collect(Collectors.toList());
 	}
+	
+	public boolean equals(Object o) {
+		return (this == o) || (o instanceof ClassInstance && equalsClassInstance((ClassInstance)o));
+	}
+
+	private boolean equalsClassInstance(ClassInstance o) {
+		return getQualifiedName().equals(o.getQualifiedName());
+	}
+	
 }

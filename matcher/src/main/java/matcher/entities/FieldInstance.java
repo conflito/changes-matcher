@@ -37,5 +37,16 @@ public class FieldInstance {
 		return getName() + "." + classInstance.getQualifiedName();
 	}
 	
+	public boolean equals(Object o) {
+		return (this == o) || (o instanceof FieldInstance && equalsFieldInstance((FieldInstance)o));
+	}
+
+	private boolean equalsFieldInstance(FieldInstance o) {
+		return getQualifiedName().equals(o.getQualifiedName());
+	}
+	
+	public int hashCode() {
+		return getQualifiedName().hashCode();
+	}
 	
 }
