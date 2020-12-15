@@ -49,6 +49,10 @@ public class ConstructorInstance {
 					  							+ parametersToString();
 	}
 	
+	public String getSimpleName() {
+		return classInstance.getName() + parametersToString();
+	}
+	
 	private String parametersToString() {
 		return getParameters().toString().replace("[", "(").replace("]", ")");
 	}
