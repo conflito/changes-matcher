@@ -50,10 +50,10 @@ public class ClassProcessor extends AbstractProcessor<CtClass<?>>{
 	private void processCompatibleMethods(List<MethodInstance> methods) {
 		for(MethodInstance method: methods) {
 			List<MethodInstance> sameNameMethods = methods.stream()
-					.filter(m -> m.getName().equals(method.getName()))
+					.filter(m -> !method.equals(m) && m.getName().equals(method.getName()))
 					.collect(Collectors.toList());
 			for(MethodInstance other: sameNameMethods) {
-				if(!method.equals(other) && method.isCompatibleWith(other)) {
+				if(method.isCompatibleWith(other)) {
 					classInstance.addCompatible(method, other);
 				}
 			}
@@ -72,7 +72,7 @@ public class ClassProcessor extends AbstractProcessor<CtClass<?>>{
 
 	private void processFields(CtClass<?> element) {
 		FieldProcessor fieldProcessor = new FieldProcessor();
-		for(CtFieldReference<?> f: element.getAllFields()) {
+		for(CtFieldReference<?> f: element.getDeclaredFields()) {
 			fieldProcessor.process(f.getFieldDeclaration());
 			FieldInstance field = fieldProcessor.getFieldInstance();
 			field.setClassInstance(classInstance);
