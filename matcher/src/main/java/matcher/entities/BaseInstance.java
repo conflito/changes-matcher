@@ -3,6 +3,8 @@ package matcher.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import matcher.utils.Pair;
+
 public class BaseInstance {
 
 	private List<ClassInstance> classInstances;
@@ -21,6 +23,38 @@ public class BaseInstance {
 			result.append(c.toStringDebug() + "\n");
 		}
 		return result.toString();
+	}
+	
+	public List<String> getFieldsQualifiedNames(){
+		List<String> result = new ArrayList<>();
+		for(ClassInstance ci: classInstances) {
+			result.addAll(ci.getFieldsQualifiedNames());
+		}
+		return result;
+	}
+	
+	public List<String> getMethodsQualifiedNames(){
+		List<String> result = new ArrayList<>();
+		for(ClassInstance ci: classInstances) {
+			result.addAll(ci.getMethodsQualifiedNames());
+		}
+		return result;
+	}
+	
+	public List<String> getConstructorsQualifiedNames(){
+		List<String> result = new ArrayList<>();
+		for(ClassInstance ci: classInstances) {
+			result.addAll(ci.getConstructorsQualifiedNames());
+		}
+		return result;
+	}
+	
+	public List<Pair<String, List<String>>> getCompatibleQualifiedNames(){
+		List<Pair<String, List<String>>> result = new ArrayList<>();
+		for(ClassInstance ci: classInstances) {
+			result.addAll(ci.getCompatibleMethodsQualifiedNames());
+		}
+		return result;
 	}
 	
 }
