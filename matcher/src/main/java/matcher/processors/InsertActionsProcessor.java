@@ -1,14 +1,8 @@
 package matcher.processors;
 
-import java.io.File;
 import java.lang.annotation.Annotation;
 import java.util.Optional;
 
-import gumtree.spoon.AstComparator;
-import gumtree.spoon.builder.CtWrapper;
-import gumtree.spoon.builder.CtVirtualElement;
-import gumtree.spoon.diff.Diff;
-import gumtree.spoon.diff.operations.Operation;
 import matcher.entities.ClassInstance;
 import matcher.entities.ConstructorInstance;
 import matcher.entities.FieldAccessInstance;
@@ -30,39 +24,6 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	public InsertActionsProcessor(ConflictPattern conflictPattern) {
 		super(conflictPattern);
 	}
-
-	////////////////////////////////////////////////////////////////////
-	//
-	//             TESTING CODE (TO BE REMOVED LATER)
-	//
-	////////////////////////////////////////////////////////////////////
-	public static void main(String[] args) throws Exception {
-		File base = new File("src/main/java/base/Square.java");
-		File variant = new File("src/main/java/branch01/Square.java");
-		Diff result = new AstComparator().compare(base, variant);
-		for(Operation<?> o: result.getAllOperations()) {
-			UpdateActionsProcessor processor = 
-					new UpdateActionsProcessor(new ConflictPattern());
-			
-//			if(o.getSrcNode() instanceof CtWrapper && ! (o.getSrcNode() instanceof CtVirtualElement)) {
-//				processor.visit(o.getSrcNode(), o.getDstNode());
-//				Optional<ActionInstance> a = processor.getResult();
-//				if(a.isPresent()) {
-//					System.out.println(a.get());
-//				}
-//			}
-			o.getSrcNode().accept(processor);
-			Optional<ActionInstance> a = processor.getResult();
-			if(a.isPresent()) {
-				System.out.println(a.get());
-			}
-		}
-	}
-	////////////////////////////////////////////////////////////////////
-	//
-	//             END OF TESTING CODE
-	//
-	////////////////////////////////////////////////////////////////////
 	
 	@Override
 	public <T> void visitCtMethod(CtMethod<T> method) {
