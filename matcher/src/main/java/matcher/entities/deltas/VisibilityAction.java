@@ -1,5 +1,7 @@
 package matcher.entities.deltas;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+
 import matcher.entities.Visibility;
 
 public class VisibilityAction extends ActionInstance {
@@ -46,6 +48,16 @@ public class VisibilityAction extends ActionInstance {
 			result.append("update visibility of ");
 			result.append(entity.getQualifiedName());
 			result.append(" from " + getOldVisibility() + " to " + getNewVisibility());
+		}
+		else if(isVisibilityInsert()) {
+			result.append("insert visibility ");
+			result.append(getNewVisibility());
+			result.append(" for " + entity.getQualifiedName());
+		}
+		else if(isVisibilityDelete()) {
+			result.append("delete visibility ");
+			result.append(getOldVisibility());
+			result.append(" for " + entity.getQualifiedName());
 		}
 		return result.toString();
 	}
