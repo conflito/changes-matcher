@@ -20,4 +20,12 @@ public class DeltaInstance {
 		return actions;
 	}
 	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		for(ActionInstance a: actions) {
+			result.append(a.toString() + "\n");
+		}
+		return result.toString();
+	}
+	
 }
