@@ -70,4 +70,16 @@ public class ConflictPattern {
 		return true;
 	}
 
+	public boolean hasMethodUpdates() {
+		return true;
+	}
+
+	public boolean hasConstructorUpdates() {
+		return true;
+	}
+
+	public boolean hasVisibilityActions() {
+		return true;
+	}
+
 }
