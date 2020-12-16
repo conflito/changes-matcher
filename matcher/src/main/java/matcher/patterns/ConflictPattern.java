@@ -50,4 +50,24 @@ public class ConflictPattern {
 		return true;
 	}
 
+	public boolean hasFieldDeletes() {
+		return true;
+	}
+
+	public boolean hasMethodDeletes() {
+		return true;
+	}
+
+	public boolean hasConstructorDeletes() {
+		return true;
+	}
+
+	public boolean hasInvocationDeletes() {
+		return true;
+	}
+
+	public boolean hasFieldAccessDeletes() {
+		return true;
+	}
+
 }
