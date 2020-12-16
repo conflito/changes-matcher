@@ -26,4 +26,12 @@ public class ChangeInstance {
 	public DeltaInstance getSecondDelta() {
 		return secondDelta;
 	}
+	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append(baseInstance.toStringDebug() + "\n---------\n");
+		result.append(firstDelta.toString() + "\n---------\n");
+		result.append(secondDelta.toString() + "\n---------\n");
+		return result.toString();
+	}
 }
