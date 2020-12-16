@@ -1,7 +1,5 @@
 package matcher.entities.deltas;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
-
 import matcher.entities.Visibility;
 
 public class VisibilityAction extends ActionInstance {
