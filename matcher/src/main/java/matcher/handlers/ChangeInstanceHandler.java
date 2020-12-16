@@ -8,10 +8,10 @@ import matcher.patterns.ConflictPattern;
 
 public class ChangeInstanceHandler {
 		
-	private ProcessBaseHandler pbh;
+	private BaseInstanceHandler pbh;
 	
 	public ChangeInstanceHandler() {
-		this.pbh = new ProcessBaseHandler();
+		this.pbh = new BaseInstanceHandler();
 	}
 
 	public void getChangeInstance(File base, File firstVariant, File secondVariant, ConflictPattern cp) 

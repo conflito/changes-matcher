@@ -17,7 +17,7 @@ import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.visitor.filter.TypeFilter;
 
-public class ProcessBaseHandler {
+public class BaseInstanceHandler {
 	
 	public BaseInstance getBaseInstance(File base, ConflictPattern cp) throws ApplicationException {
 		SpoonResource resource = null;
