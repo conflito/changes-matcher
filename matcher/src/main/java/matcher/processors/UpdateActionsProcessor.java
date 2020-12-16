@@ -14,67 +14,31 @@ import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
 import spoon.reflect.reference.*;
 import spoon.reflect.visitor.CtVisitor;
-import spoon.reflect.visitor.filter.TypeFilter;
 
-public class UpdateActionsProcessor implements CtVisitor{
-
-	private ConflictPattern conflictPattern;
-	
-	private ClassProcessor classProcessor;
-	private MethodProcessor methodProcessor;
-	private ConstructorProcessor constructorProcessor;
-	
-	private ActionInstance result;
+public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	public UpdateActionsProcessor(ConflictPattern conflictPattern) {
-		super();
-		this.conflictPattern = conflictPattern;
-		classProcessor = new ClassProcessor(conflictPattern);
-		methodProcessor = new MethodProcessor(conflictPattern);
-		constructorProcessor = new ConstructorProcessor(conflictPattern);
-	}
-	
-	public Optional<ActionInstance> getResult() {
-		return Optional.ofNullable(result);
+		super(conflictPattern);
 	}
 	
 	@Override
 	public <T> void visitCtMethod(CtMethod<T> method) {
-		if(conflictPattern.hasMethodUpdates()) {
+		if(getConflictPattern().hasMethodUpdates()) {
 			ClassInstance holderInstance = getClassInstance(method);
 			MethodInstance methodInstance = getMethodInstance(method, holderInstance);
-			result = new UpdateAction(Action.UPDATE, methodInstance);
+			ActionInstance result = new UpdateAction(Action.UPDATE, methodInstance);
+			setResult(result);
 		}
 	}
 	
 	@Override
 	public <T> void visitCtConstructor(CtConstructor<T> c) {
-		if(conflictPattern.hasConstructorUpdates()) {
+		if(getConflictPattern().hasConstructorUpdates()) {
 			ClassInstance holderInstance = getClassInstance(c);
 			ConstructorInstance cInstance = getConstructorInstance(c, holderInstance);
-			result = new UpdateAction(Action.UPDATE, cInstance);
+			ActionInstance result = new UpdateAction(Action.UPDATE, cInstance);
+			setResult(result);
 		}
-	}
-	
-	private ConstructorInstance getConstructorInstance(CtConstructor<?> constructor, 
-			ClassInstance classInstance) {
-		constructorProcessor.process(constructor);
-		ConstructorInstance constructorInstance = constructorProcessor.getConstructorInstance();
-		constructorInstance.setClassInstance(classInstance);
-		return constructorInstance;
-	}
-	
-	private ClassInstance getClassInstance(CtTypeMember member) {
-		CtClass<?> holder = (CtClass<?>) member.getTopLevelType();
-		classProcessor.process(holder);
-		return classProcessor.getClassInstance();
-	}
-	
-	private MethodInstance getMethodInstance(CtMethod<?> method, ClassInstance classInstance) {
-		methodProcessor.process(method);
-		MethodInstance methodInstance = methodProcessor.getMethodInstance();
-		methodInstance.setClassInstance(classInstance);
-		return methodInstance;
 	}
 	
 	private void visit(CtElement element) {
@@ -88,21 +52,6 @@ public class UpdateActionsProcessor implements CtVisitor{
 				c.get().accept(this);
 			}
 		}
-	}
-	
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Optional<CtMethod<?>> getMethodNode(CtElement node) {
-		Optional<CtMethod<?>> result = Optional.ofNullable((CtMethod<?>) 
-				node.getParent(new TypeFilter(CtMethod.class)));
-		return result;
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Optional<CtConstructor<?>> getConstructorNode(CtElement node) {
-		Optional<CtConstructor<?>> result = Optional.ofNullable((CtConstructor<?>) 
-				node.getParent(new TypeFilter(CtConstructor.class)));
-		return result;
 	}
 
 	@Override

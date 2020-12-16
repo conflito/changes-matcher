@@ -18,62 +18,46 @@ import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
 import spoon.reflect.reference.*;
 import spoon.reflect.visitor.CtVisitor;
-import spoon.reflect.visitor.filter.TypeFilter;
 
-public class DeleteActionsProcessor implements CtVisitor{
+public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
-	private ConflictPattern conflictPattern;
-	
-	private DeleteAction result;
-	
-	private ClassProcessor classProcessor;
-	private MethodProcessor methodProcessor;
-	private ConstructorProcessor constructorProcessor;
-	private FieldProcessor fieldProcessor;
-
 	public DeleteActionsProcessor(ConflictPattern conflictPattern) {
-		super();
-		this.conflictPattern = conflictPattern;
-		classProcessor = new ClassProcessor(conflictPattern);
-		methodProcessor = new MethodProcessor(conflictPattern);
-		constructorProcessor = new ConstructorProcessor(conflictPattern);
-		fieldProcessor = new FieldProcessor();
+		super(conflictPattern);
 	}
-	
-	public Optional<ActionInstance> getResult(){
-		return Optional.ofNullable(result);
-	}
-	
+
 	@Override
 	public <T> void visitCtConstructor(CtConstructor<T> c) {
-		if(conflictPattern.hasConstructorDeletes()) {
+		if(getConflictPattern().hasConstructorDeletes()) {
 			ClassInstance holderInstance = getClassInstance(c);
 			ConstructorInstance insertedInstance = getConstructorInstance(c, holderInstance);
-			result = new DeleteAction(Action.DELETE, insertedInstance, holderInstance);
+			ActionInstance result = new DeleteAction(Action.DELETE, insertedInstance, holderInstance);
+			setResult(result);
 		}
 		
 	}
 	
 	@Override
 	public <T> void visitCtField(CtField<T> field) {
-		if(conflictPattern.hasFieldDeletes()) {
+		if(getConflictPattern().hasFieldDeletes()) {
 			ClassInstance holderInstance = getClassInstance(field);
 			FieldInstance deletedInstance = getFieldInstance(field, holderInstance);
-			result = new DeleteAction(Action.DELETE, deletedInstance, holderInstance);
+			ActionInstance result = new DeleteAction(Action.DELETE, deletedInstance, holderInstance);
+			setResult(result);
 		}
 	}
 	
 	@Override
 	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
-		if(conflictPattern.hasInvocationDeletes()) {
+		if(getConflictPattern().hasInvocationDeletes()) {
 			MethodInvocationInstance mii = new MethodInvocationInstance(
-					methodProcessor.getInvocationQualifiedName(invocation));
+					getMethodProcessor().getInvocationQualifiedName(invocation));
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
 				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method, classInstance);
-				result = new DeleteAction(Action.DELETE, mii, methodInstance);
+				ActionInstance result = new DeleteAction(Action.DELETE, mii, methodInstance);
+				setResult(result);
 			}
 			else {
 				Optional<CtConstructor<?>> constructor = getConstructorNode(invocation);
@@ -81,7 +65,8 @@ public class DeleteActionsProcessor implements CtVisitor{
 					CtConstructor<?> c = constructor.get();
 					ClassInstance classInstance = getClassInstance(c);
 					ConstructorInstance constructorInstance = getConstructorInstance(c, classInstance);
-					result = new DeleteAction(Action.DELETE, mii, constructorInstance);
+					ActionInstance result = new DeleteAction(Action.DELETE, mii, constructorInstance);
+					setResult(result);
 				}
 			}
 		}
@@ -89,83 +74,46 @@ public class DeleteActionsProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtMethod(CtMethod<T> method) {
-		if(conflictPattern.hasMethodDeletes()) {
+		if(getConflictPattern().hasMethodDeletes()) {
 			ClassInstance holderInstance = getClassInstance(method);
 			MethodInstance deletedInstance = getMethodInstance(method, holderInstance);
-			result =  new DeleteAction(Action.DELETE, deletedInstance, holderInstance);
+			ActionInstance result =  new DeleteAction(Action.DELETE, deletedInstance, holderInstance);
+			setResult(result);
 		}
 	}
 	
 	@Override
 	public <T> void visitCtFieldRead(CtFieldRead<T> fieldRead) {
-		if(conflictPattern.hasFieldAccessDeletes()) {
-			String fieldQualifiedName = methodProcessor.getFieldQualifiedName(fieldRead.getVariable());
+		if(getConflictPattern().hasFieldAccessDeletes()) {
+			String fieldQualifiedName = getMethodProcessor()
+					.getFieldQualifiedName(fieldRead.getVariable());
 			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.READ);
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(fieldRead);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
 				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method, classInstance);
-				result = new DeleteAction(Action.INSERT, fai, methodInstance);
+				ActionInstance result = new DeleteAction(Action.INSERT, fai, methodInstance);
+				setResult(result);
 			}
 		}
 	}
 
 	@Override
 	public <T> void visitCtFieldWrite(CtFieldWrite<T> fieldWrite) {
-		if(conflictPattern.hasFieldAccessInserts()) {
-			String fieldQualifiedName = methodProcessor.getFieldQualifiedName(fieldWrite.getVariable());
+		if(getConflictPattern().hasFieldAccessInserts()) {
+			String fieldQualifiedName = getMethodProcessor()
+					.getFieldQualifiedName(fieldWrite.getVariable());
 			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.WRITE);
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(fieldWrite);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
 				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method, classInstance);
-				result = new DeleteAction(Action.INSERT, fai, methodInstance);
+				ActionInstance result = new DeleteAction(Action.INSERT, fai, methodInstance);
+				setResult(result);
 			}
 		}
-	}
-	
-	private MethodInstance getMethodInstance(CtMethod<?> method, ClassInstance classInstance) {
-		methodProcessor.process(method);
-		MethodInstance methodInstance = methodProcessor.getMethodInstance();
-		methodInstance.setClassInstance(classInstance);
-		return methodInstance;
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Optional<CtConstructor<?>> getConstructorNode(CtElement node) {
-		Optional<CtConstructor<?>> result = Optional.ofNullable((CtConstructor<?>) 
-				node.getParent(new TypeFilter(CtConstructor.class)));
-		return result;
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Optional<CtMethod<?>> getMethodNode(CtElement node) {
-		Optional<CtMethod<?>> result = Optional.ofNullable((CtMethod<?>) 
-				node.getParent(new TypeFilter(CtMethod.class)));
-		return result;
-	}
-
-	private FieldInstance getFieldInstance(CtField<?> field, ClassInstance classInstance) {
-		fieldProcessor.process(field);
-		FieldInstance fieldInstance = fieldProcessor.getFieldInstance();
-		fieldInstance.setClassInstance(classInstance);
-		return fieldInstance;
-	}
-
-	private ClassInstance getClassInstance(CtTypeMember member) {
-		CtClass<?> holder = (CtClass<?>) member.getTopLevelType();
-		classProcessor.process(holder);
-		return classProcessor.getClassInstance();
-	}
-	
-	private ConstructorInstance getConstructorInstance(CtConstructor<?> constructor, 
-			ClassInstance classInstance) {
-		constructorProcessor.process(constructor);
-		ConstructorInstance constructorInstance = constructorProcessor.getConstructorInstance();
-		constructorInstance.setClassInstance(classInstance);
-		return constructorInstance;
 	}
 	
 

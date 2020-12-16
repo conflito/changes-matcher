@@ -5,6 +5,8 @@ import java.lang.annotation.Annotation;
 import java.util.Optional;
 
 import gumtree.spoon.AstComparator;
+import gumtree.spoon.builder.CtWrapper;
+import gumtree.spoon.builder.CtVirtualElement;
 import gumtree.spoon.diff.Diff;
 import gumtree.spoon.diff.operations.Operation;
 import matcher.entities.ClassInstance;
@@ -22,30 +24,11 @@ import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
 import spoon.reflect.reference.*;
 import spoon.reflect.visitor.CtVisitor;
-import spoon.reflect.visitor.filter.TypeFilter;
 
-public class InsertActionsProcessor implements CtVisitor{
-	
-	private ConflictPattern conflictPattern;
-	
-	private InsertAction result;
-	
-	private ClassProcessor classProcessor;
-	private MethodProcessor methodProcessor;
-	private ConstructorProcessor constructorProcessor;
-	private FieldProcessor fieldProcessor;
+public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	public InsertActionsProcessor(ConflictPattern conflictPattern) {
-		super();
-		this.conflictPattern = conflictPattern;
-		classProcessor = new ClassProcessor(conflictPattern);
-		methodProcessor = new MethodProcessor(conflictPattern);
-		constructorProcessor = new ConstructorProcessor(conflictPattern);
-		fieldProcessor = new FieldProcessor();
-	}
-	
-	public Optional<ActionInstance> getResult() {
-		return Optional.ofNullable(result);
+		super(conflictPattern);
 	}
 
 	////////////////////////////////////////////////////////////////////
@@ -58,12 +41,21 @@ public class InsertActionsProcessor implements CtVisitor{
 		File variant = new File("src/main/java/branch01/Square.java");
 		Diff result = new AstComparator().compare(base, variant);
 		for(Operation<?> o: result.getAllOperations()) {
-			InsertActionsProcessor processor = new InsertActionsProcessor(new ConflictPattern());
+			UpdateActionsProcessor processor = 
+					new UpdateActionsProcessor(new ConflictPattern());
+			
+//			if(o.getSrcNode() instanceof CtWrapper && ! (o.getSrcNode() instanceof CtVirtualElement)) {
+//				processor.visit(o.getSrcNode(), o.getDstNode());
+//				Optional<ActionInstance> a = processor.getResult();
+//				if(a.isPresent()) {
+//					System.out.println(a.get());
+//				}
+//			}
 			o.getSrcNode().accept(processor);
 			Optional<ActionInstance> a = processor.getResult();
 			if(a.isPresent()) {
 				System.out.println(a.get());
-			}	
+			}
 		}
 	}
 	////////////////////////////////////////////////////////////////////
@@ -74,42 +66,46 @@ public class InsertActionsProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtMethod(CtMethod<T> method) {
-		if(conflictPattern.hasMethodInserts()) {
+		if(getConflictPattern().hasMethodInserts()) {
 			ClassInstance holderInstance = getClassInstance(method);
 			MethodInstance insertedInstance = getMethodInstance(method, holderInstance);
-			result = new InsertAction(Action.INSERT, insertedInstance, holderInstance);
+			ActionInstance result = new InsertAction(Action.INSERT, insertedInstance, holderInstance);
+			setResult(result);
 		}
 	}
 	
 	@Override
 	public <T> void visitCtConstructor(CtConstructor<T> c) {
-		if(conflictPattern.hasConstructorInserts()) {
+		if(getConflictPattern().hasConstructorInserts()) {
 			ClassInstance holderInstance = getClassInstance(c);
 			ConstructorInstance insertedInstance = getConstructorInstance(c, holderInstance);
-			result = new InsertAction(Action.INSERT, insertedInstance, holderInstance);
+			ActionInstance result = new InsertAction(Action.INSERT, insertedInstance, holderInstance);
+			setResult(result);
 		}
 	}
 	
 	@Override
 	public <T> void visitCtField(CtField<T> field) {
-		if(conflictPattern.hasFieldInserts()) {
+		if(getConflictPattern().hasFieldInserts()) {
 			ClassInstance holderInstance = getClassInstance(field);
 			FieldInstance insertedInstance = getFieldInstance(field, holderInstance);
-			result = new InsertAction(Action.INSERT, insertedInstance, holderInstance);
+			ActionInstance result = new InsertAction(Action.INSERT, insertedInstance, holderInstance);
+			setResult(result);
 		}
 	}
 	
 	@Override
 	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
-		if(conflictPattern.hasInvocationInserts()) {
+		if(getConflictPattern().hasInvocationInserts()) {
 			MethodInvocationInstance mii = new MethodInvocationInstance(
-					methodProcessor.getInvocationQualifiedName(invocation));
+					getMethodProcessor().getInvocationQualifiedName(invocation));
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
 				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method, classInstance);
-				result = new InsertAction(Action.INSERT, mii, methodInstance);
+				ActionInstance result = new InsertAction(Action.INSERT, mii, methodInstance);
+				setResult(result);
 			}
 			else {
 				Optional<CtConstructor<?>> constructor = getConstructorNode(invocation);
@@ -117,7 +113,8 @@ public class InsertActionsProcessor implements CtVisitor{
 					CtConstructor<?> c = constructor.get();
 					ClassInstance classInstance = getClassInstance(c);
 					ConstructorInstance insertedInstance = getConstructorInstance(c, classInstance);
-					result = new InsertAction(Action.INSERT, mii, insertedInstance);
+					ActionInstance result = new InsertAction(Action.INSERT, mii, insertedInstance);
+					setResult(result);
 				}
 			}
 		}
@@ -125,74 +122,36 @@ public class InsertActionsProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtFieldRead(CtFieldRead<T> fieldRead) {
-		if(conflictPattern.hasFieldAccessInserts()) {
-			String fieldQualifiedName = methodProcessor.getFieldQualifiedName(fieldRead.getVariable());
+		if(getConflictPattern().hasFieldAccessInserts()) {
+			String fieldQualifiedName = getMethodProcessor()
+					.getFieldQualifiedName(fieldRead.getVariable());
 			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.READ);
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(fieldRead);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
 				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method, classInstance);
-				result = new InsertAction(Action.INSERT, fai, methodInstance);
+				ActionInstance result = new InsertAction(Action.INSERT, fai, methodInstance);
+				setResult(result);
 			}
 		}
 	}
 
 	@Override
 	public <T> void visitCtFieldWrite(CtFieldWrite<T> fieldWrite) {
-		if(conflictPattern.hasFieldAccessInserts()) {
-			String fieldQualifiedName = methodProcessor.getFieldQualifiedName(fieldWrite.getVariable());
+		if(getConflictPattern().hasFieldAccessInserts()) {
+			String fieldQualifiedName = getMethodProcessor()
+					.getFieldQualifiedName(fieldWrite.getVariable());
 			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.WRITE);
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(fieldWrite);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
 				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method, classInstance);
-				result = new InsertAction(Action.INSERT, fai, methodInstance);
+				ActionInstance result = new InsertAction(Action.INSERT, fai, methodInstance);
+				setResult(result);
 			}
 		}
-	}
-	
-	private ClassInstance getClassInstance(CtTypeMember member) {
-		CtClass<?> holder = (CtClass<?>) member.getTopLevelType();
-		classProcessor.process(holder);
-		return classProcessor.getClassInstance();
-	}
-	
-	private FieldInstance getFieldInstance(CtField<?> field, ClassInstance classInstance) {
-		fieldProcessor.process(field);
-		FieldInstance fieldInstance = fieldProcessor.getFieldInstance();
-		fieldInstance.setClassInstance(classInstance);
-		return fieldInstance;
-	}
-	
-	private ConstructorInstance getConstructorInstance(CtConstructor<?> constructor, 
-			ClassInstance classInstance) {
-		constructorProcessor.process(constructor);
-		ConstructorInstance constructorInstance = constructorProcessor.getConstructorInstance();
-		constructorInstance.setClassInstance(classInstance);
-		return constructorInstance;
-	}
-	
-	private MethodInstance getMethodInstance(CtMethod<?> method, ClassInstance classInstance) {
-		methodProcessor.process(method);
-		MethodInstance methodInstance = methodProcessor.getMethodInstance();
-		methodInstance.setClassInstance(classInstance);
-		return methodInstance;
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Optional<CtConstructor<?>> getConstructorNode(CtElement node) {
-		Optional<CtConstructor<?>> result = Optional.ofNullable((CtConstructor<?>) 
-				node.getParent(new TypeFilter(CtConstructor.class)));
-		return result;
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Optional<CtMethod<?>> getMethodNode(CtElement node) {
-		Optional<CtMethod<?>> result = Optional.ofNullable((CtMethod<?>) 
-				node.getParent(new TypeFilter(CtMethod.class)));
-		return result;
 	}
 
 
