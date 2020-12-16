@@ -1,0 +1,575 @@
+package matcher.processors;
+
+import java.lang.annotation.Annotation;
+import java.util.Optional;
+
+import matcher.entities.ClassInstance;
+import matcher.entities.ConstructorInstance;
+import matcher.entities.MethodInstance;
+import matcher.entities.deltas.Action;
+import matcher.entities.deltas.ActionInstance;
+import matcher.entities.deltas.UpdateAction;
+import matcher.patterns.ConflictPattern;
+import spoon.reflect.code.*;
+import spoon.reflect.declaration.*;
+import spoon.reflect.reference.*;
+import spoon.reflect.visitor.CtVisitor;
+import spoon.reflect.visitor.filter.TypeFilter;
+
+public class UpdateActionsProcessor implements CtVisitor{
+
+	private ConflictPattern conflictPattern;
+	
+	private ClassProcessor classProcessor;
+	private MethodProcessor methodProcessor;
+	private ConstructorProcessor constructorProcessor;
+	
+	private ActionInstance result;
+	
+	public UpdateActionsProcessor(ConflictPattern conflictPattern) {
+		super();
+		this.conflictPattern = conflictPattern;
+		classProcessor = new ClassProcessor(conflictPattern);
+		methodProcessor = new MethodProcessor(conflictPattern);
+		constructorProcessor = new ConstructorProcessor(conflictPattern);
+	}
+	
+	public Optional<ActionInstance> getResult() {
+		return Optional.ofNullable(result);
+	}
+	
+	@Override
+	public <T> void visitCtMethod(CtMethod<T> method) {
+		if(conflictPattern.hasMethodUpdates()) {
+			ClassInstance holderInstance = getClassInstance(method);
+			MethodInstance methodInstance = getMethodInstance(method, holderInstance);
+			result = new UpdateAction(Action.UPDATE, methodInstance);
+		}
+	}
+	
+	@Override
+	public <T> void visitCtConstructor(CtConstructor<T> c) {
+		if(conflictPattern.hasConstructorUpdates()) {
+			ClassInstance holderInstance = getClassInstance(c);
+			ConstructorInstance cInstance = getConstructorInstance(c, holderInstance);
+			result = new UpdateAction(Action.UPDATE, cInstance);
+		}
+	}
+	
+	private ConstructorInstance getConstructorInstance(CtConstructor<?> constructor, 
+			ClassInstance classInstance) {
+		constructorProcessor.process(constructor);
+		ConstructorInstance constructorInstance = constructorProcessor.getConstructorInstance();
+		constructorInstance.setClassInstance(classInstance);
+		return constructorInstance;
+	}
+	
+	private ClassInstance getClassInstance(CtTypeMember member) {
+		CtClass<?> holder = (CtClass<?>) member.getTopLevelType();
+		classProcessor.process(holder);
+		return classProcessor.getClassInstance();
+	}
+	
+	private MethodInstance getMethodInstance(CtMethod<?> method, ClassInstance classInstance) {
+		methodProcessor.process(method);
+		MethodInstance methodInstance = methodProcessor.getMethodInstance();
+		methodInstance.setClassInstance(classInstance);
+		return methodInstance;
+	}
+	
+	private void visit(CtElement element) {
+		Optional<CtMethod<?>> method = getMethodNode(element);
+		if(method.isPresent()) {
+			method.get().accept(this);
+		}
+		else {
+			Optional<CtConstructor<?>> c = getConstructorNode(element);
+			if(c.isPresent()) {
+				c.get().accept(this);
+			}
+		}
+	}
+	
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private Optional<CtMethod<?>> getMethodNode(CtElement node) {
+		Optional<CtMethod<?>> result = Optional.ofNullable((CtMethod<?>) 
+				node.getParent(new TypeFilter(CtMethod.class)));
+		return result;
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private Optional<CtConstructor<?>> getConstructorNode(CtElement node) {
+		Optional<CtConstructor<?>> result = Optional.ofNullable((CtConstructor<?>) 
+				node.getParent(new TypeFilter(CtConstructor.class)));
+		return result;
+	}
+
+	@Override
+	public <A extends Annotation> void visitCtAnnotation(CtAnnotation<A> annotation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtCodeSnippetExpression(CtCodeSnippetExpression<T> expression) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtCodeSnippetStatement(CtCodeSnippetStatement statement) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <A extends Annotation> void visitCtAnnotationType(CtAnnotationType<A> annotationType) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtAnonymousExecutable(CtAnonymousExecutable anonymousExec) {
+		visit(anonymousExec);
+	}
+
+	@Override
+	public <T> void visitCtArrayRead(CtArrayRead<T> arrayRead) {
+		visit(arrayRead);
+	}
+
+	@Override
+	public <T> void visitCtArrayWrite(CtArrayWrite<T> arrayWrite) {
+		visit(arrayWrite);
+		
+	}
+
+	@Override
+	public <T> void visitCtArrayTypeReference(CtArrayTypeReference<T> reference) {
+		visit(reference);
+	}
+
+	@Override
+	public <T> void visitCtAssert(CtAssert<T> asserted) {
+		visit(asserted);
+	}
+
+	@Override
+	public <T, A extends T> void visitCtAssignment(CtAssignment<T, A> assignement) {
+		visit(assignement);
+	}
+
+	@Override
+	public <T> void visitCtBinaryOperator(CtBinaryOperator<T> operator) {
+		visit(operator);
+	}
+
+	@Override
+	public <R> void visitCtBlock(CtBlock<R> block) {
+		visit(block);		
+	}
+
+	@Override
+	public void visitCtBreak(CtBreak breakStatement) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <S> void visitCtCase(CtCase<S> caseStatement) {
+		visit(caseStatement);
+	}
+
+	@Override
+	public void visitCtCatch(CtCatch catchBlock) {
+		visit(catchBlock);
+	}
+
+	@Override
+	public <T> void visitCtClass(CtClass<T> ctClass) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtTypeParameter(CtTypeParameter typeParameter) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtConditional(CtConditional<T> conditional) {
+		visit(conditional);
+	}
+
+	@Override
+	public void visitCtContinue(CtContinue continueStatement) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtDo(CtDo doLoop) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T extends Enum<?>> void visitCtEnum(CtEnum<T> ctEnum) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtExecutableReference(CtExecutableReference<T> reference) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtField(CtField<T> f) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtEnumValue(CtEnumValue<T> enumValue) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtThisAccess(CtThisAccess<T> thisAccess) {
+		visit(thisAccess);
+	}
+
+	@Override
+	public <T> void visitCtFieldReference(CtFieldReference<T> reference) {
+		visit(reference);		
+	}
+
+	@Override
+	public <T> void visitCtUnboundVariableReference(CtUnboundVariableReference<T> reference) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtFor(CtFor forLoop) {
+		visit(forLoop);
+	}
+
+	@Override
+	public void visitCtForEach(CtForEach foreach) {
+		visit(foreach);
+		
+	}
+
+	@Override
+	public void visitCtIf(CtIf ifElement) {
+		visit(ifElement);
+	}
+
+	@Override
+	public <T> void visitCtInterface(CtInterface<T> intrface) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
+		visit(invocation);
+	}
+
+	@Override
+	public <T> void visitCtLiteral(CtLiteral<T> literal) {
+		visit(literal);
+	}
+
+	@Override
+	public <T> void visitCtLocalVariable(CtLocalVariable<T> localVariable) {
+		visit(localVariable);
+	}
+
+	@Override
+	public <T> void visitCtLocalVariableReference(CtLocalVariableReference<T> reference) {
+		visit(reference);		
+	}
+
+	@Override
+	public <T> void visitCtCatchVariable(CtCatchVariable<T> catchVariable) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtCatchVariableReference(CtCatchVariableReference<T> reference) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtAnnotationMethod(CtAnnotationMethod<T> annotationMethod) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtNewArray(CtNewArray<T> newArray) {
+		visit(newArray);
+	}
+
+	@Override
+	public <T> void visitCtConstructorCall(CtConstructorCall<T> ctConstructorCall) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtNewClass(CtNewClass<T> newClass) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtLambda(CtLambda<T> lambda) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T, E extends CtExpression<?>> void visitCtExecutableReferenceExpression(
+			CtExecutableReferenceExpression<T, E> expression) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T, A extends T> void visitCtOperatorAssignment(CtOperatorAssignment<T, A> assignment) {
+		visit(assignment);
+		
+	}
+
+	@Override
+	public void visitCtPackage(CtPackage ctPackage) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtPackageReference(CtPackageReference reference) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtParameter(CtParameter<T> parameter) {
+		visit(parameter);
+		
+	}
+
+	@Override
+	public <T> void visitCtParameterReference(CtParameterReference<T> reference) {
+		visit(reference);
+	}
+
+	@Override
+	public <R> void visitCtReturn(CtReturn<R> returnStatement) {
+		visit(returnStatement);
+	}
+
+	@Override
+	public <R> void visitCtStatementList(CtStatementList statements) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <S> void visitCtSwitch(CtSwitch<S> switchStatement) {
+		visit(switchStatement);
+		
+	}
+
+	@Override
+	public <T, S> void visitCtSwitchExpression(CtSwitchExpression<T, S> switchExpression) {
+		visit(switchExpression);		
+	}
+
+	@Override
+	public void visitCtSynchronized(CtSynchronized synchro) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtThrow(CtThrow throwStatement) {
+		visit(throwStatement);		
+	}
+
+	@Override
+	public void visitCtTry(CtTry tryBlock) {
+		visit(tryBlock);
+	}
+
+	@Override
+	public void visitCtTryWithResource(CtTryWithResource tryWithResource) {
+		visit(tryWithResource);
+	}
+
+	@Override
+	public void visitCtTypeParameterReference(CtTypeParameterReference ref) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtWildcardReference(CtWildcardReference wildcardReference) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtIntersectionTypeReference(CtIntersectionTypeReference<T> reference) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtTypeReference(CtTypeReference<T> reference) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtTypeAccess(CtTypeAccess<T> typeAccess) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtUnaryOperator(CtUnaryOperator<T> operator) {
+		visit(operator);
+	}
+
+	@Override
+	public <T> void visitCtVariableRead(CtVariableRead<T> variableRead) {
+		visit(variableRead);
+	}
+
+	@Override
+	public <T> void visitCtVariableWrite(CtVariableWrite<T> variableWrite) {
+		visit(variableWrite);
+		
+	}
+
+	@Override
+	public void visitCtWhile(CtWhile whileLoop) {
+		visit(whileLoop);
+	}
+
+	@Override
+	public <T> void visitCtAnnotationFieldAccess(CtAnnotationFieldAccess<T> annotationFieldAccess) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public <T> void visitCtFieldRead(CtFieldRead<T> fieldRead) {
+		visit(fieldRead);
+	}
+
+	@Override
+	public <T> void visitCtFieldWrite(CtFieldWrite<T> fieldWrite) {
+		visit(fieldWrite);
+	}
+
+	@Override
+	public <T> void visitCtSuperAccess(CtSuperAccess<T> f) {
+		visit(f);
+	}
+
+	@Override
+	public void visitCtComment(CtComment comment) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtJavaDoc(CtJavaDoc comment) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtJavaDocTag(CtJavaDocTag docTag) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtImport(CtImport ctImport) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtModule(CtModule module) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtModuleReference(CtModuleReference moduleReference) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtPackageExport(CtPackageExport moduleExport) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtModuleRequirement(CtModuleRequirement moduleRequirement) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtProvidedService(CtProvidedService moduleProvidedService) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtUsedService(CtUsedService usedService) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtCompilationUnit(CtCompilationUnit compilationUnit) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtPackageDeclaration(CtPackageDeclaration packageDeclaration) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtTypeMemberWildcardImportReference(CtTypeMemberWildcardImportReference wildcardReference) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitCtYieldStatement(CtYieldStatement statement) {
+		// TODO Auto-generated method stub
+		
+	}
+}
