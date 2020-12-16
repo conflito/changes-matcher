@@ -25,4 +25,13 @@ public class ChangeInstanceHandler {
 		DeltaInstance secondDelta = dih.getDeltaInstance(base, secondVariant, cp);
 		return new ChangeInstance(baseInstance, firstDelta, secondDelta);
 	}
+	
+	public static void main(String[] args) throws ApplicationException {
+		File base = new File("src/main/java/base/Square.java");
+		File firstVar = new File("src/main/java/branch01/Square.java");
+		File secondVar = new File("src/main/java/branch02/Square.java");
+		ChangeInstanceHandler cih = new ChangeInstanceHandler();
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, new ConflictPattern());
+		System.out.println(ci);
+	}
 }
