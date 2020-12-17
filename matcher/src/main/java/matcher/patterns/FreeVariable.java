@@ -49,4 +49,8 @@ public class FreeVariable {
 			return true;
 		return getValue().equals(f.getValue());
 	}
+	
+	public boolean matches(String value) {
+		return hasValue() && this.value.equals(value);
+	}
 }
