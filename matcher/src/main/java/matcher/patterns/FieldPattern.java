@@ -32,11 +32,11 @@ public class FieldPattern {
 	}
 	
 	public boolean isVariableId(int id) {
-		return freeVariable.getId() == id;
+		return getVariableId() == id;
 	}
 	
 	public boolean matches(FieldInstance instance) {
-		return filled() && (visibility == null || sameVisibility(instance)) &&  sameName(instance);
+		return filled() && (visibility == null || sameVisibility(instance)) && sameName(instance);
 	}
 	
 	private boolean sameVisibility(FieldInstance instance) {

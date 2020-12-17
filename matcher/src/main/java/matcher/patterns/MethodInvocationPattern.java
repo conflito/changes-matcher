@@ -19,6 +19,10 @@ public class MethodInvocationPattern {
 		return freeVariable.getId();
 	}
 	
+	public boolean isVariableId(int id) {
+		return getVariableId() == id;
+	}
+	
 	public void setVariableValue(String value) {
 		freeVariable.setValue(value);
 	}
