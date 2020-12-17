@@ -46,7 +46,8 @@ public class ConstructorPattern {
 	}
 	
 	public boolean hasVariableId(int id) {
-		return invocations.stream().anyMatch(invocation -> invocation.isVariableId(id));
+		return isVariableId(id) ||
+			   invocations.stream().anyMatch(invocation -> invocation.isVariableId(id));
 	}
 	
 	public void setVariableValue(int id, String value) {
