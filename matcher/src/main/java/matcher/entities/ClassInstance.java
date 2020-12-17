@@ -79,6 +79,10 @@ public class ClassInstance implements Holder{
 			result = compatibleMethods.get(m);
 		return result;
 	}
+	
+	public Iterable<MethodInstance> getMethodsWithCompatibles(){
+		return compatibleMethods.keySet();
+	}
 
 	public void setName(String name) {
 		this.name = name;
