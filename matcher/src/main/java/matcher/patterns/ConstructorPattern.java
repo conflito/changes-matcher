@@ -27,6 +27,10 @@ public class ConstructorPattern {
 		invocations.add(pattern);
 	}
 	
+	public boolean hasInvocations() {
+		return !invocations.isEmpty();
+	}
+	
 	public FreeVariable getFreeVariable() {
 		return freeVariable;
 	}
