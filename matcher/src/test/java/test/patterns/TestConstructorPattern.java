@@ -155,6 +155,6 @@ public class TestConstructorPattern {
 		constructorPattern.setVariableValue(1, "a.b.C.n()");
 		
 		assertFalse(constructorPattern.matches(instance), "Constructor with one invocation and "
-				+ "pattern with a different valuedoesn't match?");
+				+ "pattern with a different value doesn't match?");
 	}
 }
