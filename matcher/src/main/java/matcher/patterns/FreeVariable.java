@@ -26,4 +26,23 @@ public class FreeVariable {
 	public boolean hasValue() {
 		return getValue() != null;
 	}
+	
+	public int hashCode() {
+		return getId();
+	}
+	
+	public boolean equals(Object o) {
+		return (this == o) || (o instanceof FreeVariable && 
+									equalsFreeVariable((FreeVariable)o));
+	}
+
+	private boolean equalsFreeVariable(FreeVariable f) {
+		if(getId() != f.getId())
+			return false;
+		if((hasValue() && !f.hasValue()) || (!hasValue() && f.hasValue()))
+			return false;
+		if(!hasValue() && !f.hasValue())
+			return true;
+		return getValue().equals(f.getValue());
+	}
 }
