@@ -64,7 +64,7 @@ public class MethodPattern {
 	}
 	
 	public boolean isVariableId(int id) {
-		return getVariableId() == id;
+		return freeVariable.isId(id);
 	}
 	
 	private boolean invocationsHasVariableId(int id) {

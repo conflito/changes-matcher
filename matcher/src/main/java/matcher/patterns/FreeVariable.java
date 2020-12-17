@@ -23,6 +23,10 @@ public class FreeVariable {
 		return id;
 	}
 	
+	public boolean isId(int id) {
+		return getId() == id;
+	}
+	
 	public boolean hasValue() {
 		return getValue() != null;
 	}

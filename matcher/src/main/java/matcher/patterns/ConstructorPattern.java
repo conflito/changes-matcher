@@ -46,7 +46,7 @@ public class ConstructorPattern {
 	}
 	
 	public boolean isVariableId(int id) {
-		return getVariableId() == id;
+		return freeVariable.isId(id);
 	}
 	
 	public boolean hasVariableId(int id) {

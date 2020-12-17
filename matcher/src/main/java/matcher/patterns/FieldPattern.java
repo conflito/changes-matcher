@@ -32,7 +32,7 @@ public class FieldPattern {
 	}
 	
 	public boolean isVariableId(int id) {
-		return getVariableId() == id;
+		return freeVariable.isId(id);
 	}
 	
 	public boolean matches(FieldInstance instance) {

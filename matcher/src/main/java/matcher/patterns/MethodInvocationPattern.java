@@ -20,7 +20,7 @@ public class MethodInvocationPattern {
 	}
 	
 	public boolean isVariableId(int id) {
-		return getVariableId() == id;
+		return freeVariable.isId(id);
 	}
 	
 	public void setVariableValue(String value) {
