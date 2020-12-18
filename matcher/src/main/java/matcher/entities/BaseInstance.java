@@ -13,6 +13,10 @@ public class BaseInstance {
 		this.classInstances = new ArrayList<>();
 	}
 	
+	public List<ClassInstance> getClassInstances() {
+		return classInstances;
+	}
+
 	public void addClassInstance(ClassInstance classInstance) {
 		classInstances.add(classInstance);
 	}
