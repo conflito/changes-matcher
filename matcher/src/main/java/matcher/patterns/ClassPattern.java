@@ -302,6 +302,10 @@ public class ClassPattern {
 				compatiblesMatch(instance) &&
 				superClassMatch(instance);
 	}
+	
+	public boolean matchesOne(List<ClassInstance> instances) {
+		return instances.stream().anyMatch(ci -> matches(ci));
+	}
 
 	private boolean compatiblesMatch(ClassInstance instance) {
 		for(Entry<FreeVariable, List<FreeVariable>> e: compatible.entrySet()) {
