@@ -16,7 +16,7 @@ public class DeltaInstance {
 		this.actions.add(action);
 	}
 	
-	public Iterable<ActionInstance> getActionInstances(){
+	public List<ActionInstance> getActionInstances(){
 		return actions;
 	}
 	
