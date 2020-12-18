@@ -29,11 +29,11 @@ public class VisibilityAction extends ActionInstance {
 	}
 	
 	public boolean isVisibilityInsert() {
-		return oldVisibility == null;
+		return getAction() == Action.INSERT;
 	}
 	
 	public boolean isVisibilityDelete() {
-		return newVisibility == null;
+		return getAction() == Action.DELETE;
 	}
 	
 	public boolean isVisibilityUpdate() {
