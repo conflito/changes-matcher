@@ -7,6 +7,8 @@ import matcher.entities.ConstructorInstance;
 import matcher.entities.MethodInvocationInstance;
 import matcher.entities.Type;
 import matcher.entities.Visibility;
+import matcher.exceptions.ApplicationException;
+import matcher.handlers.FileSystemHandler;
 import matcher.patterns.ConflictPattern;
 import spoon.processing.AbstractProcessor;
 import spoon.reflect.code.CtInvocation;
@@ -43,15 +45,25 @@ public class ConstructorProcessor extends AbstractProcessor<CtConstructor<?>>{
 		List<CtInvocation<?>> invocations = element.getElements(new TypeFilter(CtInvocation.class));
 		for(CtInvocation<?> invocation: invocations) {
 			if(!invocation.toString().equals("super()")) {
-				MethodInvocationInstance mii = 
-						new MethodInvocationInstance(getInvocationQualifiedName(invocation));
-				constructorInstance.addMethodInvocation(mii);
+				String invocationClassName = getInvocationClassName(invocation) + ".class";
+				try {
+					if(FileSystemHandler.getInstance().fromTheSystem(invocationClassName)) {
+						MethodInvocationInstance mii = 
+								new MethodInvocationInstance(getInvocationQualifiedName(invocation));
+						constructorInstance.addMethodInvocation(mii);
+					}
+				} catch (ApplicationException e) {}
+
 			}
 		}
 	}
 
 	private String getInvocationQualifiedName(CtInvocation<?> invocation) {
 		return invocation.getTarget().getType() + "." + invocation.getExecutable().getSignature();
+	}
+	
+	private String getInvocationClassName(CtInvocation<?> invocation) {
+		return invocation.getTarget().getType().getSimpleName();
 	}
 
 }
