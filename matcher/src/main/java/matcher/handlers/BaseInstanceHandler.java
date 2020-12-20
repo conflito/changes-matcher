@@ -18,7 +18,7 @@ import spoon.reflect.declaration.CtClass;
 import spoon.reflect.visitor.filter.TypeFilter;
 
 public class BaseInstanceHandler {
-	
+		
 	public BaseInstance getBaseInstance(File base, ConflictPattern cp) throws ApplicationException {
 		SpoonResource resource = null;
 		try {
@@ -36,7 +36,7 @@ public class BaseInstanceHandler {
 		return result;
 	}
 	
-	private List<CtClass<?>> getInvolvedClasses(CtClass<?> changedClass){
+	private List<CtClass<?>> getInvolvedClasses(CtClass<?> changedClass) throws ApplicationException{
 		List<CtInvocation<?>> invocations = 
 				changedClass.getElements(new TypeFilter(CtInvocation.class));
 		invocations = invocations.stream()
@@ -46,10 +46,11 @@ public class BaseInstanceHandler {
 		result.add(changedClass);
 		for(CtInvocation<?> i: invocations) {
 			CtClass<?> invokedClass = (CtClass<?>) i.getExecutable()
-													.getDeclaringType().getTypeDeclaration();
+													.getDeclaringType()
+													.getTypeDeclaration();
 			if(!invokedClass.equals(changedClass) && 
 			   !changedClass.getReference().isSubtypeOf(invokedClass.getReference()) &&
-			   !isFromJDK(invokedClass) &&
+			   fromTheSystem(invokedClass) &&
 			   !result.contains(invokedClass)) {
 				result.add(invokedClass);
 			}
@@ -57,12 +58,7 @@ public class BaseInstanceHandler {
 		return result;
 	}
 
-	private boolean isFromJDK(CtClass<?> invokedClass) {
-		try {
-			Class<?> invoked = Class.forName(invokedClass.getQualifiedName());
-			return "".getClass().getClassLoader() == invoked.getClassLoader();
-		} catch( ClassNotFoundException e ) {
-			return false;
-		}
+	private boolean fromTheSystem(CtClass<?> invokedClass) throws ApplicationException {
+		return FileSystemHandler.getInstance().fromTheSystem(invokedClass.getSimpleName() + ".class");
 	}
 }
