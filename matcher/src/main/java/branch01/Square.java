@@ -7,5 +7,11 @@ public class Square extends Shape{
 	public int getX() {
 		return x;
 	}
+	
+	public void method() {
+		String s = "";
+		s.length();
+		new Ball().method();
+	}
 
 }

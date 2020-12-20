@@ -13,7 +13,7 @@ public class ChangeInstanceHandler {
 	private BaseInstanceHandler bih;
 	private DeltaInstanceHandler dih;
 
-	public ChangeInstanceHandler() {
+	public ChangeInstanceHandler(){
 		this.bih = new BaseInstanceHandler();
 		this.dih = new DeltaInstanceHandler();
 	}
