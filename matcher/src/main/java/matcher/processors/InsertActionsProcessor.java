@@ -12,6 +12,9 @@ import matcher.entities.MethodInstance;
 import matcher.entities.MethodInvocationInstance;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.InsertAction;
+import matcher.entities.deltas.InsertConstructorAction;
+import matcher.entities.deltas.InsertFieldAction;
+import matcher.entities.deltas.InsertMethodAction;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
@@ -29,7 +32,8 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 		if(getConflictPattern().hasInsertActions()) {
 			ClassInstance holderInstance = getClassInstance(method);
 			MethodInstance insertedInstance = getMethodInstance(method, holderInstance);
-			ActionInstance result = new InsertAction(insertedInstance, holderInstance);
+			ActionInstance result = new InsertMethodAction(insertedInstance, holderInstance,
+					insertedInstance.getVisibility());
 			setResult(result);
 		}
 	}
@@ -39,7 +43,8 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 		if(getConflictPattern().hasInsertActions()) {
 			ClassInstance holderInstance = getClassInstance(c);
 			ConstructorInstance insertedInstance = getConstructorInstance(c, holderInstance);
-			ActionInstance result = new InsertAction(insertedInstance, holderInstance);
+			ActionInstance result = new InsertConstructorAction(insertedInstance, holderInstance,
+					insertedInstance.getVisibility());
 			setResult(result);
 		}
 	}
@@ -49,7 +54,8 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 		if(getConflictPattern().hasInsertActions()) {
 			ClassInstance holderInstance = getClassInstance(field);
 			FieldInstance insertedInstance = getFieldInstance(field, holderInstance);
-			ActionInstance result = new InsertAction(insertedInstance, holderInstance);
+			ActionInstance result = new InsertFieldAction(insertedInstance, holderInstance,
+					insertedInstance.getVisibility());
 			setResult(result);
 		}
 	}
