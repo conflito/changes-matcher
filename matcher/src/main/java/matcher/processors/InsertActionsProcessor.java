@@ -29,7 +29,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtMethod(CtMethod<T> method) {
-		if(getConflictPattern().hasInsertActions()) {
+		if(getConflictPattern().hasInsertMethodActions()) {
 			ClassInstance holderInstance = getClassInstance(method);
 			MethodInstance insertedInstance = getMethodInstance(method, holderInstance);
 			ActionInstance result = new InsertMethodAction(insertedInstance, holderInstance,
@@ -40,7 +40,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtConstructor(CtConstructor<T> c) {
-		if(getConflictPattern().hasInsertActions()) {
+		if(getConflictPattern().hasInsertConstructorActions()) {
 			ClassInstance holderInstance = getClassInstance(c);
 			ConstructorInstance insertedInstance = getConstructorInstance(c, holderInstance);
 			ActionInstance result = new InsertConstructorAction(insertedInstance, holderInstance,
@@ -51,7 +51,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtField(CtField<T> field) {
-		if(getConflictPattern().hasInsertActions()) {
+		if(getConflictPattern().hasInsertFieldActions()) {
 			ClassInstance holderInstance = getClassInstance(field);
 			FieldInstance insertedInstance = getFieldInstance(field, holderInstance);
 			ActionInstance result = new InsertFieldAction(insertedInstance, holderInstance,
