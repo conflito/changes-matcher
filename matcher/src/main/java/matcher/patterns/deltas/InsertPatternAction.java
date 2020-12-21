@@ -16,6 +16,14 @@ public class InsertPatternAction extends ActionPattern {
 		this.holderEntity = holderEntity;
 	}
 	
+	public FreeVariable getInsertedEntity() {
+		return insertedEntity;
+	}
+
+	public FreeVariable getHolderEntity() {
+		return holderEntity;
+	}
+
 	@Override
 	public boolean filled() {
 		return insertedEntity.hasValue() && holderEntity.hasValue();
