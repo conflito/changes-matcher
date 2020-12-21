@@ -1,5 +1,7 @@
 package matcher.entities;
 
+import java.util.List;
+
 import matcher.entities.deltas.DeltaInstance;
 
 public class ChangeInstance {
@@ -34,4 +36,9 @@ public class ChangeInstance {
 		result.append(secondDelta.toString() + "\n---------\n");
 		return result.toString();
 	}
+	
+	public List<String> getFieldsQualifiedNames(){
+		return baseInstance.getFieldsQualifiedNames();
+	}	
+	
 }
