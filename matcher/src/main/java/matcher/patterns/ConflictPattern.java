@@ -112,6 +112,10 @@ public class ConflictPattern {
 		return basePattern.getConstructorsVariableIds();
 	}
 
+	public List<Integer> getClassVariableIds() {
+		return basePattern.getClassVariableIds();
+	}
+
 
 
 }
