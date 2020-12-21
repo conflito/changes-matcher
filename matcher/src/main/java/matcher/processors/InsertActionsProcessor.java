@@ -10,7 +10,6 @@ import matcher.entities.FieldAccessType;
 import matcher.entities.FieldInstance;
 import matcher.entities.MethodInstance;
 import matcher.entities.MethodInvocationInstance;
-import matcher.entities.deltas.Action;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.InsertAction;
 import matcher.patterns.ConflictPattern;
@@ -30,7 +29,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 		if(getConflictPattern().hasInsertActions()) {
 			ClassInstance holderInstance = getClassInstance(method);
 			MethodInstance insertedInstance = getMethodInstance(method, holderInstance);
-			ActionInstance result = new InsertAction(Action.INSERT, insertedInstance, holderInstance);
+			ActionInstance result = new InsertAction(insertedInstance, holderInstance);
 			setResult(result);
 		}
 	}
@@ -40,7 +39,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 		if(getConflictPattern().hasInsertActions()) {
 			ClassInstance holderInstance = getClassInstance(c);
 			ConstructorInstance insertedInstance = getConstructorInstance(c, holderInstance);
-			ActionInstance result = new InsertAction(Action.INSERT, insertedInstance, holderInstance);
+			ActionInstance result = new InsertAction(insertedInstance, holderInstance);
 			setResult(result);
 		}
 	}
@@ -50,7 +49,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 		if(getConflictPattern().hasInsertActions()) {
 			ClassInstance holderInstance = getClassInstance(field);
 			FieldInstance insertedInstance = getFieldInstance(field, holderInstance);
-			ActionInstance result = new InsertAction(Action.INSERT, insertedInstance, holderInstance);
+			ActionInstance result = new InsertAction(insertedInstance, holderInstance);
 			setResult(result);
 		}
 	}
@@ -65,7 +64,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 				CtMethod<?> method = possibleCaller.get();
 				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method, classInstance);
-				ActionInstance result = new InsertAction(Action.INSERT, mii, methodInstance);
+				ActionInstance result = new InsertAction(mii, methodInstance);
 				setResult(result);
 			}
 			else {
@@ -74,7 +73,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 					CtConstructor<?> c = constructor.get();
 					ClassInstance classInstance = getClassInstance(c);
 					ConstructorInstance insertedInstance = getConstructorInstance(c, classInstance);
-					ActionInstance result = new InsertAction(Action.INSERT, mii, insertedInstance);
+					ActionInstance result = new InsertAction(mii, insertedInstance);
 					setResult(result);
 				}
 			}
@@ -92,7 +91,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 				CtMethod<?> method = possibleCaller.get();
 				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method, classInstance);
-				ActionInstance result = new InsertAction(Action.INSERT, fai, methodInstance);
+				ActionInstance result = new InsertAction(fai, methodInstance);
 				setResult(result);
 			}
 		}
@@ -109,7 +108,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 				CtMethod<?> method = possibleCaller.get();
 				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method, classInstance);
-				ActionInstance result = new InsertAction(Action.INSERT, fai, methodInstance);
+				ActionInstance result = new InsertAction(fai, methodInstance);
 				setResult(result);
 			}
 		}

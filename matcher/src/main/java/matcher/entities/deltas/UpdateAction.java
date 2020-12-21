@@ -7,8 +7,8 @@ public class UpdateAction extends ActionInstance {
 
 	private Holder entity;
 
-	public UpdateAction(Action action, Holder entity) {
-		super(action);
+	public UpdateAction(Holder entity) {
+		super(Action.UPDATE);
 		this.entity = entity;
 	}
 

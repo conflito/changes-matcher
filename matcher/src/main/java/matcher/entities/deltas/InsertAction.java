@@ -12,8 +12,8 @@ public class InsertAction extends ActionInstance {
 	private Holder holderEntity;
 	
 	
-	public InsertAction(Action action, Insertable insertedEntity, Holder holderEntity) {
-		super(action);
+	public InsertAction(Insertable insertedEntity, Holder holderEntity) {
+		super(Action.INSERT);
 		this.insertedEntity = insertedEntity;
 		this.holderEntity = holderEntity;
 	}

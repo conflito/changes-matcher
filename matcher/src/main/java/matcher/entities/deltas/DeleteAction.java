@@ -11,8 +11,8 @@ public class DeleteAction extends ActionInstance {
 	private Deletable deletedEntity;
 	private Holder holderEntity;
 	
-	public DeleteAction(Action action, Deletable deletedEntity, Holder holderEntity) {
-		super(action);
+	public DeleteAction(Deletable deletedEntity, Holder holderEntity) {
+		super(Action.DELETE);
 		this.deletedEntity = deletedEntity;
 		this.holderEntity = holderEntity;
 	}

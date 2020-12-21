@@ -6,7 +6,6 @@ import java.util.Optional;
 import matcher.entities.ClassInstance;
 import matcher.entities.ConstructorInstance;
 import matcher.entities.MethodInstance;
-import matcher.entities.deltas.Action;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.UpdateAction;
 import matcher.patterns.ConflictPattern;
@@ -26,7 +25,7 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 		if(getConflictPattern().hasUpdateActions()) {
 			ClassInstance holderInstance = getClassInstance(method);
 			MethodInstance methodInstance = getMethodInstance(method, holderInstance);
-			ActionInstance result = new UpdateAction(Action.UPDATE, methodInstance);
+			ActionInstance result = new UpdateAction(methodInstance);
 			setResult(result);
 		}
 	}
@@ -36,7 +35,7 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 		if(getConflictPattern().hasUpdateActions()) {
 			ClassInstance holderInstance = getClassInstance(c);
 			ConstructorInstance cInstance = getConstructorInstance(c, holderInstance);
-			ActionInstance result = new UpdateAction(Action.UPDATE, cInstance);
+			ActionInstance result = new UpdateAction(cInstance);
 			setResult(result);
 		}
 	}
