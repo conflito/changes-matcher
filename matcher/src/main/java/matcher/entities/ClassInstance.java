@@ -1,6 +1,7 @@
 package matcher.entities;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,6 +127,14 @@ public class ClassInstance implements Holder{
 		return result;
 	}
 	
+	public List<String> getClassesQualifiedNames() {
+		List<String> result = new ArrayList<>();
+		result.add(getQualifiedName());
+		if(superClass != null)
+			result.addAll(superClass.getClassesQualifiedNames());
+		return result;
+	}
+	
 	public List<String> getConstructorsQualifiedNames(){
 		List<String> result = getConstructors().stream()
 								.map(ConstructorInstance::getQualifiedName)
@@ -197,4 +206,6 @@ public class ClassInstance implements Holder{
 		}
 		return result.toString();
 	}
+
+
 }
