@@ -1,85 +1,75 @@
 package matcher.patterns;
 
+import matcher.entities.ChangeInstance;
+import matcher.patterns.deltas.DeltaPattern;
+
 public class ConflictPattern {
+	
+	private BasePattern basePattern;
+	private DeltaPattern firstDelta;
+	private DeltaPattern secondDelta;
 
 	public boolean hasInvocations() {
-		return true;
+		return basePattern.hasInvocations();
 	}
 
 	public boolean hasFieldAccesses() {
-		return true;
+		return basePattern.hasFieldAccesses();
 	}
 
 	public boolean hasSuperClasses() {
-		return true;
+		return basePattern.hasSuperClass();
 	}
 
 	public boolean hasMethods() {
-		return true;
+		return basePattern.hasMethods();
 	}
 
 	public boolean hasFields() {
-		return true;
+		return basePattern.hasFields();
 	}
 
 	public boolean hasConstructors() {
-		return true;
+		return basePattern.hasConstructors();
 	}
 
 	public boolean hasCompatibleMethods() {
-		return true;
+		return basePattern.hasCompatible();
 	}
-
-	public boolean hasFieldInserts() {
-		return true;
+	
+	public boolean hasInsertActions() {
+		return firstDelta.hasInsertActions() || secondDelta.hasInsertActions();
 	}
-
-	public boolean hasMethodInserts() {
-		return true;
+	
+	public boolean hasDeleteActions() {
+		return firstDelta.hasDeleteActions() || secondDelta.hasDeleteActions();
 	}
-
-	public boolean hasConstructorInserts() {
-		return true;
+	
+	public boolean hasUpdateActions() {
+		return firstDelta.hasUpdateActions() || secondDelta.hasUpdateActions();
 	}
-
-	public boolean hasInvocationInserts() {
-		return true;
-	}
-
-	public boolean hasFieldAccessInserts() {
-		return true;
-	}
-
-	public boolean hasFieldDeletes() {
-		return true;
-	}
-
-	public boolean hasMethodDeletes() {
-		return true;
-	}
-
-	public boolean hasConstructorDeletes() {
-		return true;
-	}
-
-	public boolean hasInvocationDeletes() {
-		return true;
-	}
-
-	public boolean hasFieldAccessDeletes() {
-		return true;
-	}
-
-	public boolean hasMethodUpdates() {
-		return true;
-	}
-
-	public boolean hasConstructorUpdates() {
-		return true;
-	}
-
+	
 	public boolean hasVisibilityActions() {
-		return true;
+		return firstDelta.hasVisibilityActions() || secondDelta.hasVisibilityActions();
+	}
+	
+	public boolean matches(ChangeInstance instance) {
+		return basePattern.filled() && firstDelta.filled() && secondDelta.filled() &&
+			   basePattern.matches(instance.getBaseInstance()) &&
+			   deltasMatch(instance);
+	}
+
+	private boolean deltasMatch(ChangeInstance instance) {
+		return (firstDelta.matches(instance.getFirstDelta()) 
+					&& secondDelta.matches(instance.getSecondDelta())) ||
+			   (firstDelta.matches(instance.getSecondDelta()) 
+					&& secondDelta.matches(instance.getFirstDelta()));
+	}
+	
+	public void setVariableValue(int id, String value) {
+		basePattern.setVariableValue(id, value);
+		firstDelta.setVariableValue(id, value);
+		secondDelta.setVariableValue(id, value);
 	}
 
 }
