@@ -71,7 +71,7 @@ public class BasePattern {
 		return distinct(result);
 	}
 	
-	public List<Integer> getMFieldAccessesVariableIds(){
+	public List<Integer> getFieldAccessesVariableIds(){
 		List<Integer> result = new ArrayList<>();
 		for(ClassPattern c: classPatterns) {
 			result.addAll(c.getFieldAccessesIds());
