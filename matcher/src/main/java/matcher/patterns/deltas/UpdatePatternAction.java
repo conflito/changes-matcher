@@ -9,8 +9,8 @@ public class UpdatePatternAction extends ActionPattern {
 
 	private FreeVariable entity;
 	
-	public UpdatePatternAction(Action action, FreeVariable entity) {
-		super(action);
+	public UpdatePatternAction(FreeVariable entity) {
+		super(Action.UPDATE);
 		this.entity = entity;
 	}
 

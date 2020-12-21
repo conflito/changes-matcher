@@ -10,8 +10,8 @@ public class DeletePatternAction extends ActionPattern{
 	private FreeVariable deletedEntity;
 	private FreeVariable holderEntity;
 
-	public DeletePatternAction(Action action, FreeVariable deletedEntity, FreeVariable holderEntity) {
-		super(action);
+	public DeletePatternAction(FreeVariable deletedEntity, FreeVariable holderEntity) {
+		super(Action.DELETE);
 		this.deletedEntity = deletedEntity;
 		this.holderEntity = holderEntity;
 	}

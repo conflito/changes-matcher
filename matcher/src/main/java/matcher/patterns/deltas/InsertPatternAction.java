@@ -10,8 +10,8 @@ public class InsertPatternAction extends ActionPattern {
 	private FreeVariable insertedEntity;
 	private FreeVariable holderEntity;
 
-	public InsertPatternAction(Action action, FreeVariable insertedEntity, FreeVariable holderEntity) {
-		super(action);
+	public InsertPatternAction(FreeVariable insertedEntity, FreeVariable holderEntity) {
+		super(Action.INSERT);
 		this.insertedEntity = insertedEntity;
 		this.holderEntity = holderEntity;
 	}
