@@ -120,13 +120,19 @@ public class ClassInstance implements Holder{
 	}
 	
 	public List<String> getMethodsQualifiedNames(){
-		return getMethodsQualifiedNames(getMethods());
+		List<String> result = getMethodsQualifiedNames(getMethods());
+		if(superClass != null)
+			result.addAll(superClass.getMethodsQualifiedNames());
+		return result;
 	}
 	
 	public List<String> getConstructorsQualifiedNames(){
-		return getConstructors().stream()
+		List<String> result = getConstructors().stream()
 								.map(ConstructorInstance::getQualifiedName)
 								.collect(Collectors.toList());
+		if(superClass != null)
+			result.addAll(superClass.getConstructorsQualifiedNames());
+		return result;
 	}
 	
 	public List<Pair<String, List<String>>> getCompatibleMethodsQualifiedNames(){
