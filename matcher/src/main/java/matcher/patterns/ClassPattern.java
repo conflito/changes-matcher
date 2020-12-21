@@ -1,6 +1,7 @@
 package matcher.patterns;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,6 +151,15 @@ public class ClassPattern {
 		for(MethodPattern m: methods) {
 			result.addAll(m.getFieldAccessesVariableIds());
 		}
+		return result;
+	}
+	
+
+	public List<Integer> getClassVariableIds() {
+		List<Integer> result = new ArrayList<>();
+		result.add(freeVariable.getId());
+		if(hasSuperClass())
+			result.addAll(superClass.getClassVariableIds());
 		return result;
 	}
 	
@@ -420,4 +430,5 @@ public class ClassPattern {
 		
 		return result.toString();
 	}
+
 }
