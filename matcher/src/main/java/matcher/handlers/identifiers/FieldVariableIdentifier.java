@@ -12,8 +12,11 @@ import matcher.patterns.BasePattern;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
+import matcher.patterns.MethodPattern;
 import matcher.patterns.deltas.DeltaPattern;
+import matcher.patterns.deltas.InsertMethodPatternAction;
 import matcher.patterns.ConflictPattern;
+import matcher.patterns.ConstructorPattern;
 
 public class FieldVariableIdentifier implements VariableValueIdentifier {
 
@@ -41,10 +44,18 @@ public class FieldVariableIdentifier implements VariableValueIdentifier {
 		FieldPattern fieldPattern2 = new FieldPattern(new FreeVariable(2), null);
 		classPattern.addFieldPattern(fieldPattern);
 		classPattern.addFieldPattern(fieldPattern2);
+		MethodPattern methodPattern = new MethodPattern(new FreeVariable(6), null);
+		classPattern.addMethodPattern(methodPattern);
+		ConstructorPattern cPattern = new ConstructorPattern(new FreeVariable(7), null);
+		classPattern.addConstructorPattern(cPattern);
 		pattern.addClassPattern(classPattern);
-		ConflictPattern cp = new ConflictPattern(pattern, new DeltaPattern(), new DeltaPattern());
+		
+		DeltaPattern dp = new DeltaPattern();
+		dp.addActionPattern(new InsertMethodPatternAction(new FreeVariable(12)
+				, new FreeVariable(13), null));
+		ConflictPattern cp = new ConflictPattern(pattern, dp, new DeltaPattern());
 
-		FieldVariableIdentifier fvi = new FieldVariableIdentifier();
+		
 		File base = new File("src/main/java/base/Square.java");
 		File firstVar = new File("src/main/java/branch01/Square.java");
 		File secondVar = new File("src/main/java/branch02/Square.java");
@@ -52,7 +63,18 @@ public class FieldVariableIdentifier implements VariableValueIdentifier {
 
 		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		System.out.println(ci);
+		
+		FieldVariableIdentifier fvi = new FieldVariableIdentifier();
+		MethodVariableIdentifier mvi = new MethodVariableIdentifier();
+		ConstructorVariableIdentifier cvi = new ConstructorVariableIdentifier();
+		
 		Map<Integer, List<String>> res = fvi.identify(ci, cp);
+		System.out.println(res);
+		
+		res = mvi.identify(ci, cp);
+		System.out.println(res);
+		
+		res = cvi.identify(ci, cp);
 		System.out.println(res);
 	}
 
