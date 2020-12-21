@@ -1,5 +1,7 @@
 package matcher.patterns;
 
+import java.util.List;
+
 import matcher.entities.ChangeInstance;
 import matcher.patterns.deltas.DeltaPattern;
 
@@ -83,5 +85,9 @@ public class ConflictPattern {
 		return basePattern.toStringDebug() + "\n----------------\n" 
 			  + firstDelta.toStringDebug() + "\n----------------\n" 
 			  + secondDelta.toString();
+	}
+	
+	public List<Integer> getFieldsVariableIds(){
+		return basePattern.getFieldsVariableIds();
 	}
 }
