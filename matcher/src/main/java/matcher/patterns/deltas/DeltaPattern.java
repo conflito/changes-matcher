@@ -27,4 +27,26 @@ public class DeltaPattern {
 			   actions.stream().allMatch(a -> a.matchesOne(instance.getActionInstances()));
 	}
 	
+	public void setVariableValue(int id, String value) {
+		for(ActionPattern a: actions) {
+			a.setVariableValue(id, value);
+		}
+	}
+	
+	public boolean hasInsertActions() {
+		return actions.stream().anyMatch(a -> a instanceof InsertPatternAction);
+	}
+	
+	public boolean hasDeleteActions() {
+		return actions.stream().anyMatch(a -> a instanceof DeletePatternAction); 
+	}
+	
+	public boolean hasUpdateActions() {
+		return actions.stream().anyMatch(a -> a instanceof UpdatePatternAction);
+	}
+	
+	public boolean hasVisibilityActions() {
+		return actions.stream().anyMatch(a -> a instanceof VisibilityActionPattern);
+	}
+	
 }
