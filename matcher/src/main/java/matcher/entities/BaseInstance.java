@@ -60,5 +60,13 @@ public class BaseInstance {
 		}
 		return result;
 	}
+
+	public List<String> getClassQualifiedNames() {
+		List<String> result = new ArrayList<>();
+		for(ClassInstance ci: classInstances) {
+			result.addAll(ci.getClassesQualifiedNames());
+		}
+		return result;
+	}
 	
 }
