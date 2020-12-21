@@ -111,9 +111,12 @@ public class ClassInstance implements Holder{
 	}
 	
 	public List<String> getFieldsQualifiedNames(){
-		return getFields().stream()
-						  .map(FieldInstance::getQualifiedName)
-						  .collect(Collectors.toList());
+		List<String> result = getFields().stream()
+						  					 .map(FieldInstance::getQualifiedName)
+						  					 .collect(Collectors.toList());
+		if(superClass != null)
+			result.addAll(superClass.getFieldsQualifiedNames());
+		return result;
 	}
 	
 	public List<String> getMethodsQualifiedNames(){
