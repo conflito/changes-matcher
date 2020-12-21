@@ -77,9 +77,9 @@ public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
 		List<CtInvocation<?>> invocations = element.getElements(new TypeFilter(CtInvocation.class));
 		for(CtInvocation<?> invocation: invocations) {
 			if(!invocation.toString().equals("super()")){
-				String invocationClassName = getInvocationClassName(invocation) + ".class";
+				String invocationSrcName = getInvocationClassName(invocation) + ".java";
 				try {
-					if(FileSystemHandler.getInstance().fromTheSystem(invocationClassName)) {
+					if(FileSystemHandler.getInstance().fromTheSystem(invocationSrcName)) {
 						MethodInvocationInstance mii = 
 								new MethodInvocationInstance(getInvocationQualifiedName(invocation));
 						methodInstance.addMethodInvocation(mii);

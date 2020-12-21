@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.Properties;
 
 import matcher.exceptions.ApplicationException;
@@ -14,6 +15,8 @@ public class FileSystemHandler {
 	private static FileSystemHandler instance;
 	
 	private static final String PROPERTIES_PATH = "src/main/resources/config.properties"; 
+	private static final String TARGET_DIRS_PROPERTY = "target.dirs";
+	private static final String SRC_DIR_PROPERTY = "src.dir";
 	
 	private Properties prop;
 	
@@ -28,13 +31,27 @@ public class FileSystemHandler {
 		}
 	}
 	
-	public boolean fromTheSystem(String className) {
-		String[] dirs = prop.getProperty("target.dirs").split(",");
-		for(String dir: dirs) {
-			if(existsInDir(className, dir))
-				return true;
+	public boolean fromTheSystem(String fileName) {
+		return getSrcFile(fileName).isPresent();
+	}
+	
+	public Optional<File> getSrcFile(String fileName){
+		String dirName = prop.getProperty(SRC_DIR_PROPERTY);
+		if(dirName == null)
+			return Optional.empty();
+		File dir = new File(dirName);
+		return Optional.ofNullable(searchSourceFile(dir, fileName));
+	}
+	
+	private File searchSourceFile(File dir, String fileName) {
+		for(File f: dir.listFiles()) {
+			if(f.getName().equals(fileName)) {
+				return f;
+			}
+			else if(f.isDirectory())
+				searchSourceFile(f, fileName);
 		}
-		return false;
+		return null;
 	}
 	
 	private boolean existsInDir(String className, String dirName) {

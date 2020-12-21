@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import gumtree.spoon.AstComparator;
@@ -45,20 +46,32 @@ public class BaseInstanceHandler {
 		List<CtClass<?>> result = new ArrayList<>();
 		result.add(changedClass);
 		for(CtInvocation<?> i: invocations) {
-			CtClass<?> invokedClass = (CtClass<?>) i.getExecutable()
-													.getDeclaringType()
-													.getTypeDeclaration();
-			if(!invokedClass.equals(changedClass) && 
-			   !changedClass.getReference().isSubtypeOf(invokedClass.getReference()) &&
-			   fromTheSystem(invokedClass) &&
-			   !result.contains(invokedClass)) {
-				result.add(invokedClass);
+			Optional<CtClass<?>> invoked = getClass(i);
+			if(invoked.isPresent()) {
+				CtClass<?> actualInvoked = invoked.get();
+				if(!actualInvoked.equals(changedClass) &&
+				   !changedClass.getReference().isSubtypeOf(actualInvoked.getReference()) &&
+				   !result.contains(actualInvoked)) {
+					result.add(actualInvoked);
+				}
 			}
 		}
 		return result;
 	}
-
-	private boolean fromTheSystem(CtClass<?> invokedClass) throws ApplicationException {
-		return FileSystemHandler.getInstance().fromTheSystem(invokedClass.getSimpleName() + ".class");
+	
+	private Optional<CtClass<?>> getClass(CtInvocation<?> invocation) throws ApplicationException{
+		String simpleName = invocation.getExecutable().getDeclaringType().getSimpleName();
+		Optional<File> srcFile = FileSystemHandler.getInstance().getSrcFile(simpleName + ".java");
+		if(srcFile.isPresent()) {
+			SpoonResource resource = null;
+			try {
+				resource = SpoonResourceHelper.createResource(srcFile.get());
+			} catch (FileNotFoundException e) {
+				throw new ApplicationException("Invalid src file", e);
+			}
+			return Optional.ofNullable((CtClass<?>) new AstComparator().getCtType(resource));
+			
+		}
+		return Optional.empty();
 	}
 }
