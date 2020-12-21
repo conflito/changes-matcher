@@ -39,6 +39,14 @@ public class ChangeInstance {
 	
 	public List<String> getFieldsQualifiedNames(){
 		return baseInstance.getFieldsQualifiedNames();
+	}
+
+	public List<String> getMethodsQualifiedNames() {
+		return baseInstance.getMethodsQualifiedNames();
+	}
+
+	public List<String> getConstructorsQualifiedNames() {
+		return baseInstance.getConstructorsQualifiedNames();
 	}	
 	
 }
