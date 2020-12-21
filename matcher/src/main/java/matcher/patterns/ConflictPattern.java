@@ -50,6 +50,19 @@ public class ConflictPattern {
 		return firstDelta.hasInsertActions() || secondDelta.hasInsertActions();
 	}
 	
+	public boolean hasInsertMethodActions() {
+		return firstDelta.hasInsertMethodActions() || secondDelta.hasInsertMethodActions();
+	}
+	
+	public boolean hasInsertConstructorActions() {
+		return firstDelta.hasInsertConstructorActions() || 
+				secondDelta.hasInsertConstructorActions();
+	}
+	
+	public boolean hasInsertFieldActions() {
+		return firstDelta.hasInsertFieldActions() || secondDelta.hasInsertFieldActions();
+	}
+	
 	public boolean hasDeleteActions() {
 		return firstDelta.hasDeleteActions() || secondDelta.hasDeleteActions();
 	}
@@ -90,4 +103,7 @@ public class ConflictPattern {
 	public List<Integer> getFieldsVariableIds(){
 		return basePattern.getFieldsVariableIds();
 	}
+
+
+
 }
