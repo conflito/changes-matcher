@@ -27,7 +27,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtMethod(CtMethod<T> method) {
-		if(getConflictPattern().hasMethodInserts()) {
+		if(getConflictPattern().hasInsertActions()) {
 			ClassInstance holderInstance = getClassInstance(method);
 			MethodInstance insertedInstance = getMethodInstance(method, holderInstance);
 			ActionInstance result = new InsertAction(Action.INSERT, insertedInstance, holderInstance);
@@ -37,7 +37,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtConstructor(CtConstructor<T> c) {
-		if(getConflictPattern().hasConstructorInserts()) {
+		if(getConflictPattern().hasInsertActions()) {
 			ClassInstance holderInstance = getClassInstance(c);
 			ConstructorInstance insertedInstance = getConstructorInstance(c, holderInstance);
 			ActionInstance result = new InsertAction(Action.INSERT, insertedInstance, holderInstance);
@@ -47,7 +47,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtField(CtField<T> field) {
-		if(getConflictPattern().hasFieldInserts()) {
+		if(getConflictPattern().hasInsertActions()) {
 			ClassInstance holderInstance = getClassInstance(field);
 			FieldInstance insertedInstance = getFieldInstance(field, holderInstance);
 			ActionInstance result = new InsertAction(Action.INSERT, insertedInstance, holderInstance);
@@ -57,7 +57,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
-		if(getConflictPattern().hasInvocationInserts()) {
+		if(getConflictPattern().hasInsertActions()) {
 			MethodInvocationInstance mii = new MethodInvocationInstance(
 					getMethodProcessor().getInvocationQualifiedName(invocation));
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
@@ -83,7 +83,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtFieldRead(CtFieldRead<T> fieldRead) {
-		if(getConflictPattern().hasFieldAccessInserts()) {
+		if(getConflictPattern().hasInsertActions()) {
 			String fieldQualifiedName = getMethodProcessor()
 					.getFieldQualifiedName(fieldRead.getVariable());
 			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.READ);
@@ -100,7 +100,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtFieldWrite(CtFieldWrite<T> fieldWrite) {
-		if(getConflictPattern().hasFieldAccessInserts()) {
+		if(getConflictPattern().hasInsertActions()) {
 			String fieldQualifiedName = getMethodProcessor()
 					.getFieldQualifiedName(fieldWrite.getVariable());
 			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.WRITE);

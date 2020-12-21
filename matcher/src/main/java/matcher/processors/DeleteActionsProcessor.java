@@ -27,7 +27,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtConstructor(CtConstructor<T> c) {
-		if(getConflictPattern().hasConstructorDeletes()) {
+		if(getConflictPattern().hasDeleteActions()) {
 			ClassInstance holderInstance = getClassInstance(c);
 			ConstructorInstance insertedInstance = getConstructorInstance(c, holderInstance);
 			ActionInstance result = new DeleteAction(Action.DELETE, insertedInstance, holderInstance);
@@ -38,7 +38,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtField(CtField<T> field) {
-		if(getConflictPattern().hasFieldDeletes()) {
+		if(getConflictPattern().hasDeleteActions()) {
 			ClassInstance holderInstance = getClassInstance(field);
 			FieldInstance deletedInstance = getFieldInstance(field, holderInstance);
 			ActionInstance result = new DeleteAction(Action.DELETE, deletedInstance, holderInstance);
@@ -48,7 +48,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
-		if(getConflictPattern().hasInvocationDeletes()) {
+		if(getConflictPattern().hasDeleteActions()) {
 			MethodInvocationInstance mii = new MethodInvocationInstance(
 					getMethodProcessor().getInvocationQualifiedName(invocation));
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
@@ -74,7 +74,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtMethod(CtMethod<T> method) {
-		if(getConflictPattern().hasMethodDeletes()) {
+		if(getConflictPattern().hasDeleteActions()) {
 			ClassInstance holderInstance = getClassInstance(method);
 			MethodInstance deletedInstance = getMethodInstance(method, holderInstance);
 			ActionInstance result =  new DeleteAction(Action.DELETE, deletedInstance, holderInstance);
@@ -84,7 +84,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtFieldRead(CtFieldRead<T> fieldRead) {
-		if(getConflictPattern().hasFieldAccessDeletes()) {
+		if(getConflictPattern().hasDeleteActions()) {
 			String fieldQualifiedName = getMethodProcessor()
 					.getFieldQualifiedName(fieldRead.getVariable());
 			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.READ);
@@ -93,7 +93,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 				CtMethod<?> method = possibleCaller.get();
 				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method, classInstance);
-				ActionInstance result = new DeleteAction(Action.INSERT, fai, methodInstance);
+				ActionInstance result = new DeleteAction(Action.DELETE, fai, methodInstance);
 				setResult(result);
 			}
 		}
@@ -101,7 +101,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtFieldWrite(CtFieldWrite<T> fieldWrite) {
-		if(getConflictPattern().hasFieldAccessInserts()) {
+		if(getConflictPattern().hasDeleteActions()) {
 			String fieldQualifiedName = getMethodProcessor()
 					.getFieldQualifiedName(fieldWrite.getVariable());
 			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.WRITE);
@@ -110,7 +110,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 				CtMethod<?> method = possibleCaller.get();
 				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method, classInstance);
-				ActionInstance result = new DeleteAction(Action.INSERT, fai, methodInstance);
+				ActionInstance result = new DeleteAction(Action.DELETE, fai, methodInstance);
 				setResult(result);
 			}
 		}
