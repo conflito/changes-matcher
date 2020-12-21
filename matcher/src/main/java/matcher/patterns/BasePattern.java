@@ -87,6 +87,14 @@ public class BasePattern {
 		return distinct(result);
 	}
 	
+	public List<Integer> getClassVariableIds() {
+		List<Integer> result = new ArrayList<>();
+		for(ClassPattern c: classPatterns) {
+			result.addAll(c.getClassVariableIds());
+		}
+		return distinct(result);
+	}
+	
 	public void setVariableValue(int id, String value) {
 		for(ClassPattern c: classPatterns) {
 			c.setVariableValue(id, value);
