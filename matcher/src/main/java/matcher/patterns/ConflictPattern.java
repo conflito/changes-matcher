@@ -104,6 +104,14 @@ public class ConflictPattern {
 		return basePattern.getFieldsVariableIds();
 	}
 
+	public List<Integer> getMethodVariableIds() {
+		return basePattern.getMethodsVariableIds();
+	}
+
+	public List<Integer> getConstructorsVariableIds() {
+		return basePattern.getConstructorsVariableIds();
+	}
+
 
 
 }
