@@ -108,7 +108,13 @@ public class ClassPattern {
 	}
 	
 	public List<Integer> getFieldVariableIds(){
-		return fields.stream().map(FieldPattern::getVariableId).collect(Collectors.toList());
+		List<Integer> result = fields.stream()
+									 .map(FieldPattern::getVariableId)
+									 .collect(Collectors.toList());
+		if(hasSuperClass())
+			result.addAll(superClass.getFieldVariableIds());
+
+		return result;
 	}
 	
 	public List<Integer> getMethodVariableIds(){
