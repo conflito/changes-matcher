@@ -46,4 +46,8 @@ public class FieldPattern {
 	private boolean sameName(FieldInstance instance) {
 		return instance.getQualifiedName().equals(freeVariable.getValue());
 	}
+	
+	public String toStringDegub() {
+		return (visibility == null?"*":visibility.toString().toLowerCase()) + " field #" + getVariableId();
+	}
 }

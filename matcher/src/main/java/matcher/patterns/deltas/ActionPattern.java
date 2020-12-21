@@ -24,6 +24,8 @@ public abstract class ActionPattern {
 
 	public abstract boolean matches(ActionInstance action);
 	
+	public abstract String toStringDebug();
+	
 	public boolean matchesOne(List<ActionInstance> actions) {
 		return actions.stream().anyMatch(a -> matches(a));
 	}

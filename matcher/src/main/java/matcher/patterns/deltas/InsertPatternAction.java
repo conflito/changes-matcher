@@ -40,4 +40,9 @@ public class InsertPatternAction extends ActionPattern {
 			holderEntity.setValue(value);
 	}
 
+	@Override
+	public String toStringDebug() {
+		return "insert #" + insertedEntity.getId() + " into #" + holderEntity.getId();
+	}
+
 }

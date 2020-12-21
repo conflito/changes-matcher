@@ -105,4 +105,13 @@ public class BasePattern {
 	private List<Integer> distinct(List<Integer> list){
 		return list.stream().distinct().collect(Collectors.toList());
 	}
+	
+	public String toStringDebug() {
+		StringBuilder result = new StringBuilder();
+		
+		for(ClassPattern c: classPatterns)
+			result.append(c.toStringDebug() + "\n");
+		
+		return result.toString();
+	}
 }

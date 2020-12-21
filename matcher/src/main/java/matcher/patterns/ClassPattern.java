@@ -121,7 +121,7 @@ public class ClassPattern {
 	}
 	
 	public Optional<Integer> getSuperClassVariableId(){
-		if(hasSuperClass())
+		if(!hasSuperClass())
 			return Optional.empty();
 		return Optional.of(superClass.getVariableId());
 	}
@@ -386,5 +386,32 @@ public class ClassPattern {
 
 	private boolean sameName(ClassInstance instance) {
 		return instance.getQualifiedName().equals(freeVariable.getValue());
+	}
+	
+	public String toStringDebug() {
+		StringBuilder result = new StringBuilder();
+		
+		if(hasSuperClass()) {
+			result.append("#" + getVariableId() + " extends #" 
+					+ getSuperClassVariableId().get() + "\n");
+			result.append(superClass.toStringDebug());
+		}
+		for(FieldPattern f : fields) {
+			result.append("#" + getVariableId() + " has " + f.toStringDegub() + "\n");
+		}
+		for(ConstructorPattern c: constructors) {
+			result.append(c.toStringDebug(getVariableId()));
+		}
+		for(MethodPattern m: methods) {
+			result.append(m.toStringDebug(getVariableId()));
+		}
+		for(Entry<FreeVariable, List<FreeVariable>> e: compatible.entrySet()) {
+			FreeVariable v = e.getKey();
+			for(FreeVariable f: e.getValue()) {
+				result.append("#" + v.getId() + " compatible with " + f.getId() + "\n");
+			}
+		}
+		
+		return result.toString();
 	}
 }

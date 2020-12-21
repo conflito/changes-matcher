@@ -35,4 +35,9 @@ public class UpdatePatternAction extends ActionPattern {
 			entity.setValue(value);
 	}
 
+	@Override
+	public String toStringDebug() {
+		return "update #" + entity.getId();
+	}
+
 }

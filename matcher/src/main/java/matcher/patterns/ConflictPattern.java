@@ -9,6 +9,13 @@ public class ConflictPattern {
 	private DeltaPattern firstDelta;
 	private DeltaPattern secondDelta;
 
+	public ConflictPattern(BasePattern basePattern, DeltaPattern firstDelta, DeltaPattern secondDelta) {
+		super();
+		this.basePattern = basePattern;
+		this.firstDelta = firstDelta;
+		this.secondDelta = secondDelta;
+	}
+
 	public boolean hasInvocations() {
 		return basePattern.hasInvocations();
 	}
@@ -71,5 +78,10 @@ public class ConflictPattern {
 		firstDelta.setVariableValue(id, value);
 		secondDelta.setVariableValue(id, value);
 	}
-
+	
+	public String toStringDebug() {
+		return basePattern.toStringDebug() + "\n----------------\n" 
+			  + firstDelta.toStringDebug() + "\n----------------\n" 
+			  + secondDelta.toString();
+	}
 }

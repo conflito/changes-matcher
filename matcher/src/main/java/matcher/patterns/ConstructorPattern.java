@@ -104,4 +104,18 @@ public class ConstructorPattern {
 	private boolean sameVisibility(ConstructorInstance instance) {
 		return instance.getVisibility() == visibility;
 	}
+
+	public String toStringDebug(int classVariableId) {
+		StringBuilder result = new StringBuilder();
+		
+		result.append("#" + classVariableId + " has " + 
+				(visibility == null?"*":visibility.toString().toLowerCase()));
+		result.append(" constructor #" + getVariableId() + "\n");
+		
+		for(MethodInvocationPattern i: invocations) {
+			result.append("#" + getVariableId() + " invokes #" + i.getVariableId() + "\n");
+		}
+		
+		return result.toString();
+	}
 }

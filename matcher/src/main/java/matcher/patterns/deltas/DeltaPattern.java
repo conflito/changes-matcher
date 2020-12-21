@@ -49,4 +49,13 @@ public class DeltaPattern {
 		return actions.stream().anyMatch(a -> a instanceof VisibilityActionPattern);
 	}
 	
+	public String toStringDebug() {
+		StringBuilder result = new StringBuilder();
+		
+		for(ActionPattern a: actions)
+			result.append(a.toStringDebug() + "\n");
+		
+		return result.toString();
+	}
+	
 }

@@ -40,4 +40,9 @@ public class DeletePatternAction extends ActionPattern{
 			holderEntity.setValue(value);
 	}
 
+	@Override
+	public String toStringDebug() {
+		return "remove #" + deletedEntity.getId() + " from #" + holderEntity.getId();
+	}
+
 }

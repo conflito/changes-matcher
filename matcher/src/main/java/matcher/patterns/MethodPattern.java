@@ -160,4 +160,25 @@ public class MethodPattern {
 	private boolean sameVisibility(MethodInstance instance) {
 		return instance.getVisibility() == visibility;
 	}
+
+	public String toStringDebug(int classVariableId) {
+		StringBuilder result = new StringBuilder();
+		
+		result.append("#" + classVariableId + " has " + 
+					(visibility == null?"*":visibility.toString().toLowerCase()));
+		result.append(" method #" + getVariableId() + "\n");
+		
+		for(MethodInvocationPattern i: invocations) {
+			result.append("#" + getVariableId() + " invokes #" + i.getVariableId() + "\n");
+		}
+		for(FieldAccessPattern f: fieldAccesses) {
+			String access = null;
+			if(f.isAnyAccess())
+				access = " accesses ";
+			else
+				access = " " + f.getType().toString().toLowerCase() + "s ";
+			result.append("#" + getVariableId() + access + "field #" + f.getVariableId() + "\n");
+		}
+		return result.toString();
+	}
 }
