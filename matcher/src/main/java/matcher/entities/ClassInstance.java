@@ -119,14 +119,6 @@ public class ClassInstance implements Holder{
 		return result;
 	}
 	
-	public List<String> getFieldAccessesQualifiedNames() {
-		List<String> result = new ArrayList<>();
-		for(MethodInstance m: methods) {
-			result.addAll(m.getFieldAccessesQualifiedNames());
-		}
-		return result;
-	}
-	
 	
 	public List<String> getMethodsQualifiedNames(){
 		List<String> result = getMethodsQualifiedNames(getMethods());
