@@ -2,11 +2,9 @@ package base;
 
 public class Square extends Shape{
 			
-	private int x;
+	private int t;
 	
-	public void method() {
-		String s = "";
-		s.length();
-		new Ball().method();
+	public void m() {
+		int n = t;
 	}
 }

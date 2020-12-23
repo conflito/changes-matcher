@@ -2,21 +2,11 @@ package branch01;
 
 public class Square extends Shape{
 			
+	private int t;
 	private int x;
-	public int z;
-	
-	private Square() {
-		
-	}
-	
-	public int getX() {
-		return x;
-	}
-	
-	public void method() {
-		String s = "";
-		s.length();
-		new Ball().method();
-	}
 
+	public void m() {
+		int n = t;
+		int v = x;
+	}
 }
