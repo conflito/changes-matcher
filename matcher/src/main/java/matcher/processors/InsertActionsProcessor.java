@@ -13,6 +13,7 @@ import matcher.entities.MethodInvocationInstance;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.InsertAction;
 import matcher.entities.deltas.InsertConstructorAction;
+import matcher.entities.deltas.InsertFieldAccessAction;
 import matcher.entities.deltas.InsertFieldAction;
 import matcher.entities.deltas.InsertMethodAction;
 import matcher.patterns.ConflictPattern;
@@ -92,7 +93,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtFieldRead(CtFieldRead<T> fieldRead) {
-		if(getConflictPattern().hasInsertActions()) {
+		if(getConflictPattern().hasInsertFieldAccessActions()) {
 			String fieldQualifiedName = getMethodProcessor()
 					.getFieldQualifiedName(fieldRead.getVariable());
 			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.READ);
@@ -101,7 +102,8 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 				CtMethod<?> method = possibleCaller.get();
 				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method, classInstance);
-				ActionInstance result = new InsertAction(fai, methodInstance);
+				ActionInstance result = 
+						new InsertFieldAccessAction(fai, methodInstance, FieldAccessType.READ);
 				setResult(result);
 			}
 		}
@@ -109,7 +111,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtFieldWrite(CtFieldWrite<T> fieldWrite) {
-		if(getConflictPattern().hasInsertActions()) {
+		if(getConflictPattern().hasInsertFieldAccessActions()) {
 			String fieldQualifiedName = getMethodProcessor()
 					.getFieldQualifiedName(fieldWrite.getVariable());
 			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.WRITE);
@@ -118,7 +120,8 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 				CtMethod<?> method = possibleCaller.get();
 				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method, classInstance);
-				ActionInstance result = new InsertAction(fai, methodInstance);
+				ActionInstance result = 
+						new InsertFieldAccessAction(fai, methodInstance, FieldAccessType.WRITE);
 				setResult(result);
 			}
 		}
