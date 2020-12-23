@@ -71,14 +71,6 @@ public class BasePattern {
 		return distinct(result);
 	}
 	
-	public List<Integer> getFieldAccessesVariableIds(){
-		List<Integer> result = new ArrayList<>();
-		for(ClassPattern c: classPatterns) {
-			result.addAll(c.getFieldAccessesIds());
-		}
-		return distinct(result);
-	}
-	
 	public List<Integer> getInvocationsVariableIds(){
 		List<Integer> result = new ArrayList<>();
 		for(ClassPattern c: classPatterns) {
