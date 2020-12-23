@@ -143,16 +143,7 @@ public class ClassPattern {
 			result.add(p);
 		}
 		return result;
-	}
-	
-	public List<Integer> getFieldAccessesIds(){
-		List<Integer> result = new ArrayList<>();
-		for(MethodPattern m: methods) {
-			result.addAll(m.getFieldAccessesVariableIds());
-		}
-		return result;
-	}
-	
+	}	
 
 	public List<Integer> getClassVariableIds() {
 		List<Integer> result = new ArrayList<>();
