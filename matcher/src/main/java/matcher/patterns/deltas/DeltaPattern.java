@@ -77,8 +77,31 @@ public class DeltaPattern {
 
 	public List<Integer> getFieldsVariableIds() {
 		List<Integer> result = getInsertFieldsVariableIds();
-		result.addAll(getInsertFieldAccessesVariableIds());
 		return result.stream().distinct().collect(Collectors.toList());
+	}
+	
+	public List<Integer> getMethodsVariableIds() {
+		List<Integer> result = getInsertMethodsVariableIds();
+		return result.stream().distinct().collect(Collectors.toList());
+	}
+	
+	public List<Integer> getConstructorsVariableIds() {
+		List<Integer> result = getInsertConstructorsVariableIds();
+		return result.stream().distinct().collect(Collectors.toList());
+	}
+	
+	private List<Integer> getInsertConstructorsVariableIds() {
+		return actions.stream()
+				  .filter(a -> insertConstructorAction(a))
+				  .map(a -> ((InsertConstructorPatternAction)a).getInsertedEntity().getId())
+				  .collect(Collectors.toList());
+	}
+
+	private List<Integer> getInsertMethodsVariableIds(){
+		return actions.stream()
+					  .filter(a -> insertMethodAction(a))
+					  .map(a -> ((InsertMethodPatternAction)a).getInsertedEntity().getId())
+					  .collect(Collectors.toList());
 	}
 	
 	private List<Integer> getInsertFieldsVariableIds(){
@@ -87,21 +110,17 @@ public class DeltaPattern {
 					  .map(a -> ((InsertFieldPatternAction)a).getInsertedEntity().getId())
 					  .collect(Collectors.toList());
 	}
-	
-	private List<Integer> getInsertFieldAccessesVariableIds(){
-		return actions.stream()
-					  .filter(a -> insertFieldAccessAction(a))
-					  .map(a -> ((InsertFieldAccessPatternAction)a).getInsertedEntity()
-							  .getId())
-					  .collect(Collectors.toList());
-	}
 
 	private boolean insertFieldAction(ActionPattern a) {
 		return a instanceof InsertFieldPatternAction;
 	}
 	
-	private boolean insertFieldAccessAction(ActionPattern a) {
-		return a instanceof InsertFieldAccessPatternAction;
+	private boolean insertMethodAction(ActionPattern a) {
+		return a instanceof InsertMethodPatternAction;
+	}
+	
+	private boolean insertConstructorAction(ActionPattern a) {
+		return a instanceof InsertConstructorPatternAction;
 	}
 	
 }
