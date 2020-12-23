@@ -43,4 +43,34 @@ public class DeltaInstance {
 	private boolean insertFieldAction(ActionInstance a) {
 		return a instanceof InsertFieldAction;
 	}
+
+	public List<String> getMethodsQualifiedNames() {
+		return getInsertMethodsQualifiedNames();
+	}
+
+	private List<String> getInsertMethodsQualifiedNames() {
+		return actions.stream()
+				  .filter(a -> insertMethodAction(a))
+				  .map(a -> ((InsertMethodAction) a).getInsertedEntity().getQualifiedName())
+				  .collect(Collectors.toList());
+	}
+	
+	private boolean insertMethodAction(ActionInstance a) {
+		return a instanceof InsertMethodAction;
+	}
+	
+	public List<String> getConstructorsQualifiedNames() {
+		return getInsertConstructorsQualifiedNames();
+	}
+	
+	private List<String> getInsertConstructorsQualifiedNames() {
+		return actions.stream()
+				  .filter(a -> insertConstructorAction(a))
+				  .map(a -> ((InsertConstructorAction) a).getInsertedEntity().getQualifiedName())
+				  .collect(Collectors.toList());
+	}
+
+	private boolean insertConstructorAction(ActionInstance a) {
+		return a instanceof InsertConstructorAction;
+	}
 }
