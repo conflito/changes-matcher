@@ -108,7 +108,6 @@ public class ConflictPattern {
 	
 	public List<Integer> getFieldsVariableIds(){
 		List<Integer> result = basePattern.getFieldsVariableIds();
-		result.addAll(basePattern.getFieldAccessesVariableIds());
 		return result;
 	}
 
@@ -129,6 +128,20 @@ public class ConflictPattern {
 		List<Integer> secondDeltaFields = secondDelta.getFieldsVariableIds();
 		firstDeltaFields.addAll(secondDeltaFields);
 		return firstDeltaFields.stream().distinct().collect(Collectors.toList());
+	}
+
+	public List<Integer> getDeltaMethodsVariableIds() {
+		List<Integer> firstDeltaMethods = firstDelta.getMethodsVariableIds();
+		List<Integer> secondDeltaMethods = secondDelta.getMethodsVariableIds();
+		firstDeltaMethods.addAll(secondDeltaMethods);
+		return firstDeltaMethods.stream().distinct().collect(Collectors.toList());
+	}
+
+	public List<Integer> getDeltaConstructorsVariableIds() {
+		List<Integer> firstDeltaConstructors = firstDelta.getConstructorsVariableIds();
+		List<Integer> secondDeltaConstructors = secondDelta.getConstructorsVariableIds();
+		firstDeltaConstructors.addAll(secondDeltaConstructors);
+		return firstDeltaConstructors.stream().distinct().collect(Collectors.toList());
 	}
 
 
