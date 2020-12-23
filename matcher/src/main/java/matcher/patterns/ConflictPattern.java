@@ -1,6 +1,7 @@
 package matcher.patterns;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import matcher.entities.ChangeInstance;
 import matcher.patterns.deltas.DeltaPattern;
@@ -106,7 +107,9 @@ public class ConflictPattern {
 	}
 	
 	public List<Integer> getFieldsVariableIds(){
-		return basePattern.getFieldsVariableIds();
+		List<Integer> result = basePattern.getFieldsVariableIds();
+		result.addAll(basePattern.getFieldAccessesVariableIds());
+		return result;
 	}
 
 	public List<Integer> getMethodVariableIds() {
@@ -119,6 +122,13 @@ public class ConflictPattern {
 
 	public List<Integer> getClassVariableIds() {
 		return basePattern.getClassVariableIds();
+	}
+
+	public List<Integer> getDeltaFieldsVariableIds() {
+		List<Integer> firstDeltaFields = firstDelta.getFieldsVariableIds();
+		List<Integer> secondDeltaFields = secondDelta.getFieldsVariableIds();
+		firstDeltaFields.addAll(secondDeltaFields);
+		return firstDeltaFields.stream().distinct().collect(Collectors.toList());
 	}
 
 

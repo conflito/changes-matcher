@@ -1,7 +1,6 @@
 package matcher.entities;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -120,6 +119,15 @@ public class ClassInstance implements Holder{
 		return result;
 	}
 	
+	public List<String> getFieldAccessesQualifiedNames() {
+		List<String> result = new ArrayList<>();
+		for(MethodInstance m: methods) {
+			result.addAll(m.getFieldAccessesQualifiedNames());
+		}
+		return result;
+	}
+	
+	
 	public List<String> getMethodsQualifiedNames(){
 		List<String> result = getMethodsQualifiedNames(getMethods());
 		if(superClass != null)
@@ -206,6 +214,5 @@ public class ClassInstance implements Holder{
 		}
 		return result.toString();
 	}
-
 
 }

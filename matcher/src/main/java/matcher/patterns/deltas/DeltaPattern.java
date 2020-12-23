@@ -2,6 +2,7 @@ package matcher.patterns.deltas;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import matcher.entities.deltas.DeltaInstance;
 
@@ -72,6 +73,35 @@ public class DeltaPattern {
 			result.append(a.toStringDebug() + "\n");
 		
 		return result.toString();
+	}
+
+	public List<Integer> getFieldsVariableIds() {
+		List<Integer> result = getInsertFieldsVariableIds();
+		result.addAll(getInsertFieldAccessesVariableIds());
+		return result.stream().distinct().collect(Collectors.toList());
+	}
+	
+	private List<Integer> getInsertFieldsVariableIds(){
+		return actions.stream()
+					  .filter(a -> insertFieldAction(a))
+					  .map(a -> ((InsertFieldPatternAction)a).getInsertedEntity().getId())
+					  .collect(Collectors.toList());
+	}
+	
+	private List<Integer> getInsertFieldAccessesVariableIds(){
+		return actions.stream()
+					  .filter(a -> insertFieldAccessAction(a))
+					  .map(a -> ((InsertFieldAccessPatternAction)a).getInsertedEntity()
+							  .getId())
+					  .collect(Collectors.toList());
+	}
+
+	private boolean insertFieldAction(ActionPattern a) {
+		return a instanceof InsertFieldPatternAction;
+	}
+	
+	private boolean insertFieldAccessAction(ActionPattern a) {
+		return a instanceof InsertFieldAccessPatternAction;
 	}
 	
 }

@@ -1,7 +1,6 @@
 package matcher.patterns;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,7 +132,7 @@ public class ClassPattern {
 		return Optional.of(superClass.getVariableId());
 	}
 	
-	public List<Pair<Integer, List<Integer>>> getCompatibleVariableIda(){
+	public List<Pair<Integer, List<Integer>>> getCompatibleVariables(){
 		List<Pair<Integer, List<Integer>>> result = new ArrayList<>();
 		for(Entry<FreeVariable, List<FreeVariable>> e: compatible.entrySet()) {
 			int id = e.getKey().getId();

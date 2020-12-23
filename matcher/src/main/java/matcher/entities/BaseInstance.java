@@ -37,6 +37,14 @@ public class BaseInstance {
 		return result;
 	}
 	
+	public List<String> getFieldAccessesQualifiedNames(){
+		List<String> result = new ArrayList<>();
+		for(ClassInstance ci: classInstances) {
+			result.addAll(ci.getFieldAccessesQualifiedNames());
+		}
+		return result;
+	}
+	
 	public List<String> getMethodsQualifiedNames(){
 		List<String> result = new ArrayList<>();
 		for(ClassInstance ci: classInstances) {

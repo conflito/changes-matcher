@@ -2,6 +2,7 @@ package matcher.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import matcher.entities.deltas.Deletable;
 import matcher.entities.deltas.Holder;
@@ -129,5 +130,11 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder{
 	
 	public int hashCode() {
 		return getQualifiedName().hashCode();
+	}
+
+	public List<String> getFieldAccessesQualifiedNames() {
+		return fieldAccesses.stream()
+							.map(FieldAccessInstance::getQualifiedName)
+							.collect(Collectors.toList());
 	}
 }

@@ -1,6 +1,7 @@
 package matcher.entities;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import matcher.entities.deltas.DeltaInstance;
 
@@ -51,6 +52,13 @@ public class ChangeInstance {
 
 	public List<String> getClassQualifiedNames() {
 		return baseInstance.getClassQualifiedNames();
+	}
+
+	public List<String> getDeltaFieldsQualifiedNames() {
+		List<String> firstDeltaFields = firstDelta.getFieldsQualifiedNames();
+		List<String> secondDeltaFields = secondDelta.getFieldsQualifiedNames();
+		firstDeltaFields.addAll(secondDeltaFields);
+		return firstDeltaFields.stream().distinct().collect(Collectors.toList());
 	}	
 	
 }
