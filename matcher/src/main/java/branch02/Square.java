@@ -4,4 +4,8 @@ public class Square extends Shape{
 			
 	private int t;
 	private int z;
+	
+	public Square(int n) {
+		
+	}
 }

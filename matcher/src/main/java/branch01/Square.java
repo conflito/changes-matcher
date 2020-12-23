@@ -9,4 +9,8 @@ public class Square extends Shape{
 		int n = t;
 		int v = x;
 	}
+	
+	public void n() {
+		
+	}
 }
