@@ -49,6 +49,10 @@ public class DeltaPattern {
 		return actions.stream().anyMatch(a -> a instanceof InsertFieldPatternAction);
 	}
 	
+	public boolean hasInsertFieldAccessActions() {
+		return actions.stream().anyMatch(a -> a instanceof InsertFieldAccessPatternAction);
+	}
+	
 	public boolean hasDeleteActions() {
 		return actions.stream().anyMatch(a -> a instanceof DeletePatternAction); 
 	}

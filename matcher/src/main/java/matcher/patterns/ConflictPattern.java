@@ -63,6 +63,11 @@ public class ConflictPattern {
 		return firstDelta.hasInsertFieldActions() || secondDelta.hasInsertFieldActions();
 	}
 	
+	public boolean hasInsertFieldAccessActions() {
+		return firstDelta.hasInsertFieldAccessActions() 
+				|| secondDelta.hasInsertFieldAccessActions();
+	}
+	
 	public boolean hasDeleteActions() {
 		return firstDelta.hasDeleteActions() || secondDelta.hasDeleteActions();
 	}
