@@ -2,6 +2,8 @@ package matcher.handlers;
 
 import java.io.File;
 
+import gumtree.spoon.AstComparator;
+import gumtree.spoon.diff.Diff;
 import matcher.entities.BaseInstance;
 import matcher.entities.ChangeInstance;
 import matcher.entities.deltas.DeltaInstance;
@@ -20,18 +22,21 @@ public class ChangeInstanceHandler {
 
 	public ChangeInstance getChangeInstance(File base, File firstVariant, File secondVariant, ConflictPattern cp) 
 			throws ApplicationException {
+		Diff firstDiff = diff(base, firstVariant);
+		Diff secondDiff = diff(base, secondVariant);
 		BaseInstance baseInstance = bih.getBaseInstance(base, cp);
-		DeltaInstance firstDelta = dih.getDeltaInstance(base, firstVariant, cp);
-		DeltaInstance secondDelta = dih.getDeltaInstance(base, secondVariant, cp);
+		DeltaInstance firstDelta = dih.getDeltaInstance(firstDiff, cp);
+		DeltaInstance secondDelta = dih.getDeltaInstance(secondDiff, cp);
 		return new ChangeInstance(baseInstance, firstDelta, secondDelta);
 	}
 	
-//	public static void main(String[] args) throws ApplicationException {
-//		File base = new File("src/main/java/base/Square.java");
-//		File firstVar = new File("src/main/java/branch01/Square.java");
-//		File secondVar = new File("src/main/java/branch02/Square.java");
-//		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-//		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, new ConflictPattern());
-//		System.out.println(ci);
-//	}
+	private Diff diff(File first, File second) throws ApplicationException {
+		Diff diff = null;
+		try {
+			diff = new AstComparator().compare(first, second);
+		} catch (Exception e) {
+			throw new ApplicationException("Error calculating the delta", e);
+		}
+		return diff;
+	}
 }
