@@ -37,6 +37,7 @@ public class BaseInstanceHandler {
 		return result;
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private List<CtClass<?>> getInvolvedClasses(CtClass<?> changedClass) throws ApplicationException{
 		List<CtInvocation<?>> invocations = 
 				changedClass.getElements(new TypeFilter(CtInvocation.class));
