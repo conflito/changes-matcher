@@ -15,7 +15,6 @@ public class FileSystemHandler {
 	private static FileSystemHandler instance;
 	
 	private static final String PROPERTIES_PATH = "src/main/resources/config.properties"; 
-	private static final String TARGET_DIRS_PROPERTY = "target.dirs";
 	private static final String SRC_DIR_PROPERTY = "src.dir";
 	
 	private Properties prop;
@@ -52,17 +51,6 @@ public class FileSystemHandler {
 				searchSourceFile(f, fileName);
 		}
 		return null;
-	}
-	
-	private boolean existsInDir(String className, String dirName) {
-		File dir = new File(dirName);
-		if(dir.isDirectory()) {
-			for(File f: dir.listFiles()) {
-				if(f.getName().equals(className))
-					return true;
-			}
-		}
-		return false;
 	}
 	
 	public static FileSystemHandler getInstance() throws ApplicationException {
