@@ -54,6 +54,7 @@ public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
 		processFieldWrites(element);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void processFieldWrites(CtMethod<?> element) {
 		List<CtFieldWrite<?>> fieldWrites = element.getElements(new TypeFilter(CtFieldWrite.class));
 		for(CtFieldWrite<?> fieldWrite: fieldWrites) {
@@ -64,6 +65,7 @@ public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
 
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void processFieldReads(CtMethod<?> element) {
 		List<CtFieldRead<?>> fieldReads = element.getElements(new TypeFilter(CtFieldRead.class));
 		for(CtFieldRead<?> fieldRead: fieldReads) {
@@ -73,6 +75,7 @@ public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void processInvocations(CtMethod<?> element) {
 		List<CtInvocation<?>> invocations = element.getElements(new TypeFilter(CtInvocation.class));
 		for(CtInvocation<?> invocation: invocations) {

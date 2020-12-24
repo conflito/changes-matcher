@@ -41,6 +41,7 @@ public class ConstructorProcessor extends AbstractProcessor<CtConstructor<?>>{
 			processMethodInvocations(element);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void processMethodInvocations(CtConstructor<?> element) {
 		List<CtInvocation<?>> invocations = element.getElements(new TypeFilter(CtInvocation.class));
 		for(CtInvocation<?> invocation: invocations) {
