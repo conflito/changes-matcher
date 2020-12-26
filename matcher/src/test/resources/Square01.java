@@ -1,6 +1,6 @@
-package branch01;
+package base;
 
-public class Square extends Shape{
+public class Square{
 			
 	private int t;
 	private int x;
