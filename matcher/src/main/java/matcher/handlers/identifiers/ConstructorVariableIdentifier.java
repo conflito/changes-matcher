@@ -5,15 +5,16 @@ import java.util.Map;
 
 import matcher.entities.ChangeInstance;
 import matcher.patterns.ConflictPattern;
+import matcher.utils.MapUtilities;
 
-public class ConstructorVariableIdentifier extends AbstractVariableIdentifier {
+public class ConstructorVariableIdentifier implements IVariableIdentifier {
 
 	@Override
 	public Map<Integer, List<String>> identify(ChangeInstance changeInstance, 
 			ConflictPattern conflictPattern) {
 		Map<Integer, List<String>> result =  
 				constructorsInBase(changeInstance, conflictPattern);
-		mergeMaps(result, constructorsInDeltas(changeInstance, conflictPattern));
+		MapUtilities.mergeMaps(result, constructorsInDeltas(changeInstance, conflictPattern));
 		return result;
 	}
 	
@@ -22,14 +23,14 @@ public class ConstructorVariableIdentifier extends AbstractVariableIdentifier {
 		List<Integer> vars = conflictPattern.getConstructorsVariableIds();
 		List<String> cs = changeInstance.getConstructorsQualifiedNames();
 		
-		return combine(vars, cs);
+		return MapUtilities.combine(vars, cs);
 	}
 	
 	private Map<Integer, List<String>> constructorsInDeltas(ChangeInstance changeInstance,
 			ConflictPattern conflictPattern){
 		List<Integer> vars = conflictPattern.getDeltaConstructorsVariableIds();
 		List<String> cs = changeInstance.getDeltaConstructorsQualifiedNames();
-		return combine(vars, cs);
+		return MapUtilities.combine(vars, cs);
 	}
 
 }
