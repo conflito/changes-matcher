@@ -2,7 +2,6 @@ package matcher.patterns.deltas;
 
 import matcher.entities.Visibility;
 import matcher.entities.deltas.ActionInstance;
-import matcher.entities.deltas.InsertAction;
 import matcher.entities.deltas.InsertFieldAction;
 import matcher.patterns.FreeVariable;
 
@@ -18,7 +17,7 @@ public class InsertFieldPatternAction extends InsertPatternAction {
 	
 	@Override
 	public boolean matches(ActionInstance action) {
-		return action instanceof InsertAction && filled() && matches((InsertFieldAction)action);
+		return action instanceof InsertFieldAction && filled() && matches((InsertFieldAction)action);
 	}
 	
 	private boolean matches(InsertFieldAction action) {
