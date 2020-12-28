@@ -181,4 +181,15 @@ public class DeltaInstance {
 	private boolean updateAction(ActionInstance a) {
 		return a instanceof UpdateAction;
 	}
+
+	public List<String> getVisibilityActionsQualifiedNames() {
+		return actions.stream()
+				  .filter(a -> visibilityAction(a))
+				  .map(a -> ((VisibilityAction) a).getEntity().getQualifiedName())
+				  .collect(Collectors.toList());
+	}
+	
+	private boolean visibilityAction(ActionInstance a) {
+		return a instanceof VisibilityAction;
+	}
 }

@@ -190,4 +190,11 @@ public class ConflictPattern {
 		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
 	}
 
+	public List<Integer> getVisibilityActionsVariableIds() {
+		List<Integer> firstDeltaUpdates = firstDelta.getVisibilityActionsVariableIds();
+		List<Integer> secondDeltaUpdates = secondDelta.getVisibilityActionsVariableIds();
+		firstDeltaUpdates.addAll(secondDeltaUpdates);
+		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
+	}
+
 }

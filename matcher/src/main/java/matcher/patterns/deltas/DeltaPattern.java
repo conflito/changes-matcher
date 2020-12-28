@@ -246,4 +246,15 @@ public class DeltaPattern {
 		return a instanceof UpdatePatternAction;
 	}
 
+	public List<Integer> getVisibilityActionsVariableIds() {
+		return actions.stream()
+				  .filter(a -> visibilityAction(a))
+				  .map(a -> ((VisibilityActionPattern)a).getEntity().getId())
+				  .collect(Collectors.toList());
+	}
+	
+	private boolean visibilityAction(ActionPattern a) {
+		return a instanceof VisibilityActionPattern;
+	}
+
 }

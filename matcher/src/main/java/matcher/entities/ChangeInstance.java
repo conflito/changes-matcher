@@ -104,5 +104,12 @@ public class ChangeInstance {
 		firstDeltaUpdates.addAll(secondDeltaUpdates);
 		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
 	}
+
+	public List<String> getVisibilityActionsQualifiedNames() {
+		List<String> firstDeltaUpdates = firstDelta.getVisibilityActionsQualifiedNames();
+		List<String> secondDeltaUpdates = secondDelta.getVisibilityActionsQualifiedNames();
+		firstDeltaUpdates.addAll(secondDeltaUpdates);
+		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
+	}
 	
 }
