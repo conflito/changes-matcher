@@ -88,5 +88,10 @@ public class VisibilityActionPattern extends ActionPattern{
 			return "update visibility of #" + entity.getId() + " from " + visNew + " to " + visOld;
 		}
 	}
+
+	@Override
+	public void clean() {
+		entity.clean();
+	}
 	
 }

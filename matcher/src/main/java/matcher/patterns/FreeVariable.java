@@ -18,6 +18,10 @@ public class FreeVariable {
 	public void setValue(String value) {
 		this.value = value;
 	}
+	
+	public void clean() {
+		setValue(null);
+	}
 
 	public int getId() {
 		return id;

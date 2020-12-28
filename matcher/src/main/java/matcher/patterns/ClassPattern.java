@@ -230,6 +230,44 @@ public class ClassPattern {
 		return fields.stream().anyMatch(f -> f.isVariableId(id));
 	}
 	
+	public void clean() {
+		freeVariable.clean();
+		cleanFields();
+		cleanMethods();
+		cleanConstructors();
+		cleanCompatibles();
+		if(hasSuperClass())
+			superClass.clean();
+	}
+	
+	private void cleanCompatibles() {
+		for(Entry<FreeVariable, List<FreeVariable>> e: compatible.entrySet()) {
+			e.getKey().clean();
+			List<FreeVariable> valList = e.getValue();
+			for(FreeVariable free: valList) {
+				free.clean();
+			}
+		}
+	}
+
+	private void cleanConstructors() {
+		for(ConstructorPattern c: constructors) {
+			c.clean();
+		}
+	}
+
+	private void cleanMethods() {
+		for(MethodPattern m: methods) {
+			m.clean();
+		}
+	}
+
+	private void cleanFields() {
+		for(FieldPattern f: fields) {
+			f.clean();
+		}
+	}
+
 	public void setVariableValue(int id, String value) {
 		if(isVariableId(id))
 			freeVariable.setValue(value);

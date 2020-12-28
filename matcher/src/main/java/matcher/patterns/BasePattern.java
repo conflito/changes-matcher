@@ -101,6 +101,12 @@ public class BasePattern {
 		}
 	}
 	
+	public void clean() {
+		for(ClassPattern c: classPatterns) {
+			c.clean();
+		}
+	}
+	
 	public boolean filled() {
 		return classPatterns.stream().allMatch(ClassPattern::filled);
 	}

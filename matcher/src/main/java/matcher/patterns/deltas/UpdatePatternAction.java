@@ -44,4 +44,9 @@ public class UpdatePatternAction extends ActionPattern {
 		return "update #" + entity.getId();
 	}
 
+	@Override
+	public void clean() {
+		entity.clean();
+	}
+
 }

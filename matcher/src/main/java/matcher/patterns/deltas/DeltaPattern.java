@@ -256,5 +256,11 @@ public class DeltaPattern {
 	private boolean isVisibilityAction(ActionPattern a) {
 		return a instanceof VisibilityActionPattern;
 	}
+	
+	public void clean() {
+		for(ActionPattern a: actions) {
+			a.clean();
+		}
+	}
 
 }

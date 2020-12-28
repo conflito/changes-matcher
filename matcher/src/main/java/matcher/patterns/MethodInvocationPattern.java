@@ -27,6 +27,10 @@ public class MethodInvocationPattern {
 		freeVariable.setValue(value);
 	}
 	
+	public void clean() {
+		freeVariable.clean();
+	}
+	
 	public boolean filled() {
 		return freeVariable.hasValue();
 	}

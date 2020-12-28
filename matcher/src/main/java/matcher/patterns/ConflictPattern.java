@@ -116,6 +116,12 @@ public class ConflictPattern {
 		secondDelta.setVariableValue(id, value);
 	}
 	
+	public void clean() {
+		basePattern.clean();
+		firstDelta.clean();
+		secondDelta.clean();
+	}
+	
 	public String toStringDebug() {
 		return basePattern.toStringDebug() + "\n----------------\n" 
 			  + firstDelta.toStringDebug() + "\n----------------\n" 

@@ -57,4 +57,10 @@ public class InsertPatternAction extends ActionPattern {
 		return "insert #" + insertedEntity.getId() + " into #" + holderEntity.getId();
 	}
 
+	@Override
+	public void clean() {
+		insertedEntity.clean();
+		holderEntity.clean();
+	}
+
 }

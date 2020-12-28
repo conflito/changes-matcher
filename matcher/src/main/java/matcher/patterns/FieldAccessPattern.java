@@ -35,6 +35,10 @@ public class FieldAccessPattern {
 		freeVariable.setValue(value);
 	}
 	
+	public void clean() {
+		freeVariable.clean();
+	}
+	
 	public boolean isFieldRead() {
 		return accessType == FieldAccessType.READ;
 	}

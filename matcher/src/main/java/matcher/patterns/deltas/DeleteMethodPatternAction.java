@@ -46,4 +46,12 @@ public class DeleteMethodPatternAction extends DeletePatternAction {
 		return compatibles.stream().anyMatch(h -> v.matches(h.getQualifiedName()));
 	}
 	
+	@Override
+	public void clean() {
+		super.clean();
+		for(FreeVariable v: compatibles) {
+			v.clean();
+		}
+	}
+	
 }

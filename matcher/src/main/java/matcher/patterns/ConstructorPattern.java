@@ -61,6 +61,17 @@ public class ConstructorPattern {
 			setVariableValueInvocations(id, value);
 	}
 	
+	public void clean() {
+		freeVariable.clean();
+		cleanInvocations();
+	}
+	
+	private void cleanInvocations() {
+		for(MethodInvocationPattern i: invocations) {
+			i.clean();
+		}
+	}
+	
 	private void setVariableValueInvocations(int id, String value) {
 		for(MethodInvocationPattern pattern: invocations) {
 			if(pattern.isVariableId(id))

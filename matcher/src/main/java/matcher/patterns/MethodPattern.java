@@ -89,6 +89,24 @@ public class MethodPattern {
 		else
 			setVariableValueInvocations(id, value);
 	}
+	
+	public void clean() {
+		freeVariable.clean();
+		cleanInvocations();
+		cleanFieldAccesses();
+	}
+
+	private void cleanFieldAccesses() {
+		for(FieldAccessPattern f: fieldAccesses) {
+			f.clean();
+		}
+	}
+
+	private void cleanInvocations() {
+		for(MethodInvocationPattern i: invocations) {
+			i.clean();
+		}
+	}
 
 	private void setVariableValueInvocations(int id, String value) {
 		for(MethodInvocationPattern pattern: invocations) {
