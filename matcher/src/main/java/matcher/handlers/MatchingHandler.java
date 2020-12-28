@@ -55,6 +55,7 @@ public class MatchingHandler {
 		MapUtilities.mergeMaps(result, methods);
 		MapUtilities.mergeMaps(result, constructors);
 		MapUtilities.mergeMaps(result, classes);
+		System.out.println(result);
 		return toPairList(result);
 	}
 

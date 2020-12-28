@@ -69,6 +69,12 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder{
 	public List<FieldAccessInstance> getFieldAccesses() {
 		return fieldAccesses;
 	}
+	
+	public List<String> getFieldAccessesQualifiedNames() {
+		return fieldAccesses.stream()
+							.map(FieldAccessInstance::getQualifiedName)
+							.collect(Collectors.toList());
+	}
 
 	public void setClassInstance(ClassInstance classInstance) {
 		this.classInstance = classInstance;
@@ -135,4 +141,6 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder{
 	public int hashCode() {
 		return getQualifiedName().hashCode();
 	}
+
+
 }

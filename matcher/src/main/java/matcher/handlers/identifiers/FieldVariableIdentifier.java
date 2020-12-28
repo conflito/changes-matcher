@@ -38,14 +38,22 @@ public class FieldVariableIdentifier implements IVariableIdentifier{
 			ConflictPattern conflictPattern){
 		List<Integer> vars = conflictPattern.getFieldsVariableIds();
 		List<String> fields = changeInstance.getFieldsQualifiedNames();
-		return MapUtilities.combine(vars, fields);
+		Map<Integer, List<String>> result = MapUtilities.combine(vars, fields);
+		List<Integer> accessVars = conflictPattern.getFieldAccessVariableIds();
+		List<String> accessFields = changeInstance.getFieldsAccessQualifiedNames();
+		MapUtilities.mergeMaps(result, MapUtilities.combine(accessVars, accessFields));
+		return result;
 	}
 	
 	private Map<Integer, List<String>> fieldsInDeltas(ChangeInstance changeInstance,
 			ConflictPattern conflictPattern){		
 		List<Integer> vars = conflictPattern.getDeltaFieldsVariableIds();
 		List<String> fields = changeInstance.getDeltaFieldsQualifiedNames();
-		return MapUtilities.combine(vars, fields);
+		Map<Integer, List<String>> result = MapUtilities.combine(vars, fields);
+		List<Integer> accessVars = conflictPattern.getDeltaFieldAccessVariableIds();
+		List<String> accessFields = changeInstance.getDeltaFieldsAccessQualifiedNames();
+		MapUtilities.mergeMaps(result, MapUtilities.combine(accessVars, accessFields));
+		return result;
 	}
 	
 	public static void main(String[] args) throws ApplicationException {

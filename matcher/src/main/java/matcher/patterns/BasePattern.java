@@ -79,6 +79,14 @@ public class BasePattern {
 		return distinct(result);
 	}
 	
+	public List<Integer> getFieldAccessesVariableIds() {
+		List<Integer> result = new ArrayList<>();
+		for(ClassPattern c: classPatterns) {
+			result.addAll(c.getFieldAccessesVariableIds());
+		}
+		return distinct(result);
+	}
+	
 	public List<Integer> getClassVariableIds() {
 		List<Integer> result = new ArrayList<>();
 		for(ClassPattern c: classPatterns) {
@@ -114,4 +122,6 @@ public class BasePattern {
 		
 		return result.toString();
 	}
+
+
 }

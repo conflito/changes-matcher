@@ -86,6 +86,22 @@ public class DeltaInstance {
 	}
 	
 	private boolean insertInvocationAction(ActionInstance a) {
-		return a instanceof InsertAction;
+		return !insertFieldAction(a) && !insertConstructorAction(a) &&
+				!insertMethodAction(a) && !insertFieldAccessAction(a) && a instanceof InsertAction;
+	}
+	
+	public List<String> getFieldAccessesQualifiedNames() {
+		return getInsertFieldAccessesQualifiedNames();
+	}
+
+	private List<String> getInsertFieldAccessesQualifiedNames() {
+		return actions.stream()
+				  .filter(a -> insertFieldAccessAction(a))
+				  .map(a -> ((InsertFieldAccessAction) a).getInsertedEntity().getQualifiedName())
+				  .collect(Collectors.toList());
+	}
+
+	private boolean insertFieldAccessAction(ActionInstance a) {
+		return a instanceof InsertFieldAccessAction;
 	}
 }

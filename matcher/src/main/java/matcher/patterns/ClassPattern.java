@@ -121,6 +121,14 @@ public class ClassPattern {
 		return methods.stream().map(MethodPattern::getVariableId).collect(Collectors.toList());
 	}
 	
+	public List<Integer> getFieldAccessesVariableIds() {
+		List<Integer> result = new ArrayList<>();
+		for(MethodPattern m: methods) {
+			result.addAll(m.getFieldAccessesVariableIds());
+		}
+		return result;
+	}
+	
 	public List<Integer> getConstructorsVariableIds(){
 		return constructors.stream().map(ConstructorPattern::getVariableId)
 									.collect(Collectors.toList());

@@ -96,6 +96,11 @@ public class DeltaPattern {
 		return result.stream().distinct().collect(Collectors.toList());
 	}
 	
+	public List<Integer> getFieldAccessesVariableIds() {
+		List<Integer> result = getInsertFieldAccessesVariableIds();
+		return result.stream().distinct().collect(Collectors.toList());
+	}
+
 	public List<Integer> getMethodsVariableIds() {
 		List<Integer> result = getInsertMethodsVariableIds();
 		return result.stream().distinct().collect(Collectors.toList());
@@ -138,6 +143,17 @@ public class DeltaPattern {
 					  .map(a -> ((InsertFieldPatternAction)a).getInsertedEntity().getId())
 					  .collect(Collectors.toList());
 	}
+	
+	private List<Integer> getInsertFieldAccessesVariableIds() {
+		return actions.stream()
+				  .filter(a -> insertFieldAccessAction(a))
+				  .map(a -> ((InsertFieldAccessPatternAction)a).getInsertedEntity().getId())
+				  .collect(Collectors.toList());
+	}
+
+	private boolean insertFieldAccessAction(ActionPattern a) {
+		return a instanceof InsertFieldAccessPatternAction;
+	}
 
 	private boolean insertFieldAction(ActionPattern a) {
 		return a instanceof InsertFieldPatternAction;
@@ -153,7 +169,8 @@ public class DeltaPattern {
 	
 	private boolean insertInvocationAction(ActionPattern a) {
 		return !insertFieldAction(a) && !insertMethodAction(a) &&
-				!insertConstructorAction(a) && a instanceof InsertPatternAction;
+				!insertConstructorAction(a) && !insertFieldAccessAction(a) &&
+				a instanceof InsertPatternAction;
 	}
 
 }

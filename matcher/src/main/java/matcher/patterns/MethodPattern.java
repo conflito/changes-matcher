@@ -57,6 +57,12 @@ public class MethodPattern {
 						  .collect(Collectors.toList());
 	}
 	
+	public List<Integer> getFieldAccessesVariableIds(){
+		return fieldAccesses.stream()
+							.map(FieldAccessPattern::getVariableId)
+							.collect(Collectors.toList());
+	}
+	
 	public boolean isVariableId(int id) {
 		return freeVariable.isId(id);
 	}
