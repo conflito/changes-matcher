@@ -92,20 +92,20 @@ public class DeltaPattern {
 	}
 
 	public List<Integer> getFieldsVariableIds() {
-		List<Integer> result = getInsertFieldsVariableIds();
-		result.addAll(getDeleteFieldsVariableIds());
+		List<Integer> result = getInsertedFieldsVariableIds();
+		result.addAll(getDeletedFieldsVariableIds());
 		return result.stream().distinct().collect(Collectors.toList());
 	}
 
 	public List<Integer> getFieldAccessesVariableIds() {
-		List<Integer> result = getInsertFieldAccessesVariableIds();
-		result.addAll(getDeleteFieldAccessesVariableIds());
+		List<Integer> result = getInsertedFieldAccessesVariableIds();
+		result.addAll(getDeletedFieldAccessesVariableIds());
 		return result.stream().distinct().collect(Collectors.toList());
 	}
 
 	public List<Integer> getMethodsVariableIds() {
-		List<Integer> result = getInsertMethodsVariableIds();
-		result.addAll(getDeleteMethodsVariableIds());
+		List<Integer> result = getInsertedMethodsVariableIds();
+		result.addAll(getDeletedMethodsVariableIds());
 		return result.stream().distinct().collect(Collectors.toList());
 	}
 	
@@ -117,143 +117,143 @@ public class DeltaPattern {
 	
 	private List<Integer> getInsertedMethodInvocationsVariableIds() {
 		return actions.stream()
-					  .filter(a -> insertInvocationAction(a))
+					  .filter(a -> isInsertInvocationAction(a))
 					  .map(a -> ((InsertPatternAction)a).getInsertedEntity().getId())
 					  .collect(Collectors.toList());
 	}
 	
 	private List<Integer> getDeletedMethodInvocationsVariableIds() {
 		return actions.stream()
-					  .filter(a -> deleteInvocationAction(a))
+					  .filter(a -> isDeleteInvocationAction(a))
 					  .map(a -> ((DeletePatternAction)a).getDeletedEntity().getId())
 					  .collect(Collectors.toList());
 	}
 
 	public List<Integer> getConstructorsVariableIds() {
-		List<Integer> result = getInsertConstructorsVariableIds();
-		result.addAll(getDeleteConstructorsVariableIds());
+		List<Integer> result = getInsertedConstructorsVariableIds();
+		result.addAll(getDeletedConstructorsVariableIds());
 		return result.stream().distinct().collect(Collectors.toList());
 	}
 	
-	private List<Integer> getInsertConstructorsVariableIds() {
+	private List<Integer> getInsertedConstructorsVariableIds() {
 		return actions.stream()
-				  .filter(a -> insertConstructorAction(a))
+				  .filter(a -> isInsertConstructorAction(a))
 				  .map(a -> ((InsertConstructorPatternAction)a).getInsertedEntity().getId())
 				  .collect(Collectors.toList());
 	}
 	
-	private List<Integer> getDeleteConstructorsVariableIds(){
+	private List<Integer> getDeletedConstructorsVariableIds(){
 		return actions.stream()
-				  .filter(a -> deleteConstructorAction(a))
+				  .filter(a -> isDeleteConstructorAction(a))
 				  .map(a -> ((DeleteConstructorPatternAction)a).getDeletedEntity().getId())
 				  .collect(Collectors.toList());
 	}
 
-	private List<Integer> getInsertMethodsVariableIds(){
+	private List<Integer> getInsertedMethodsVariableIds(){
 		return actions.stream()
-					  .filter(a -> insertMethodAction(a))
+					  .filter(a -> isInsertMethodAction(a))
 					  .map(a -> ((InsertMethodPatternAction)a).getInsertedEntity().getId())
 					  .collect(Collectors.toList());
 	}
 	
-	private List<Integer> getDeleteMethodsVariableIds(){
+	private List<Integer> getDeletedMethodsVariableIds(){
 		return actions.stream()
-					  .filter(a -> deleteMethodAction(a))
+					  .filter(a -> isDeleteMethodAction(a))
 					  .map(a -> ((DeleteMethodPatternAction)a).getDeletedEntity().getId())
 					  .collect(Collectors.toList());
 	}
 	
-	private List<Integer> getInsertFieldsVariableIds(){
+	private List<Integer> getInsertedFieldsVariableIds(){
 		return actions.stream()
-					  .filter(a -> insertFieldAction(a))
+					  .filter(a -> isInsertFieldAction(a))
 					  .map(a -> ((InsertFieldPatternAction)a).getInsertedEntity().getId())
 					  .collect(Collectors.toList());
 	}
 	
-	private List<Integer> getDeleteFieldsVariableIds() {
+	private List<Integer> getDeletedFieldsVariableIds() {
 		return actions.stream()
-				  .filter(a -> deleteFieldAction(a))
+				  .filter(a -> isDeleteFieldAction(a))
 				  .map(a -> ((DeleteFieldPatternAction)a).getDeletedEntity().getId())
 				  .collect(Collectors.toList());
 	}
 
-	private List<Integer> getInsertFieldAccessesVariableIds() {
+	private List<Integer> getInsertedFieldAccessesVariableIds() {
 		return actions.stream()
-				  .filter(a -> insertFieldAccessAction(a))
+				  .filter(a -> isInsertFieldAccessAction(a))
 				  .map(a -> ((InsertFieldAccessPatternAction)a).getInsertedEntity().getId())
 				  .collect(Collectors.toList());
 	}
 	
-	private List<Integer> getDeleteFieldAccessesVariableIds(){
+	private List<Integer> getDeletedFieldAccessesVariableIds(){
 		return actions.stream()
-				  .filter(a -> deleteFieldAccessAction(a))
+				  .filter(a -> isDeleteFieldAccessAction(a))
 				  .map(a -> ((DeleteFieldAccessPatternAction)a).getDeletedEntity().getId())
 				  .collect(Collectors.toList());
 	}
 
-	private boolean deleteFieldAccessAction(ActionPattern a) {
+	private boolean isDeleteFieldAccessAction(ActionPattern a) {
 		return a instanceof DeleteFieldAccessPatternAction;
 	}
 
-	private boolean insertFieldAccessAction(ActionPattern a) {
+	private boolean isInsertFieldAccessAction(ActionPattern a) {
 		return a instanceof InsertFieldAccessPatternAction;
 	}
 
-	private boolean insertFieldAction(ActionPattern a) {
+	private boolean isInsertFieldAction(ActionPattern a) {
 		return a instanceof InsertFieldPatternAction;
 	}
 	
-	private boolean deleteFieldAction(ActionPattern a) {
+	private boolean isDeleteFieldAction(ActionPattern a) {
 		return a instanceof DeleteFieldPatternAction;
 	}
 	
-	private boolean insertMethodAction(ActionPattern a) {
+	private boolean isInsertMethodAction(ActionPattern a) {
 		return a instanceof InsertMethodPatternAction;
 	}
 	
-	private boolean deleteMethodAction(ActionPattern a) {
+	private boolean isDeleteMethodAction(ActionPattern a) {
 		return a instanceof DeleteMethodPatternAction;
 	}
 	
-	private boolean insertConstructorAction(ActionPattern a) {
+	private boolean isInsertConstructorAction(ActionPattern a) {
 		return a instanceof InsertConstructorPatternAction;
 	}
 	
-	private boolean deleteConstructorAction(ActionPattern a) {
+	private boolean isDeleteConstructorAction(ActionPattern a) {
 		return a instanceof DeleteConstructorPatternAction;
 	}
 	
-	private boolean insertInvocationAction(ActionPattern a) {
-		return !insertFieldAction(a) && !insertMethodAction(a) &&
-				!insertConstructorAction(a) && !insertFieldAccessAction(a) &&
+	private boolean isInsertInvocationAction(ActionPattern a) {
+		return !isInsertFieldAction(a) && !isInsertMethodAction(a) &&
+				!isInsertConstructorAction(a) && !isInsertFieldAccessAction(a) &&
 				a instanceof InsertPatternAction;
 	}
 	
-	private boolean deleteInvocationAction(ActionPattern a) {
-		return !deleteFieldAction(a) && !deleteMethodAction(a) &&
-				!deleteConstructorAction(a) && !deleteFieldAccessAction(a) &&
+	private boolean isDeleteInvocationAction(ActionPattern a) {
+		return !isDeleteFieldAction(a) && !isDeleteMethodAction(a) &&
+				!isDeleteConstructorAction(a) && !isDeleteFieldAccessAction(a) &&
 				a instanceof DeletePatternAction;
 	}
 
 	public List<Integer> getUpdatesVariableIds() {
 		return actions.stream()
-				  .filter(a -> updateAction(a))
+				  .filter(a -> isUpdateAction(a))
 				  .map(a -> ((UpdatePatternAction)a).getEntity().getId())
 				  .collect(Collectors.toList());
 	}
 	
-	private boolean updateAction(ActionPattern a) {
+	private boolean isUpdateAction(ActionPattern a) {
 		return a instanceof UpdatePatternAction;
 	}
 
 	public List<Integer> getVisibilityActionsVariableIds() {
 		return actions.stream()
-				  .filter(a -> visibilityAction(a))
+				  .filter(a -> isVisibilityAction(a))
 				  .map(a -> ((VisibilityActionPattern)a).getEntity().getId())
 				  .collect(Collectors.toList());
 	}
 	
-	private boolean visibilityAction(ActionPattern a) {
+	private boolean isVisibilityAction(ActionPattern a) {
 		return a instanceof VisibilityActionPattern;
 	}
 
