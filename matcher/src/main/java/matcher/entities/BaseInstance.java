@@ -68,5 +68,13 @@ public class BaseInstance {
 		}
 		return result;
 	}
+
+	public List<String> getInvocationsQualifiedNames() {
+		List<String> result = new ArrayList<>();
+		for(ClassInstance ci: classInstances) {
+			result.addAll(ci.getInvocationsQualifiedNames());
+		}
+		return result;
+	}
 	
 }

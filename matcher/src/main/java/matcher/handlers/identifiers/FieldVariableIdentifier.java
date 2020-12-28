@@ -12,6 +12,7 @@ import matcher.patterns.BasePattern;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
+import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
 import matcher.patterns.deltas.DeltaPattern;
 import matcher.patterns.deltas.InsertConstructorPatternAction;
@@ -54,10 +55,12 @@ public class FieldVariableIdentifier implements IVariableIdentifier{
 		classPattern.addFieldPattern(fieldPattern);
 //		ConstructorPattern cPattern = new ConstructorPattern(new FreeVariable(5), null);
 //		classPattern.addConstructorPattern(cPattern);
-//		MethodPattern methodPattern = new MethodPattern(new FreeVariable(3), null);
+		MethodPattern methodPattern = new MethodPattern(new FreeVariable(3), null);
 //		FieldAccessPattern fAccess = new FieldAccessPattern(new FreeVariable(1), null);
 //		methodPattern.addFieldAccessPattern(fAccess);
-//		classPattern.addMethodPattern(methodPattern);
+//		MethodInvocationPattern mip = new MethodInvocationPattern(new FreeVariable(4));
+//		methodPattern.addMethodInvocationPattern(mip);
+		classPattern.addMethodPattern(methodPattern);
 		pattern.addClassPattern(classPattern);
 		
 		DeltaPattern dp = new DeltaPattern();
@@ -79,7 +82,10 @@ public class FieldVariableIdentifier implements IVariableIdentifier{
 		System.out.println(ci);
 		
 		MatchingHandler mh = new MatchingHandler();
-		System.out.println(mh.matchingAssignments(ci, cp));
+//		System.out.println(mh.matchingAssignments(ci, cp));
+		for(List<Pair<Integer,String>> l: mh.matchingAssignments(ci, cp)) {
+			System.out.println(l);
+		}
 	}
 
 }

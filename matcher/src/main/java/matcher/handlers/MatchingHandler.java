@@ -82,7 +82,7 @@ public class MatchingHandler {
 			List<String> varValues = p.getSecond();
 			for(String s: varValues) {
 				curr.add(new Pair<>(varId, s));
-				calculateResults(forwardCheck(values, s), result, new ArrayList<>(curr));
+				calculateResults(new ArrayList<>(values), result, new ArrayList<>(curr));
 				curr.remove(curr.size()-1);
 			}
 		}
@@ -91,19 +91,19 @@ public class MatchingHandler {
 		}
 	}
 	
-	private List<Pair<Integer, List<String>>> forwardCheck(List<Pair<Integer, List<String>>> values, 
-			String value) {
-		List<Pair<Integer, List<String>>> result = new ArrayList<>();
-		for(Pair<Integer, List<String>> p: values) {
-			List<String> trimmedValues = new ArrayList<>();
-			for(String s: p.getSecond()) {
-				if(!s.equals(value))
-					trimmedValues.add(s);
-			}
-			result.add(new Pair<>(p.getFirst(), trimmedValues));
-		}
-		return result;
-	}
+//	private List<Pair<Integer, List<String>>> forwardCheck(List<Pair<Integer, List<String>>> values, 
+//			String value) {
+//		List<Pair<Integer, List<String>>> result = new ArrayList<>();
+//		for(Pair<Integer, List<String>> p: values) {
+//			List<String> trimmedValues = new ArrayList<>();
+//			for(String s: p.getSecond()) {
+//				if(!s.equals(value))
+//					trimmedValues.add(s);
+//			}
+//			result.add(new Pair<>(p.getFirst(), trimmedValues));
+//		}
+//		return result;
+//	}
 
 
 }

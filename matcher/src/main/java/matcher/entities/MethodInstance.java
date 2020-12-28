@@ -2,6 +2,7 @@ package matcher.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import matcher.entities.deltas.Deletable;
 import matcher.entities.deltas.Holder;
@@ -75,6 +76,10 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder{
 	
 	public String getQualifiedName() {
 		return classInstance.getQualifiedName() + "." + getName() + parametersToString();
+	}
+
+	public List<String> getInvocationsQualifiedNames() {
+		return invocations.stream().map(i -> i.getQualifiedName()).collect(Collectors.toList());
 	}
 	
 	public String getSimpleSignature() {

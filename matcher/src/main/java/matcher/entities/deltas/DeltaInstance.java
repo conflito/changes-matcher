@@ -73,4 +73,19 @@ public class DeltaInstance {
 	private boolean insertConstructorAction(ActionInstance a) {
 		return a instanceof InsertConstructorAction;
 	}
+
+	public List<String> getInvocationsQualifiedNames() {
+		return getInsertInvocationsQualifiedNames();
+	}
+
+	private List<String> getInsertInvocationsQualifiedNames() {
+		return actions.stream()
+				  .filter(a -> insertInvocationAction(a))
+				  .map(a -> ((InsertAction) a).getInsertedEntity().getQualifiedName())
+				  .collect(Collectors.toList());
+	}
+	
+	private boolean insertInvocationAction(ActionInstance a) {
+		return a instanceof InsertAction;
+	}
 }

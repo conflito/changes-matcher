@@ -2,6 +2,7 @@ package matcher.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import matcher.entities.deltas.Deletable;
 import matcher.entities.deltas.Holder;
@@ -52,6 +53,10 @@ public class ConstructorInstance implements Insertable, Deletable, Visible, Hold
 		return classInstance.getQualifiedName() + "." 
 					  							+ classInstance.getName() 
 					  							+ parametersToString();
+	}
+	
+	public List<String> getInvocationsQualifiedNames() {
+		return invocations.stream().map(i -> i.getQualifiedName()).collect(Collectors.toList());
 	}
 	
 	public String getSimpleName() {

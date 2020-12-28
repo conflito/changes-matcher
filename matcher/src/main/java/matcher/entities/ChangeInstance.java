@@ -45,6 +45,10 @@ public class ChangeInstance {
 	public List<String> getMethodsQualifiedNames() {
 		return baseInstance.getMethodsQualifiedNames();
 	}
+	
+	public List<String> getInvocationsQualifiedNames() {
+		return baseInstance.getInvocationsQualifiedNames();
+	}	
 
 	public List<String> getConstructorsQualifiedNames() {
 		return baseInstance.getConstructorsQualifiedNames();
@@ -73,6 +77,13 @@ public class ChangeInstance {
 		List<String> secondDeltaConstructors = secondDelta.getConstructorsQualifiedNames();
 		firstDeltaConstructors.addAll(secondDeltaConstructors);
 		return firstDeltaConstructors.stream().distinct().collect(Collectors.toList());
-	}	
+	}
+
+	public List<String> getDeltaInvocationsQualifiedNames() {
+		List<String> firstDeltaInvocations = firstDelta.getInvocationsQualifiedNames();
+		List<String> secondDeltaInvocations = secondDelta.getInvocationsQualifiedNames();
+		firstDeltaInvocations.addAll(secondDeltaInvocations);
+		return firstDeltaInvocations.stream().distinct().collect(Collectors.toList());
+	}
 	
 }

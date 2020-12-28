@@ -101,6 +101,18 @@ public class DeltaPattern {
 		return result.stream().distinct().collect(Collectors.toList());
 	}
 	
+	public List<Integer> getInvocationsVariableIds() {
+		List<Integer> result = getMethodInvocationsVariableIds();
+		return result.stream().distinct().collect(Collectors.toList());
+	}
+	
+	private List<Integer> getMethodInvocationsVariableIds() {
+		return actions.stream()
+					  .filter(a -> insertInvocationAction(a))
+					  .map(a -> ((InsertPatternAction)a).getInsertedEntity().getId())
+					  .collect(Collectors.toList());
+	}
+
 	public List<Integer> getConstructorsVariableIds() {
 		List<Integer> result = getInsertConstructorsVariableIds();
 		return result.stream().distinct().collect(Collectors.toList());
@@ -137,6 +149,11 @@ public class DeltaPattern {
 	
 	private boolean insertConstructorAction(ActionPattern a) {
 		return a instanceof InsertConstructorPatternAction;
+	}
+	
+	private boolean insertInvocationAction(ActionPattern a) {
+		return !insertFieldAction(a) && !insertMethodAction(a) &&
+				!insertConstructorAction(a) && a instanceof InsertPatternAction;
 	}
 
 }

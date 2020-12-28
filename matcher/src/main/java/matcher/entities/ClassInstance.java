@@ -127,6 +127,17 @@ public class ClassInstance implements Holder{
 		return result;
 	}
 	
+	public List<String> getInvocationsQualifiedNames() {
+		List<String> result = new ArrayList<>();
+		for(MethodInstance m: methods) {
+			result.addAll(m.getInvocationsQualifiedNames());
+		}
+		for(ConstructorInstance c: constructors) {
+			result.addAll(c.getInvocationsQualifiedNames());
+		}
+		return result;
+	}
+	
 	public List<String> getClassesQualifiedNames() {
 		List<String> result = new ArrayList<>();
 		result.add(getQualifiedName());

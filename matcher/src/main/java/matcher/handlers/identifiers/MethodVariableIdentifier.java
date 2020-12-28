@@ -20,14 +20,22 @@ public class MethodVariableIdentifier implements IVariableIdentifier {
 			ConflictPattern conflictPattern){
 		List<Integer> vars = conflictPattern.getMethodVariableIds();
 		List<String> methods = changeInstance.getMethodsQualifiedNames();
-		return MapUtilities.combine(vars, methods);
+		Map<Integer, List<String>> result = MapUtilities.combine(vars, methods);
+		List<Integer> invoVars = conflictPattern.getInvocationsVariableIds();
+		List<String> invoMethods = changeInstance.getInvocationsQualifiedNames();
+		MapUtilities.mergeMaps(result, MapUtilities.combine(invoVars, invoMethods));
+		return result;
 	}
 	
 	private Map<Integer, List<String>> methodsInDeltas(ChangeInstance changeInstance,
 			ConflictPattern conflictPattern){
 		List<Integer> vars = conflictPattern.getDeltaMethodsVariableIds();
 		List<String> methods = changeInstance.getDeltaMethodsQualifiedNames();
-		return MapUtilities.combine(vars, methods);
+		Map<Integer, List<String>> result = MapUtilities.combine(vars, methods);
+		List<Integer> invoVars = conflictPattern.getDeltaInvocationsVariableIds();
+		List<String> invoMethods = changeInstance.getDeltaInvocationsQualifiedNames();
+		MapUtilities.mergeMaps(result, MapUtilities.combine(invoVars, invoMethods));
+		return result;
 	}
 
 }
