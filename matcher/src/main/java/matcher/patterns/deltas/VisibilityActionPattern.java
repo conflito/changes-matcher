@@ -22,6 +22,10 @@ public class VisibilityActionPattern extends ActionPattern{
 		this.entity = entity;
 	}
 	
+	public FreeVariable getEntity() {
+		return entity;
+	}
+
 	public boolean isVisibilityInsert() {
 		return getAction() == Action.INSERT;
 	}
