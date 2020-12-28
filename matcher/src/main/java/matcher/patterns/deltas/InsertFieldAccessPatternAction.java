@@ -2,7 +2,6 @@ package matcher.patterns.deltas;
 
 import matcher.entities.FieldAccessType;
 import matcher.entities.deltas.ActionInstance;
-import matcher.entities.deltas.InsertAction;
 import matcher.entities.deltas.InsertFieldAccessAction;
 import matcher.patterns.FreeVariable;
 
