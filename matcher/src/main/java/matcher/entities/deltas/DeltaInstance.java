@@ -30,166 +30,166 @@ public class DeltaInstance {
 	}
 
 	public List<String> getFieldsQualifiedNames() {
-		List<String> result = getInsertFieldsQualifiedNames();
-		result.addAll(getDeleteFieldsQualifiedNames());
+		List<String> result = getInsertedFieldsQualifiedNames();
+		result.addAll(getDeletedFieldsQualifiedNames());
 		return result;
 	}
 
-	private List<String> getInsertFieldsQualifiedNames() {
+	private List<String> getInsertedFieldsQualifiedNames() {
 		return actions.stream()
-					  .filter(a -> insertFieldAction(a))
+					  .filter(a -> isInsertFieldAction(a))
 					  .map(a -> ((InsertFieldAction) a).getInsertedEntity().getQualifiedName())
 					  .collect(Collectors.toList());
 	}
 	
-	private List<String> getDeleteFieldsQualifiedNames(){
+	private List<String> getDeletedFieldsQualifiedNames(){
 		return actions.stream()
-				  .filter(a -> deleteFieldAction(a))
+				  .filter(a -> isDeleteFieldAction(a))
 				  .map(a -> ((DeleteFieldAction) a).getDeletedEntity().getQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
-	private boolean deleteFieldAction(ActionInstance a) {
+	private boolean isDeleteFieldAction(ActionInstance a) {
 		return a instanceof DeleteFieldAction;
 	}
 
-	private boolean insertFieldAction(ActionInstance a) {
+	private boolean isInsertFieldAction(ActionInstance a) {
 		return a instanceof InsertFieldAction;
 	}
 
 	public List<String> getMethodsQualifiedNames() {
-		List<String> result = getInsertMethodsQualifiedNames();
-		result.addAll(getDeleteMethodsQualifiedNames());
+		List<String> result = getInsertedMethodsQualifiedNames();
+		result.addAll(getDeletedMethodsQualifiedNames());
 		return result;
 	}
 
-	private List<String> getInsertMethodsQualifiedNames() {
+	private List<String> getInsertedMethodsQualifiedNames() {
 		return actions.stream()
-				  .filter(a -> insertMethodAction(a))
+				  .filter(a -> isInsertMethodAction(a))
 				  .map(a -> ((InsertMethodAction) a).getInsertedEntity().getQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
-	private List<String> getDeleteMethodsQualifiedNames() {
+	private List<String> getDeletedMethodsQualifiedNames() {
 		return actions.stream()
-				  .filter(a -> deleteMethodAction(a))
+				  .filter(a -> isDeleteMethodAction(a))
 				  .map(a -> ((DeleteMethodAction) a).getDeletedEntity().getQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
-	private boolean insertMethodAction(ActionInstance a) {
+	private boolean isInsertMethodAction(ActionInstance a) {
 		return a instanceof InsertMethodAction;
 	}
 	
-	private boolean deleteMethodAction(ActionInstance a) {
+	private boolean isDeleteMethodAction(ActionInstance a) {
 		return a instanceof DeleteMethodAction;
 	}
 	
 	public List<String> getConstructorsQualifiedNames() {
-		List<String> result = getInsertConstructorsQualifiedNames();
-		result.addAll(getDeleteConstructorsQualifiedNames());
+		List<String> result = getInsertedConstructorsQualifiedNames();
+		result.addAll(getDeletedConstructorsQualifiedNames());
 		return result;
 	}
 	
-	private List<String> getInsertConstructorsQualifiedNames() {
+	private List<String> getInsertedConstructorsQualifiedNames() {
 		return actions.stream()
-				  .filter(a -> insertConstructorAction(a))
+				  .filter(a -> isInsertConstructorAction(a))
 				  .map(a -> ((InsertConstructorAction) a).getInsertedEntity().getQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
-	private List<String> getDeleteConstructorsQualifiedNames() {
+	private List<String> getDeletedConstructorsQualifiedNames() {
 		return actions.stream()
-				  .filter(a -> deleteConstructorAction(a))
+				  .filter(a -> isDeleteConstructorAction(a))
 				  .map(a -> ((DeleteConstructorAction) a).getDeletedEntity().getQualifiedName())
 				  .collect(Collectors.toList());
 	}
 
-	private boolean insertConstructorAction(ActionInstance a) {
+	private boolean isInsertConstructorAction(ActionInstance a) {
 		return a instanceof InsertConstructorAction;
 	}
 	
-	private boolean deleteConstructorAction(ActionInstance a) {
+	private boolean isDeleteConstructorAction(ActionInstance a) {
 		return a instanceof DeleteConstructorAction;
 	}
 
 	public List<String> getInvocationsQualifiedNames() {
-		List<String> result = getInsertInvocationsQualifiedNames();
-		result.addAll(getDeleteInvocationsQualifiedNames());
+		List<String> result = getInsertedInvocationsQualifiedNames();
+		result.addAll(getDeletedInvocationsQualifiedNames());
 		return result;
 	}
 
-	private List<String> getInsertInvocationsQualifiedNames() {
+	private List<String> getInsertedInvocationsQualifiedNames() {
 		return actions.stream()
-				  .filter(a -> insertInvocationAction(a))
+				  .filter(a -> isInsertInvocationAction(a))
 				  .map(a -> ((InsertAction) a).getInsertedEntity().getQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
-	private List<String> getDeleteInvocationsQualifiedNames() {
+	private List<String> getDeletedInvocationsQualifiedNames() {
 		return actions.stream()
-				  .filter(a -> deleteInvocationAction(a))
+				  .filter(a -> isDeleteInvocationAction(a))
 				  .map(a -> ((DeleteAction) a).getDeletedEntity().getQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
-	private boolean insertInvocationAction(ActionInstance a) {
-		return !insertFieldAction(a) && !insertConstructorAction(a) &&
-				!insertMethodAction(a) && !insertFieldAccessAction(a) && a instanceof InsertAction;
+	private boolean isInsertInvocationAction(ActionInstance a) {
+		return !isInsertFieldAction(a) && !isInsertConstructorAction(a) &&
+				!isInsertMethodAction(a) && !isInsertFieldAccessAction(a) && a instanceof InsertAction;
 	}
 	
-	private boolean deleteInvocationAction(ActionInstance a) {
-		return !deleteFieldAction(a) && !deleteConstructorAction(a) &&
-				!deleteMethodAction(a) && !deleteFieldAccessAction(a) && a instanceof DeleteAction;
+	private boolean isDeleteInvocationAction(ActionInstance a) {
+		return !isDeleteFieldAction(a) && !isDeleteConstructorAction(a) &&
+				!isDeleteMethodAction(a) && !isDeleteFieldAccessAction(a) && a instanceof DeleteAction;
 	}
 	
 	public List<String> getFieldAccessesQualifiedNames() {
-		List<String> result = getInsertFieldAccessesQualifiedNames();
-		result.addAll(getDeleteFieldAccessesQualifiedNames());
+		List<String> result = getInsertedFieldAccessesQualifiedNames();
+		result.addAll(getDeletedFieldAccessesQualifiedNames());
 		return result;
 	}
 
-	private List<String> getInsertFieldAccessesQualifiedNames() {
+	private List<String> getInsertedFieldAccessesQualifiedNames() {
 		return actions.stream()
-				  .filter(a -> insertFieldAccessAction(a))
+				  .filter(a -> isInsertFieldAccessAction(a))
 				  .map(a -> ((InsertFieldAccessAction) a).getInsertedEntity().getQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
-	private List<String> getDeleteFieldAccessesQualifiedNames() {
+	private List<String> getDeletedFieldAccessesQualifiedNames() {
 		return actions.stream()
-				  .filter(a -> deleteFieldAccessAction(a))
+				  .filter(a -> isDeleteFieldAccessAction(a))
 				  .map(a -> ((DeleteFieldAccessAction) a).getDeletedEntity().getQualifiedName())
 				  .collect(Collectors.toList());
 	}
 
-	private boolean insertFieldAccessAction(ActionInstance a) {
+	private boolean isInsertFieldAccessAction(ActionInstance a) {
 		return a instanceof InsertFieldAccessAction;
 	}
 	
-	private boolean deleteFieldAccessAction(ActionInstance a) {
+	private boolean isDeleteFieldAccessAction(ActionInstance a) {
 		return a instanceof DeleteFieldAccessAction;
 	}
 
 	public List<String> getUpdatesQualifiedNames() {
 		return actions.stream()
-				  .filter(a -> updateAction(a))
+				  .filter(a -> isUpdateAction(a))
 				  .map(a -> ((UpdateAction) a).getEntity().getQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
-	private boolean updateAction(ActionInstance a) {
+	private boolean isUpdateAction(ActionInstance a) {
 		return a instanceof UpdateAction;
 	}
 
 	public List<String> getVisibilityActionsQualifiedNames() {
 		return actions.stream()
-				  .filter(a -> visibilityAction(a))
+				  .filter(a -> isVisibilityAction(a))
 				  .map(a -> ((VisibilityAction) a).getEntity().getQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
-	private boolean visibilityAction(ActionInstance a) {
+	private boolean isVisibilityAction(ActionInstance a) {
 		return a instanceof VisibilityAction;
 	}
 }
