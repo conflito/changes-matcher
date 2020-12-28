@@ -93,11 +93,13 @@ public class DeltaPattern {
 
 	public List<Integer> getFieldsVariableIds() {
 		List<Integer> result = getInsertFieldsVariableIds();
+		result.addAll(getDeleteFieldsVariableIds());
 		return result.stream().distinct().collect(Collectors.toList());
 	}
-	
+
 	public List<Integer> getFieldAccessesVariableIds() {
 		List<Integer> result = getInsertFieldAccessesVariableIds();
+		result.addAll(getDeleteFieldAccessesVariableIds());
 		return result.stream().distinct().collect(Collectors.toList());
 	}
 
@@ -144,11 +146,29 @@ public class DeltaPattern {
 					  .collect(Collectors.toList());
 	}
 	
+	private List<Integer> getDeleteFieldsVariableIds() {
+		return actions.stream()
+				  .filter(a -> deleteFieldAction(a))
+				  .map(a -> ((DeleteFieldPatternAction)a).getDeletedEntity().getId())
+				  .collect(Collectors.toList());
+	}
+
 	private List<Integer> getInsertFieldAccessesVariableIds() {
 		return actions.stream()
 				  .filter(a -> insertFieldAccessAction(a))
 				  .map(a -> ((InsertFieldAccessPatternAction)a).getInsertedEntity().getId())
 				  .collect(Collectors.toList());
+	}
+	
+	private List<Integer> getDeleteFieldAccessesVariableIds(){
+		return actions.stream()
+				  .filter(a -> deleteFieldAccessAction(a))
+				  .map(a -> ((DeleteFieldAccessPatternAction)a).getDeletedEntity().getId())
+				  .collect(Collectors.toList());
+	}
+
+	private boolean deleteFieldAccessAction(ActionPattern a) {
+		return a instanceof DeleteFieldAccessPatternAction;
 	}
 
 	private boolean insertFieldAccessAction(ActionPattern a) {
@@ -157,6 +177,10 @@ public class DeltaPattern {
 
 	private boolean insertFieldAction(ActionPattern a) {
 		return a instanceof InsertFieldPatternAction;
+	}
+	
+	private boolean deleteFieldAction(ActionPattern a) {
+		return a instanceof DeleteFieldPatternAction;
 	}
 	
 	private boolean insertMethodAction(ActionPattern a) {

@@ -30,7 +30,9 @@ public class DeltaInstance {
 	}
 
 	public List<String> getFieldsQualifiedNames() {
-		return getInsertFieldsQualifiedNames();
+		List<String> result = getInsertFieldsQualifiedNames();
+		result.addAll(getDeleteFieldsQualifiedNames());
+		return result;
 	}
 
 	private List<String> getInsertFieldsQualifiedNames() {
@@ -40,6 +42,17 @@ public class DeltaInstance {
 					  .collect(Collectors.toList());
 	}
 	
+	private List<String> getDeleteFieldsQualifiedNames(){
+		return actions.stream()
+				  .filter(a -> deleteFieldAction(a))
+				  .map(a -> ((DeleteFieldAction) a).getDeletedEntity().getQualifiedName())
+				  .collect(Collectors.toList());
+	}
+	
+	private boolean deleteFieldAction(ActionInstance a) {
+		return a instanceof DeleteFieldAction;
+	}
+
 	private boolean insertFieldAction(ActionInstance a) {
 		return a instanceof InsertFieldAction;
 	}
@@ -91,7 +104,9 @@ public class DeltaInstance {
 	}
 	
 	public List<String> getFieldAccessesQualifiedNames() {
-		return getInsertFieldAccessesQualifiedNames();
+		List<String> result = getInsertFieldAccessesQualifiedNames();
+		result.addAll(getDeleteFieldAccessesQualifiedNames());
+		return result;
 	}
 
 	private List<String> getInsertFieldAccessesQualifiedNames() {
@@ -100,8 +115,19 @@ public class DeltaInstance {
 				  .map(a -> ((InsertFieldAccessAction) a).getInsertedEntity().getQualifiedName())
 				  .collect(Collectors.toList());
 	}
+	
+	private List<String> getDeleteFieldAccessesQualifiedNames() {
+		return actions.stream()
+				  .filter(a -> deleteFieldAccessAction(a))
+				  .map(a -> ((DeleteFieldAccessAction) a).getDeletedEntity().getQualifiedName())
+				  .collect(Collectors.toList());
+	}
 
 	private boolean insertFieldAccessAction(ActionInstance a) {
 		return a instanceof InsertFieldAccessAction;
+	}
+	
+	private boolean deleteFieldAccessAction(ActionInstance a) {
+		return a instanceof DeleteFieldAccessAction;
 	}
 }
