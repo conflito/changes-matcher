@@ -77,6 +77,10 @@ public class ConflictPattern {
 		return firstDelta.hasDeleteFieldActions() || secondDelta.hasDeleteFieldActions();
 	}
 	
+	public boolean hasDeleteMethodActions() {
+		return firstDelta.hasDeleteMethodActions() || secondDelta.hasDeleteMethodActions();
+	}
+	
 	public boolean hasUpdateActions() {
 		return firstDelta.hasUpdateActions() || secondDelta.hasUpdateActions();
 	}
@@ -147,5 +151,7 @@ public class ConflictPattern {
 		firstDeltaConstructors.addAll(secondDeltaConstructors);
 		return firstDeltaConstructors.stream().distinct().collect(Collectors.toList());
 	}
+
+
 
 }
