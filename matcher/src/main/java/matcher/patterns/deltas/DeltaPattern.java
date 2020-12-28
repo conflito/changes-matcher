@@ -70,6 +70,10 @@ public class DeltaPattern {
 		return actions.stream().anyMatch(a -> a instanceof DeleteConstructorPatternAction); 
 	}
 	
+	public boolean hasDeleteFieldAccessActions() {
+		return actions.stream().anyMatch(a -> a instanceof DeleteFieldAccessPatternAction); 
+	}
+	
 	public boolean hasUpdateActions() {
 		return actions.stream().anyMatch(a -> a instanceof UpdatePatternAction);
 	}

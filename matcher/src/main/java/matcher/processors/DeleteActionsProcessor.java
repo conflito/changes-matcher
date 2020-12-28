@@ -13,6 +13,7 @@ import matcher.entities.MethodInvocationInstance;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.DeleteAction;
 import matcher.entities.deltas.DeleteConstructorAction;
+import matcher.entities.deltas.DeleteFieldAccessAction;
 import matcher.entities.deltas.DeleteFieldAction;
 import matcher.entities.deltas.DeleteMethodAction;
 import matcher.patterns.ConflictPattern;
@@ -89,7 +90,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtFieldRead(CtFieldRead<T> fieldRead) {
-		if(getConflictPattern().hasDeleteActions()) {
+		if(getConflictPattern().hasDeleteFieldAccessActions()) {
 			String fieldQualifiedName = getMethodProcessor()
 					.getFieldQualifiedName(fieldRead.getVariable());
 			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.READ);
@@ -98,7 +99,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 				CtMethod<?> method = possibleCaller.get();
 				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method, classInstance);
-				ActionInstance result = new DeleteAction(fai, methodInstance);
+				ActionInstance result = new DeleteFieldAccessAction(fai, methodInstance, fai.getAccessType());
 				setResult(result);
 			}
 		}
@@ -106,7 +107,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtFieldWrite(CtFieldWrite<T> fieldWrite) {
-		if(getConflictPattern().hasDeleteActions()) {
+		if(getConflictPattern().hasDeleteFieldAccessActions()) {
 			String fieldQualifiedName = getMethodProcessor()
 					.getFieldQualifiedName(fieldWrite.getVariable());
 			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.WRITE);
@@ -115,7 +116,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 				CtMethod<?> method = possibleCaller.get();
 				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method, classInstance);
-				ActionInstance result = new DeleteAction(fai, methodInstance);
+				ActionInstance result = new DeleteFieldAccessAction(fai, methodInstance, fai.getAccessType());
 				setResult(result);
 			}
 		}

@@ -85,6 +85,10 @@ public class ConflictPattern {
 		return firstDelta.hasDeleteConstructorsActions() || secondDelta.hasDeleteConstructorsActions();
 	}
 	
+	public boolean hasDeleteFieldAccessActions() {
+		return firstDelta.hasDeleteFieldAccessActions() || secondDelta.hasDeleteFieldAccessActions();
+	}
+	
 	public boolean hasUpdateActions() {
 		return firstDelta.hasUpdateActions() || secondDelta.hasUpdateActions();
 	}
