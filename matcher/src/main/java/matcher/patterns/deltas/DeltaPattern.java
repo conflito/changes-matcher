@@ -105,18 +105,27 @@ public class DeltaPattern {
 
 	public List<Integer> getMethodsVariableIds() {
 		List<Integer> result = getInsertMethodsVariableIds();
+		result.addAll(getDeleteMethodsVariableIds());
 		return result.stream().distinct().collect(Collectors.toList());
 	}
 	
 	public List<Integer> getInvocationsVariableIds() {
-		List<Integer> result = getMethodInvocationsVariableIds();
+		List<Integer> result = getInsertedMethodInvocationsVariableIds();
+		result.addAll(getDeletedMethodInvocationsVariableIds());
 		return result.stream().distinct().collect(Collectors.toList());
 	}
 	
-	private List<Integer> getMethodInvocationsVariableIds() {
+	private List<Integer> getInsertedMethodInvocationsVariableIds() {
 		return actions.stream()
 					  .filter(a -> insertInvocationAction(a))
 					  .map(a -> ((InsertPatternAction)a).getInsertedEntity().getId())
+					  .collect(Collectors.toList());
+	}
+	
+	private List<Integer> getDeletedMethodInvocationsVariableIds() {
+		return actions.stream()
+					  .filter(a -> deleteInvocationAction(a))
+					  .map(a -> ((DeletePatternAction)a).getDeletedEntity().getId())
 					  .collect(Collectors.toList());
 	}
 
@@ -144,6 +153,13 @@ public class DeltaPattern {
 		return actions.stream()
 					  .filter(a -> insertMethodAction(a))
 					  .map(a -> ((InsertMethodPatternAction)a).getInsertedEntity().getId())
+					  .collect(Collectors.toList());
+	}
+	
+	private List<Integer> getDeleteMethodsVariableIds(){
+		return actions.stream()
+					  .filter(a -> deleteMethodAction(a))
+					  .map(a -> ((DeleteMethodPatternAction)a).getDeletedEntity().getId())
 					  .collect(Collectors.toList());
 	}
 	
@@ -195,6 +211,10 @@ public class DeltaPattern {
 		return a instanceof InsertMethodPatternAction;
 	}
 	
+	private boolean deleteMethodAction(ActionPattern a) {
+		return a instanceof DeleteMethodPatternAction;
+	}
+	
 	private boolean insertConstructorAction(ActionPattern a) {
 		return a instanceof InsertConstructorPatternAction;
 	}
@@ -207,6 +227,12 @@ public class DeltaPattern {
 		return !insertFieldAction(a) && !insertMethodAction(a) &&
 				!insertConstructorAction(a) && !insertFieldAccessAction(a) &&
 				a instanceof InsertPatternAction;
+	}
+	
+	private boolean deleteInvocationAction(ActionPattern a) {
+		return !deleteFieldAction(a) && !deleteMethodAction(a) &&
+				!deleteConstructorAction(a) && !deleteFieldAccessAction(a) &&
+				a instanceof DeletePatternAction;
 	}
 
 }

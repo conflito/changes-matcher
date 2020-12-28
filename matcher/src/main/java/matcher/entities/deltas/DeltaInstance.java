@@ -58,7 +58,9 @@ public class DeltaInstance {
 	}
 
 	public List<String> getMethodsQualifiedNames() {
-		return getInsertMethodsQualifiedNames();
+		List<String> result = getInsertMethodsQualifiedNames();
+		result.addAll(getDeleteMethodsQualifiedNames());
+		return result;
 	}
 
 	private List<String> getInsertMethodsQualifiedNames() {
@@ -68,8 +70,19 @@ public class DeltaInstance {
 				  .collect(Collectors.toList());
 	}
 	
+	private List<String> getDeleteMethodsQualifiedNames() {
+		return actions.stream()
+				  .filter(a -> deleteMethodAction(a))
+				  .map(a -> ((DeleteMethodAction) a).getDeletedEntity().getQualifiedName())
+				  .collect(Collectors.toList());
+	}
+	
 	private boolean insertMethodAction(ActionInstance a) {
 		return a instanceof InsertMethodAction;
+	}
+	
+	private boolean deleteMethodAction(ActionInstance a) {
+		return a instanceof DeleteMethodAction;
 	}
 	
 	public List<String> getConstructorsQualifiedNames() {
@@ -101,7 +114,9 @@ public class DeltaInstance {
 	}
 
 	public List<String> getInvocationsQualifiedNames() {
-		return getInsertInvocationsQualifiedNames();
+		List<String> result = getInsertInvocationsQualifiedNames();
+		result.addAll(getDeleteInvocationsQualifiedNames());
+		return result;
 	}
 
 	private List<String> getInsertInvocationsQualifiedNames() {
@@ -111,9 +126,21 @@ public class DeltaInstance {
 				  .collect(Collectors.toList());
 	}
 	
+	private List<String> getDeleteInvocationsQualifiedNames() {
+		return actions.stream()
+				  .filter(a -> deleteInvocationAction(a))
+				  .map(a -> ((DeleteAction) a).getDeletedEntity().getQualifiedName())
+				  .collect(Collectors.toList());
+	}
+	
 	private boolean insertInvocationAction(ActionInstance a) {
 		return !insertFieldAction(a) && !insertConstructorAction(a) &&
 				!insertMethodAction(a) && !insertFieldAccessAction(a) && a instanceof InsertAction;
+	}
+	
+	private boolean deleteInvocationAction(ActionInstance a) {
+		return !deleteFieldAction(a) && !deleteConstructorAction(a) &&
+				!deleteMethodAction(a) && !deleteFieldAccessAction(a) && a instanceof DeleteAction;
 	}
 	
 	public List<String> getFieldAccessesQualifiedNames() {
