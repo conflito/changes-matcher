@@ -43,6 +43,7 @@ public class MatchingHandler {
 			assignValues(cp, l);
 			if(cp.matches(ci))
 				result.add(l);
+			cp.clean();
 		}
 		return result;
 	}
