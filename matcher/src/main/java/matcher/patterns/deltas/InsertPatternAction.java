@@ -19,6 +19,10 @@ public class InsertPatternAction extends ActionPattern {
 	public FreeVariable getInsertedEntity() {
 		return insertedEntity;
 	}
+	
+	public int getInsertedEntityId() {
+		return insertedEntity.getId();
+	}
 
 	public FreeVariable getHolderEntity() {
 		return holderEntity;
@@ -36,8 +40,8 @@ public class InsertPatternAction extends ActionPattern {
 	
 	private boolean matches(InsertAction action) {
 		return getAction() == action.getAction() &&
-			   insertedEntity.matches(action.getInsertedEntity().getQualifiedName()) &&
-			   holderEntity.matches(action.getHolderEntity().getQualifiedName());
+			   insertedEntity.matches(action.getInsertedEntityQualifiedName()) &&
+			   holderEntity.matches(action.getHolderEntityQualifiedName());
 	}
 
 	@Override

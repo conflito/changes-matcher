@@ -22,8 +22,8 @@ public class VisibilityActionPattern extends ActionPattern{
 		this.entity = entity;
 	}
 	
-	public FreeVariable getEntity() {
-		return entity;
+	public int getEntityId() {
+		return entity.getId();
 	}
 
 	public boolean isVisibilityInsert() {
@@ -55,7 +55,7 @@ public class VisibilityActionPattern extends ActionPattern{
 	}
 	
 	private boolean matches(VisibilityAction action) {
-		String entityName = action.getEntity().getQualifiedName();
+		String entityName = action.getEntityQualifiedName();
 		if(isVisibilityInsert() && action.isVisibilityInsert()) {
 			return (newVisibility == null || newVisibility == action.getNewVisibility()) &&
 				   entity.matches(entityName);

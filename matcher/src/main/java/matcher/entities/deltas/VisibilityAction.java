@@ -15,9 +15,9 @@ public class VisibilityAction extends ActionInstance {
 		this.oldVisibility = oldVisibility;
 		this.newVisibility = newVisibility;
 	}
-
-	public Visible getEntity() {
-		return entity;
+	
+	public String getEntityQualifiedName() {
+		return entity.getQualifiedName();
 	}
 
 	public Visibility getOldVisibility() {

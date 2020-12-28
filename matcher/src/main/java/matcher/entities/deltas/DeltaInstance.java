@@ -38,14 +38,14 @@ public class DeltaInstance {
 	private List<String> getInsertedFieldsQualifiedNames() {
 		return actions.stream()
 					  .filter(a -> isInsertFieldAction(a))
-					  .map(a -> ((InsertFieldAction) a).getInsertedEntity().getQualifiedName())
+					  .map(a -> ((InsertFieldAction) a).getInsertedEntityQualifiedName())
 					  .collect(Collectors.toList());
 	}
 	
 	private List<String> getDeletedFieldsQualifiedNames(){
 		return actions.stream()
 				  .filter(a -> isDeleteFieldAction(a))
-				  .map(a -> ((DeleteFieldAction) a).getDeletedEntity().getQualifiedName())
+				  .map(a -> ((DeleteFieldAction) a).getDeletedEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
@@ -66,14 +66,14 @@ public class DeltaInstance {
 	private List<String> getInsertedMethodsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isInsertMethodAction(a))
-				  .map(a -> ((InsertMethodAction) a).getInsertedEntity().getQualifiedName())
+				  .map(a -> ((InsertMethodAction) a).getInsertedEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
 	private List<String> getDeletedMethodsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isDeleteMethodAction(a))
-				  .map(a -> ((DeleteMethodAction) a).getDeletedEntity().getQualifiedName())
+				  .map(a -> ((DeleteMethodAction) a).getDeletedEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
@@ -94,14 +94,14 @@ public class DeltaInstance {
 	private List<String> getInsertedConstructorsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isInsertConstructorAction(a))
-				  .map(a -> ((InsertConstructorAction) a).getInsertedEntity().getQualifiedName())
+				  .map(a -> ((InsertConstructorAction) a).getInsertedEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
 	private List<String> getDeletedConstructorsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isDeleteConstructorAction(a))
-				  .map(a -> ((DeleteConstructorAction) a).getDeletedEntity().getQualifiedName())
+				  .map(a -> ((DeleteConstructorAction) a).getDeletedEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 
@@ -122,14 +122,14 @@ public class DeltaInstance {
 	private List<String> getInsertedInvocationsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isInsertInvocationAction(a))
-				  .map(a -> ((InsertAction) a).getInsertedEntity().getQualifiedName())
+				  .map(a -> ((InsertAction) a).getInsertedEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
 	private List<String> getDeletedInvocationsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isDeleteInvocationAction(a))
-				  .map(a -> ((DeleteAction) a).getDeletedEntity().getQualifiedName())
+				  .map(a -> ((DeleteAction) a).getDeletedEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
@@ -152,14 +152,14 @@ public class DeltaInstance {
 	private List<String> getInsertedFieldAccessesQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isInsertFieldAccessAction(a))
-				  .map(a -> ((InsertFieldAccessAction) a).getInsertedEntity().getQualifiedName())
+				  .map(a -> ((InsertFieldAccessAction) a).getInsertedEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
 	private List<String> getDeletedFieldAccessesQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isDeleteFieldAccessAction(a))
-				  .map(a -> ((DeleteFieldAccessAction) a).getDeletedEntity().getQualifiedName())
+				  .map(a -> ((DeleteFieldAccessAction) a).getDeletedEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 
@@ -174,7 +174,7 @@ public class DeltaInstance {
 	public List<String> getUpdatesQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isUpdateAction(a))
-				  .map(a -> ((UpdateAction) a).getEntity().getQualifiedName())
+				  .map(a -> ((UpdateAction) a).getEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
@@ -185,7 +185,7 @@ public class DeltaInstance {
 	public List<String> getVisibilityActionsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isVisibilityAction(a))
-				  .map(a -> ((VisibilityAction) a).getEntity().getQualifiedName())
+				  .map(a -> ((VisibilityAction) a).getEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	

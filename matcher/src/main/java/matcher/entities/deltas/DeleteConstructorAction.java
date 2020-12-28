@@ -18,8 +18,8 @@ public class DeleteConstructorAction extends DeleteAction {
 	public String toString() {
 		StringBuilder result = new StringBuilder("delete " + visibility.toString().toLowerCase() 
 				+ " constructor ");
-		result.append(getDeletedEntity().getQualifiedName() + " in ");
-		result.append(getHolderEntity().getQualifiedName());
+		result.append(getDeletedEntityQualifiedName() + " in ");
+		result.append(getHolderEntityQualifiedName());
 		return result.toString();
 	}
 }

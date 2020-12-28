@@ -11,9 +11,9 @@ public class UpdateAction extends ActionInstance {
 		super(Action.UPDATE);
 		this.entity = entity;
 	}
-
-	public Holder getEntity() {
-		return entity;
+	
+	public String getEntityQualifiedName() {
+		return entity.getQualifiedName();
 	}
 	
 	public boolean isMethodUpdate() {

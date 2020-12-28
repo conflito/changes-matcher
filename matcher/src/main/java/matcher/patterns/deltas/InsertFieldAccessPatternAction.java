@@ -22,8 +22,8 @@ public class InsertFieldAccessPatternAction extends InsertPatternAction {
 	
 	private boolean matches(InsertFieldAccessAction action) {
 		return getAction() == action.getAction() &&
-			   getInsertedEntity().matches(action.getInsertedEntity().getQualifiedName()) &&
-			   getHolderEntity().matches(action.getHolderEntity().getQualifiedName()) &&
+			   getInsertedEntity().matches(action.getInsertedEntityQualifiedName()) &&
+			   getHolderEntity().matches(action.getHolderEntityQualifiedName()) &&
 			   (accessType == null || accessType == action.getAccessType());
 	}
 	

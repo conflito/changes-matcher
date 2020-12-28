@@ -14,13 +14,13 @@ public class InsertAction extends ActionInstance {
 		this.insertedEntity = insertedEntity;
 		this.holderEntity = holderEntity;
 	}
-
-	public Insertable getInsertedEntity() {
-		return insertedEntity;
+	
+	public String getInsertedEntityQualifiedName() {
+		return insertedEntity.getQualifiedName();
 	}
-
-	public Holder getHolderEntity() {
-		return holderEntity;
+	
+	public String getHolderEntityQualifiedName() {
+		return holderEntity.getQualifiedName();
 	}
 	
 	public boolean isInvocationInsert() {

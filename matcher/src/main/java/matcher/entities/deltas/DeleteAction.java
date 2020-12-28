@@ -16,13 +16,13 @@ public class DeleteAction extends ActionInstance {
 		this.deletedEntity = deletedEntity;
 		this.holderEntity = holderEntity;
 	}
-
-	public Deletable getDeletedEntity() {
-		return deletedEntity;
+	
+	public String getDeletedEntityQualifiedName() {
+		return deletedEntity.getQualifiedName();
 	}
-
-	public Holder getHolderEntity() {
-		return holderEntity;
+	
+	public String getHolderEntityQualifiedName() {
+		return holderEntity.getQualifiedName();
 	}
 	
 	public boolean isMethodDelete() {

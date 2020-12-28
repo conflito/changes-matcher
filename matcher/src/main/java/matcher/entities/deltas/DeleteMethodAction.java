@@ -32,12 +32,12 @@ public class DeleteMethodAction extends DeleteAction {
 	public String toString() {
 		StringBuilder result = new StringBuilder("delete " + visibility.toString().toLowerCase() 
 				+ " method ");
-		result.append(getDeletedEntity().getQualifiedName() + " in ");
-		result.append(getHolderEntity().getQualifiedName());
+		result.append(getDeletedEntityQualifiedName() + " in ");
+		result.append(getHolderEntityQualifiedName());
 		if(!compatibles.isEmpty()) {
 			result.append("\n");
 			for(Holder h: compatibles) {
-				result.append(getDeletedEntity().getQualifiedName() + " compatible with ");
+				result.append(getDeletedEntityQualifiedName() + " compatible with ");
 				result.append(h.getQualifiedName() + "\n");
 			}			
 		}

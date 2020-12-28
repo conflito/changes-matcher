@@ -18,8 +18,8 @@ public class DeleteFieldAction extends DeleteAction {
 	public String toString() {
 		StringBuilder result = new StringBuilder("delete " + visibility.toString().toLowerCase() 
 				+ " field ");
-		result.append(getDeletedEntity().getQualifiedName() + " in ");
-		result.append(getHolderEntity().getQualifiedName());
+		result.append(getDeletedEntityQualifiedName() + " in ");
+		result.append(getHolderEntityQualifiedName());
 		return result.toString();
 	}
 	

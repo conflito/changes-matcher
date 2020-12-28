@@ -33,12 +33,12 @@ public class InsertMethodAction extends InsertAction {
 	public String toString() {
 		StringBuilder result = new StringBuilder("insert " + visibility.toString().toLowerCase() 
 				+ " method ");
-		result.append(getInsertedEntity().getQualifiedName() + " in ");
-		result.append(getHolderEntity().getQualifiedName());
+		result.append(getInsertedEntityQualifiedName() + " in ");
+		result.append(getHolderEntityQualifiedName());
 		if(!compatibles.isEmpty()) {
 			result.append("\n");
 			for(Holder h: compatibles) {
-				result.append(getInsertedEntity().getQualifiedName() + " compatible with ");
+				result.append(getInsertedEntityQualifiedName() + " compatible with ");
 				result.append(h.getQualifiedName() + "\n");
 			}			
 		}

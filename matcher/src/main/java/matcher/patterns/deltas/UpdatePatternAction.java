@@ -13,9 +13,9 @@ public class UpdatePatternAction extends ActionPattern {
 		super(Action.UPDATE);
 		this.entity = entity;
 	}
-
-	public FreeVariable getEntity() {
-		return entity;
+	
+	public int getEntityId() {
+		return entity.getId();
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class UpdatePatternAction extends ActionPattern {
 	
 	private boolean matches(UpdateAction action) {
 		return getAction() == action.getAction() &&
-			   entity.matches(action.getEntity().getQualifiedName());
+			   entity.matches(action.getEntityQualifiedName());
 	}
 
 	@Override

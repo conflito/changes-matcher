@@ -19,8 +19,8 @@ public class InsertConstructorAction extends InsertAction {
 	public String toString() {
 		StringBuilder result = new StringBuilder("insert " + visibility.toString().toLowerCase() 
 				+ " constructor ");
-		result.append(getInsertedEntity().getQualifiedName() + " in ");
-		result.append(getHolderEntity().getQualifiedName());
+		result.append(getInsertedEntityQualifiedName() + " in ");
+		result.append(getHolderEntityQualifiedName());
 		return result.toString();
 	}
 

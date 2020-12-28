@@ -19,8 +19,8 @@ public class InsertFieldAccessAction extends InsertAction {
 	public String toString() {
 		StringBuilder result = new StringBuilder("insert " + accessType.toString().toLowerCase() 
 				+ " of field ");
-		result.append(getInsertedEntity().getQualifiedName() + " in ");
-		result.append(getHolderEntity().getQualifiedName());
+		result.append(getInsertedEntityQualifiedName() + " in ");
+		result.append(getHolderEntityQualifiedName());
 		return result.toString();
 	}
 

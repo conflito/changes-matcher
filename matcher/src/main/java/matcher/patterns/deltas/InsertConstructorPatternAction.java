@@ -23,8 +23,8 @@ public class InsertConstructorPatternAction extends InsertPatternAction {
 	
 	private boolean matches(InsertConstructorAction action) {
 		return getAction() == action.getAction() &&
-			   getInsertedEntity().matches(action.getInsertedEntity().getQualifiedName()) &&
-			   getHolderEntity().matches(action.getHolderEntity().getQualifiedName()) &&
+			   getInsertedEntity().matches(action.getInsertedEntityQualifiedName()) &&
+			   getHolderEntity().matches(action.getHolderEntityQualifiedName()) &&
 			   (visibility == null || visibility == action.getVisibility());
 	}
 	

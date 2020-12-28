@@ -19,6 +19,10 @@ public class DeletePatternAction extends ActionPattern{
 	public FreeVariable getDeletedEntity() {
 		return deletedEntity;
 	}
+	
+	public int getDeletedEntityId() {
+		return deletedEntity.getId();
+	}
 
 	public FreeVariable getHolderEntity() {
 		return holderEntity;
@@ -36,8 +40,8 @@ public class DeletePatternAction extends ActionPattern{
 
 	private boolean matches(DeleteAction action) {
 		return getAction() == action.getAction() &&
-			   deletedEntity.matches(action.getDeletedEntity().getQualifiedName()) &&
-			   holderEntity.matches(action.getHolderEntity().getQualifiedName());
+			   deletedEntity.matches(action.getDeletedEntityQualifiedName()) &&
+			   holderEntity.matches(action.getHolderEntityQualifiedName());
 	}
 
 	@Override

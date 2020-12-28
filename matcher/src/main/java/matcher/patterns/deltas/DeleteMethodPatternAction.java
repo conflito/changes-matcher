@@ -32,8 +32,8 @@ public class DeleteMethodPatternAction extends DeletePatternAction {
 	
 	private boolean matches(DeleteMethodAction action) {
 		return getAction() == action.getAction() &&
-			   getDeletedEntity().matches(action.getDeletedEntity().getQualifiedName()) &&
-			   getHolderEntity().matches(action.getHolderEntity().getQualifiedName()) &&
+			   getDeletedEntity().matches(action.getDeletedEntityQualifiedName()) &&
+			   getHolderEntity().matches(action.getHolderEntityQualifiedName()) &&
 			   (visibility == null || visibility == action.getVisibility()) &&
 			   compatiblesMatch(action);
 	}
