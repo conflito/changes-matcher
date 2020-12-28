@@ -132,6 +132,8 @@ public class ClassInstance implements Holder{
 		for(MethodInstance m: methods) {
 			result.addAll(m.getFieldAccessesQualifiedNames());
 		}
+		if(superClass != null)
+			result.addAll(superClass.getFieldAccessesQualifiedNames());
 		return result;
 	}
 	
@@ -143,6 +145,8 @@ public class ClassInstance implements Holder{
 		for(ConstructorInstance c: constructors) {
 			result.addAll(c.getInvocationsQualifiedNames());
 		}
+		if(superClass != null)
+			result.addAll(superClass.getInvocationsQualifiedNames());
 		return result;
 	}
 	
@@ -171,6 +175,8 @@ public class ClassInstance implements Holder{
 			Pair<String, List<String>> pair = new Pair<>(methodQualifiedName, compatibleQualifiedNames);
 			result.add(pair);
 		}
+		if(superClass != null)
+			result.addAll(superClass.getCompatibleMethodsQualifiedNames());
 		return result;
 	}
 	
