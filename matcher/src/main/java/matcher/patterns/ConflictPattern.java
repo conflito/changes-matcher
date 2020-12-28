@@ -183,4 +183,11 @@ public class ConflictPattern {
 		return firstDeltaAccesses.stream().distinct().collect(Collectors.toList());
 	}
 
+	public List<Integer> getUpdatedVariableIds() {
+		List<Integer> firstDeltaUpdates = firstDelta.getUpdatesVariableIds();
+		List<Integer> secondDeltaUpdates = secondDelta.getUpdatesVariableIds();
+		firstDeltaUpdates.addAll(secondDeltaUpdates);
+		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
+	}
+
 }

@@ -235,4 +235,15 @@ public class DeltaPattern {
 				a instanceof DeletePatternAction;
 	}
 
+	public List<Integer> getUpdatesVariableIds() {
+		return actions.stream()
+				  .filter(a -> updateAction(a))
+				  .map(a -> ((UpdatePatternAction)a).getEntity().getId())
+				  .collect(Collectors.toList());
+	}
+	
+	private boolean updateAction(ActionPattern a) {
+		return a instanceof UpdatePatternAction;
+	}
+
 }

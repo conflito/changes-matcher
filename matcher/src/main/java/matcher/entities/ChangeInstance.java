@@ -97,5 +97,12 @@ public class ChangeInstance {
 		return firstDeltaAccesses.stream().distinct().collect(Collectors.toList());
 
 	}
+
+	public List<String> getUpdatedQualifiedNames() {
+		List<String> firstDeltaUpdates = firstDelta.getUpdatesQualifiedNames();
+		List<String> secondDeltaUpdates = secondDelta.getUpdatesQualifiedNames();
+		firstDeltaUpdates.addAll(secondDeltaUpdates);
+		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
+	}
 	
 }

@@ -170,4 +170,15 @@ public class DeltaInstance {
 	private boolean deleteFieldAccessAction(ActionInstance a) {
 		return a instanceof DeleteFieldAccessAction;
 	}
+
+	public List<String> getUpdatesQualifiedNames() {
+		return actions.stream()
+				  .filter(a -> updateAction(a))
+				  .map(a -> ((UpdateAction) a).getEntity().getQualifiedName())
+				  .collect(Collectors.toList());
+	}
+	
+	private boolean updateAction(ActionInstance a) {
+		return a instanceof UpdateAction;
+	}
 }
