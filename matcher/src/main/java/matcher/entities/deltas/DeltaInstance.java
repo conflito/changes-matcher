@@ -73,7 +73,9 @@ public class DeltaInstance {
 	}
 	
 	public List<String> getConstructorsQualifiedNames() {
-		return getInsertConstructorsQualifiedNames();
+		List<String> result = getInsertConstructorsQualifiedNames();
+		result.addAll(getDeleteConstructorsQualifiedNames());
+		return result;
 	}
 	
 	private List<String> getInsertConstructorsQualifiedNames() {
@@ -82,9 +84,20 @@ public class DeltaInstance {
 				  .map(a -> ((InsertConstructorAction) a).getInsertedEntity().getQualifiedName())
 				  .collect(Collectors.toList());
 	}
+	
+	private List<String> getDeleteConstructorsQualifiedNames() {
+		return actions.stream()
+				  .filter(a -> deleteConstructorAction(a))
+				  .map(a -> ((DeleteConstructorAction) a).getDeletedEntity().getQualifiedName())
+				  .collect(Collectors.toList());
+	}
 
 	private boolean insertConstructorAction(ActionInstance a) {
 		return a instanceof InsertConstructorAction;
+	}
+	
+	private boolean deleteConstructorAction(ActionInstance a) {
+		return a instanceof DeleteConstructorAction;
 	}
 
 	public List<String> getInvocationsQualifiedNames() {
