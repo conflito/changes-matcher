@@ -16,6 +16,14 @@ public class DeletePatternAction extends ActionPattern{
 		this.holderEntity = holderEntity;
 	}
 	
+	public FreeVariable getDeletedEntity() {
+		return deletedEntity;
+	}
+
+	public FreeVariable getHolderEntity() {
+		return holderEntity;
+	}
+
 	@Override
 	public boolean filled() {
 		return deletedEntity.hasValue() && holderEntity.hasValue();
