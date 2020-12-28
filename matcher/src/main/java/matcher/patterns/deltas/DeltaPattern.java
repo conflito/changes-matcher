@@ -64,7 +64,11 @@ public class DeltaPattern {
 
 	public boolean hasDeleteMethodActions() {
 		return actions.stream().anyMatch(a -> a instanceof DeleteMethodPatternAction); 
-	}	
+	}
+	
+	public boolean hasDeleteConstructorsActions() {
+		return actions.stream().anyMatch(a -> a instanceof DeleteConstructorPatternAction); 
+	}
 	
 	public boolean hasUpdateActions() {
 		return actions.stream().anyMatch(a -> a instanceof UpdatePatternAction);
