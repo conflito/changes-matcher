@@ -18,7 +18,7 @@ public class InsertFieldAccessPatternAction extends InsertPatternAction {
 	
 	@Override
 	public boolean matches(ActionInstance action) {
-		return action instanceof InsertAction && filled() && matches((InsertFieldAccessAction)action);
+		return action instanceof InsertFieldAccessAction && filled() && matches((InsertFieldAccessAction)action);
 	}
 	
 	private boolean matches(InsertFieldAccessAction action) {
