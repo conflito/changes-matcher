@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import matcher.entities.ClassInstance;
@@ -118,7 +117,12 @@ public class ClassPattern {
 	}
 	
 	public List<Integer> getMethodVariableIds(){
-		return methods.stream().map(MethodPattern::getVariableId).collect(Collectors.toList());
+		List<Integer> result = methods.stream()
+									  .map(MethodPattern::getVariableId)
+									  .collect(Collectors.toList());
+		if(hasSuperClass())
+			result.addAll(superClass.getMethodVariableIds());
+		return result;
 	}
 	
 	public List<Integer> getFieldAccessesVariableIds() {
@@ -126,18 +130,19 @@ public class ClassPattern {
 		for(MethodPattern m: methods) {
 			result.addAll(m.getFieldAccessesVariableIds());
 		}
+		if(hasSuperClass())
+			result.addAll(superClass.getFieldAccessesVariableIds());
+		
 		return result;
 	}
 	
 	public List<Integer> getConstructorsVariableIds(){
-		return constructors.stream().map(ConstructorPattern::getVariableId)
-									.collect(Collectors.toList());
-	}
-	
-	public Optional<Integer> getSuperClassVariableId(){
-		if(!hasSuperClass())
-			return Optional.empty();
-		return Optional.of(superClass.getVariableId());
+		List<Integer> result = constructors.stream()
+										   .map(ConstructorPattern::getVariableId)
+										   .collect(Collectors.toList());
+		if(hasSuperClass())
+			result.addAll(superClass.getConstructorsVariableIds());
+		return result;
 	}
 	
 	public List<Pair<Integer, List<Integer>>> getCompatibleVariables(){
@@ -150,6 +155,8 @@ public class ClassPattern {
 			Pair<Integer, List<Integer>> p = new Pair<>(id, list);
 			result.add(p);
 		}
+		if(hasSuperClass())
+			result.addAll(superClass.getCompatibleVariables());
 		return result;
 	}	
 
@@ -165,6 +172,9 @@ public class ClassPattern {
 		List<Integer> result = new ArrayList<>();
 		getInvocationsInMethodsVariableIds(result);
 		getInvocationsInConstructorsVariableIds(result);
+		if(hasSuperClass())
+			result.addAll(superClass.getInvocationsVariableIds());
+		
 		return result;
 	}
 
@@ -407,7 +417,7 @@ public class ClassPattern {
 		
 		if(hasSuperClass()) {
 			result.append("#" + getVariableId() + " extends #" 
-					+ getSuperClassVariableId().get() + "\n");
+					+ superClass.getVariableId() + "\n");
 			result.append(superClass.toStringDebug());
 		}
 		for(FieldPattern f : fields) {
