@@ -12,6 +12,7 @@ import matcher.entities.MethodInstance;
 import matcher.entities.MethodInvocationInstance;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.DeleteAction;
+import matcher.entities.deltas.DeleteFieldAction;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
@@ -37,10 +38,11 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtField(CtField<T> field) {
-		if(getConflictPattern().hasDeleteActions()) {
+		if(getConflictPattern().hasDeleteFieldActions()) {
 			ClassInstance holderInstance = getClassInstance(field);
 			FieldInstance deletedInstance = getFieldInstance(field, holderInstance);
-			ActionInstance result = new DeleteAction(deletedInstance, holderInstance);
+			ActionInstance result = new DeleteFieldAction(deletedInstance, holderInstance, 
+					deletedInstance.getVisibility());
 			setResult(result);
 		}
 	}

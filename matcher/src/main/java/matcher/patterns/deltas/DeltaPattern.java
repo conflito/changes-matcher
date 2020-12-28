@@ -58,6 +58,10 @@ public class DeltaPattern {
 		return actions.stream().anyMatch(a -> a instanceof DeletePatternAction); 
 	}
 	
+	public boolean hasDeleteFieldActions() {
+		return actions.stream().anyMatch(a -> a instanceof DeleteFieldPatternAction); 
+	}
+	
 	public boolean hasUpdateActions() {
 		return actions.stream().anyMatch(a -> a instanceof UpdatePatternAction);
 	}
@@ -121,6 +125,5 @@ public class DeltaPattern {
 	
 	private boolean insertConstructorAction(ActionPattern a) {
 		return a instanceof InsertConstructorPatternAction;
-	}
-	
+	}	
 }
