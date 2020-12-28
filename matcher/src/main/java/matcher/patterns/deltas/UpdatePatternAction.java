@@ -14,6 +14,10 @@ public class UpdatePatternAction extends ActionPattern {
 		this.entity = entity;
 	}
 
+	public FreeVariable getEntity() {
+		return entity;
+	}
+
 	@Override
 	public boolean filled() {
 		return entity.hasValue();
