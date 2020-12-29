@@ -18,7 +18,7 @@ public class MapUtilities {
 				first.put(e.getKey(), e.getValue());
 			}
 		}
-		first.forEach((key, val) -> val.stream().distinct().collect(Collectors.toList()));
+		first.forEach((key, val) -> first.put(key, val.stream().distinct().collect(Collectors.toList())));
 	}
 	
 	public static Map<Integer,List<String>> combine(List<Integer> vars, List<String> names){
