@@ -9,11 +9,13 @@ import matcher.patterns.BasePattern;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.ConflictPattern;
 import matcher.patterns.ConstructorPattern;
+import matcher.patterns.FieldAccessPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
 import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
 import matcher.patterns.deltas.DeleteConstructorPatternAction;
+import matcher.patterns.deltas.DeleteFieldAccessPatternAction;
 import matcher.patterns.deltas.DeleteFieldPatternAction;
 import matcher.patterns.deltas.DeleteMethodPatternAction;
 import matcher.patterns.deltas.DeletePatternAction;
@@ -33,6 +35,7 @@ public class TestMatcherDeletes {
 	private static final String DEL_FIELD_CONSTR_FOLDER = "FieldAndConstructorDeleteInstance/";
 	private static final String DEL_FIELD_COMPA_METHOD_FOLDER = "FieldAndCompatibleMethodDeleteInstance/";
 	private static final String DEL_FIELD_AND_INVO_FOLDER = "MethodInvocationAndFieldDeleteInstance/";
+	private static final String DEL_FIELD_ACCESS_FOLDER = "FieldAccessAndMethodDeleteInstance/";
 
 	@Test
 	public void deletePrivateFieldAndPublicMethodTest() throws ApplicationException {
@@ -127,6 +130,32 @@ public class TestMatcherDeletes {
 				assignments.get(2).getSecond().equals("base.Shape.m()"), 
 				"Deleted method invoation is not base.Shape.m()?");
 	}
+	
+	@Test
+	public void deleteFieldAccessAndMethodTest() throws ApplicationException {
+		File base = new File(SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + "Square.java");
+		File firstVar = new File(SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + "Square01.java");
+		File secondVar = new File(SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + "Square02.java");
+		ConflictPattern cp = getDeleteFieldAccessAndMethodPattern();
+		ChangeInstanceHandler cih = new ChangeInstanceHandler();
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
+		MatchingHandler mh = new MatchingHandler();
+		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		assertTrue(result.size() == 1, "More than one result for deleting field and compatible method?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("base.Square.t"), 
+				"Accessed field is not base.Square.t?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("base.Square.m()"), 
+				"Method with deleted access is not base.Square.m()?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("base.Square.m2()"), 
+				"Deleted method is not base.Square.m2(int)?");
+	}
 
 	private ConflictPattern getDeletePrivateFieldAndPublicMethodPattern() {
 		FreeVariable classVar = new FreeVariable(0);
@@ -210,6 +239,32 @@ public class TestMatcherDeletes {
 		DeltaPattern dp2 = new DeltaPattern();
 		dp1.addActionPattern(new DeleteFieldPatternAction(fieldVar, classVar, null));
 		dp2.addActionPattern(new DeletePatternAction(methodVar, methodVar));
+		
+		return new ConflictPattern(basePattern, dp1, dp2);
+	}
+	
+	private ConflictPattern getDeleteFieldAccessAndMethodPattern() {
+		FreeVariable classVar = new FreeVariable(0);
+		FreeVariable fieldVar = new FreeVariable(1);
+		FreeVariable methodVar1 = new FreeVariable(2);
+		FreeVariable methodVar2 = new FreeVariable(3);
+		
+		BasePattern basePattern = new BasePattern();
+		ClassPattern classPattern = new ClassPattern(classVar);
+		FieldPattern fieldPattern = new FieldPattern(fieldVar, null);
+		MethodPattern methodPattern1 = new MethodPattern(methodVar1, null);
+		MethodPattern methodPattern2 = new MethodPattern(methodVar2, null);
+		FieldAccessPattern accessPattern = new FieldAccessPattern(fieldVar, null);
+		methodPattern1.addFieldAccessPattern(accessPattern);
+		classPattern.addFieldPattern(fieldPattern);
+		classPattern.addMethodPattern(methodPattern1);
+		classPattern.addMethodPattern(methodPattern2);
+		basePattern.addClassPattern(classPattern);
+		
+		DeltaPattern dp1 = new DeltaPattern();
+		DeltaPattern dp2 = new DeltaPattern();
+		dp1.addActionPattern(new DeleteFieldAccessPatternAction(fieldVar, methodVar1, null));
+		dp2.addActionPattern(new DeleteMethodPatternAction(methodVar2, classVar, null));
 		
 		return new ConflictPattern(basePattern, dp1, dp2);
 	}
