@@ -25,6 +25,7 @@ public class TestMatcherUpdates {
 	
 	private static final String SRC_FOLDER = "src/test/resources/";
 	private static final String UPD_INS_METHOD = "MethodUpdateWithInsertOperationInstance/";
+	private static final String UPD_DEL_METHOD = "MethodUpdateWithDeleteOperationInstance/";
 	
 	@Test
 	public void methodUpdateWithInsertOperationTest() throws ApplicationException {
@@ -36,7 +37,26 @@ public class TestMatcherUpdates {
 		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
-		System.out.println(result);
+		assertTrue(result.size() == 1, "More than one result for updating method?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("base.Square.m()"), 
+				"Updated method is not base.Square.m()?");
+	}
+	
+	@Test
+	public void methodUpdateWithDeleteOperationTest() throws ApplicationException {
+		File base = new File(SRC_FOLDER + UPD_INS_METHOD + "Square.java");
+		File firstVar = new File(SRC_FOLDER + UPD_INS_METHOD + "Square01.java");
+		File secondVar = new File(SRC_FOLDER + UPD_INS_METHOD + "Square02.java");
+		ConflictPattern cp = getUpdateMethodPattern();
+		ChangeInstanceHandler cih = new ChangeInstanceHandler();
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
+		MatchingHandler mh = new MatchingHandler();
+		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for updating method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
@@ -62,6 +82,5 @@ public class TestMatcherUpdates {
 		dp1.addActionPattern(new UpdatePatternAction(methodVar));
 		
 		return new ConflictPattern(basePattern, dp1, dp2);
-
 	}
 }
