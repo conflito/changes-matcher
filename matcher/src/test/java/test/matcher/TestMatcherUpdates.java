@@ -3,7 +3,6 @@ package test.matcher;
 import org.junit.jupiter.api.Test;
 
 import matcher.entities.ChangeInstance;
-import matcher.entities.Visibility;
 import matcher.exceptions.ApplicationException;
 import matcher.handlers.ChangeInstanceHandler;
 import matcher.handlers.MatchingHandler;
@@ -49,9 +48,9 @@ public class TestMatcherUpdates {
 	
 	@Test
 	public void methodUpdateWithDeleteOperationTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + UPD_INS_METHOD + "Square.java");
-		File firstVar = new File(SRC_FOLDER + UPD_INS_METHOD + "Square01.java");
-		File secondVar = new File(SRC_FOLDER + UPD_INS_METHOD + "Square02.java");
+		File base = new File(SRC_FOLDER + UPD_DEL_METHOD + "Shape.java");
+		File firstVar = new File(SRC_FOLDER + UPD_DEL_METHOD + "Shape01.java");
+		File secondVar = new File(SRC_FOLDER + UPD_DEL_METHOD + "Shape02.java");
 		ConflictPattern cp = getUpdateMethodPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
 		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
@@ -61,10 +60,10 @@ public class TestMatcherUpdates {
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
+				assignments.get(0).getSecond().equals("base.Shape"), "Class is not base.Shape?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.m()"), 
-				"Updated method is not base.Square.m()?");
+				assignments.get(1).getSecond().equals("base.Shape.m()"), 
+				"Updated method is not base.Shape.m()?");
 	}
 	
 	private ConflictPattern getUpdateMethodPattern() {
