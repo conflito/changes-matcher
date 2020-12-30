@@ -157,7 +157,6 @@ public class TestMatcherInserts {
 		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
-		System.out.println(result);
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
