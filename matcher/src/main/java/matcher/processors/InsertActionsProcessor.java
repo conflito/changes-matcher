@@ -16,6 +16,7 @@ import matcher.entities.deltas.InsertConstructorAction;
 import matcher.entities.deltas.InsertFieldAccessAction;
 import matcher.entities.deltas.InsertFieldAction;
 import matcher.entities.deltas.InsertMethodAction;
+import matcher.entities.deltas.UpdateAction;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
@@ -126,6 +127,28 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 			}
 		}
 	}
+	
+	private void visit(CtElement element) {
+		if(getConflictPattern().hasUpdateActions()) {
+			Optional<CtMethod<?>> possibleCaller = getMethodNode(element);
+			if(possibleCaller.isPresent()) {
+				CtMethod<?> method = possibleCaller.get();
+				ClassInstance classInstance = getClassInstance(method);
+				MethodInstance methodInstance = getMethodInstance(method, classInstance);
+				ActionInstance result = new UpdateAction(methodInstance);
+				setResult(result);
+			}
+			else {
+				Optional<CtConstructor<?>> c = getConstructorNode(element);
+				if(c.isPresent()) {
+					ClassInstance holderInstance = getClassInstance(c.get());
+					ConstructorInstance cInstance = getConstructorInstance(c.get(), holderInstance);
+					ActionInstance result = new UpdateAction(cInstance);
+					setResult(result);
+				}
+			}
+		}
+	}
 
 
 	@Override
@@ -154,68 +177,57 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public void visitCtAnonymousExecutable(CtAnonymousExecutable anonymousExec) {
-		// TODO Auto-generated method stub
-		
+		visit(anonymousExec);
 	}
 
 	@Override
 	public <T> void visitCtArrayRead(CtArrayRead<T> arrayRead) {
-		// TODO Auto-generated method stub
-		
+		visit(arrayRead);
 	}
 
 	@Override
 	public <T> void visitCtArrayWrite(CtArrayWrite<T> arrayWrite) {
-		// TODO Auto-generated method stub
-		
+		visit(arrayWrite);
 	}
 
 	@Override
 	public <T> void visitCtArrayTypeReference(CtArrayTypeReference<T> reference) {
-		// TODO Auto-generated method stub
-		
+		visit(reference);
 	}
 
 	@Override
 	public <T> void visitCtAssert(CtAssert<T> asserted) {
-		// TODO Auto-generated method stub
-		
+		visit(asserted);
 	}
 
 	@Override
 	public <T, A extends T> void visitCtAssignment(CtAssignment<T, A> assignement) {
-		// TODO Auto-generated method stub
-		
+		visit(assignement);
 	}
 
 	@Override
 	public <T> void visitCtBinaryOperator(CtBinaryOperator<T> operator) {
-		// TODO Auto-generated method stub
-		
+		visit(operator);
 	}
 
 	@Override
 	public <R> void visitCtBlock(CtBlock<R> block) {
-		// TODO Auto-generated method stub
-		
+		visit(block);
 	}
 
 	@Override
 	public void visitCtBreak(CtBreak breakStatement) {
-		// TODO Auto-generated method stub
-		
+		visit(breakStatement);
 	}
 
 	@Override
 	public <S> void visitCtCase(CtCase<S> caseStatement) {
-		// TODO Auto-generated method stub
-		
+		visit(caseStatement);
 	}
 
 	@Override
 	public void visitCtCatch(CtCatch catchBlock) {
-		// TODO Auto-generated method stub
-		
+		visit(catchBlock);
 	}
 
 	@Override
@@ -232,20 +244,17 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtConditional(CtConditional<T> conditional) {
-		// TODO Auto-generated method stub
-		
+		visit(conditional);
 	}
 
 	@Override
 	public void visitCtContinue(CtContinue continueStatement) {
-		// TODO Auto-generated method stub
-		
+		visit(continueStatement);
 	}
 
 	@Override
 	public void visitCtDo(CtDo doLoop) {
-		// TODO Auto-generated method stub
-		
+		visit(doLoop);
 	}
 
 	@Override
@@ -256,20 +265,17 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtExecutableReference(CtExecutableReference<T> reference) {
-		// TODO Auto-generated method stub
-		
+		visit(reference);
 	}
 
 	@Override
 	public <T> void visitCtEnumValue(CtEnumValue<T> enumValue) {
-		// TODO Auto-generated method stub
-		
+		visit(enumValue);
 	}
 
 	@Override
 	public <T> void visitCtThisAccess(CtThisAccess<T> thisAccess) {
-		// TODO Auto-generated method stub
-		
+		visit(thisAccess);
 	}
 
 	@Override
@@ -286,20 +292,17 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public void visitCtFor(CtFor forLoop) {
-		// TODO Auto-generated method stub
-		
+		visit(forLoop);
 	}
 
 	@Override
 	public void visitCtForEach(CtForEach foreach) {
-		// TODO Auto-generated method stub
-		
+		visit(foreach);
 	}
 
 	@Override
 	public void visitCtIf(CtIf ifElement) {
-		// TODO Auto-generated method stub
-		
+		visit(ifElement);
 	}
 
 	@Override
@@ -310,26 +313,23 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtLiteral(CtLiteral<T> literal) {
-		// TODO Auto-generated method stub
-		
+		visit(literal);
 	}
 
 	@Override
 	public <T> void visitCtLocalVariable(CtLocalVariable<T> localVariable) {
-		// TODO Auto-generated method stub
+		visit(localVariable);
 		
 	}
 
 	@Override
 	public <T> void visitCtLocalVariableReference(CtLocalVariableReference<T> reference) {
-		// TODO Auto-generated method stub
-		
+		visit(reference);
 	}
 
 	@Override
 	public <T> void visitCtCatchVariable(CtCatchVariable<T> catchVariable) {
-		// TODO Auto-generated method stub
-		
+		visit(catchVariable);
 	}
 
 	@Override
@@ -346,14 +346,12 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtNewArray(CtNewArray<T> newArray) {
-		// TODO Auto-generated method stub
-		
+		visit(newArray);
 	}
 
 	@Override
 	public <T> void visitCtConstructorCall(CtConstructorCall<T> ctConstructorCall) {
-		// TODO Auto-generated method stub
-		
+		visit(ctConstructorCall);
 	}
 
 	@Override
@@ -364,8 +362,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtLambda(CtLambda<T> lambda) {
-		// TODO Auto-generated method stub
-		
+		visit(lambda);
 	}
 
 	@Override
@@ -395,20 +392,17 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtParameter(CtParameter<T> parameter) {
-		// TODO Auto-generated method stub
-		
+		visit(parameter);
 	}
 
 	@Override
 	public <T> void visitCtParameterReference(CtParameterReference<T> reference) {
-		// TODO Auto-generated method stub
-		
+		visit(reference);
 	}
 
 	@Override
 	public <R> void visitCtReturn(CtReturn<R> returnStatement) {
-		// TODO Auto-generated method stub
-		
+		visit(returnStatement);
 	}
 
 	@Override
@@ -425,8 +419,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T, S> void visitCtSwitchExpression(CtSwitchExpression<T, S> switchExpression) {
-		// TODO Auto-generated method stub
-		
+		visit(switchExpression);
 	}
 
 	@Override
@@ -437,20 +430,17 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public void visitCtThrow(CtThrow throwStatement) {
-		// TODO Auto-generated method stub
-		
+		visit(throwStatement);
 	}
 
 	@Override
 	public void visitCtTry(CtTry tryBlock) {
-		// TODO Auto-generated method stub
-		
+		visit(tryBlock);
 	}
 
 	@Override
 	public void visitCtTryWithResource(CtTryWithResource tryWithResource) {
-		// TODO Auto-generated method stub
-		
+		visit(tryWithResource);
 	}
 
 	@Override
@@ -485,26 +475,22 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtUnaryOperator(CtUnaryOperator<T> operator) {
-		// TODO Auto-generated method stub
-		
+		visit(operator);
 	}
 
 	@Override
 	public <T> void visitCtVariableRead(CtVariableRead<T> variableRead) {
-		// TODO Auto-generated method stub
-		
+		visit(variableRead);
 	}
 
 	@Override
 	public <T> void visitCtVariableWrite(CtVariableWrite<T> variableWrite) {
-		// TODO Auto-generated method stub
-		
+		visit(variableWrite);
 	}
 
 	@Override
 	public void visitCtWhile(CtWhile whileLoop) {
-		// TODO Auto-generated method stub
-		
+		visit(whileLoop);
 	}
 
 	@Override
@@ -515,8 +501,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtSuperAccess(CtSuperAccess<T> f) {
-		// TODO Auto-generated method stub
-		
+		visit(f);
 	}
 
 	@Override
