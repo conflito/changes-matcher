@@ -24,16 +24,17 @@ import java.util.List;
 public class TestMatcherUpdates {
 	
 	private static final String SRC_FOLDER = "src/test/resources/";
-	private static final String UPD_INS_METHOD = "MethodUpdateWithInsertOperationInstance/";
-	private static final String UPD_DEL_METHOD = "MethodUpdateWithDeleteOperationInstance/";
-	private static final String UPD_INS_CONST = "ConstructorUpdateWithInsertOperationInstance/";
-	private static final String UPD_DEL_CONST = "ConstructorUpdateWithDeleteOperationInstance/";
+	private static final String UPD_INS_METHOD_FOLDER = "MethodUpdateWithInsertOperationInstance/";
+	private static final String UPD_DEL_METHOD_FOLDER = "MethodUpdateWithDeleteOperationInstance/";
+	private static final String UPD_INS_CONST_FOLDER = "ConstructorUpdateWithInsertOperationInstance/";
+	private static final String UPD_DEL_CONST_FOLDER = 
+			"ConstructorUpdateWithDeleteOperationInstance/";
 
 	@Test
 	public void methodUpdateWithInsertOperationTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + UPD_INS_METHOD + "Square.java");
-		File firstVar = new File(SRC_FOLDER + UPD_INS_METHOD + "Square01.java");
-		File secondVar = new File(SRC_FOLDER + UPD_INS_METHOD + "Square02.java");
+		File base = new File(SRC_FOLDER + UPD_INS_METHOD_FOLDER + "Square.java");
+		File firstVar = new File(SRC_FOLDER + UPD_INS_METHOD_FOLDER + "Square01.java");
+		File secondVar = new File(SRC_FOLDER + UPD_INS_METHOD_FOLDER + "Square02.java");
 		ConflictPattern cp = getUpdateMethodPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
 		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
@@ -51,9 +52,9 @@ public class TestMatcherUpdates {
 	
 	@Test
 	public void methodUpdateWithDeleteOperationTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + UPD_DEL_METHOD + "Shape.java");
-		File firstVar = new File(SRC_FOLDER + UPD_DEL_METHOD + "Shape01.java");
-		File secondVar = new File(SRC_FOLDER + UPD_DEL_METHOD + "Shape02.java");
+		File base = new File(SRC_FOLDER + UPD_DEL_METHOD_FOLDER + "Shape.java");
+		File firstVar = new File(SRC_FOLDER + UPD_DEL_METHOD_FOLDER + "Shape01.java");
+		File secondVar = new File(SRC_FOLDER + UPD_DEL_METHOD_FOLDER + "Shape02.java");
 		ConflictPattern cp = getUpdateMethodPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
 		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
@@ -71,9 +72,9 @@ public class TestMatcherUpdates {
 	
 	@Test
 	public void constructorUpdateWithInsertOperationTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + UPD_INS_CONST + "Square.java");
-		File firstVar = new File(SRC_FOLDER + UPD_INS_CONST + "Square01.java");
-		File secondVar = new File(SRC_FOLDER + UPD_INS_CONST + "Square02.java");
+		File base = new File(SRC_FOLDER + UPD_INS_CONST_FOLDER + "Square.java");
+		File firstVar = new File(SRC_FOLDER + UPD_INS_CONST_FOLDER + "Square01.java");
+		File secondVar = new File(SRC_FOLDER + UPD_INS_CONST_FOLDER + "Square02.java");
 		ConflictPattern cp = getUpdateConstructorPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
 		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
@@ -91,9 +92,9 @@ public class TestMatcherUpdates {
 	
 	@Test
 	public void constructorUpdateWithDeleteOperationTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + UPD_DEL_CONST + "Square.java");
-		File firstVar = new File(SRC_FOLDER + UPD_DEL_CONST + "Square01.java");
-		File secondVar = new File(SRC_FOLDER + UPD_DEL_CONST + "Square02.java");
+		File base = new File(SRC_FOLDER + UPD_DEL_CONST_FOLDER + "Square.java");
+		File firstVar = new File(SRC_FOLDER + UPD_DEL_CONST_FOLDER + "Square01.java");
+		File secondVar = new File(SRC_FOLDER + UPD_DEL_CONST_FOLDER + "Square02.java");
 		ConflictPattern cp = getUpdateConstructorPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
 		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
