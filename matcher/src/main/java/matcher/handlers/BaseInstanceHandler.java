@@ -42,7 +42,8 @@ public class BaseInstanceHandler {
 		List<CtInvocation<?>> invocations = 
 				changedClass.getElements(new TypeFilter(CtInvocation.class));
 		invocations = invocations.stream()
-								 .filter(i -> !i.toString().equals("super()"))
+								 .filter(i -> !i.toString().equals("super()") &&
+									!getInvocationClassQualifiedName(i).equals(changedClass.getQualifiedName()))
 								 .collect(Collectors.toList());
 		List<CtClass<?>> result = new ArrayList<>();
 		result.add(changedClass);
@@ -58,6 +59,10 @@ public class BaseInstanceHandler {
 			}
 		}
 		return result;
+	}
+	
+	private String getInvocationClassQualifiedName(CtInvocation<?> invocation) {
+		return invocation.getTarget().getType().getQualifiedName();
 	}
 	
 	private Optional<CtClass<?>> getClass(CtInvocation<?> invocation) throws ApplicationException{
