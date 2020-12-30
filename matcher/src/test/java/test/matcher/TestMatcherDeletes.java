@@ -11,10 +11,12 @@ import matcher.patterns.ConflictPattern;
 import matcher.patterns.ConstructorPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
+import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
 import matcher.patterns.deltas.DeleteConstructorPatternAction;
 import matcher.patterns.deltas.DeleteFieldPatternAction;
 import matcher.patterns.deltas.DeleteMethodPatternAction;
+import matcher.patterns.deltas.DeletePatternAction;
 import matcher.patterns.deltas.DeltaPattern;
 import matcher.utils.Pair;
 
@@ -30,6 +32,7 @@ public class TestMatcherDeletes {
 	private static final String DEL_FIELD_METHOD_FOLDER = "FieldAndMethodDeleteInstance/";
 	private static final String DEL_FIELD_CONSTR_FOLDER = "FieldAndConstructorDeleteInstance/";
 	private static final String DEL_FIELD_COMPA_METHOD_FOLDER = "FieldAndCompatibleMethodDeleteInstance/";
+	private static final String DEL_FIELD_AND_INVO_FOLDER = "MethodInvocationAndFieldDeleteInstance/";
 
 	@Test
 	public void deletePrivateFieldAndPublicMethodTest() throws ApplicationException {
@@ -101,6 +104,29 @@ public class TestMatcherDeletes {
 				assignments.get(3).getSecond().equals("base.Square.m(int)"), 
 				"Deleted and compatible method is not base.Square.m(int)?");
 	}
+	
+	@Test
+	public void deleteFieldAndMethodInvocationTest() throws ApplicationException {
+		File base = new File(SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + "Shape.java");
+		File firstVar = new File(SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + "Shape01.java");
+		File secondVar = new File(SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + "Shape02.java");
+		ConflictPattern cp = getDeleteFieldAndMethodInvocationPattern();
+		ChangeInstanceHandler cih = new ChangeInstanceHandler();
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
+		MatchingHandler mh = new MatchingHandler();
+		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		assertTrue(result.size() == 1, "More than one result for deleting field and method invocation?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 3, "Not 3 assignments with only 3 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("base.Shape"), "Class is not base.Shape?");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("base.Shape.t"), 
+				"Deleted field is not base.Shape.t?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("base.Shape.m()"), 
+				"Deleted method invoation is not base.Shape.m()?");
+	}
 
 	private ConflictPattern getDeletePrivateFieldAndPublicMethodPattern() {
 		FreeVariable classVar = new FreeVariable(0);
@@ -162,6 +188,28 @@ public class TestMatcherDeletes {
 		DeltaPattern dp2 = new DeltaPattern();
 		dp1.addActionPattern(new DeleteFieldPatternAction(fieldVar, classVar, null));
 		dp2.addActionPattern(new DeleteMethodPatternAction(subMethodVar, classVar, null));
+		
+		return new ConflictPattern(basePattern, dp1, dp2);
+	}
+	
+	private ConflictPattern getDeleteFieldAndMethodInvocationPattern() {
+		FreeVariable classVar = new FreeVariable(0);
+		FreeVariable fieldVar = new FreeVariable(1);
+		FreeVariable methodVar = new FreeVariable(2);
+		
+		BasePattern basePattern = new BasePattern();
+		ClassPattern classPattern = new ClassPattern(classVar);
+		FieldPattern fieldPattern = new FieldPattern(fieldVar, null);
+		MethodPattern methodPattern = new MethodPattern(methodVar, null);
+		MethodInvocationPattern invoPattern = new MethodInvocationPattern(methodVar);
+		methodPattern.addMethodInvocationPattern(invoPattern);
+		classPattern.addFieldPattern(fieldPattern);
+		classPattern.addMethodPattern(methodPattern);
+		basePattern.addClassPattern(classPattern);
+		DeltaPattern dp1 = new DeltaPattern();
+		DeltaPattern dp2 = new DeltaPattern();
+		dp1.addActionPattern(new DeleteFieldPatternAction(fieldVar, classVar, null));
+		dp2.addActionPattern(new DeletePatternAction(methodVar, methodVar));
 		
 		return new ConflictPattern(basePattern, dp1, dp2);
 	}
