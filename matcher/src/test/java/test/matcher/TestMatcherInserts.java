@@ -15,10 +15,12 @@ import matcher.handlers.MatchingHandler;
 import matcher.patterns.BasePattern;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.ConflictPattern;
+import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
 import matcher.patterns.MethodPattern;
 import matcher.patterns.deltas.DeltaPattern;
 import matcher.patterns.deltas.InsertConstructorPatternAction;
+import matcher.patterns.deltas.InsertFieldAccessPatternAction;
 import matcher.patterns.deltas.InsertFieldPatternAction;
 import matcher.patterns.deltas.InsertMethodPatternAction;
 import matcher.patterns.deltas.InsertPatternAction;
@@ -32,6 +34,7 @@ public class TestMatcherInserts {
 	private static final String INS_CONSTR_COMPAT_METHOD_FOLDER = 
 			"ConstructorAndCompatibleMethodInsertInstance/";
 	private static final String INS_METHOD_WITH_INV_FOLDER = "MethodWithInvocationInsertInstance/";
+	private static final String INS_METHOD_WITH_ACCESS_FOLDER = "MethodWithFieldAccessInsertInstance/";
 	
 	@Test
 	public void insertPrivateFieldAndPublicMethodTest() throws ApplicationException {
@@ -143,6 +146,31 @@ public class TestMatcherInserts {
 				assignments.get(3).getSecond().equals("base.Square.m2()"), "Inserted method with invocation "
 						+ "is not base.Square.m2()?");
 	}
+	
+	@Test
+	public void insertMethodWithFieldAccessTest() throws ApplicationException {
+		File base = new File(SRC_FOLDER + INS_METHOD_WITH_ACCESS_FOLDER + "Square.java");
+		File firstVar = new File(SRC_FOLDER + INS_METHOD_WITH_ACCESS_FOLDER + "Square01.java");
+		File secondVar = new File(SRC_FOLDER + INS_METHOD_WITH_ACCESS_FOLDER + "Square02.java");
+		ConflictPattern cp = getInsertMethodWithFieldAccess();
+		ChangeInstanceHandler cih = new ChangeInstanceHandler();
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
+		MatchingHandler mh = new MatchingHandler();
+		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		System.out.println(result);
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("base.Square.t"), "Field is not base.Square.t?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("base.Square.m2()"), 
+				"One of the inserted methods is not base.Square.m2()?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("base.Square.m()"), "Inserted method with field access "
+						+ "is not base.Square.2()?");
+	}
 
 	private ConflictPattern getInsertPrivateFieldAndPublicMethodPattern() {
 		FreeVariable classVar = new FreeVariable(0);
@@ -231,6 +259,26 @@ public class TestMatcherInserts {
 		dp1.addActionPattern(new InsertMethodPatternAction(insMethodVar1, classVar, null));
 		dp2.addActionPattern(new InsertMethodPatternAction(insMethodVar2, classVar, null));
 		dp2.addActionPattern(new InsertPatternAction(methodVar, insMethodVar2));
+		
+		return new ConflictPattern(basePattern, dp1, dp2);
+	}
+	
+	private ConflictPattern getInsertMethodWithFieldAccess() {
+		FreeVariable classVar = new FreeVariable(0);
+		FreeVariable fieldVar = new FreeVariable(1);
+		FreeVariable insMethodVar1 = new FreeVariable(2);
+		FreeVariable insMethodVar2 = new FreeVariable(3);
+		
+		BasePattern basePattern = new BasePattern();
+		ClassPattern classPattern = new ClassPattern(classVar);
+		FieldPattern fieldPattern = new FieldPattern(fieldVar, null);
+		classPattern.addFieldPattern(fieldPattern);
+		basePattern.addClassPattern(classPattern);
+		DeltaPattern dp1 = new DeltaPattern();
+		DeltaPattern dp2 = new DeltaPattern();
+		dp1.addActionPattern(new InsertMethodPatternAction(insMethodVar1, classVar, null));
+		dp2.addActionPattern(new InsertMethodPatternAction(insMethodVar2, classVar, null));
+		dp2.addActionPattern(new InsertFieldAccessPatternAction(fieldVar, insMethodVar2, null));
 		
 		return new ConflictPattern(basePattern, dp1, dp2);
 	}
