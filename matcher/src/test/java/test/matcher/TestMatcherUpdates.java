@@ -9,6 +9,7 @@ import matcher.handlers.MatchingHandler;
 import matcher.patterns.BasePattern;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.ConflictPattern;
+import matcher.patterns.ConstructorPattern;
 import matcher.patterns.FreeVariable;
 import matcher.patterns.MethodPattern;
 import matcher.patterns.deltas.DeltaPattern;
@@ -25,7 +26,9 @@ public class TestMatcherUpdates {
 	private static final String SRC_FOLDER = "src/test/resources/";
 	private static final String UPD_INS_METHOD = "MethodUpdateWithInsertOperationInstance/";
 	private static final String UPD_DEL_METHOD = "MethodUpdateWithDeleteOperationInstance/";
-	
+	private static final String UPD_INS_CONST = "ConstructorUpdateWithInsertOperationInstance/";
+	private static final String UPD_DEL_CONST = "ConstructorUpdateWithDeleteOperationInstance/";
+
 	@Test
 	public void methodUpdateWithInsertOperationTest() throws ApplicationException {
 		File base = new File(SRC_FOLDER + UPD_INS_METHOD + "Square.java");
@@ -66,6 +69,46 @@ public class TestMatcherUpdates {
 				"Updated method is not base.Shape.m()?");
 	}
 	
+	@Test
+	public void constructorUpdateWithInsertOperationTest() throws ApplicationException {
+		File base = new File(SRC_FOLDER + UPD_INS_CONST + "Square.java");
+		File firstVar = new File(SRC_FOLDER + UPD_INS_CONST + "Square01.java");
+		File secondVar = new File(SRC_FOLDER + UPD_INS_CONST + "Square02.java");
+		ConflictPattern cp = getUpdateConstructorPattern();
+		ChangeInstanceHandler cih = new ChangeInstanceHandler();
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
+		MatchingHandler mh = new MatchingHandler();
+		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		assertTrue(result.size() == 1, "More than one result for updating method?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("base.Square.Square()"), 
+				"Updated constructor is not base.Square.Square()?");
+	}
+	
+	@Test
+	public void constructorUpdateWithDeleteOperationTest() throws ApplicationException {
+		File base = new File(SRC_FOLDER + UPD_DEL_CONST + "Square.java");
+		File firstVar = new File(SRC_FOLDER + UPD_DEL_CONST + "Square01.java");
+		File secondVar = new File(SRC_FOLDER + UPD_DEL_CONST + "Square02.java");
+		ConflictPattern cp = getUpdateConstructorPattern();
+		ChangeInstanceHandler cih = new ChangeInstanceHandler();
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
+		MatchingHandler mh = new MatchingHandler();
+		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		assertTrue(result.size() == 1, "More than one result for updating method?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("base.Square.Square()"), 
+				"Updated constructor is not base.Square.Square()?");
+	}
+	
 	private ConflictPattern getUpdateMethodPattern() {
 		FreeVariable classVar = new FreeVariable(0);
 		FreeVariable methodVar = new FreeVariable(1);
@@ -79,6 +122,23 @@ public class TestMatcherUpdates {
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
 		dp1.addActionPattern(new UpdatePatternAction(methodVar));
+		
+		return new ConflictPattern(basePattern, dp1, dp2);
+	}
+	
+	private ConflictPattern getUpdateConstructorPattern() {
+		FreeVariable classVar = new FreeVariable(0);
+		FreeVariable cVar = new FreeVariable(1);
+		
+		BasePattern basePattern = new BasePattern();
+		ClassPattern classPattern = new ClassPattern(classVar);
+		ConstructorPattern cPattern = new ConstructorPattern(cVar, null);
+		classPattern.addConstructorPattern(cPattern);
+		basePattern.addClassPattern(classPattern);
+		
+		DeltaPattern dp1 = new DeltaPattern();
+		DeltaPattern dp2 = new DeltaPattern();
+		dp1.addActionPattern(new UpdatePatternAction(cVar));
 		
 		return new ConflictPattern(basePattern, dp1, dp2);
 	}
