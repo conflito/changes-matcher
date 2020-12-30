@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -43,12 +45,18 @@ public class FileSystemHandler {
 	}
 	
 	private File searchSourceFile(File dir, String fileName) {
+		List<File> dirs = new ArrayList<>();
 		for(File f: dir.listFiles()) {
 			if(f.getName().equals(fileName)) {
 				return f;
 			}
 			else if(f.isDirectory())
-				searchSourceFile(f, fileName);
+				dirs.add(f);
+		}
+		for(File f: dirs) {
+			File result = searchSourceFile(f, fileName);
+			if(result != null)
+				return result;
 		}
 		return null;
 	}
