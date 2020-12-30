@@ -1,28 +1,17 @@
 package matcher.patterns.deltas;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import matcher.entities.Visibility;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.DeleteMethodAction;
-import matcher.entities.deltas.Holder;
 import matcher.patterns.FreeVariable;
 
 public class DeleteMethodPatternAction extends DeletePatternAction {
 
 	private Visibility visibility;
-	
-	private List<FreeVariable> compatibles;
 
 	public DeleteMethodPatternAction(FreeVariable deletedEntity, FreeVariable holderEntity, Visibility visibility) {
 		super(deletedEntity, holderEntity);
 		this.visibility = visibility;
-		compatibles = new ArrayList<>();
-	}
-	
-	public void addCompatible(FreeVariable var) {
-		compatibles.add(var);
 	}
 	
 	@Override
@@ -34,24 +23,7 @@ public class DeleteMethodPatternAction extends DeletePatternAction {
 		return getAction() == action.getAction() &&
 			   getDeletedEntity().matches(action.getDeletedEntityQualifiedName()) &&
 			   getHolderEntity().matches(action.getHolderEntityQualifiedName()) &&
-			   (visibility == null || visibility == action.getVisibility()) &&
-			   compatiblesMatch(action);
-	}
-	
-	private boolean compatiblesMatch(DeleteMethodAction action) {
-		return compatibles.stream().allMatch(v -> matchesOne(v, action.getCompatibles()));
-	}
-
-	private boolean matchesOne(FreeVariable v, List<Holder> compatibles) {
-		return compatibles.stream().anyMatch(h -> v.matches(h.getQualifiedName()));
-	}
-	
-	@Override
-	public void clean() {
-		super.clean();
-		for(FreeVariable v: compatibles) {
-			v.clean();
-		}
+			   (visibility == null || visibility == action.getVisibility());
 	}
 	
 }
