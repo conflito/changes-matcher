@@ -33,7 +33,7 @@ import java.util.List;
 
 public class TestMatcherDeletes {
 
-	private static final String SRC_FOLDER = "src/test/resources/";
+	private static final String SRC_FOLDER = "src/test/resources/OperationsInstances/";
 	private static final String DEL_FIELD_METHOD_FOLDER = "FieldAndMethodDeleteInstance/";
 	private static final String DEL_FIELD_CONSTR_FOLDER = "FieldAndConstructorDeleteInstance/";
 	private static final String DEL_FIELD_COMPA_METHOD_FOLDER = "FieldAndCompatibleMethodDeleteInstance/";

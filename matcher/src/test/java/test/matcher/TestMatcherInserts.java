@@ -29,7 +29,7 @@ import matcher.utils.Pair;
 
 public class TestMatcherInserts {
 
-	private static final String SRC_FOLDER = "src/test/resources/";
+	private static final String SRC_FOLDER = "src/test/resources/OperationsInstances/";
 	private static final String INS_FIELD_METHOD_FOLDER = "FieldAndMethodInsertInstance/";
 	private static final String INS_FIELD_CONSTR_FOLDER = "FieldAndConstructorInsertInstance/";
 	private static final String INS_CONSTR_COMPAT_METHOD_FOLDER = 

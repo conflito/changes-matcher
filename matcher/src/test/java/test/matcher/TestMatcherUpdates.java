@@ -24,7 +24,7 @@ import java.util.List;
 
 public class TestMatcherUpdates {
 	
-	private static final String SRC_FOLDER = "src/test/resources/";
+	private static final String SRC_FOLDER = "src/test/resources/OperationsInstances/";
 	private static final String UPD_INS_METHOD_FOLDER = "MethodUpdateWithInsertOperationInstance/";
 	private static final String UPD_DEL_METHOD_FOLDER = "MethodUpdateWithDeleteOperationInstance/";
 	private static final String UPD_INS_CONST_FOLDER = "ConstructorUpdateWithInsertOperationInstance/";

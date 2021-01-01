@@ -25,7 +25,7 @@ import java.util.List;
 
 public class TestMatcherVisibilities {
 	
-	private static final String SRC_FOLDER = "src/test/resources/";
+	private static final String SRC_FOLDER = "src/test/resources/OperationsInstances/";
 	private static final String INS_VIS_FIELD_FOLDER = "VisibilityFieldInsertInstance/";
 	private static final String DEL_VIS_FIELD_FOLDER = "VisibilityFieldDeleteInstance/";
 	private static final String UPD_VIS_FIELD_FOLDER = "VisibilityFieldUpdateInstance/";
