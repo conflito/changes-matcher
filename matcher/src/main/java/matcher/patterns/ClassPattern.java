@@ -59,19 +59,31 @@ public class ClassPattern {
 	}
 	
 	public boolean hasFields() {
-		return !fields.isEmpty();
+		boolean result = !fields.isEmpty();
+		if(!result && hasSuperClass())
+			result = superClass.hasFields();
+		return result;
 	}
 	
 	public boolean hasMethods() {
-		return !methods.isEmpty();
+		boolean result = !methods.isEmpty();
+		if(!result && hasSuperClass())
+			result = superClass.hasMethods();
+		return result;
 	}
 	
 	public boolean hasConstructors() {
-		return !constructors.isEmpty();
+		boolean result = !constructors.isEmpty();
+		if(!result && hasSuperClass())
+			result = superClass.hasConstructors();
+		return result;
 	}
 	
 	public boolean hasCompatibles() {
-		return !compatible.isEmpty();
+		boolean result = !compatible.isEmpty();
+		if(!result && hasSuperClass())
+			result = superClass.hasCompatibles();
+		return result;
 	}
 	
 	public boolean hasSuperClass() {
@@ -79,11 +91,17 @@ public class ClassPattern {
 	}
 	
 	public boolean hasInvocations() {
-		return methodsHaveInvocations() || constructorsHaveInvocations();
+		boolean result = methodsHaveInvocations() || constructorsHaveInvocations();
+		if(!result && hasSuperClass())
+			result = superClass.hasInvocations();
+		return result;
 	}
 	
 	public boolean hasFieldAccesses() {
-		return methodsHaveFieldAccesses();
+		boolean result = methodsHaveFieldAccesses();
+		if(!result && hasSuperClass())
+			result = superClass.hasFieldAccesses();
+		return result;
 	}
 	
 	private boolean constructorsHaveInvocations() {
