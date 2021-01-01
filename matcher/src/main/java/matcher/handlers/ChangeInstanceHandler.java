@@ -19,11 +19,13 @@ public class ChangeInstanceHandler {
 		this.bih = new BaseInstanceHandler();
 		this.dih = new DeltaInstanceHandler();
 	}
+	
+	public Diff getDiff(File base, File variant) throws ApplicationException {
+		return diff(base, variant);
+	}
 
-	public ChangeInstance getChangeInstance(File base, File firstVariant, File secondVariant, ConflictPattern cp) 
-			throws ApplicationException {
-		Diff firstDiff = diff(base, firstVariant);
-		Diff secondDiff = diff(base, secondVariant);
+	public ChangeInstance getChangeInstance(File base, Diff firstDiff, Diff secondDiff, 
+			ConflictPattern cp) throws ApplicationException {
 		BaseInstance baseInstance = bih.getBaseInstance(base, cp);
 		DeltaInstance firstDelta = dih.getDeltaInstance(firstDiff, cp);
 		DeltaInstance secondDelta = dih.getDeltaInstance(secondDiff, cp);
