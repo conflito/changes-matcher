@@ -33,18 +33,21 @@ public class ClassProcessor extends AbstractProcessor<CtClass<?>>{
 
 	@Override
 	public void process(CtClass<?> element) {
-		classInstance = new ClassInstance(element.getSimpleName(), element.getQualifiedName());
-		if(conflictPattern.hasSuperClasses())
-			processSuperClass(element);
-		if(conflictPattern.hasFields())
-			processFields(element);
-		if(conflictPattern.hasMethods()) {
-			List<MethodInstance> methods = processMethods(element);
-			if(conflictPattern.hasCompatibleMethods())
-				processCompatibleMethods(methods);
+		if(element!= null) {
+			classInstance = new ClassInstance(element.getSimpleName(), element.getQualifiedName());
+			if(conflictPattern.hasSuperClasses())
+				processSuperClass(element);
+			if(conflictPattern.hasFields())
+				processFields(element);
+			if(conflictPattern.hasMethods()) {
+				List<MethodInstance> methods = processMethods(element);
+				if(conflictPattern.hasCompatibleMethods())
+					processCompatibleMethods(methods);
+			}
+			if(conflictPattern.hasConstructors())
+				processConstructors(element);
 		}
-		if(conflictPattern.hasConstructors())
-			processConstructors(element);
+		
 	}
 
 	private void processCompatibleMethods(List<MethodInstance> methods) {
