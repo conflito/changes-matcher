@@ -32,6 +32,15 @@ public class ChangeInstanceHandler {
 		return new ChangeInstance(baseInstance, firstDelta, secondDelta);
 	}
 	
+	public ChangeInstance getChangeInstance(File base1, File base2, Diff firstDiff, Diff secondDiff,
+			ConflictPattern cp) throws ApplicationException {
+		BaseInstance baseInstance = bih.getBaseInstance(base1, cp);
+		baseInstance.merge(bih.getBaseInstance(base2, cp));
+		DeltaInstance firstDelta = dih.getDeltaInstance(firstDiff, cp);
+		DeltaInstance secondDelta = dih.getDeltaInstance(secondDiff, cp);
+		return new ChangeInstance(baseInstance, firstDelta, secondDelta);
+	}
+	
 	private Diff diff(File first, File second) throws ApplicationException {
 		Diff diff = null;
 		try {
