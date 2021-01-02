@@ -52,9 +52,8 @@ public class VisibilityUpdateActionsProcessor extends DeltaProcessor{
 	}
 	
 	private void visit(CtFieldImpl<?> srcImpl, CtFieldImpl<?> dstImpl) {
-		ClassInstance classInstance = getClassInstance(dstImpl.getTopLevelType());
-		FieldInstance dstFieldInstance = getFieldInstance(dstImpl, classInstance);
-		FieldInstance srcFieldInstance = getFieldInstance(srcImpl, classInstance);
+		FieldInstance dstFieldInstance = getFieldInstance(dstImpl);
+		FieldInstance srcFieldInstance = getFieldInstance(srcImpl);
 		Visibility oldVisibility = srcFieldInstance.getVisibility();
 		Visibility newVisibility = dstFieldInstance.getVisibility();
 		ActionInstance result = new VisibilityAction(Action.UPDATE, dstFieldInstance, 

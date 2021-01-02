@@ -59,7 +59,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	public <T> void visitCtField(CtField<T> field) {
 		if(getConflictPattern().hasInsertFieldActions()) {
 			ClassInstance holderInstance = getClassInstance(field);
-			FieldInstance insertedInstance = getFieldInstance(field, holderInstance);
+			FieldInstance insertedInstance = getFieldInstance(field);
 			ActionInstance result = new InsertFieldAction(insertedInstance, holderInstance,
 					insertedInstance.getVisibility());
 			setResult(result);

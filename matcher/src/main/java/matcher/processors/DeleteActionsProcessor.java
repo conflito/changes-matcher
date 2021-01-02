@@ -45,7 +45,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	public <T> void visitCtField(CtField<T> field) {
 		if(getConflictPattern().hasDeleteFieldActions()) {
 			ClassInstance holderInstance = getClassInstance(field);
-			FieldInstance deletedInstance = getFieldInstance(field, holderInstance);
+			FieldInstance deletedInstance = getFieldInstance(field);
 			ActionInstance result = new DeleteFieldAction(deletedInstance, holderInstance, 
 					deletedInstance.getVisibility());
 			setResult(result);

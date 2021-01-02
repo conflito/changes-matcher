@@ -47,8 +47,7 @@ public class VisibilityDeleteActionsProcessor extends DeltaProcessor {
 	}
 	
 	private void visit(CtFieldImpl<?> elementImpl) {
-		ClassInstance classInstance = getClassInstance(elementImpl.getTopLevelType());
-		FieldInstance fieldInstance = getFieldInstance(elementImpl, classInstance);
+		FieldInstance fieldInstance = getFieldInstance(elementImpl);
 		Visibility visibility = fieldInstance.getVisibility();
 		ActionInstance result = new VisibilityAction(Action.DELETE, fieldInstance, 
 				visibility, null);
