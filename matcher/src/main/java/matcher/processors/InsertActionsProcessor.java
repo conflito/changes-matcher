@@ -95,8 +95,8 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	@Override
 	public <T> void visitCtFieldRead(CtFieldRead<T> fieldRead) {
 		if(getConflictPattern().hasInsertFieldAccessActions()) {
-			String fieldQualifiedName = getMethodProcessor()
-					.getFieldQualifiedName(fieldRead.getVariable());
+			String fieldQualifiedName = fieldRead.getVariable().getSimpleName();
+					//getMethodProcessor().getFieldQualifiedName(fieldRead.getVariable());
 			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.READ);
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(fieldRead);
 			if(possibleCaller.isPresent()) {
@@ -113,8 +113,8 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	@Override
 	public <T> void visitCtFieldWrite(CtFieldWrite<T> fieldWrite) {
 		if(getConflictPattern().hasInsertFieldAccessActions()) {
-			String fieldQualifiedName = getMethodProcessor()
-					.getFieldQualifiedName(fieldWrite.getVariable());
+			String fieldQualifiedName = fieldWrite.getVariable().getSimpleName();
+					//getMethodProcessor().getFieldQualifiedName(fieldWrite.getVariable());
 			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.WRITE);
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(fieldWrite);
 			if(possibleCaller.isPresent()) {

@@ -59,7 +59,7 @@ public class TestMatcherDeletes {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.t"), "Field is not base.Square.t?");
+				assignments.get(1).getSecond().equals("t"), "Field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
 				assignments.get(2).getSecond().equals("base.Square.m()"), "Method is not base.Square.m()?");
 	}
@@ -83,7 +83,7 @@ public class TestMatcherDeletes {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.t"), "Field is not base.Square.t?");
+				assignments.get(1).getSecond().equals("t"), "Field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
 				assignments.get(2).getSecond().equals("base.Square.Square()"), "Constructor is "
 						+ "not base.Square.m()?");
@@ -107,8 +107,8 @@ public class TestMatcherDeletes {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.t"), 
-				"Deleted field is not base.Square.t?");
+				assignments.get(1).getSecond().equals("t"), 
+				"Deleted field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
 				assignments.get(2).getSecond().equals("base.Square.m(java.lang.Number)"), 
 				"Top method is not base.Square.m(java.lang.Number)?");
@@ -135,8 +135,8 @@ public class TestMatcherDeletes {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Shape"), "Class is not base.Shape?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Shape.t"), 
-				"Deleted field is not base.Shape.t?");
+				assignments.get(1).getSecond().equals("t"), 
+				"Deleted field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
 				assignments.get(2).getSecond().equals("base.Shape.m()"), 
 				"Deleted method invoation is not base.Shape.m()?");
@@ -160,8 +160,8 @@ public class TestMatcherDeletes {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.t"), 
-				"Accessed field is not base.Square.t?");
+				assignments.get(1).getSecond().equals("t"), 
+				"Accessed field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
 				assignments.get(2).getSecond().equals("base.Square.m()"), 
 				"Method with deleted access is not base.Square.m()?");

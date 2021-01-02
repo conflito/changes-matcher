@@ -61,7 +61,6 @@ public abstract class DeltaProcessor {
 	protected FieldInstance getFieldInstance(CtField<?> field, ClassInstance classInstance) {
 		fieldProcessor.process(field);
 		FieldInstance fieldInstance = fieldProcessor.getFieldInstance();
-		fieldInstance.setClassInstance(classInstance);
 		return fieldInstance;
 	}
 	

@@ -75,7 +75,6 @@ public class ClassProcessor extends AbstractProcessor<CtClass<?>>{
 		for(CtFieldReference<?> f: element.getDeclaredFields()) {
 			fieldProcessor.process(f.getFieldDeclaration());
 			FieldInstance field = fieldProcessor.getFieldInstance();
-			field.setClassInstance(classInstance);
 			classInstance.addField(field);
 		}
 		

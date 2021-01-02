@@ -202,7 +202,7 @@ public class ClassInstance implements Holder{
 			result.append("\n");
 		}
 		for(FieldInstance f: getFields()) {
-			result.append(getQualifiedName() + " has field " + f.getVisibility() + " " + f.getName());
+			result.append(getQualifiedName() + " has field " + f.getVisibility() + " " + f.getQualifiedName());
 			result.append("\n");
 		}
 		for(ConstructorInstance c: getConstructors()) {

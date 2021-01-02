@@ -51,7 +51,6 @@ public class TestClassPattern {
 	public void matchingClassWithPrivateFieldTest() {
 		ClassInstance instance = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
 		FieldInstance field = new FieldInstance("x", Visibility.PRIVATE, INT_TYPE);
-		field.setClassInstance(instance);
 		instance.addField(field);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
@@ -71,7 +70,6 @@ public class TestClassPattern {
 	public void matchingClassWithAnyVisibilityFieldTest() {
 		ClassInstance instance = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
 		FieldInstance field = new FieldInstance("x", Visibility.PRIVATE, INT_TYPE);
-		field.setClassInstance(instance);
 		instance.addField(field);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
@@ -91,7 +89,6 @@ public class TestClassPattern {
 	public void matchingClassWithWrongVisibilityFieldTest() {
 		ClassInstance instance = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
 		FieldInstance field = new FieldInstance("x", Visibility.PRIVATE, INT_TYPE);
-		field.setClassInstance(instance);
 		instance.addField(field);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
@@ -131,12 +128,10 @@ public class TestClassPattern {
 	public void matchingClassWithSuperClassWithFieldsTest() {
 		ClassInstance instance = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
 		FieldInstance field = new FieldInstance("x", Visibility.PRIVATE, INT_TYPE);
-		field.setClassInstance(instance);
 		instance.addField(field);
 		
 		ClassInstance parent = new ClassInstance(SUPER_CLASS_NAME, SUPER_CLASS_QUALIFIED_NAME);
 		FieldInstance parentField = new FieldInstance("t", Visibility.PROTECTED, INT_TYPE);
-		parentField.setClassInstance(parent);
 		parent.addField(parentField);
 		
 		instance.setSuperClass(parent);

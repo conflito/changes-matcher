@@ -11,7 +11,7 @@ import matcher.patterns.FreeVariable;
 public class TestFieldAccessPattern {
 
 	private final FreeVariable FREE_VAR = new FreeVariable(0);
-	private final String ACCESS_QUALIFIED_NAME = "a.b.C.x";
+	private final String ACCESS_QUALIFIED_NAME = "x";
 	
 	@Test
 	public void matchingFieldAccessSameAccessTest() {

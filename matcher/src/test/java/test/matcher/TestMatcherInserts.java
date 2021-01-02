@@ -56,7 +56,7 @@ public class TestMatcherInserts {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 					assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.t"), "Field is not base.Square.t?");
+				assignments.get(1).getSecond().equals("t"), "Field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
 				assignments.get(2).getSecond().equals("base.Square.m()"), "Method is not base.Square.m()?");
 	}
@@ -95,7 +95,7 @@ public class TestMatcherInserts {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.t"), "Field is not base.Square.t?");
+				assignments.get(1).getSecond().equals("t"), "Field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
 				assignments.get(2).getSecond().equals("base.Square.Square()"), "Constructor is not "
 						+ "base.Square.Square()?");
@@ -175,7 +175,7 @@ public class TestMatcherInserts {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.t"), "Field is not base.Square.t?");
+				assignments.get(1).getSecond().equals("t"), "Field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
 				assignments.get(2).getSecond().equals("base.Square.m2()"), 
 				"One of the inserted methods is not base.Square.m2()?");

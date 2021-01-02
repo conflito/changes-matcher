@@ -48,8 +48,8 @@ public class TestMatcherVisibilities {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.t"), 
-				"Updated field is not base.Square.t?");
+				assignments.get(1).getSecond().equals("t"), 
+				"Updated field is not t?");
 	}
 	
 	@Test
@@ -70,8 +70,8 @@ public class TestMatcherVisibilities {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.t"), 
-				"Updated field is not base.Square.t?");
+				assignments.get(1).getSecond().equals("t"), 
+				"Updated field is not t?");
 	}
 	
 	@Test
@@ -92,8 +92,8 @@ public class TestMatcherVisibilities {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.t"), 
-				"Updated field is not base.Square.t?");
+				assignments.get(1).getSecond().equals("t"), 
+				"Updated field is not t?");
 	}
 
 	private ConflictPattern getInsertFieldVisibilityPattern() {

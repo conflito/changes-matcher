@@ -11,8 +11,6 @@ public class FieldInstance implements Insertable, Deletable, Visible{
 	private Visibility visibility;
 	
 	private Type type;
-	
-	private ClassInstance classInstance;
 
 	public FieldInstance(String name, Visibility visibility, Type type) {
 		super();
@@ -21,7 +19,7 @@ public class FieldInstance implements Insertable, Deletable, Visible{
 		this.type = type;
 	}
 
-	public String getName() {
+	public String getQualifiedName() {
 		return name;
 	}
 
@@ -31,14 +29,6 @@ public class FieldInstance implements Insertable, Deletable, Visible{
 
 	public Type getType() {
 		return type;
-	}
-
-	public void setClassInstance(ClassInstance classInstance) {
-		this.classInstance = classInstance;
-	}
-	
-	public String getQualifiedName() {
-		return classInstance.getQualifiedName() + "." + getName();
 	}
 	
 	public boolean equals(Object o) {
