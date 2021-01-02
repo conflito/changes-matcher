@@ -6,6 +6,7 @@ import gumtree.spoon.diff.Diff;
 import matcher.entities.ChangeInstance;
 import matcher.entities.FieldAccessType;
 import matcher.entities.Visibility;
+import matcher.entities.deltas.Action;
 import matcher.exceptions.ApplicationException;
 import matcher.handlers.ChangeInstanceHandler;
 import matcher.handlers.MatchingHandler;
@@ -21,6 +22,7 @@ import matcher.patterns.deltas.InsertFieldAccessPatternAction;
 import matcher.patterns.deltas.InsertFieldPatternAction;
 import matcher.patterns.deltas.InsertMethodPatternAction;
 import matcher.patterns.deltas.InsertPatternAction;
+import matcher.patterns.deltas.VisibilityActionPattern;
 import matcher.utils.Pair;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,9 +35,11 @@ public class TestMatcherSemanticConflicts {
 	private static final String SRC_FOLDER = "src/test/resources/SemanticConflictsInstances/";
 	private static final String OVERLOAD_ADDITION_FOLDER = "AddOverloadingMByAdditionAddCall2M/";
 	private static final String FIELD_HIDING_FOLDER = "AddFieldHidingAddMethodThatUseDefFinChild/";
-	private static final String METHOD_OVERIDING = "AddOveridingMAddCall2MInParent/";
+	private static final String METHOD_OVERIDING_FOLDER = "AddOveridingMAddCall2MInParent/";
+	private static final String OVERLOAD_ACCESS_CHANGE_FOLDER = 
+			"AddOverloadingMByChangeAccessibility1AddCall2M/";
 	
-	@Test
+//	@Test
 	public void overloadByAdditionTest() throws ApplicationException {
 		File base = new File(SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + "TestClass.java");
 		File firstVar = new File(SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + "TestClass01.java");
@@ -65,7 +69,7 @@ public class TestMatcherSemanticConflicts {
 				"Inserted compatible method is not move(int, int)?");
 	}
 	
-	@Test
+//	@Test
 	public void addFieldHidingTest() throws ApplicationException {
 		File base = new File(SRC_FOLDER + FIELD_HIDING_FOLDER + "B.java");
 		File firstVar = new File(SRC_FOLDER + FIELD_HIDING_FOLDER + "B01.java");
@@ -92,12 +96,12 @@ public class TestMatcherSemanticConflicts {
 				"Inserted method that writes to field is not m()?");
 	}
 	
-	@Test
+//	@Test
 	public void methodOveridingTest() throws ApplicationException {
-		File base1 = new File(SRC_FOLDER + METHOD_OVERIDING + "C.java");
-		File var1 = new File(SRC_FOLDER + METHOD_OVERIDING + "C01.java");
-		File base2 = new File(SRC_FOLDER + METHOD_OVERIDING + "D.java");
-		File var2 = new File(SRC_FOLDER + METHOD_OVERIDING + "D01.java");
+		File base1 = new File(SRC_FOLDER + METHOD_OVERIDING_FOLDER + "C.java");
+		File var1 = new File(SRC_FOLDER + METHOD_OVERIDING_FOLDER + "C01.java");
+		File base2 = new File(SRC_FOLDER + METHOD_OVERIDING_FOLDER + "D.java");
+		File var2 = new File(SRC_FOLDER + METHOD_OVERIDING_FOLDER + "D01.java");
 		ConflictPattern cp = getMethodOveridingPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
 		Diff d1 = cih.getDiff(base1, var1);
@@ -121,6 +125,28 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(4).getFirst() == 4 && 
 				assignments.get(4).getSecond().equals("h"), 
 				"Field is not h?");
+	}
+	
+	@Test
+	public void overloadingAccessChangeTest() throws ApplicationException {
+		/**
+		 * Test is incomplete because gumtree spoon diff assumes move(0,0)
+		 * as move(int,int) even if move(int,int) is private
+		 * Awating reply on the issue in the github repo
+		 */
+		File base1 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "E.java");
+		File var1 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "E01.java");
+		File base2 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "F.java");
+		File var2 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "F01.java");
+		ConflictPattern cp = getOverloadAccessChangePattern();
+		ChangeInstanceHandler cih = new ChangeInstanceHandler();
+		Diff d1 = cih.getDiff(base1, var1);
+		Diff d2 = cih.getDiff(base2, var2);
+		ChangeInstance ci = cih.getChangeInstance(base1, base2, d1, d2, cp);
+		System.out.println(ci);
+		MatchingHandler mh = new MatchingHandler();
+		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		System.out.println(result);
 	}
 
 	private ConflictPattern getOverloadByAdditionPattern() {
@@ -197,6 +223,34 @@ public class TestMatcherSemanticConflicts {
 		dp2.addActionPattern(new InsertFieldAccessPatternAction(fieldVar, methodVar, 
 				FieldAccessType.WRITE));
 		
+		return new ConflictPattern(basePattern, dp1, dp2);
+	}
+
+	private ConflictPattern getOverloadAccessChangePattern() {
+		FreeVariable superClassVar = new FreeVariable(0);
+		FreeVariable classVar = new FreeVariable(1);
+		FreeVariable topMethodVar = new FreeVariable(2);
+		FreeVariable subMethodVar = new FreeVariable(3);
+		FreeVariable insertedMethodVar = new FreeVariable(4);
+		
+		BasePattern basePattern = new BasePattern();
+		ClassPattern superClassPattern = new ClassPattern(superClassVar);
+		ClassPattern classPattern = new ClassPattern(classVar);
+		MethodPattern topMethodPattern = new MethodPattern(topMethodVar, Visibility.PUBLIC);
+		MethodPattern subMethodPattern = new MethodPattern(subMethodVar, Visibility.PRIVATE);
+		superClassPattern.addMethodPattern(topMethodPattern);
+		superClassPattern.addMethodPattern(subMethodPattern);
+		superClassPattern.addCompatible(subMethodVar, topMethodVar);
+		classPattern.setSuperClass(superClassPattern);
+		basePattern.addClassPattern(classPattern);
+		
+		DeltaPattern dp1 = new DeltaPattern();
+		DeltaPattern dp2 = new DeltaPattern();
+		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, classVar, 
+				Visibility.PUBLIC));
+		dp1.addActionPattern(new InsertPatternAction(topMethodVar, classVar));
+		dp2.addActionPattern(new VisibilityActionPattern(Action.UPDATE, Visibility.PUBLIC, 
+				Visibility.PRIVATE, subMethodVar));
 		return new ConflictPattern(basePattern, dp1, dp2);
 	}
 }
