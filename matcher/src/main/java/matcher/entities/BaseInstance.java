@@ -22,6 +22,12 @@ public class BaseInstance {
 			classInstances.add(classInstance);
 	}
 	
+	public void merge(BaseInstance b) {
+		for(ClassInstance c: b.classInstances) {
+			addClassInstance(c);
+		}
+	}
+	
 	public String toStringDebug() {
 		StringBuilder result = new StringBuilder();
 		for(ClassInstance c: classInstances) {
