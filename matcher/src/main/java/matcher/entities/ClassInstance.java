@@ -214,7 +214,7 @@ public class ClassInstance implements Holder{
 			}
 		}
 		for(MethodInstance m: getMethods()) {
-			result.append(getQualifiedName() + " has method " + m.getVisibility() + " " + m.getSimpleSignature());
+			result.append(getQualifiedName() + " has method " + m.getVisibility() + " " + m.getQualifiedName());
 			result.append("\n");
 			for(FieldAccessInstance fai: m.getFieldAccesses()) {
 				result.append(m.getQualifiedName() + " " + fai.getAccessType() + " " + fai.getQualifiedName());

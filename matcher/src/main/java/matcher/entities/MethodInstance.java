@@ -22,8 +22,6 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder{
 	private List<MethodInvocationInstance> invocations;
 	
 	private List<FieldAccessInstance> fieldAccesses;
-	
-	private ClassInstance classInstance;
 
 	public MethodInstance(String name, Visibility visibility, Type returnType) {
 		super();
@@ -49,7 +47,19 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder{
 	public String getName() {
 		return name;
 	}
+	
+	public String getQualifiedName() {
+		return getSimpleSignature();
+	}
+	
+	private String getSimpleSignature() {
+		return getName() + parametersToString();
+	}
 
+	private String parametersToString() {
+		return getParameters().toString().replace("[", "(").replace("]", ")");
+	}
+	
 	public Visibility getVisibility() {
 		return visibility;
 	}
@@ -76,24 +86,8 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder{
 							.collect(Collectors.toList());
 	}
 
-	public void setClassInstance(ClassInstance classInstance) {
-		this.classInstance = classInstance;
-	}
-	
-	public String getQualifiedName() {
-		return classInstance.getQualifiedName() + "." + getName() + parametersToString();
-	}
-
 	public List<String> getInvocationsQualifiedNames() {
 		return invocations.stream().map(i -> i.getQualifiedName()).collect(Collectors.toList());
-	}
-	
-	public String getSimpleSignature() {
-		return getName() + parametersToString();
-	}
-
-	private String parametersToString() {
-		return getParameters().toString().replace("[", "(").replace("]", ")");
 	}
 	
 	public boolean isCompatibleWith(MethodInstance m) {

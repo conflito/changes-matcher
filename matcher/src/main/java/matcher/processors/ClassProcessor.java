@@ -86,7 +86,6 @@ public class ClassProcessor extends AbstractProcessor<CtClass<?>>{
 		for(CtMethod<?> method: element.getMethods()) {
 			methodProcessor.process(method);
 			MethodInstance methodInstance = methodProcessor.getMethodInstance();
-			methodInstance.setClassInstance(getClassInstance());
 			classInstance.addMethod(methodInstance);
 			methods.add(methodInstance);
 		}

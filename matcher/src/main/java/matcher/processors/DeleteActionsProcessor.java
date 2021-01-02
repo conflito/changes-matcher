@@ -60,8 +60,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
-				ClassInstance classInstance = getClassInstance(method);
-				MethodInstance methodInstance = getMethodInstance(method, classInstance);
+				MethodInstance methodInstance = getMethodInstance(method);
 				ActionInstance result = new DeleteAction(mii, methodInstance);
 				setResult(result);
 			}
@@ -82,7 +81,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	public <T> void visitCtMethod(CtMethod<T> method) {
 		if(getConflictPattern().hasDeleteMethodActions()) {
 			ClassInstance holderInstance = getClassInstance(method);
-			MethodInstance deletedInstance = getMethodInstance(method, holderInstance);
+			MethodInstance deletedInstance = getMethodInstance(method);
 			ActionInstance result =  new DeleteMethodAction(deletedInstance, holderInstance, 
 					deletedInstance.getVisibility());
 			setResult(result);
@@ -98,8 +97,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(fieldRead);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
-				ClassInstance classInstance = getClassInstance(method);
-				MethodInstance methodInstance = getMethodInstance(method, classInstance);
+				MethodInstance methodInstance = getMethodInstance(method);
 				ActionInstance result = new DeleteFieldAccessAction(fai, methodInstance, fai.getAccessType());
 				setResult(result);
 			}
@@ -115,8 +113,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(fieldWrite);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
-				ClassInstance classInstance = getClassInstance(method);
-				MethodInstance methodInstance = getMethodInstance(method, classInstance);
+				MethodInstance methodInstance = getMethodInstance(method);
 				ActionInstance result = new DeleteFieldAccessAction(fai, methodInstance, fai.getAccessType());
 				setResult(result);
 			}
@@ -128,8 +125,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(element);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
-				ClassInstance classInstance = getClassInstance(method);
-				MethodInstance methodInstance = getMethodInstance(method, classInstance);
+				MethodInstance methodInstance = getMethodInstance(method);
 				ActionInstance result = new UpdateAction(methodInstance);
 				setResult(result);
 			}

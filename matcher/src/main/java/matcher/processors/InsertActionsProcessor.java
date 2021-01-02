@@ -33,7 +33,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	public <T> void visitCtMethod(CtMethod<T> method) {
 		if(getConflictPattern().hasInsertMethodActions()) {
 			ClassInstance holderInstance = getClassInstance(method);
-			MethodInstance insertedInstance = getMethodInstance(method, holderInstance);
+			MethodInstance insertedInstance = getMethodInstance(method);
 			InsertMethodAction result = new InsertMethodAction(insertedInstance, holderInstance,
 					insertedInstance.getVisibility());
 			for(MethodInstance m: holderInstance.getMethods()) {
@@ -74,8 +74,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
-				ClassInstance classInstance = getClassInstance(method);
-				MethodInstance methodInstance = getMethodInstance(method, classInstance);
+				MethodInstance methodInstance = getMethodInstance(method);
 				ActionInstance result = new InsertAction(mii, methodInstance);
 				setResult(result);
 			}
@@ -101,8 +100,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(fieldRead);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
-				ClassInstance classInstance = getClassInstance(method);
-				MethodInstance methodInstance = getMethodInstance(method, classInstance);
+				MethodInstance methodInstance = getMethodInstance(method);
 				ActionInstance result = 
 						new InsertFieldAccessAction(fai, methodInstance, FieldAccessType.READ);
 				setResult(result);
@@ -119,8 +117,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(fieldWrite);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
-				ClassInstance classInstance = getClassInstance(method);
-				MethodInstance methodInstance = getMethodInstance(method, classInstance);
+				MethodInstance methodInstance = getMethodInstance(method);
 				ActionInstance result = 
 						new InsertFieldAccessAction(fai, methodInstance, FieldAccessType.WRITE);
 				setResult(result);
@@ -133,8 +130,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(element);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
-				ClassInstance classInstance = getClassInstance(method);
-				MethodInstance methodInstance = getMethodInstance(method, classInstance);
+				MethodInstance methodInstance = getMethodInstance(method);
 				ActionInstance result = new UpdateAction(methodInstance);
 				setResult(result);
 			}

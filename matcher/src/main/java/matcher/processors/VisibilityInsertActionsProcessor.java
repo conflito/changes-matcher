@@ -38,8 +38,7 @@ public class VisibilityInsertActionsProcessor extends DeltaProcessor{
 	}
 	
 	private void visit(CtMethodImpl<?> elementImpl) {
-		ClassInstance classInstance = getClassInstance(elementImpl.getTopLevelType());
-		MethodInstance methodInstance = getMethodInstance(elementImpl, classInstance);
+		MethodInstance methodInstance = getMethodInstance(elementImpl);
 		Visibility newVisibility = methodInstance.getVisibility();
 		ActionInstance result = new VisibilityAction(Action.INSERT, methodInstance, 
 				null, newVisibility);

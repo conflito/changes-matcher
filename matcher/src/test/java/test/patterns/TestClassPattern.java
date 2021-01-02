@@ -163,7 +163,6 @@ public class TestClassPattern {
 	public void matchingClassWithSimplePublicMethodTest() {
 		ClassInstance instance = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
 		MethodInstance method = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		method.setClassInstance(instance);
 		instance.addMethod(method);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
@@ -183,7 +182,6 @@ public class TestClassPattern {
 	public void matchingClassWithSimpleAnyVisibilityMethodTest() {
 		ClassInstance instance = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
 		MethodInstance method = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		method.setClassInstance(instance);
 		instance.addMethod(method);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
@@ -203,7 +201,6 @@ public class TestClassPattern {
 	public void matchingClassWithSimpleWrongVisibilityMethodTest() {
 		ClassInstance instance = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
 		MethodInstance method = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		method.setClassInstance(instance);
 		instance.addMethod(method);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
@@ -223,9 +220,8 @@ public class TestClassPattern {
 	public void matchingClassWithMethodWithInvocationTest() {
 		ClassInstance instance = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
 		MethodInstance method = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		MethodInvocationInstance invocation = new MethodInvocationInstance("a.b.C.m()");
+		MethodInvocationInstance invocation = new MethodInvocationInstance("m()");
 		method.addMethodInvocation(invocation);
-		method.setClassInstance(instance);
 		instance.addMethod(method);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
@@ -240,7 +236,7 @@ public class TestClassPattern {
 		
 		pattern.setVariableValue(0, instance.getQualifiedName());
 		pattern.setVariableValue(1, method.getQualifiedName());
-		pattern.setVariableValue(2, "a.b.C.m()");
+		pattern.setVariableValue(2, "m()");
 		
 		assertTrue(pattern.matches(instance), "Class with method with invocation "
 				+ "doesn't match?");
@@ -250,9 +246,8 @@ public class TestClassPattern {
 	public void matchingClassWithMethodWithReadFieldAccessTest() {
 		ClassInstance instance = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
 		MethodInstance method = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		FieldAccessInstance access = new FieldAccessInstance("a.b.C.z", FieldAccessType.READ);
+		FieldAccessInstance access = new FieldAccessInstance("z", FieldAccessType.READ);
 		method.addFieldAccess(access);
-		method.setClassInstance(instance);
 		instance.addMethod(method);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
@@ -267,7 +262,7 @@ public class TestClassPattern {
 		
 		pattern.setVariableValue(0, instance.getQualifiedName());
 		pattern.setVariableValue(1, method.getQualifiedName());
-		pattern.setVariableValue(2, "a.b.C.z");
+		pattern.setVariableValue(2, "z");
 		
 		assertTrue(pattern.matches(instance), "Class with method with read access "
 				+ "doesn't match?");
@@ -277,9 +272,8 @@ public class TestClassPattern {
 	public void matchingClassWithMethodWithAnyFieldAccessTest() {
 		ClassInstance instance = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
 		MethodInstance method = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		FieldAccessInstance access = new FieldAccessInstance("a.b.C.z", FieldAccessType.READ);
+		FieldAccessInstance access = new FieldAccessInstance("z", FieldAccessType.READ);
 		method.addFieldAccess(access);
-		method.setClassInstance(instance);
 		instance.addMethod(method);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
@@ -294,7 +288,7 @@ public class TestClassPattern {
 		
 		pattern.setVariableValue(0, instance.getQualifiedName());
 		pattern.setVariableValue(1, method.getQualifiedName());
-		pattern.setVariableValue(2, "a.b.C.z");
+		pattern.setVariableValue(2, "z");
 		
 		assertTrue(pattern.matches(instance), "Class with method with any access "
 				+ "doesn't match?");
@@ -373,10 +367,8 @@ public class TestClassPattern {
 	public void matchingClassWithCompatibleMethodsTest() {
 		ClassInstance instance = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
 		MethodInstance method1 = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		method1.setClassInstance(instance);
 		method1.addParameter(INT_TYPE);
 		MethodInstance method2 = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		method2.setClassInstance(instance);
 		method2.addParameter(NUMBER_TYPE);
 		instance.addMethod(method1);
 		instance.addMethod(method2);
@@ -404,10 +396,8 @@ public class TestClassPattern {
 	public void matchingClassWithCompatibleMethodsFailTest() {
 		ClassInstance instance = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
 		MethodInstance method1 = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		method1.setClassInstance(instance);
 		method1.addParameter(INT_TYPE);
 		MethodInstance method2 = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		method2.setClassInstance(instance);
 		method2.addParameter(STRING_TYPE);
 		instance.addMethod(method1);
 		instance.addMethod(method2);
@@ -434,15 +424,12 @@ public class TestClassPattern {
 	public void matchingClassWithTwoCompatibleMethodsTest() {
 		ClassInstance instance = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
 		MethodInstance method1 = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		method1.setClassInstance(instance);
 		method1.addParameter(INT_TYPE);
 		method1.addParameter(INT_TYPE);
 		MethodInstance method2 = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		method2.setClassInstance(instance);
 		method2.addParameter(INT_TYPE);
 		method2.addParameter(NUMBER_TYPE);
 		MethodInstance method3 = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		method3.setClassInstance(instance);
 		method3.addParameter(NUMBER_TYPE);
 		method3.addParameter(NUMBER_TYPE);		
 		instance.addMethod(method1);

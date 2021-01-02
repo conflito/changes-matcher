@@ -72,10 +72,9 @@ public abstract class DeltaProcessor {
 		return constructorInstance;
 	}
 	
-	protected MethodInstance getMethodInstance(CtMethod<?> method, ClassInstance classInstance) {
+	protected MethodInstance getMethodInstance(CtMethod<?> method) {
 		methodProcessor.process(method);
 		MethodInstance methodInstance = methodProcessor.getMethodInstance();
-		methodInstance.setClassInstance(classInstance);
 		return methodInstance;
 	}
 	

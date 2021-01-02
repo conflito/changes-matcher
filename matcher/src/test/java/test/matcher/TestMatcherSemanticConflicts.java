@@ -47,15 +47,15 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(0).getSecond().equals("base.TestClass"), "Class is not "
 						+ "base.TestClass?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.TestClass.move(java.lang.Number, "
+				assignments.get(1).getSecond().equals("move(java.lang.Number, "
 						+ "java.lang.Number)"), 
-				"Method in class is not base.TestClass.move(java.lang.Number, java.lang.Number)?");
+				"Method in class is not move(java.lang.Number, java.lang.Number)?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("base.TestClass.reset()"), 
-				"Inserted method with invocation is not base.TestClass.reset()?");
+				assignments.get(2).getSecond().equals("reset()"), 
+				"Inserted method with invocation is not reset()?");
 		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("base.TestClass.move(int, int)"), 
-				"Inserted compatible method is not base.TestClass.move(int, int)?");
+				assignments.get(3).getSecond().equals("move(int, int)"), 
+				"Inserted compatible method is not move(int, int)?");
 	}
 
 	private ConflictPattern getOverloadByAdditionPattern() {

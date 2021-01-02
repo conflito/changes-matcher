@@ -60,7 +60,8 @@ public class ConstructorProcessor extends AbstractProcessor<CtConstructor<?>>{
 	}
 
 	private String getInvocationQualifiedName(CtInvocation<?> invocation) {
-		return invocation.getTarget().getType() + "." + invocation.getExecutable().getSignature();
+		return /*invocation.getTarget().getType() + "." 
+				+*/ invocation.getExecutable().getSignature().replace(",", ", ");
 	}
 	
 	private String getInvocationClassName(CtInvocation<?> invocation) {

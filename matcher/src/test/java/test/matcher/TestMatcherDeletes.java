@@ -61,7 +61,7 @@ public class TestMatcherDeletes {
 		assertTrue(assignments.get(1).getFirst() == 1 && 
 				assignments.get(1).getSecond().equals("t"), "Field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("base.Square.m()"), "Method is not base.Square.m()?");
+				assignments.get(2).getSecond().equals("m()"), "Method is not base.Square.m()?");
 	}
 	
 	@Test
@@ -110,11 +110,11 @@ public class TestMatcherDeletes {
 				assignments.get(1).getSecond().equals("t"), 
 				"Deleted field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("base.Square.m(java.lang.Number)"), 
-				"Top method is not base.Square.m(java.lang.Number)?");
+				assignments.get(2).getSecond().equals("m(java.lang.Number)"), 
+				"Top method is not m(java.lang.Number)?");
 		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("base.Square.m(int)"), 
-				"Deleted and compatible method is not base.Square.m(int)?");
+				assignments.get(3).getSecond().equals("m(int)"), 
+				"Deleted and compatible method is not m(int)?");
 	}
 	
 	@Test
@@ -138,8 +138,8 @@ public class TestMatcherDeletes {
 				assignments.get(1).getSecond().equals("t"), 
 				"Deleted field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("base.Shape.m()"), 
-				"Deleted method invoation is not base.Shape.m()?");
+				assignments.get(2).getSecond().equals("m()"), 
+				"Deleted method invoation is not m()?");
 	}
 	
 	@Test
@@ -163,11 +163,11 @@ public class TestMatcherDeletes {
 				assignments.get(1).getSecond().equals("t"), 
 				"Accessed field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("base.Square.m()"), 
-				"Method with deleted access is not base.Square.m()?");
+				assignments.get(2).getSecond().equals("m()"), 
+				"Method with deleted access is not m()?");
 		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("base.Square.m2()"), 
-				"Deleted method is not base.Square.m2(int)?");
+				assignments.get(3).getSecond().equals("m2()"), 
+				"Deleted method is not m2()?");
 	}
 
 	private ConflictPattern getDeletePrivateFieldAndPublicMethodPattern() {

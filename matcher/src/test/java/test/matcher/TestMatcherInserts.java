@@ -58,7 +58,7 @@ public class TestMatcherInserts {
 		assertTrue(assignments.get(1).getFirst() == 1 && 
 				assignments.get(1).getSecond().equals("t"), "Field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("base.Square.m()"), "Method is not base.Square.m()?");
+				assignments.get(2).getSecond().equals("m()"), "Method is not m()?");
 	}
 	
 	@Test
@@ -120,11 +120,11 @@ public class TestMatcherInserts {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.move(java.lang.Number)"), 
-				"Top method is not base.Square.move(java.lang.Number)?");
+				assignments.get(1).getSecond().equals("move(java.lang.Number)"), 
+				"Top method is not move(java.lang.Number)?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("base.Square.move(int)"), 
-				"Inserted and compatible method is not base.Square.move(int)?");
+				assignments.get(2).getSecond().equals("move(int)"), 
+				"Inserted and compatible method is not move(int)?");
 		assertTrue(assignments.get(3).getFirst() == 3 && 
 				assignments.get(3).getSecond().equals("base.Square.Square()"), "Inserted constructor is not "
 						+ "base.Square.Square()?");
@@ -148,14 +148,14 @@ public class TestMatcherInserts {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.m()"), 
-				"Method in class (and then invoked) is not base.Square.m()?");
+				assignments.get(1).getSecond().equals("m()"), 
+				"Method in class (and then invoked) is not m()?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("base.Square.m1()"), 
-				"One of the inserted methods is not base.Square.m1()?");
+				assignments.get(2).getSecond().equals("m1()"), 
+				"One of the inserted methods is not m1()?");
 		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("base.Square.m2()"), "Inserted method with invocation "
-						+ "is not base.Square.m2()?");
+				assignments.get(3).getSecond().equals("m2()"), "Inserted method with invocation "
+						+ "is not m2()?");
 	}
 	
 	@Test
@@ -177,11 +177,11 @@ public class TestMatcherInserts {
 		assertTrue(assignments.get(1).getFirst() == 1 && 
 				assignments.get(1).getSecond().equals("t"), "Field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("base.Square.m2()"), 
-				"One of the inserted methods is not base.Square.m2()?");
+				assignments.get(2).getSecond().equals("m2()"), 
+				"One of the inserted methods is not m2()?");
 		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("base.Square.m()"), "Inserted method with field access "
-						+ "is not base.Square.2()?");
+				assignments.get(3).getSecond().equals("m()"), "Inserted method with field access "
+						+ "is not m()?");
 	}
 
 	private ConflictPattern getInsertPrivateFieldAndPublicMethodPattern() {

@@ -49,8 +49,8 @@ public class TestMatcherUpdates {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.m()"), 
-				"Updated method is not base.Square.m()?");
+				assignments.get(1).getSecond().equals("m()"), 
+				"Updated method is not m()?");
 	}
 	
 	@Test
@@ -71,8 +71,8 @@ public class TestMatcherUpdates {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Shape"), "Class is not base.Shape?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Shape.m()"), 
-				"Updated method is not base.Shape.m()?");
+				assignments.get(1).getSecond().equals("m()"), 
+				"Updated method is not m()?");
 	}
 	
 	@Test
