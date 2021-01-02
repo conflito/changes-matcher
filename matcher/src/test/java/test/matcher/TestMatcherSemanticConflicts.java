@@ -12,6 +12,7 @@ import matcher.handlers.MatchingHandler;
 import matcher.patterns.BasePattern;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.ConflictPattern;
+import matcher.patterns.ConstructorPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
 import matcher.patterns.MethodPattern;
@@ -32,7 +33,8 @@ public class TestMatcherSemanticConflicts {
 	private static final String SRC_FOLDER = "src/test/resources/SemanticConflictsInstances/";
 	private static final String OVERLOAD_ADDITION_FOLDER = "AddOverloadingMByAdditionAddCall2M/";
 	private static final String FIELD_HIDING_FOLDER = "AddFieldHidingAddMethodThatUseDefFinChild/";
-
+	private static final String METHOD_OVERIDING = "AddOveridingMAddCall2MInParent/";
+	
 	@Test
 	public void overloadByAdditionTest() throws ApplicationException {
 		File base = new File(SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + "TestClass.java");
@@ -89,6 +91,37 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(3).getSecond().equals("m()"), 
 				"Inserted method that writes to field is not m()?");
 	}
+	
+	@Test
+	public void methodOveridingTest() throws ApplicationException {
+		File base1 = new File(SRC_FOLDER + METHOD_OVERIDING + "C.java");
+		File var1 = new File(SRC_FOLDER + METHOD_OVERIDING + "C01.java");
+		File base2 = new File(SRC_FOLDER + METHOD_OVERIDING + "D.java");
+		File var2 = new File(SRC_FOLDER + METHOD_OVERIDING + "D01.java");
+		ConflictPattern cp = getMethodOveridingPattern();
+		ChangeInstanceHandler cih = new ChangeInstanceHandler();
+		Diff d1 = cih.getDiff(base1, var1);
+		Diff d2 = cih.getDiff(base2, var2);
+		ChangeInstance ci = cih.getChangeInstance(base1, base2, d1, d2, cp);
+		MatchingHandler mh = new MatchingHandler();
+		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		assertTrue(result.size() == 1, "More than one result for overloading method?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("C"), "Superclass is not C");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("D"), "Class is not D?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("C.C()"), 
+				"Constructor is not C.C()?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("resize()"), 
+				"Inserted method that writes to field is not resize()?");
+		assertTrue(assignments.get(4).getFirst() == 4 && 
+				assignments.get(4).getSecond().equals("h"), 
+				"Field is not h?");
+	}
 
 	private ConflictPattern getOverloadByAdditionPattern() {
 		FreeVariable classVar = new FreeVariable(0);
@@ -135,6 +168,35 @@ public class TestMatcherSemanticConflicts {
 		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, classVar, null));
 		dp1.addActionPattern(new InsertFieldAccessPatternAction(fieldVar, insertedMethodVar, FieldAccessType.WRITE));
 		dp2.addActionPattern(new InsertFieldPatternAction(fieldVar, classVar, null));
+		return new ConflictPattern(basePattern, dp1, dp2);
+	}
+	
+	private ConflictPattern getMethodOveridingPattern() {
+		FreeVariable superClassVar = new FreeVariable(0);
+		FreeVariable classVar = new FreeVariable(1);
+		FreeVariable cVar = new FreeVariable(2);
+		FreeVariable methodVar = new FreeVariable(3);
+		FreeVariable fieldVar =  new FreeVariable(4);
+		
+		BasePattern basePattern = new BasePattern();
+		ClassPattern superClassPattern = new ClassPattern(superClassVar);
+		ClassPattern classPattern = new ClassPattern(classVar);
+		MethodPattern methodPattern = new MethodPattern(methodVar, Visibility.PACKAGE);
+		ConstructorPattern cPattern = new ConstructorPattern(cVar, Visibility.PACKAGE);
+		FieldPattern fieldPattern = new FieldPattern(fieldVar, Visibility.PACKAGE);
+		superClassPattern.addConstructorPattern(cPattern);
+		superClassPattern.addMethodPattern(methodPattern);
+		classPattern.addFieldPattern(fieldPattern);
+		classPattern.setSuperClass(superClassPattern);
+		basePattern.addClassPattern(classPattern);
+		
+		DeltaPattern dp1 = new DeltaPattern();
+		DeltaPattern dp2 = new DeltaPattern();
+		dp1.addActionPattern(new InsertPatternAction(methodVar, cVar));
+		dp2.addActionPattern(new InsertMethodPatternAction(methodVar, classVar, Visibility.PACKAGE));
+		dp2.addActionPattern(new InsertFieldAccessPatternAction(fieldVar, methodVar, 
+				FieldAccessType.WRITE));
+		
 		return new ConflictPattern(basePattern, dp1, dp2);
 	}
 }
