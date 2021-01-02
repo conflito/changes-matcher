@@ -18,7 +18,8 @@ public class BaseInstance {
 	}
 
 	public void addClassInstance(ClassInstance classInstance) {
-		classInstances.add(classInstance);
+		if(!classInstances.contains(classInstance))
+			classInstances.add(classInstance);
 	}
 	
 	public String toStringDebug() {
