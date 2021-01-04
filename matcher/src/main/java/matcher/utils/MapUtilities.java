@@ -12,7 +12,11 @@ public class MapUtilities {
 			Map<Integer, List<String>> second) {
 		for(Entry<Integer, List<String>> e: second.entrySet()) {
 			if(first.containsKey(e.getKey())) {
-				first.get(e.getKey()).addAll(e.getValue());
+				List<String> firsts = first.get(e.getKey());
+				List<String> seconds = e.getValue();
+				List<String> intersect = firsts.stream().filter(seconds::contains)
+														.collect(Collectors.toList());
+				first.put(e.getKey(), intersect);
 			}
 			else {
 				first.put(e.getKey(), e.getValue());
