@@ -128,6 +128,12 @@ public class ConflictPattern {
 			  + secondDelta.toString();
 	}
 	
+	public String toStringFilled() {
+		return basePattern.toStringFilled() + "\n----------------\n" 
+				  + firstDelta.toStringFilled() + "\n----------------\n" 
+				  + secondDelta.toStringFilled();
+	}
+	
 	public List<Integer> getFieldsVariableIds(){
 		List<Integer> result = basePattern.getFieldsVariableIds();
 		return result;

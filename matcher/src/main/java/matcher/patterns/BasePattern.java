@@ -129,5 +129,14 @@ public class BasePattern {
 		return result.toString();
 	}
 
+	public String toStringFilled() {
+		StringBuilder result = new StringBuilder();
+		
+		for(ClassPattern c: classPatterns)
+			result.append(c.toStringFilled() + "\n");
+		
+		return result.toString();
+	}
+
 
 }

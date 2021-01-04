@@ -199,4 +199,25 @@ public class MethodPattern {
 		}
 		return result.toString();
 	}
+
+	public String toStringFilled(String value) {
+		StringBuilder result = new StringBuilder();
+		
+		result.append("#" + value + " has " + 
+					(visibility == null?"*":visibility.toString().toLowerCase()));
+		result.append(" method #" + freeVariable.getValue() + "\n");
+		
+		for(MethodInvocationPattern i: invocations) {
+			result.append("#" + freeVariable.getValue() + " invokes #" + i.getFreeVariable().getValue() + "\n");
+		}
+		for(FieldAccessPattern f: fieldAccesses) {
+			String access = null;
+			if(f.isAnyAccess())
+				access = " accesses ";
+			else
+				access = " " + f.getType().toString().toLowerCase() + "s ";
+			result.append("#" + freeVariable.getValue() + access + "field #" + f.getFreeVariable().getValue() + "\n");
+		}
+		return result.toString();
+	}
 }

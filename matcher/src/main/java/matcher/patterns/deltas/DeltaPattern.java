@@ -263,4 +263,13 @@ public class DeltaPattern {
 		}
 	}
 
+	public String toStringFilled() {
+		StringBuilder result = new StringBuilder();
+		
+		for(ActionPattern a: actions)
+			result.append(a.toStringFilled() + "\n");
+		
+		return result.toString();
+	}
+
 }

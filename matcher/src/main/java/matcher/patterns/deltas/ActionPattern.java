@@ -31,4 +31,6 @@ public abstract class ActionPattern {
 	public boolean matchesOne(List<ActionInstance> actions) {
 		return actions.stream().anyMatch(a -> matches(a));
 	}
+
+	public abstract String toStringFilled();
 }

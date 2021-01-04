@@ -56,6 +56,11 @@ public class DeletePatternAction extends ActionPattern{
 	public String toStringDebug() {
 		return "remove #" + deletedEntity.getId() + " from #" + holderEntity.getId();
 	}
+	
+	@Override
+	public String toStringFilled() {
+		return "remove #" + deletedEntity.getValue() + " from #" + holderEntity.getValue();
+	}
 
 	@Override
 	public void clean() {

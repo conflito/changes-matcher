@@ -495,4 +495,31 @@ public class ClassPattern {
 		return result.toString();
 	}
 
+	public String toStringFilled() {
+		StringBuilder result = new StringBuilder();
+		
+		if(hasSuperClass()) {
+			result.append("#" + freeVariable.getValue() + " extends #" 
+					+ superClass.freeVariable.getValue() + "\n");
+			result.append(superClass.toStringFilled());
+		}
+		for(FieldPattern f : fields) {
+			result.append("#" + freeVariable.getValue() + " has " + f.toStringDegub() + "\n");
+		}
+		for(ConstructorPattern c: constructors) {
+			result.append(c.toStringFilled(freeVariable.getValue()));
+		}
+		for(MethodPattern m: methods) {
+			result.append(m.toStringFilled(freeVariable.getValue()));
+		}
+		for(Entry<FreeVariable, List<FreeVariable>> e: compatible.entrySet()) {
+			FreeVariable v = e.getKey();
+			for(FreeVariable f: e.getValue()) {
+				result.append("#" + v.getValue() + " compatible with " + f.getValue() + "\n");
+			}
+		}
+		
+		return result.toString();
+	}
+
 }

@@ -56,6 +56,11 @@ public class InsertPatternAction extends ActionPattern {
 	public String toStringDebug() {
 		return "insert #" + insertedEntity.getId() + " into #" + holderEntity.getId();
 	}
+	
+	@Override
+	public String toStringFilled() {
+		return "insert #" + insertedEntity.getValue() + " into #" + holderEntity.getValue();
+	}
 
 	@Override
 	public void clean() {

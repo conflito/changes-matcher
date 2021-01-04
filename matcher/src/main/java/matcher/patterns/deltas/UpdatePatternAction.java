@@ -43,6 +43,11 @@ public class UpdatePatternAction extends ActionPattern {
 	public String toStringDebug() {
 		return "update #" + entity.getId();
 	}
+	
+	@Override
+	public String toStringFilled() {
+		return "update #" + entity.getValue();
+	}
 
 	@Override
 	public void clean() {

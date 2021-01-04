@@ -129,4 +129,18 @@ public class ConstructorPattern {
 		
 		return result.toString();
 	}
+
+	public String toStringFilled(String classVal) {
+		StringBuilder result = new StringBuilder();
+		
+		result.append("#" + classVal + " has " + 
+				(visibility == null?"*":visibility.toString().toLowerCase()));
+		result.append(" constructor #" + freeVariable.getValue() + "\n");
+		
+		for(MethodInvocationPattern i: invocations) {
+			result.append("#" + freeVariable.getValue() + " invokes #" + i.getFreeVariable().getValue() + "\n");
+		}
+		
+		return result.toString();
+	}
 }
