@@ -2,7 +2,6 @@ package test.matcher;
 
 import org.junit.jupiter.api.Test;
 
-import gumtree.spoon.diff.Diff;
 import matcher.entities.ChangeInstance;
 import matcher.entities.Visibility;
 import matcher.entities.deltas.Action;
@@ -37,9 +36,7 @@ public class TestMatcherVisibilities {
 		File secondVar = new File(SRC_FOLDER + INS_VIS_FIELD_FOLDER + "Square02.java");
 		ConflictPattern cp = getInsertFieldVisibilityPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for updating method?");
@@ -59,9 +56,7 @@ public class TestMatcherVisibilities {
 		File secondVar = new File(SRC_FOLDER + DEL_VIS_FIELD_FOLDER + "Square02.java");
 		ConflictPattern cp = getDeleteFieldVisibilityPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for updating method?");
@@ -81,9 +76,7 @@ public class TestMatcherVisibilities {
 		File secondVar = new File(SRC_FOLDER + UPD_VIS_FIELD_FOLDER + "Square02.java");
 		ConflictPattern cp = getUpdateFieldVisibilityPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for updating method?");

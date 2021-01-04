@@ -1,7 +1,9 @@
 package matcher.handlers;
 
+import java.io.File;
 import java.util.Optional;
 
+import gumtree.spoon.AstComparator;
 import gumtree.spoon.builder.CtVirtualElement;
 import gumtree.spoon.builder.CtWrapper;
 import gumtree.spoon.diff.Diff;
@@ -19,8 +21,9 @@ import matcher.processors.VisibilityUpdateActionsProcessor;
 
 public class DeltaInstanceHandler {
 	
-	public DeltaInstance getDeltaInstance(Diff diff, ConflictPattern cp) 
+	public DeltaInstance getDeltaInstance(File base, File variant, ConflictPattern cp) 
 			throws ApplicationException {
+		Diff diff = diff(base, variant);
 		DeltaInstance deltaInstance = new DeltaInstance();
 		for(Operation<?> o: diff.getAllOperations()) {
 			if(isInsert(o)) {
@@ -49,6 +52,16 @@ public class DeltaInstanceHandler {
 			}
 		}
 		return deltaInstance;
+	}
+	
+	private Diff diff(File first, File second) throws ApplicationException {
+		Diff diff = null;
+		try {
+			diff = new AstComparator().compare(first, second);
+		} catch (Exception e) {
+			throw new ApplicationException("Error calculating the delta", e);
+		}
+		return diff;
 	}
 	
 	private void processDeleteVisibilityAction(Operation<?> o, DeltaInstance deltaInstance, 

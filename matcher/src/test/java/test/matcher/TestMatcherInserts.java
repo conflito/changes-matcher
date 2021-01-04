@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import gumtree.spoon.diff.Diff;
 import matcher.entities.ChangeInstance;
 import matcher.entities.Visibility;
 import matcher.exceptions.ApplicationException;
@@ -44,9 +43,7 @@ public class TestMatcherInserts {
 		File secondVar = new File(SRC_FOLDER + INS_FIELD_METHOD_FOLDER + "Square02.java");
 		ConflictPattern cp = getInsertPrivateFieldAndPublicMethodPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for inserting private "
@@ -68,9 +65,7 @@ public class TestMatcherInserts {
 		File secondVar = new File(SRC_FOLDER + INS_FIELD_METHOD_FOLDER + "Square02.java");
 		ConflictPattern cp = getInsertPublicFieldAndPublicMethodPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 0, "Finds match when there's no private field insertion?");
@@ -83,9 +78,7 @@ public class TestMatcherInserts {
 		File secondVar = new File(SRC_FOLDER + INS_FIELD_CONSTR_FOLDER + "Square02.java");
 		ConflictPattern cp = getInsertPrivateFieldAndAnyVisibilityConstructorPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for inserting private "
@@ -108,9 +101,7 @@ public class TestMatcherInserts {
 		File secondVar = new File(SRC_FOLDER + INS_CONSTR_COMPAT_METHOD_FOLDER + "Square02.java");
 		ConflictPattern cp = getInsertConstructorAndCompatibleMethodPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for inserting private "
@@ -137,9 +128,7 @@ public class TestMatcherInserts {
 		File secondVar = new File(SRC_FOLDER + INS_METHOD_WITH_INV_FOLDER + "Square02.java");
 		ConflictPattern cp = getInsertMethodWithInvocationPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for inserting method with invocation?");
@@ -165,9 +154,7 @@ public class TestMatcherInserts {
 		File secondVar = new File(SRC_FOLDER + INS_METHOD_WITH_ACCESS_FOLDER + "Square02.java");
 		ConflictPattern cp = getInsertMethodWithFieldAccess();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		List<Pair<Integer,String>> assignments = result.get(0);

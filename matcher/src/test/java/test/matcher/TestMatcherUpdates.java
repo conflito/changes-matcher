@@ -2,7 +2,6 @@ package test.matcher;
 
 import org.junit.jupiter.api.Test;
 
-import gumtree.spoon.diff.Diff;
 import matcher.entities.ChangeInstance;
 import matcher.exceptions.ApplicationException;
 import matcher.handlers.ChangeInstanceHandler;
@@ -38,9 +37,7 @@ public class TestMatcherUpdates {
 		File secondVar = new File(SRC_FOLDER + UPD_INS_METHOD_FOLDER + "Square02.java");
 		ConflictPattern cp = getUpdateMethodPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for updating method?");
@@ -60,9 +57,7 @@ public class TestMatcherUpdates {
 		File secondVar = new File(SRC_FOLDER + UPD_DEL_METHOD_FOLDER + "Shape02.java");
 		ConflictPattern cp = getUpdateMethodPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for updating method?");
@@ -82,9 +77,7 @@ public class TestMatcherUpdates {
 		File secondVar = new File(SRC_FOLDER + UPD_INS_CONST_FOLDER + "Square02.java");
 		ConflictPattern cp = getUpdateConstructorPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for updating method?");
@@ -104,9 +97,7 @@ public class TestMatcherUpdates {
 		File secondVar = new File(SRC_FOLDER + UPD_DEL_CONST_FOLDER + "Square02.java");
 		ConflictPattern cp = getUpdateConstructorPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for updating method?");

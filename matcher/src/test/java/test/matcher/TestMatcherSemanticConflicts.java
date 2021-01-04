@@ -2,7 +2,6 @@ package test.matcher;
 
 import org.junit.jupiter.api.Test;
 
-import gumtree.spoon.diff.Diff;
 import matcher.entities.ChangeInstance;
 import matcher.entities.FieldAccessType;
 import matcher.entities.Visibility;
@@ -24,10 +23,18 @@ import matcher.patterns.deltas.InsertMethodPatternAction;
 import matcher.patterns.deltas.InsertPatternAction;
 import matcher.patterns.deltas.VisibilityActionPattern;
 import matcher.utils.Pair;
+import spoon.Launcher;
+import spoon.compiler.SpoonResource;
+import spoon.compiler.SpoonResourceHelper;
+import spoon.reflect.code.CtInvocation;
+import spoon.reflect.declaration.CtClass;
+import spoon.reflect.declaration.CtType;
+import spoon.reflect.visitor.filter.TypeFilter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class TestMatcherSemanticConflicts {
@@ -39,16 +46,14 @@ public class TestMatcherSemanticConflicts {
 	private static final String OVERLOAD_ACCESS_CHANGE_FOLDER = 
 			"AddOverloadingMByChangeAccessibility1AddCall2M/";
 	
-//	@Test
+	@Test
 	public void overloadByAdditionTest() throws ApplicationException {
 		File base = new File(SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + "TestClass.java");
 		File firstVar = new File(SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + "TestClass01.java");
 		File secondVar = new File(SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + "TestClass02.java");
 		ConflictPattern cp = getOverloadByAdditionPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for overloading method?");
@@ -69,16 +74,14 @@ public class TestMatcherSemanticConflicts {
 				"Inserted compatible method is not move(int, int)?");
 	}
 	
-//	@Test
+	@Test
 	public void addFieldHidingTest() throws ApplicationException {
 		File base = new File(SRC_FOLDER + FIELD_HIDING_FOLDER + "B.java");
 		File firstVar = new File(SRC_FOLDER + FIELD_HIDING_FOLDER + "B01.java");
 		File secondVar = new File(SRC_FOLDER + FIELD_HIDING_FOLDER + "B02.java");
 		ConflictPattern cp = getFieldHidingPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for overloading method?");
@@ -96,7 +99,7 @@ public class TestMatcherSemanticConflicts {
 				"Inserted method that writes to field is not m()?");
 	}
 	
-//	@Test
+	@Test
 	public void methodOveridingTest() throws ApplicationException {
 		File base1 = new File(SRC_FOLDER + METHOD_OVERIDING_FOLDER + "C.java");
 		File var1 = new File(SRC_FOLDER + METHOD_OVERIDING_FOLDER + "C01.java");
@@ -104,9 +107,7 @@ public class TestMatcherSemanticConflicts {
 		File var2 = new File(SRC_FOLDER + METHOD_OVERIDING_FOLDER + "D01.java");
 		ConflictPattern cp = getMethodOveridingPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base1, var1);
-		Diff d2 = cih.getDiff(base2, var2);
-		ChangeInstance ci = cih.getChangeInstance(base1, base2, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base1, base2, var1, var2, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for overloading method?");
@@ -127,26 +128,43 @@ public class TestMatcherSemanticConflicts {
 				"Field is not h?");
 	}
 	
-	@Test
-	public void overloadingAccessChangeTest() throws ApplicationException {
+//	@Test
+	public void overloadingAccessChangeTest() throws ApplicationException, FileNotFoundException {
 		/**
 		 * Test is incomplete because gumtree spoon diff assumes move(0,0)
 		 * as move(int,int) even if move(int,int) is private
 		 * Awating reply on the issue in the github repo
+		 * 
+		 * TESTING CODE BENEATH
 		 */
 		File base1 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "E.java");
 		File var1 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "E01.java");
 		File base2 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "F.java");
 		File var2 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "F01.java");
-		ConflictPattern cp = getOverloadAccessChangePattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base1, var1);
-		Diff d2 = cih.getDiff(base2, var2);
-		ChangeInstance ci = cih.getChangeInstance(base1, base2, d1, d2, cp);
-		System.out.println(ci);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
-		System.out.println(result);
+		
+		Launcher launcher = new Launcher();
+		SpoonResource resource = SpoonResourceHelper.createFile(base1);
+		SpoonResource resource2 = SpoonResourceHelper.createFile(var2);
+		launcher.addInputResource(resource);
+		launcher.addInputResource(resource2);
+		for(CtType<?> c: launcher.buildModel().getAllTypes()) {
+			if(c.getSimpleName().equals("F")) {
+				CtClass<?> cc = (CtClass<?>) c;
+				List<CtInvocation<?>> l =cc.getMethodsByName("reset").get(0)
+						.getElements(new TypeFilter(CtInvocation.class));
+				System.out.println(l.get(0).getExecutable().getSignature());
+			}
+		}
+		
+//		ConflictPattern cp = getOverloadAccessChangePattern();
+//		ChangeInstanceHandler cih = new ChangeInstanceHandler();
+//		Diff d1 = cih.getDiff(base1, var1);
+//		Diff d2 = cih.getDiff(base2, var2);
+//		ChangeInstance ci = cih.getChangeInstance(base1, base2, d1, d2, cp);
+//		System.out.println(ci);
+//		MatchingHandler mh = new MatchingHandler();
+//		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+//		System.out.println(result);
 	}
 
 	private ConflictPattern getOverloadByAdditionPattern() {

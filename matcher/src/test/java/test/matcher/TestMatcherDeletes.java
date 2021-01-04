@@ -24,8 +24,6 @@ import matcher.utils.Pair;
 
 import org.junit.jupiter.api.Test;
 
-import gumtree.spoon.diff.Diff;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
@@ -47,9 +45,7 @@ public class TestMatcherDeletes {
 		File secondVar = new File(SRC_FOLDER + DEL_FIELD_METHOD_FOLDER + "Square02.java");
 		ConflictPattern cp = getDeletePrivateFieldAndPublicMethodPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for deleting private "
@@ -71,9 +67,7 @@ public class TestMatcherDeletes {
 		File secondVar = new File(SRC_FOLDER + DEL_FIELD_CONSTR_FOLDER + "Square02.java");
 		ConflictPattern cp = getDeletePrivateFieldAndPublicConstructorPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for deleting private "
@@ -96,9 +90,7 @@ public class TestMatcherDeletes {
 		File secondVar = new File(SRC_FOLDER + DEL_FIELD_COMPA_METHOD_FOLDER + "Square02.java");
 		ConflictPattern cp = getDeleteFieldAndCompatibleMethodPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for deleting field and compatible method?");
@@ -124,9 +116,7 @@ public class TestMatcherDeletes {
 		File secondVar = new File(SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + "Shape02.java");
 		ConflictPattern cp = getDeleteFieldAndMethodInvocationPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for deleting field and method invocation?");
@@ -149,9 +139,7 @@ public class TestMatcherDeletes {
 		File secondVar = new File(SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + "Square02.java");
 		ConflictPattern cp = getDeleteFieldAccessAndMethodPattern();
 		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		Diff d1 = cih.getDiff(base, firstVar);
-		Diff d2 = cih.getDiff(base, secondVar);
-		ChangeInstance ci = cih.getChangeInstance(base, d1, d2, cp);
+		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
 		MatchingHandler mh = new MatchingHandler();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		assertTrue(result.size() == 1, "More than one result for deleting field and compatible method?");
