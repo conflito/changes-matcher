@@ -23,13 +23,6 @@ import matcher.patterns.deltas.InsertMethodPatternAction;
 import matcher.patterns.deltas.InsertPatternAction;
 import matcher.patterns.deltas.VisibilityActionPattern;
 import matcher.utils.Pair;
-import spoon.Launcher;
-import spoon.compiler.SpoonResource;
-import spoon.compiler.SpoonResourceHelper;
-import spoon.reflect.code.CtInvocation;
-import spoon.reflect.declaration.CtClass;
-import spoon.reflect.declaration.CtType;
-import spoon.reflect.visitor.filter.TypeFilter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -128,43 +121,34 @@ public class TestMatcherSemanticConflicts {
 				"Field is not h?");
 	}
 	
-//	@Test
+	@Test
 	public void overloadingAccessChangeTest() throws ApplicationException, FileNotFoundException {
-		/**
-		 * Test is incomplete because gumtree spoon diff assumes move(0,0)
-		 * as move(int,int) even if move(int,int) is private
-		 * Awating reply on the issue in the github repo
-		 * 
-		 * TESTING CODE BENEATH
-		 */
 		File base1 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "E.java");
 		File var1 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "E01.java");
 		File base2 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "F.java");
 		File var2 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "F01.java");
 		
-		Launcher launcher = new Launcher();
-		SpoonResource resource = SpoonResourceHelper.createFile(base1);
-		SpoonResource resource2 = SpoonResourceHelper.createFile(var2);
-		launcher.addInputResource(resource);
-		launcher.addInputResource(resource2);
-		for(CtType<?> c: launcher.buildModel().getAllTypes()) {
-			if(c.getSimpleName().equals("F")) {
-				CtClass<?> cc = (CtClass<?>) c;
-				List<CtInvocation<?>> l =cc.getMethodsByName("reset").get(0)
-						.getElements(new TypeFilter(CtInvocation.class));
-				System.out.println(l.get(0).getExecutable().getSignature());
-			}
-		}
-		
-//		ConflictPattern cp = getOverloadAccessChangePattern();
-//		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-//		Diff d1 = cih.getDiff(base1, var1);
-//		Diff d2 = cih.getDiff(base2, var2);
-//		ChangeInstance ci = cih.getChangeInstance(base1, base2, d1, d2, cp);
-//		System.out.println(ci);
-//		MatchingHandler mh = new MatchingHandler();
-//		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
-//		System.out.println(result);
+		ConflictPattern cp = getOverloadAccessChangePattern();
+		ChangeInstanceHandler cih = new ChangeInstanceHandler();
+		ChangeInstance ci = cih.getChangeInstance(base1, base2, var1, var2, cp);
+		MatchingHandler mh = new MatchingHandler();
+		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		assertTrue(result.size() == 1, "More than one result for overloading method?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("E"), "Superclass is not E");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("F"), "Class is not F?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("move(java.lang.Number, java.lang.Number)"), 
+				"Top method is not move(java.lang.Number, java.lang.Number)?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("move(int, int)"), 
+				"Sub method is not move(int, int)?");
+		assertTrue(assignments.get(4).getFirst() == 4 && 
+				assignments.get(4).getSecond().equals("reset()"), 
+				"Inserted method with invocation is not reset()?");
 	}
 
 	private ConflictPattern getOverloadByAdditionPattern() {
@@ -266,7 +250,7 @@ public class TestMatcherSemanticConflicts {
 		DeltaPattern dp2 = new DeltaPattern();
 		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, classVar, 
 				Visibility.PUBLIC));
-		dp1.addActionPattern(new InsertPatternAction(topMethodVar, classVar));
+		dp1.addActionPattern(new InsertPatternAction(topMethodVar, insertedMethodVar));
 		dp2.addActionPattern(new VisibilityActionPattern(Action.UPDATE, Visibility.PUBLIC, 
 				Visibility.PRIVATE, subMethodVar));
 		return new ConflictPattern(basePattern, dp1, dp2);
