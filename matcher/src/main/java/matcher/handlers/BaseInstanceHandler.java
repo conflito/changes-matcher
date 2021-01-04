@@ -21,7 +21,7 @@ import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.TypeFilter;
 
 public class BaseInstanceHandler {
-		
+
 	public BaseInstance getBaseInstance(File base, ConflictPattern cp) throws ApplicationException {
 		SpoonResource resource = null;
 		Launcher launcher = new Launcher();
@@ -31,30 +31,35 @@ public class BaseInstanceHandler {
 		} catch (FileNotFoundException e) {
 			throw new ApplicationException("Invalid specified file", e);
 		}
-		CtClass<?> changedClass = (CtClass<?>) new AstComparator().getCtType(resource);
-		loadClassTree(changedClass, launcher);
-		loadInvokedClasses(changedClass, launcher);
-		
-		BaseInstance result = new BaseInstance();
-		for(CtType<?> t: launcher.buildModel().getAllTypes()) {
-			ClassProcessor processor = new ClassProcessor(cp);
-			processor.process((CtClass<?>)t);
-			result.addClassInstance(processor.getClassInstance());
+		CtType<?> changedType = new AstComparator().getCtType(resource);
+		if(changedType.isClass()) {
+			CtClass<?> changedClass = (CtClass<?>) new AstComparator().getCtType(resource);
+			loadClassTree(changedClass, launcher);
+			loadInvokedClasses(changedClass, launcher);
+
+			BaseInstance result = new BaseInstance();
+			for(CtType<?> t: launcher.buildModel().getAllTypes()) {
+				ClassProcessor processor = new ClassProcessor(cp);
+				processor.process((CtClass<?>)t);
+				result.addClassInstance(processor.getClassInstance());
+			}
+
+			return result;
 		}
-		
-		return result;
+		return null;
 	}
-	
+
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void loadInvokedClasses(CtClass<?> changedClass, Launcher launcher) 
 			throws ApplicationException {
 		List<CtInvocation<?>> invocations = 
 				changedClass.getElements(new TypeFilter(CtInvocation.class));
 		invocations = invocations.stream()
-								 .filter(i -> !i.toString().equals("super()") &&
-									!getInvocationClassQualifiedName(i)
-										.equals(changedClass.getQualifiedName()))
-								 .collect(Collectors.toList());
+				.filter(i -> !i.toString().equals("super()") &&
+						!getInvocationClassQualifiedName(i)
+						.equals(changedClass.getQualifiedName()))
+				.collect(Collectors.toList());
 		for(CtInvocation<?> invocation: invocations) {
 			String simpleName = invocation.getExecutable().getDeclaringType().getSimpleName();
 			Optional<File> srcFile = FileSystemHandler.getInstance().getSrcFile(simpleName + ".java");
@@ -82,7 +87,7 @@ public class BaseInstanceHandler {
 			}
 		}
 	}
-	
+
 	private String getInvocationClassQualifiedName(CtInvocation<?> invocation) {
 		return invocation.getTarget().getType().getQualifiedName();
 	}

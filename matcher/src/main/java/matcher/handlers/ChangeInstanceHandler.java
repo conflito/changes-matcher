@@ -27,6 +27,8 @@ public class ChangeInstanceHandler {
 	public ChangeInstance getChangeInstance(File base, Diff firstDiff, Diff secondDiff, 
 			ConflictPattern cp) throws ApplicationException {
 		BaseInstance baseInstance = bih.getBaseInstance(base, cp);
+		if(baseInstance == null)
+			return null;
 		DeltaInstance firstDelta = dih.getDeltaInstance(firstDiff, cp);
 		DeltaInstance secondDelta = dih.getDeltaInstance(secondDiff, cp);
 		return new ChangeInstance(baseInstance, firstDelta, secondDelta);
@@ -35,7 +37,12 @@ public class ChangeInstanceHandler {
 	public ChangeInstance getChangeInstance(File base1, File base2, Diff firstDiff, Diff secondDiff,
 			ConflictPattern cp) throws ApplicationException {
 		BaseInstance baseInstance = bih.getBaseInstance(base1, cp);
-		baseInstance.merge(bih.getBaseInstance(base2, cp));
+		if(baseInstance == null)
+			return null;
+		BaseInstance baseInstance2 = bih.getBaseInstance(base2, cp);
+		if(baseInstance2 == null)
+			return null;
+		baseInstance.merge(baseInstance2);
 		DeltaInstance firstDelta = dih.getDeltaInstance(firstDiff, cp);
 		DeltaInstance secondDelta = dih.getDeltaInstance(secondDiff, cp);
 		return new ChangeInstance(baseInstance, firstDelta, secondDelta);
