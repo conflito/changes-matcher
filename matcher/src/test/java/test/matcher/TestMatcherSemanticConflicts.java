@@ -39,6 +39,7 @@ public class TestMatcherSemanticConflicts {
 			"AddOverloadingMByChangeAccessibility1AddCall2M/";
 	private static final String OVERLOAD_ACCESS_CHANGE2_FOLDER = 
 			"AddOverloadingMByChangeAccessibility2AddCall2M/";
+	private static final String OVERRIDING_FOLDER = "AddOverridingMAddCall2MinChild/";
 	
 	@Test
 	public void overloadByAdditionTest() throws ApplicationException {
@@ -181,6 +182,32 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(4).getSecond().equals("reset()"), 
 				"Inserted method with invocation is not reset()?");
 	}
+	
+	@Test
+	public void overridingTest() throws ApplicationException {
+		File base = new File(SRC_FOLDER + OVERRIDING_FOLDER + "J.java");
+		File var1 = new File(SRC_FOLDER + OVERRIDING_FOLDER + "J01.java");
+		File var2 = new File(SRC_FOLDER + OVERRIDING_FOLDER + "J02.java");
+		
+		ConflictPattern cp = getOverridingPattern();
+		ChangeInstanceHandler cih = new ChangeInstanceHandler();
+		ChangeInstance ci = cih.getChangeInstance(base, var1, var2, cp);
+		MatchingHandler mh = new MatchingHandler();
+		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		assertTrue(result.size() == 1, "More than one result for overloading method?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("I"), "Superclass is not I");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("J"), "Class is not J?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("move(int, int)"), 
+				"Method overwritten is not move(int, int)?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("reset()"), 
+				"Method with invocation is not reset()?");
+	}
 
 	private ConflictPattern getOverloadByAdditionPattern() {
 		FreeVariable classVar = new FreeVariable(0);
@@ -312,6 +339,31 @@ public class TestMatcherSemanticConflicts {
 		dp1.addActionPattern(new InsertPatternAction(subMethodVar, insertedMethodVar));
 		dp2.addActionPattern(new VisibilityActionPattern(Action.UPDATE, Visibility.PRIVATE, 
 				Visibility.PUBLIC, subMethodVar));
+		return new ConflictPattern(basePattern, dp1, dp2);
+	}
+	
+	private ConflictPattern getOverridingPattern() {
+		FreeVariable superClassVar = new FreeVariable(0);
+		FreeVariable classVar = new FreeVariable(1);
+		FreeVariable methodVar = new FreeVariable(2);
+		FreeVariable insertedMethodVar = new FreeVariable(3);
+		
+		BasePattern basePattern = new BasePattern();
+		ClassPattern superClassPattern = new ClassPattern(superClassVar);
+		ClassPattern classPattern = new ClassPattern(classVar);
+		MethodPattern methodPattern = new MethodPattern(methodVar, Visibility.PUBLIC);
+		superClassPattern.addMethodPattern(methodPattern);
+		classPattern.setSuperClass(superClassPattern);
+		basePattern.addClassPattern(classPattern);
+		
+		DeltaPattern dp1 = new DeltaPattern();
+		DeltaPattern dp2 = new DeltaPattern();
+		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, classVar, 
+				Visibility.PUBLIC));
+		dp1.addActionPattern(new InsertPatternAction(methodVar, insertedMethodVar));
+		dp2.addActionPattern(new InsertMethodPatternAction(methodVar, classVar, 
+				Visibility.PUBLIC));
+		
 		return new ConflictPattern(basePattern, dp1, dp2);
 	}
 }
