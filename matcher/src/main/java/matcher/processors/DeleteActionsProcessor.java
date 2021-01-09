@@ -11,10 +11,10 @@ import matcher.entities.FieldInstance;
 import matcher.entities.MethodInstance;
 import matcher.entities.MethodInvocationInstance;
 import matcher.entities.deltas.ActionInstance;
-import matcher.entities.deltas.DeleteAction;
 import matcher.entities.deltas.DeleteConstructorAction;
 import matcher.entities.deltas.DeleteFieldAccessAction;
 import matcher.entities.deltas.DeleteFieldAction;
+import matcher.entities.deltas.DeleteInvocationAction;
 import matcher.entities.deltas.DeleteMethodAction;
 import matcher.entities.deltas.UpdateAction;
 import matcher.patterns.ConflictPattern;
@@ -61,7 +61,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
 				MethodInstance methodInstance = getMethodInstance(method);
-				ActionInstance result = new DeleteAction(mii, methodInstance);
+				ActionInstance result = new DeleteInvocationAction(mii, methodInstance);
 				setResult(result);
 			}
 			else {
@@ -70,7 +70,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 					CtConstructor<?> c = constructor.get();
 					ClassInstance classInstance = getClassInstance(c);
 					ConstructorInstance constructorInstance = getConstructorInstance(c, classInstance);
-					ActionInstance result = new DeleteAction(mii, constructorInstance);
+					ActionInstance result = new DeleteInvocationAction(mii, constructorInstance);
 					setResult(result);
 				}
 			}

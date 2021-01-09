@@ -17,8 +17,8 @@ import matcher.patterns.MethodPattern;
 import matcher.patterns.deltas.DeleteConstructorPatternAction;
 import matcher.patterns.deltas.DeleteFieldAccessPatternAction;
 import matcher.patterns.deltas.DeleteFieldPatternAction;
+import matcher.patterns.deltas.DeleteInvocationPatternAction;
 import matcher.patterns.deltas.DeleteMethodPatternAction;
-import matcher.patterns.deltas.DeletePatternAction;
 import matcher.patterns.deltas.DeltaPattern;
 import matcher.utils.Pair;
 
@@ -239,7 +239,7 @@ public class TestMatcherDeletes {
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
 		dp1.addActionPattern(new DeleteFieldPatternAction(fieldVar, classVar, null));
-		dp2.addActionPattern(new DeletePatternAction(methodVar, methodVar));
+		dp2.addActionPattern(new DeleteInvocationPatternAction(methodVar, methodVar));
 		
 		return new ConflictPattern(basePattern, dp1, dp2);
 	}
