@@ -1,11 +1,9 @@
 package matcher.patterns.deltas;
 
 import matcher.entities.deltas.Action;
-import matcher.entities.deltas.ActionInstance;
-import matcher.entities.deltas.InsertAction;
 import matcher.patterns.FreeVariable;
 
-public class InsertPatternAction extends ActionPattern {
+public abstract class InsertPatternAction extends ActionPattern {
 
 	private FreeVariable insertedEntity;
 	private FreeVariable holderEntity;
@@ -31,17 +29,6 @@ public class InsertPatternAction extends ActionPattern {
 	@Override
 	public boolean filled() {
 		return insertedEntity.hasValue() && holderEntity.hasValue();
-	}
-
-	@Override
-	public boolean matches(ActionInstance action) {
-		return action instanceof InsertAction && filled() && matches((InsertAction)action);
-	}
-	
-	private boolean matches(InsertAction action) {
-		return getAction() == action.getAction() &&
-			   insertedEntity.matches(action.getInsertedEntityQualifiedName()) &&
-			   holderEntity.matches(action.getHolderEntityQualifiedName());
 	}
 
 	@Override

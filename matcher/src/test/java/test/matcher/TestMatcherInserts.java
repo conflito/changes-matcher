@@ -22,8 +22,8 @@ import matcher.patterns.deltas.DeltaPattern;
 import matcher.patterns.deltas.InsertConstructorPatternAction;
 import matcher.patterns.deltas.InsertFieldAccessPatternAction;
 import matcher.patterns.deltas.InsertFieldPatternAction;
+import matcher.patterns.deltas.InsertInvocationPatternAction;
 import matcher.patterns.deltas.InsertMethodPatternAction;
-import matcher.patterns.deltas.InsertPatternAction;
 import matcher.utils.Pair;
 
 public class TestMatcherInserts {
@@ -257,7 +257,7 @@ public class TestMatcherInserts {
 		DeltaPattern dp2 = new DeltaPattern();
 		dp1.addActionPattern(new InsertMethodPatternAction(insMethodVar1, classVar, null));
 		dp2.addActionPattern(new InsertMethodPatternAction(insMethodVar2, classVar, null));
-		dp2.addActionPattern(new InsertPatternAction(methodVar, insMethodVar2));
+		dp2.addActionPattern(new InsertInvocationPatternAction(methodVar, insMethodVar2));
 		
 		return new ConflictPattern(basePattern, dp1, dp2);
 	}

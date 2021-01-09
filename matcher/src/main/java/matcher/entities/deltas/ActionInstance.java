@@ -12,4 +12,6 @@ public abstract class ActionInstance {
 		return action;
 	}
 	
+	public abstract String toString();
+	
 }

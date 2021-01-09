@@ -11,10 +11,10 @@ import matcher.entities.FieldInstance;
 import matcher.entities.MethodInstance;
 import matcher.entities.MethodInvocationInstance;
 import matcher.entities.deltas.ActionInstance;
-import matcher.entities.deltas.InsertAction;
 import matcher.entities.deltas.InsertConstructorAction;
 import matcher.entities.deltas.InsertFieldAccessAction;
 import matcher.entities.deltas.InsertFieldAction;
+import matcher.entities.deltas.InsertInvocationAction;
 import matcher.entities.deltas.InsertMethodAction;
 import matcher.entities.deltas.UpdateAction;
 import matcher.patterns.ConflictPattern;
@@ -75,7 +75,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
 				MethodInstance methodInstance = getMethodInstance(method);
-				ActionInstance result = new InsertAction(mii, methodInstance);
+				ActionInstance result = new InsertInvocationAction(mii, methodInstance);
 				setResult(result);
 			}
 			else {
@@ -84,7 +84,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 					CtConstructor<?> c = constructor.get();
 					ClassInstance classInstance = getClassInstance(c);
 					ConstructorInstance insertedInstance = getConstructorInstance(c, classInstance);
-					ActionInstance result = new InsertAction(mii, insertedInstance);
+					ActionInstance result = new InsertInvocationAction(mii, insertedInstance);
 					setResult(result);
 				}
 			}

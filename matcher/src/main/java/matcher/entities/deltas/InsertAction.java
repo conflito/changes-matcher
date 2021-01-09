@@ -1,9 +1,6 @@
 package matcher.entities.deltas;
 
-import matcher.entities.FieldAccessInstance;
-import matcher.entities.MethodInvocationInstance;
-
-public class InsertAction extends ActionInstance {
+public abstract class InsertAction extends ActionInstance {
 
 	private Insertable insertedEntity;
 	private Holder holderEntity;
@@ -23,30 +20,5 @@ public class InsertAction extends ActionInstance {
 		return holderEntity.getQualifiedName();
 	}
 	
-	public boolean isInvocationInsert() {
-		return insertedEntity instanceof MethodInvocationInstance;
-	}
-	
-	public boolean isFieldReadInsert() {
-		return insertedEntity instanceof FieldAccessInstance 
-				&& ((FieldAccessInstance)insertedEntity).isFieldRead();
-	}
-	
-	public boolean isFieldWriteInsert() {
-		return insertedEntity instanceof FieldAccessInstance 
-				&& ((FieldAccessInstance)insertedEntity).isFieldWrite();
-	}
-	
-	public String toString() {
-		StringBuilder result = new StringBuilder("insert ");
-		if(isInvocationInsert())
-			result.append("method invocation of ");
-		if(isFieldReadInsert())
-			result.append("field read of ");
-		if(isFieldWriteInsert())
-			result.append("field write of ");
-		result.append(insertedEntity.getQualifiedName() + " in ");
-		result.append(holderEntity.getQualifiedName());
-		return result.toString();
-	}
+	public abstract String toString();
 }
