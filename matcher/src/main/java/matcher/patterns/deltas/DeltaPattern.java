@@ -34,8 +34,8 @@ public class DeltaPattern {
 		}
 	}
 	
-	public boolean hasInsertActions() {
-		return actions.stream().anyMatch(a -> a instanceof InsertPatternAction);
+	public boolean hasInsertInvocationActions() {
+		return actions.stream().anyMatch(a -> a instanceof InsertInvocationPatternAction);
 	}
 	
 	public boolean hasInsertMethodActions() {

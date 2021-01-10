@@ -47,8 +47,8 @@ public class ConflictPattern {
 		return basePattern.hasCompatible();
 	}
 	
-	public boolean hasInsertActions() {
-		return firstDelta.hasInsertActions() || secondDelta.hasInsertActions();
+	public boolean hasInsertInvocationActions() {
+		return firstDelta.hasInsertInvocationActions() || secondDelta.hasInsertInvocationActions();
 	}
 	
 	public boolean hasInsertMethodActions() {

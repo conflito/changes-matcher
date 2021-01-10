@@ -79,7 +79,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
-		if(getConflictPattern().hasInsertActions()) {
+		if(getConflictPattern().hasInsertInvocationActions()) {
 			MethodInvocationInstance mii = new MethodInvocationInstance(
 					getMethodProcessor().getInvocationQualifiedName(invocation));
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
