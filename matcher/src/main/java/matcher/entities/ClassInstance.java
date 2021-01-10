@@ -9,9 +9,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import matcher.entities.deltas.Holder;
+import matcher.entities.deltas.Insertable;
 import matcher.utils.Pair;
 
-public class ClassInstance implements Holder{
+public class ClassInstance implements Insertable, Holder{
 	
 	private String name;
 	

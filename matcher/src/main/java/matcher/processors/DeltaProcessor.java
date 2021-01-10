@@ -54,7 +54,11 @@ public abstract class DeltaProcessor {
 	
 	protected ClassInstance getClassInstance(CtTypeMember member) {
 		CtClass<?> holder = (CtClass<?>) member.getTopLevelType();
-		classProcessor.process(holder);
+		return getClassInstance(holder);
+	}
+	
+	protected ClassInstance getClassInstance(CtClass<?> c) {
+		classProcessor.process(c);
 		return classProcessor.getClassInstance();
 	}
 	

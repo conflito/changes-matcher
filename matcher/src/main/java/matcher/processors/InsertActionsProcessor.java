@@ -11,6 +11,7 @@ import matcher.entities.FieldInstance;
 import matcher.entities.MethodInstance;
 import matcher.entities.MethodInvocationInstance;
 import matcher.entities.deltas.ActionInstance;
+import matcher.entities.deltas.InsertClassAction;
 import matcher.entities.deltas.InsertConstructorAction;
 import matcher.entities.deltas.InsertFieldAccessAction;
 import matcher.entities.deltas.InsertFieldAction;
@@ -64,6 +65,16 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 					insertedInstance.getVisibility());
 			setResult(result);
 		}
+	}
+	
+	@Override
+	public <T> void visitCtClass(CtClass<T> ctClass) {
+		if(getConflictPattern().hasInsertClassActions()) {
+			ClassInstance insertedInstance = getClassInstance(ctClass);
+			ActionInstance result = new InsertClassAction(insertedInstance);
+			setResult(result);
+		}
+		
 	}
 	
 	@Override
@@ -224,12 +235,6 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	@Override
 	public void visitCtCatch(CtCatch catchBlock) {
 		visit(catchBlock);
-	}
-
-	@Override
-	public <T> void visitCtClass(CtClass<T> ctClass) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

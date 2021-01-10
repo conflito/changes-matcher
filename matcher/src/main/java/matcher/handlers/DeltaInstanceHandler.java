@@ -1,6 +1,7 @@
 package matcher.handlers;
 
 import java.io.File;
+import java.util.List;
 import java.util.Optional;
 
 import gumtree.spoon.AstComparator;
@@ -22,6 +23,7 @@ import matcher.utils.SpoonUtils;
 import spoon.Launcher;
 import spoon.compiler.SpoonResource;
 import spoon.reflect.declaration.CtClass;
+import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtType;
 
 public class DeltaInstanceHandler {
@@ -29,9 +31,40 @@ public class DeltaInstanceHandler {
 	public DeltaInstance getDeltaInstance(File base, File variant, ConflictPattern cp) 
 			throws ApplicationException {
 
-		Diff diff = calculateDiff(base, variant);
-		DeltaInstance deltaInstance = new DeltaInstance();
-		for(Operation<?> o: diff.getAllOperations()) {
+		if(base != null) {
+			Diff diff = calculateDiff(base, variant);
+			DeltaInstance deltaInstance = new DeltaInstance();
+			processOperations(diff.getAllOperations(), deltaInstance, cp);
+			return deltaInstance;
+		}
+		else {
+			DeltaInstance deltaInstance = new DeltaInstance();
+			processClassInsertion(variant, deltaInstance, cp);
+			return deltaInstance;
+		}
+	}
+	
+	private void processClassInsertion(File variant, DeltaInstance deltaInstance, 
+			ConflictPattern cp) throws ApplicationException {
+		Launcher launcher = new Launcher();
+		SpoonResource resource = SpoonUtils.getSpoonResource(variant);
+		launcher.addInputResource(resource);
+		CtType<?> changedType = SpoonUtils.getCtType(resource);
+		if(changedType.isClass()) {
+			CtClass<?> changedClass = SpoonUtils.getCtClass(resource);
+			SpoonUtils.loadClassTree(changedClass, launcher);
+			SpoonUtils.loadInvokedClasses(changedClass, launcher);
+			CtType<?> fullType = SpoonUtils.getFullChangedCtType(launcher, changedType);
+			fullType.descendantIterator().forEachRemaining(e -> {
+				processInsert(e, deltaInstance, cp);
+			});
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private void processOperations(List<Operation> operations, 
+			DeltaInstance deltaInstance, ConflictPattern cp) {
+		for(Operation<?> o: operations) {
 			if(isInsert(o)) {
 				if(isVisibilityAction(o)) {
 					processInsertVisibilityAction(o, deltaInstance, cp);
@@ -57,7 +90,6 @@ public class DeltaInstanceHandler {
 				}
 			}
 		}
-		return deltaInstance;
 	}
 	
 	private Diff calculateDiff(File base, File variant) throws ApplicationException {
@@ -71,7 +103,7 @@ public class DeltaInstanceHandler {
 		CtType<?> changedType = SpoonUtils.getCtType(varResource);
 		
 		if(baseType.isClass() && changedType.isClass()) {
-			CtClass<?>baseClass = SpoonUtils.getCtClass(baseResource);
+			CtClass<?> baseClass = SpoonUtils.getCtClass(baseResource);
 			CtClass<?> changedClass = SpoonUtils.getCtClass(varResource);
 			SpoonUtils.loadClassTree(baseClass, baseLauncher);
 			SpoonUtils.loadInvokedClasses(changedClass, varLauncher);
@@ -144,8 +176,12 @@ public class DeltaInstanceHandler {
 	}
 
 	private void processInsertAction(Operation<?> o, DeltaInstance deltaInstance, ConflictPattern cp) {
+		processInsert(o.getSrcNode(), deltaInstance, cp);
+	}
+	
+	private void processInsert(CtElement e, DeltaInstance deltaInstance, ConflictPattern cp) {
 		InsertActionsProcessor processor = new InsertActionsProcessor(cp);
-		o.getSrcNode().accept(processor);
+		e.accept(processor);
 		Optional<ActionInstance> a = processor.getResult();
 		if(a.isPresent())
 			deltaInstance.addActionInstance(a.get());
