@@ -15,6 +15,7 @@ import matcher.patterns.ConflictPattern;
 import matcher.patterns.ConstructorPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
+import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
 import matcher.patterns.deltas.DeleteMethodPatternAction;
 import matcher.patterns.deltas.DeltaPattern;
@@ -22,6 +23,7 @@ import matcher.patterns.deltas.InsertFieldAccessPatternAction;
 import matcher.patterns.deltas.InsertFieldPatternAction;
 import matcher.patterns.deltas.InsertInvocationPatternAction;
 import matcher.patterns.deltas.InsertMethodPatternAction;
+import matcher.patterns.deltas.UpdatePatternAction;
 import matcher.patterns.deltas.VisibilityActionPattern;
 import matcher.utils.Pair;
 
@@ -42,6 +44,7 @@ public class TestMatcherSemanticConflicts {
 			"AddOverloadingMByChangeAccessibility2AddCall2M/";
 	private static final String OVERRIDING_FOLDER = "AddOverridingMAddCall2MinChild/";
 	private static final String REMOVE_OVERRIDER_FOLDER ="RemoveOverridingMAddCall2M/";
+	private static final String CHANGE_METHOD1_FOLDER ="ChangeMethod01/";
 	
 	@Test
 	public void overloadByAdditionTest() throws ApplicationException {
@@ -236,6 +239,48 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(3).getSecond().equals("reset()"), 
 				"Method with invocation is not reset()?");
 	}
+	
+	@Test
+	public void changeMethod1Test() throws ApplicationException {
+		File base = new File(SRC_FOLDER + CHANGE_METHOD1_FOLDER + "M.java");
+		File var1 = new File(SRC_FOLDER + CHANGE_METHOD1_FOLDER + "M01.java");
+		File var2 = new File(SRC_FOLDER + CHANGE_METHOD1_FOLDER + "M02.java");
+		
+		ConflictPattern cp = getChangeMethodPattern();
+		ChangeInstanceHandler cih = new ChangeInstanceHandler();
+		ChangeInstance ci = cih.getChangeInstance(base, var1, var2, cp);
+		MatchingHandler mh = new MatchingHandler();
+		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		assertTrue(result.size() == 2, "Not two results for method change?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("M"), "Class is not M");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("m()"), 
+				"Method with invocations is not m()?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("m1()"), 
+				"Method updated is not m1()?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("m2()"), 
+				"Other method updated is not m2()?");
+		
+		assignments = result.get(1);
+		
+		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("M"), "Class is not M");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("m()"), 
+				"Method with invocations is not m()?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("m2()"), 
+				"Method updated is not m2()?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("m1()"), 
+				"Other method updated is not m1()?");
+	}
 
 	private ConflictPattern getOverloadByAdditionPattern() {
 		FreeVariable classVar = new FreeVariable(0);
@@ -417,6 +462,32 @@ public class TestMatcherSemanticConflicts {
 		dp1.addActionPattern(new InsertInvocationPatternAction(methodVar, insertedMethodVar));
 		dp2.addActionPattern(new DeleteMethodPatternAction(methodVar, classVar, null));
 		
+		return new ConflictPattern(basePattern, dp1, dp2);
+	}
+	
+	private ConflictPattern getChangeMethodPattern() {
+		FreeVariable classVar = new FreeVariable(0);
+		FreeVariable methodVar1 = new FreeVariable(1);
+		FreeVariable methodVar2 = new FreeVariable(2);
+		FreeVariable methodVar3 = new FreeVariable(3);
+
+		BasePattern basePattern = new BasePattern();
+		ClassPattern classPattern = new ClassPattern(classVar);
+		MethodPattern methodPattern1 = new MethodPattern(methodVar1, null);
+		MethodPattern methodPattern2 = new MethodPattern(methodVar2, null);
+		MethodPattern methodPattern3 = new MethodPattern(methodVar3, null);
+		methodPattern1.addMethodInvocationPattern(new MethodInvocationPattern(methodVar2));
+		methodPattern1.addMethodInvocationPattern(new MethodInvocationPattern(methodVar3));
+		classPattern.addMethodPattern(methodPattern1);
+		classPattern.addMethodPattern(methodPattern2);
+		classPattern.addMethodPattern(methodPattern3);
+		basePattern.addClassPattern(classPattern);
+		
+		DeltaPattern dp1 = new DeltaPattern();
+		DeltaPattern dp2 = new DeltaPattern();
+		dp1.addActionPattern(new UpdatePatternAction(methodVar2));
+		dp2.addActionPattern(new UpdatePatternAction(methodVar3));
+
 		return new ConflictPattern(basePattern, dp1, dp2);
 	}
 }
