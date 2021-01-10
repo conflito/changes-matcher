@@ -18,7 +18,25 @@ import spoon.reflect.declaration.CtType;
 import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.TypeFilter;
 
-public class SpoonLauncherUtils {
+public class SpoonUtils {
+	
+	public static SpoonResource getSpoonResource(File f) throws ApplicationException {
+		SpoonResource resource;
+		try {
+			resource = SpoonResourceHelper.createResource(f);
+		} catch (FileNotFoundException e) {
+			throw new ApplicationException("Invalid specified file", e);
+		}
+		return resource;
+	}
+	
+	public static CtType<?> getCtType(SpoonResource resource){
+		return new AstComparator().getCtType(resource);
+	}
+	
+	public static CtClass<?> getCtClass(SpoonResource resource){
+		return (CtClass<?>) getCtType(resource);
+	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void loadInvokedClasses(CtClass<?> changedClass, Launcher launcher) 
