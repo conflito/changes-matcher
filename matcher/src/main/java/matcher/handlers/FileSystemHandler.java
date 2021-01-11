@@ -32,6 +32,17 @@ public class FileSystemHandler {
 		}
 	}
 	
+	public void setConfigPath(String path) throws ApplicationException {
+		try(InputStream input = new FileInputStream(path)){
+			prop = new Properties();
+			prop.load(input);
+		} catch (FileNotFoundException e) {
+			throw new ApplicationException("Invalid properties file", e);
+		} catch (IOException e) {
+			throw new ApplicationException("Error reading properties file", e);
+		}
+	}
+	
 	public boolean fromTheSystem(String fileName) {
 		return getSrcFile(fileName).isPresent();
 	}
