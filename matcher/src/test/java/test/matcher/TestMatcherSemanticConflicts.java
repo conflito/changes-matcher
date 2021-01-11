@@ -48,6 +48,7 @@ public class TestMatcherSemanticConflicts {
 	private static final String CHANGE_METHOD1_FOLDER ="ChangeMethod01/";
 	private static final String DEPENDENCY_BASED1_FOLDER = "DependencyBased01/";
 	private static final String DEPENDENCY_BASED2_FOLDER = "DependencyBased02/";
+	private static final String DEPENDENCY_BASED4_FOLDER = "DependencyBased04/";
 
 	@Test
 	public void overloadByAdditionTest() throws ApplicationException {
@@ -364,6 +365,38 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(2).getFirst() == 2 && 
 				assignments.get(2).getSecond().equals("m1()"), 
 				"Method updated is not m1()?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("B"), 
+				"New class is not B?");
+		assertTrue(assignments.get(4).getFirst() == 4 && 
+				assignments.get(4).getSecond().equals("k()"), 
+				"Method inserted with invocation is not k()?");
+	}
+	
+	@Test
+	public void dependencyBased4Test() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ DEPENDENCY_BASED4_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + DEPENDENCY_BASED4_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + DEPENDENCY_BASED4_FOLDER + "A01.java";
+		String newClassPath = SRC_FOLDER + DEPENDENCY_BASED4_FOLDER + "B.java";
+		
+		ConflictPattern cp = getDependencyBased2Pattern();
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(basePath, var1Path, null, newClassPath, cp);
+		assertTrue(result.size() == 1, "More than one result for dependency based 2?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("A"), "Class is not A");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("m()"), 
+				"Method with invocation is not m()?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("m1(double, int)"), 
+				"Method updated is not m1(doublt, int)?");
 		assertTrue(assignments.get(3).getFirst() == 3 && 
 				assignments.get(3).getSecond().equals("B"), 
 				"New class is not B?");
