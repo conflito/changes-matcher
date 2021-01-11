@@ -384,8 +384,7 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtTypeReference(CtTypeReference<T> reference) {
-		// TODO Auto-generated method stub
-		
+		visit(reference);
 	}
 
 	@Override
