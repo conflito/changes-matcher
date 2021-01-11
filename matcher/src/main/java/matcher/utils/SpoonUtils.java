@@ -71,14 +71,10 @@ public class SpoonUtils {
 					FileSystemHandler.getInstance().getSrcFile(superClass.getSimpleName() + ".java");
 			if(superFile.isPresent()) {
 				File sf = superFile.get();
+				SpoonResource resource = SpoonUtils.getSpoonResource(sf);
+				CtClass<?> sc = SpoonUtils.getCtClass(resource);
 				launcher.addInputResource(sf.getAbsolutePath());
-				try {
-					SpoonResource resource = SpoonResourceHelper.createFile(sf);
-					CtClass<?> sc = (CtClass<?>) new AstComparator().getCtType(resource);
-					loadClassTree(sc, launcher);
-				} catch (FileNotFoundException e) {
-					throw new ApplicationException("Invalid file", e);
-				}
+				loadClassTree(sc, launcher);
 			}
 		}
 	}
@@ -92,7 +88,10 @@ public class SpoonUtils {
 		return l.get(0);
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static String getInvocationClassQualifiedName(CtInvocation<?> invocation) {
-		return invocation.getTarget().getType().getQualifiedName();
+		CtType<?> parent = (CtType<?>)invocation.getExecutable()
+												  .getParent(new TypeFilter(CtType.class));
+		return parent.getQualifiedName();
 	}
 }
