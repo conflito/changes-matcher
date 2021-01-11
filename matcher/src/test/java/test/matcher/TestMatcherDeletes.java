@@ -1,10 +1,8 @@
 package test.matcher;
 
-import matcher.entities.ChangeInstance;
+import matcher.Matcher;
 import matcher.entities.Visibility;
 import matcher.exceptions.ApplicationException;
-import matcher.handlers.ChangeInstanceHandler;
-import matcher.handlers.MatchingHandler;
 import matcher.patterns.BasePattern;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.ConflictPattern;
@@ -26,12 +24,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.File;
 import java.util.List;
 
 public class TestMatcherDeletes {
 
 	private static final String SRC_FOLDER = "src/test/resources/OperationsInstances/";
+	private static final String CONFIG_FILE_NAME = "config.properties";
+	
 	private static final String DEL_FIELD_METHOD_FOLDER = "FieldAndMethodDeleteInstance/";
 	private static final String DEL_FIELD_CONSTR_FOLDER = "FieldAndConstructorDeleteInstance/";
 	private static final String DEL_FIELD_COMPA_METHOD_FOLDER = "FieldAndCompatibleMethodDeleteInstance/";
@@ -40,14 +39,18 @@ public class TestMatcherDeletes {
 
 	@Test
 	public void deletePrivateFieldAndPublicMethodTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + DEL_FIELD_METHOD_FOLDER + "Square.java");
-		File firstVar = new File(SRC_FOLDER + DEL_FIELD_METHOD_FOLDER + "Square01.java");
-		File secondVar = new File(SRC_FOLDER + DEL_FIELD_METHOD_FOLDER + "Square02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ DEL_FIELD_METHOD_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + DEL_FIELD_METHOD_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + DEL_FIELD_METHOD_FOLDER + "Square01.java";
+		String secondVarPath = SRC_FOLDER + DEL_FIELD_METHOD_FOLDER + "Square02.java";
+		
 		ConflictPattern cp = getDeletePrivateFieldAndPublicMethodPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result =
+				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for deleting private "
 				+ "field and public method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -62,14 +65,18 @@ public class TestMatcherDeletes {
 	
 	@Test
 	public void deletePrivateFieldAndPublicConstructorTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + DEL_FIELD_CONSTR_FOLDER + "Square.java");
-		File firstVar = new File(SRC_FOLDER + DEL_FIELD_CONSTR_FOLDER + "Square01.java");
-		File secondVar = new File(SRC_FOLDER + DEL_FIELD_CONSTR_FOLDER + "Square02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ DEL_FIELD_CONSTR_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + DEL_FIELD_CONSTR_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + DEL_FIELD_CONSTR_FOLDER + "Square01.java";
+		String secondVarPath = SRC_FOLDER + DEL_FIELD_CONSTR_FOLDER + "Square02.java";
+		
 		ConflictPattern cp = getDeletePrivateFieldAndPublicConstructorPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for deleting private "
 				+ "field and constructor method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -85,14 +92,18 @@ public class TestMatcherDeletes {
 	
 	@Test
 	public void deleteFieldAndCompatibleMethodTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + DEL_FIELD_COMPA_METHOD_FOLDER + "Square.java");
-		File firstVar = new File(SRC_FOLDER + DEL_FIELD_COMPA_METHOD_FOLDER + "Square01.java");
-		File secondVar = new File(SRC_FOLDER + DEL_FIELD_COMPA_METHOD_FOLDER + "Square02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ DEL_FIELD_COMPA_METHOD_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + DEL_FIELD_COMPA_METHOD_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + DEL_FIELD_COMPA_METHOD_FOLDER + "Square01.java";
+		String secondVarPath = SRC_FOLDER + DEL_FIELD_COMPA_METHOD_FOLDER + "Square02.java";
+		
 		ConflictPattern cp = getDeleteFieldAndCompatibleMethodPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for deleting field and compatible method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
@@ -111,14 +122,18 @@ public class TestMatcherDeletes {
 	
 	@Test
 	public void deleteFieldAndMethodInvocationTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + "Shape.java");
-		File firstVar = new File(SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + "Shape01.java");
-		File secondVar = new File(SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + "Shape02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ DEL_FIELD_AND_INVO_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + "Shape.java";
+		String firstVarPath = SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + "Shape01.java";
+		String secondVarPath = SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + "Shape02.java";
+		
 		ConflictPattern cp = getDeleteFieldAndMethodInvocationPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for deleting field and method invocation?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 3, "Not 3 assignments with only 3 variables?");
@@ -134,14 +149,18 @@ public class TestMatcherDeletes {
 	
 	@Test
 	public void deleteFieldAccessAndMethodTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + "Square.java");
-		File firstVar = new File(SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + "Square01.java");
-		File secondVar = new File(SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + "Square02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ DEL_FIELD_ACCESS_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + "Square01.java";
+		String secondVarPath = SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + "Square02.java";
+		
 		ConflictPattern cp = getDeleteFieldAccessAndMethodPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result =
+				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+				
 		assertTrue(result.size() == 1, "More than one result for deleting field and compatible method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
