@@ -2,10 +2,8 @@ package test.matcher;
 
 import org.junit.jupiter.api.Test;
 
-import matcher.entities.ChangeInstance;
+import matcher.Matcher;
 import matcher.exceptions.ApplicationException;
-import matcher.handlers.ChangeInstanceHandler;
-import matcher.handlers.MatchingHandler;
 import matcher.patterns.BasePattern;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.ConflictPattern;
@@ -18,12 +16,13 @@ import matcher.utils.Pair;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.File;
 import java.util.List;
 
 public class TestMatcherUpdates {
 	
 	private static final String SRC_FOLDER = "src/test/resources/OperationsInstances/";
+	private static final String CONFIG_FILE_NAME = "config.properties";
+	
 	private static final String UPD_INS_METHOD_FOLDER = "MethodUpdateWithInsertOperationInstance/";
 	private static final String UPD_DEL_METHOD_FOLDER = "MethodUpdateWithDeleteOperationInstance/";
 	private static final String UPD_INS_CONST_FOLDER = "ConstructorUpdateWithInsertOperationInstance/";
@@ -32,14 +31,18 @@ public class TestMatcherUpdates {
 
 	@Test
 	public void methodUpdateWithInsertOperationTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + UPD_INS_METHOD_FOLDER + "Square.java");
-		File firstVar = new File(SRC_FOLDER + UPD_INS_METHOD_FOLDER + "Square01.java");
-		File secondVar = new File(SRC_FOLDER + UPD_INS_METHOD_FOLDER + "Square02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ UPD_INS_METHOD_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + UPD_INS_METHOD_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + UPD_INS_METHOD_FOLDER + "Square01.java";
+		String secondVarPath = SRC_FOLDER + UPD_INS_METHOD_FOLDER + "Square02.java";
+		
 		ConflictPattern cp = getUpdateMethodPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for updating method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
@@ -52,14 +55,18 @@ public class TestMatcherUpdates {
 	
 	@Test
 	public void methodUpdateWithDeleteOperationTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + UPD_DEL_METHOD_FOLDER + "Shape.java");
-		File firstVar = new File(SRC_FOLDER + UPD_DEL_METHOD_FOLDER + "Shape01.java");
-		File secondVar = new File(SRC_FOLDER + UPD_DEL_METHOD_FOLDER + "Shape02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ UPD_DEL_METHOD_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + UPD_DEL_METHOD_FOLDER + "Shape.java";
+		String firstVarPath = SRC_FOLDER + UPD_DEL_METHOD_FOLDER + "Shape01.java";
+		String secondVarPath = SRC_FOLDER + UPD_DEL_METHOD_FOLDER + "Shape02.java";
+		
 		ConflictPattern cp = getUpdateMethodPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+			matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for updating method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
@@ -72,14 +79,18 @@ public class TestMatcherUpdates {
 	
 	@Test
 	public void constructorUpdateWithInsertOperationTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + UPD_INS_CONST_FOLDER + "Square.java");
-		File firstVar = new File(SRC_FOLDER + UPD_INS_CONST_FOLDER + "Square01.java");
-		File secondVar = new File(SRC_FOLDER + UPD_INS_CONST_FOLDER + "Square02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ UPD_INS_CONST_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + UPD_INS_CONST_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + UPD_INS_CONST_FOLDER + "Square01.java";
+		String secondVarPath = SRC_FOLDER + UPD_INS_CONST_FOLDER + "Square02.java";
+		
 		ConflictPattern cp = getUpdateConstructorPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for updating method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
@@ -92,14 +103,18 @@ public class TestMatcherUpdates {
 	
 	@Test
 	public void constructorUpdateWithDeleteOperationTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + UPD_DEL_CONST_FOLDER + "Square.java");
-		File firstVar = new File(SRC_FOLDER + UPD_DEL_CONST_FOLDER + "Square01.java");
-		File secondVar = new File(SRC_FOLDER + UPD_DEL_CONST_FOLDER + "Square02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ UPD_DEL_CONST_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + UPD_DEL_CONST_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + UPD_DEL_CONST_FOLDER + "Square01.java";
+		String secondVarPath = SRC_FOLDER + UPD_DEL_CONST_FOLDER + "Square02.java";
+		
 		ConflictPattern cp = getUpdateConstructorPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for updating method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
