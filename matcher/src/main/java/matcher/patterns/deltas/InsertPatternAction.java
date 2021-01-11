@@ -28,14 +28,14 @@ public abstract class InsertPatternAction extends ActionPattern {
 
 	@Override
 	public boolean filled() {
-		return insertedEntity.hasValue() && holderEntity.hasValue();
+		return insertedEntity.hasValue() && (holderEntity == null || holderEntity.hasValue());
 	}
 
 	@Override
 	public void setVariableValue(int id, String value) {
 		if(insertedEntity.isId(id))
 			insertedEntity.setValue(value);
-		else if(holderEntity.isId(id))
+		else if(holderEntity != null && holderEntity.isId(id))
 			holderEntity.setValue(value);
 	}
 
@@ -52,7 +52,8 @@ public abstract class InsertPatternAction extends ActionPattern {
 	@Override
 	public void clean() {
 		insertedEntity.clean();
-		holderEntity.clean();
+		if(holderEntity != null)
+			holderEntity.clean();
 	}
 
 }
