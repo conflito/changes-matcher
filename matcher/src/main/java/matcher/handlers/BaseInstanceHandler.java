@@ -24,8 +24,7 @@ public class BaseInstanceHandler {
 		CtType<?> changedType = SpoonUtils.getCtType(resource);
 		if(changedType.isClass()) {
 			CtClass<?> changedClass = SpoonUtils.getCtClass(resource);
-			SpoonUtils.loadClassTree(changedClass, launcher);
-			SpoonUtils.loadInvokedClasses(changedClass, launcher);
+			SpoonUtils.loadLauncher(changedClass, launcher);
 
 			BaseInstance result = new BaseInstance();
 			for(CtType<?> t: launcher.buildModel().getAllTypes()) {

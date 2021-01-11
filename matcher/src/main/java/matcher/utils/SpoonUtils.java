@@ -37,6 +37,12 @@ public class SpoonUtils {
 	public static CtClass<?> getCtClass(SpoonResource resource){
 		return (CtClass<?>) getCtType(resource);
 	}
+	
+	public static void loadLauncher(CtClass<?> changedClass, Launcher launcher) 
+			throws ApplicationException {
+		loadClassTree(changedClass, launcher);
+		loadInvokedClasses(changedClass, launcher);
+	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void loadInvokedClasses(CtClass<?> changedClass, Launcher launcher) 
@@ -77,12 +83,11 @@ public class SpoonUtils {
 		}
 	}
 	
-	public static CtType<?> getFullChangedCtType(Launcher launcher, CtType<?> changedType){
+	public static CtType<?> getFullChangedCtType(Launcher launcher, String changedType){
 		List<CtType<?>> l = launcher.buildModel()
 									.getAllTypes()
 									.stream()
-									.filter(c -> c.getQualifiedName()
-											.equals(changedType.getQualifiedName()))
+									.filter(c -> c.getQualifiedName().equals(changedType))
 									.collect(Collectors.toList());
 		return l.get(0);
 	}

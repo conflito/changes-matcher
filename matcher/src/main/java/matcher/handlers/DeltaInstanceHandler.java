@@ -52,9 +52,9 @@ public class DeltaInstanceHandler {
 		CtType<?> changedType = SpoonUtils.getCtType(resource);
 		if(changedType.isClass()) {
 			CtClass<?> changedClass = SpoonUtils.getCtClass(resource);
-			SpoonUtils.loadClassTree(changedClass, launcher);
-			SpoonUtils.loadInvokedClasses(changedClass, launcher);
-			CtType<?> fullType = SpoonUtils.getFullChangedCtType(launcher, changedType);
+			SpoonUtils.loadLauncher(changedClass, launcher);
+			CtType<?> fullType = SpoonUtils.getFullChangedCtType(launcher, 
+					changedType.getQualifiedName());
 			fullType.descendantIterator().forEachRemaining(e -> {
 				processInsert(e, deltaInstance, cp);
 			});
@@ -105,13 +105,11 @@ public class DeltaInstanceHandler {
 		if(baseType.isClass() && changedType.isClass()) {
 			CtClass<?> baseClass = SpoonUtils.getCtClass(baseResource);
 			CtClass<?> changedClass = SpoonUtils.getCtClass(varResource);
-			SpoonUtils.loadClassTree(baseClass, baseLauncher);
-			SpoonUtils.loadInvokedClasses(baseClass, baseLauncher);
-			SpoonUtils.loadClassTree(changedClass, varLauncher);
-			SpoonUtils.loadInvokedClasses(changedClass, varLauncher);
+			SpoonUtils.loadLauncher(baseClass, baseLauncher);
+			SpoonUtils.loadLauncher(changedClass, varLauncher);
 		}
-		return diff(SpoonUtils.getFullChangedCtType(baseLauncher, baseType)
-				, SpoonUtils.getFullChangedCtType(varLauncher, changedType));
+		return diff(SpoonUtils.getFullChangedCtType(baseLauncher, baseType.getQualifiedName())
+				, SpoonUtils.getFullChangedCtType(varLauncher, changedType.getQualifiedName()));
 	}
 	
 	private Diff diff(CtType<?> first, CtType<?> second) throws ApplicationException {
