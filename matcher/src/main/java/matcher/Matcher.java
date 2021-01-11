@@ -41,8 +41,12 @@ public class Matcher {
 	public List<List<Pair<Integer, String>>> matchingAssignments(String firstBasePath, 
 			String firstVariantPath, String secondBasePath, String secondVariantPath, 
 			ConflictPattern cp) throws ApplicationException{
-		File base1 = new File(firstBasePath);
-		File base2 = new File(secondBasePath);
+		File base1 = null;
+		if(firstBasePath != null)
+				base1 = new File(firstBasePath);
+		File base2 = null;
+		if(secondBasePath != null)
+			base2 = new File(secondBasePath);
 		File var1 = new File(firstVariantPath);
 		File var2 = new File(secondVariantPath);
 		ChangeInstance ci = cih.getChangeInstance(base1, base2, var1, var2, cp);
