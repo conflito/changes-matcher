@@ -30,15 +30,34 @@ public class ChangeInstanceHandler {
 	
 	public ChangeInstance getChangeInstance(File base1, File base2, File variant1, File variant2,
 			ConflictPattern cp) throws ApplicationException {
-		BaseInstance baseInstance = bih.getBaseInstance(base1, cp);
-		if(baseInstance == null)
+		if(base1 == null && base2 == null)
 			return null;
-		BaseInstance baseInstance2 = bih.getBaseInstance(base2, cp);
-		if(baseInstance2 == null)
-			return null;
-		baseInstance.merge(baseInstance2);
+		BaseInstance baseInstance = null;
+		if(base1 != null) {
+			baseInstance = bih.getBaseInstance(base1, cp);
+			if(baseInstance == null)
+				return null;
+		}
+
+		BaseInstance baseInstance2 = null;
+		if(base2 != null) {
+			baseInstance2 = bih.getBaseInstance(base2, cp);
+			if(baseInstance2 == null)
+				return null;
+		}
+		
 		DeltaInstance firstDelta = dih.getDeltaInstance(base1, variant1, cp);
 		DeltaInstance secondDelta = dih.getDeltaInstance(base2, variant2, cp);
-		return new ChangeInstance(baseInstance, firstDelta, secondDelta);
+		
+		if(baseInstance != null && baseInstance2 != null) {
+			baseInstance.merge(baseInstance2);
+			return new ChangeInstance(baseInstance, firstDelta, secondDelta);
+		}
+		else if(baseInstance2 != null) {
+			return new ChangeInstance(baseInstance2, firstDelta, secondDelta);
+		}
+		else {
+			return new ChangeInstance(baseInstance, firstDelta, secondDelta);
+		}		
 	}
 }
