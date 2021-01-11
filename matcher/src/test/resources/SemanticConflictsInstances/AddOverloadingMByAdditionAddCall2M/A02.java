@@ -1,12 +1,12 @@
 package base;
 
-public class TestClass{
+public class A{
 	
 	public void move(Number x, Number y) {
 		
 	}
 	
-	public void reset() {
-		move(0, 0);
+	public void move(int x, int y) {
+		
 	}
 }

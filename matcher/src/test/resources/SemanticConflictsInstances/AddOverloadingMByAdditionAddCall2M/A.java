@@ -1,6 +1,6 @@
 package base;
 
-public class TestClass{
+public class A{
 	
 	public void move(Number x, Number y) {
 		

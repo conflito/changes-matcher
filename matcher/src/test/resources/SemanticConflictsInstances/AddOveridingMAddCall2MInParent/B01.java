@@ -1,4 +1,4 @@
-public class D extends C {
+public class B extends A {
 	
 	int h;
 	

@@ -1,4 +1,4 @@
-public class K{
+public class A {
 	
 	public void move(int x, int y) {
 		

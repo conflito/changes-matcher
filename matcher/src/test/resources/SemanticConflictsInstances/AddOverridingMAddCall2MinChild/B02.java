@@ -1,4 +1,4 @@
-public class J extends I{
+public class B extends A{
 	
 	public void move(int dx, int dy) {
 		

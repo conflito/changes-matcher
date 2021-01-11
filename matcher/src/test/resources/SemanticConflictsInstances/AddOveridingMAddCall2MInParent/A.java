@@ -1,6 +1,6 @@
-public class C{
+public class A{
 	
-	C(){
+	A(){
 		
 	}
 	

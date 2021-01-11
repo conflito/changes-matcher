@@ -1,4 +1,4 @@
-public class M{
+public class A{
 
     public int m(){
 		return m1() + m2();

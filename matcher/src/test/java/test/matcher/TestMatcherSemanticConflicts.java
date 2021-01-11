@@ -2,13 +2,12 @@ package test.matcher;
 
 import org.junit.jupiter.api.Test;
 
-import matcher.entities.ChangeInstance;
+import matcher.Matcher;
+
 import matcher.entities.FieldAccessType;
 import matcher.entities.Visibility;
 import matcher.entities.deltas.Action;
 import matcher.exceptions.ApplicationException;
-import matcher.handlers.ChangeInstanceHandler;
-import matcher.handlers.MatchingHandler;
 import matcher.patterns.BasePattern;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.ConflictPattern;
@@ -29,12 +28,13 @@ import matcher.utils.Pair;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.File;
 import java.util.List;
 
 public class TestMatcherSemanticConflicts {
 
 	private static final String SRC_FOLDER = "src/test/resources/SemanticConflictsInstances/";
+	private static final String CONFIG_FILE_NAME = "config.properties";
+	
 	private static final String OVERLOAD_ADDITION_FOLDER = "AddOverloadingMByAdditionAddCall2M/";
 	private static final String FIELD_HIDING_FOLDER = "AddFieldHidingAddMethodThatUseDefFinChild/";
 	private static final String METHOD_OVERIDING_FOLDER = "AddOveridingMAddCall2MInParent/";
@@ -45,23 +45,26 @@ public class TestMatcherSemanticConflicts {
 	private static final String OVERRIDING_FOLDER = "AddOverridingMAddCall2MinChild/";
 	private static final String REMOVE_OVERRIDER_FOLDER ="RemoveOverridingMAddCall2M/";
 	private static final String CHANGE_METHOD1_FOLDER ="ChangeMethod01/";
-	
+
 	@Test
 	public void overloadByAdditionTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + "TestClass.java");
-		File firstVar = new File(SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + "TestClass01.java");
-		File secondVar = new File(SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + "TestClass02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ OVERLOAD_ADDITION_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + "A.java";
+		String firstVarPath = SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + "A01.java";
+		String secondVarPath = SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + "A02.java";
+		
 		ConflictPattern cp = getOverloadByAdditionPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for overloading method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.TestClass"), "Class is not "
-						+ "base.TestClass?");
+				assignments.get(0).getSecond().equals("base.A"), "Class is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
 				assignments.get(1).getSecond().equals("move(java.lang.Number, "
 						+ "java.lang.Number)"), 
@@ -76,14 +79,18 @@ public class TestMatcherSemanticConflicts {
 	
 	@Test
 	public void addFieldHidingTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + FIELD_HIDING_FOLDER + "B.java");
-		File firstVar = new File(SRC_FOLDER + FIELD_HIDING_FOLDER + "B01.java");
-		File secondVar = new File(SRC_FOLDER + FIELD_HIDING_FOLDER + "B02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ FIELD_HIDING_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + FIELD_HIDING_FOLDER + "B.java";
+		String firstVarPath = SRC_FOLDER + FIELD_HIDING_FOLDER + "B01.java";
+		String secondVarPath = SRC_FOLDER + FIELD_HIDING_FOLDER + "B02.java";
+		
 		ConflictPattern cp = getFieldHidingPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for overloading method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
@@ -101,25 +108,29 @@ public class TestMatcherSemanticConflicts {
 	
 	@Test
 	public void methodOveridingTest() throws ApplicationException {
-		File base1 = new File(SRC_FOLDER + METHOD_OVERIDING_FOLDER + "C.java");
-		File var1 = new File(SRC_FOLDER + METHOD_OVERIDING_FOLDER + "C01.java");
-		File base2 = new File(SRC_FOLDER + METHOD_OVERIDING_FOLDER + "D.java");
-		File var2 = new File(SRC_FOLDER + METHOD_OVERIDING_FOLDER + "D01.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ METHOD_OVERIDING_FOLDER + CONFIG_FILE_NAME);
+		
+		String base1Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + "A01.java";
+		String base2Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + "B01.java";
+		
 		ConflictPattern cp = getMethodOveridingPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base1, base2, var1, var2, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(base1Path, var1Path, base2Path, var2Path, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for overloading method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("C"), "Superclass is not C");
+				assignments.get(0).getSecond().equals("A"), "Superclass is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("D"), "Class is not D?");
+				assignments.get(1).getSecond().equals("B"), "Class is not B?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("C.C()"), 
-				"Constructor is not C.C()?");
+				assignments.get(2).getSecond().equals("A.A()"), 
+				"Constructor is not A.A()?");
 		assertTrue(assignments.get(3).getFirst() == 3 && 
 				assignments.get(3).getSecond().equals("resize()"), 
 				"Inserted method that writes to field is not resize()?");
@@ -130,23 +141,26 @@ public class TestMatcherSemanticConflicts {
 	
 	@Test
 	public void overloadingAccessChangeTest() throws ApplicationException {
-		File base1 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "E.java");
-		File var1 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "E01.java");
-		File base2 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "F.java");
-		File var2 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "F01.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ OVERLOAD_ACCESS_CHANGE_FOLDER + CONFIG_FILE_NAME);
+		
+		String base1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "A01.java";
+		String base2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "B01.java";
 		
 		ConflictPattern cp = getOverloadAccessChangePattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base1, base2, var1, var2, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(base1Path, var1Path, base2Path, var2Path, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for overloading method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("E"), "Superclass is not E");
+				assignments.get(0).getSecond().equals("A"), "Superclass is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("F"), "Class is not F?");
+				assignments.get(1).getSecond().equals("B"), "Class is not B?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
 				assignments.get(2).getSecond().equals("move(java.lang.Number, java.lang.Number)"), 
 				"Top method is not move(java.lang.Number, java.lang.Number)?");
@@ -160,23 +174,26 @@ public class TestMatcherSemanticConflicts {
 	
 	@Test
 	public void overloadingAccessChange2Test() throws ApplicationException {
-		File base1 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + "G.java");
-		File var1 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + "G01.java");
-		File base2 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + "H.java");
-		File var2 = new File(SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + "H01.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ OVERLOAD_ACCESS_CHANGE2_FOLDER + CONFIG_FILE_NAME);
+		
+		String base1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + "A01.java";
+		String base2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + "B01.java";
 		
 		ConflictPattern cp = getOverloadAccessChange2Pattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base1, base2, var1, var2, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(base1Path, var1Path, base2Path, var2Path, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for overloading method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("G"), "Superclass is not G");
+				assignments.get(0).getSecond().equals("A"), "Superclass is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("H"), "Class is not H?");
+				assignments.get(1).getSecond().equals("B"), "Class is not B?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
 				assignments.get(2).getSecond().equals("move(java.lang.Number, java.lang.Number)"), 
 				"Top method is not move(java.lang.Number, java.lang.Number)?");
@@ -190,22 +207,25 @@ public class TestMatcherSemanticConflicts {
 	
 	@Test
 	public void overridingTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + OVERRIDING_FOLDER + "J.java");
-		File var1 = new File(SRC_FOLDER + OVERRIDING_FOLDER + "J01.java");
-		File var2 = new File(SRC_FOLDER + OVERRIDING_FOLDER + "J02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ OVERRIDING_FOLDER + CONFIG_FILE_NAME);
 		
+		String basePath = SRC_FOLDER + OVERRIDING_FOLDER + "B.java";
+		String var1Path = SRC_FOLDER + OVERRIDING_FOLDER + "B01.java";
+		String var2Path = SRC_FOLDER + OVERRIDING_FOLDER + "B02.java";
+
 		ConflictPattern cp = getOverridingPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, var1, var2, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result =
+				matcher.matchingAssignments(basePath, var1Path, var2Path, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for overriding method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("I"), "Superclass is not I");
+				assignments.get(0).getSecond().equals("A"), "Superclass is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("J"), "Class is not J?");
+				assignments.get(1).getSecond().equals("B"), "Class is not B?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
 				assignments.get(2).getSecond().equals("move(int, int)"), 
 				"Method overwritten is not move(int, int)?");
@@ -216,22 +236,25 @@ public class TestMatcherSemanticConflicts {
 	
 	@Test
 	public void removeOverridingTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + REMOVE_OVERRIDER_FOLDER + "L.java");
-		File var1 = new File(SRC_FOLDER + REMOVE_OVERRIDER_FOLDER + "L01.java");
-		File var2 = new File(SRC_FOLDER + REMOVE_OVERRIDER_FOLDER + "L02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ REMOVE_OVERRIDER_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + REMOVE_OVERRIDER_FOLDER + "B.java";
+		String var1Path = SRC_FOLDER + REMOVE_OVERRIDER_FOLDER + "B01.java";
+		String var2Path = SRC_FOLDER + REMOVE_OVERRIDER_FOLDER + "B02.java";
 		
 		ConflictPattern cp = getRemoveOverridingPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, var1, var2, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(basePath, var1Path, var2Path, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for remove overriding method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("K"), "Superclass is not K");
+				assignments.get(0).getSecond().equals("A"), "Superclass is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("L"), "Class is not L?");
+				assignments.get(1).getSecond().equals("B"), "Class is not B?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
 				assignments.get(2).getSecond().equals("move(int, int)"), 
 				"Method removed is not move(int, int)?");
@@ -242,20 +265,23 @@ public class TestMatcherSemanticConflicts {
 	
 	@Test
 	public void changeMethod1Test() throws ApplicationException {
-		File base = new File(SRC_FOLDER + CHANGE_METHOD1_FOLDER + "M.java");
-		File var1 = new File(SRC_FOLDER + CHANGE_METHOD1_FOLDER + "M01.java");
-		File var2 = new File(SRC_FOLDER + CHANGE_METHOD1_FOLDER + "M02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ CHANGE_METHOD1_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + CHANGE_METHOD1_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + CHANGE_METHOD1_FOLDER + "A01.java";
+		String var2Path = SRC_FOLDER + CHANGE_METHOD1_FOLDER + "A02.java";
 		
 		ConflictPattern cp = getChangeMethodPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, var1, var2, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(basePath, var1Path, var2Path, cp);
+				
 		assertTrue(result.size() == 2, "Not two results for method change?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("M"), "Class is not M");
+				assignments.get(0).getSecond().equals("A"), "Class is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
 				assignments.get(1).getSecond().equals("m()"), 
 				"Method with invocations is not m()?");
@@ -270,7 +296,7 @@ public class TestMatcherSemanticConflicts {
 		
 		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("M"), "Class is not M");
+				assignments.get(0).getSecond().equals("A"), "Class is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
 				assignments.get(1).getSecond().equals("m()"), 
 				"Method with invocations is not m()?");
