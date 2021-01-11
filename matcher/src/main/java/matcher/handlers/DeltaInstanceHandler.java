@@ -106,7 +106,7 @@ public class DeltaInstanceHandler {
 			CtClass<?> baseClass = SpoonUtils.getCtClass(baseResource);
 			CtClass<?> changedClass = SpoonUtils.getCtClass(varResource);
 			SpoonUtils.loadClassTree(baseClass, baseLauncher);
-			SpoonUtils.loadInvokedClasses(changedClass, varLauncher);
+			SpoonUtils.loadInvokedClasses(baseClass, baseLauncher);
 			SpoonUtils.loadClassTree(changedClass, varLauncher);
 			SpoonUtils.loadInvokedClasses(changedClass, varLauncher);
 		}
