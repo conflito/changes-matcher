@@ -2,12 +2,10 @@ package test.matcher;
 
 import org.junit.jupiter.api.Test;
 
-import matcher.entities.ChangeInstance;
+import matcher.Matcher;
 import matcher.entities.Visibility;
 import matcher.entities.deltas.Action;
 import matcher.exceptions.ApplicationException;
-import matcher.handlers.ChangeInstanceHandler;
-import matcher.handlers.MatchingHandler;
 import matcher.patterns.BasePattern;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.ConflictPattern;
@@ -19,26 +17,31 @@ import matcher.utils.Pair;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.File;
 import java.util.List;
 
 public class TestMatcherVisibilities {
 	
 	private static final String SRC_FOLDER = "src/test/resources/OperationsInstances/";
+	private static final String CONFIG_FILE_NAME = "config.properties";
+	
 	private static final String INS_VIS_FIELD_FOLDER = "VisibilityFieldInsertInstance/";
 	private static final String DEL_VIS_FIELD_FOLDER = "VisibilityFieldDeleteInstance/";
 	private static final String UPD_VIS_FIELD_FOLDER = "VisibilityFieldUpdateInstance/";
 	
 	@Test
 	public void insertVisibilityInFieldTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + INS_VIS_FIELD_FOLDER + "Square.java");
-		File firstVar = new File(SRC_FOLDER + INS_VIS_FIELD_FOLDER + "Square01.java");
-		File secondVar = new File(SRC_FOLDER + INS_VIS_FIELD_FOLDER + "Square02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ INS_VIS_FIELD_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + INS_VIS_FIELD_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + INS_VIS_FIELD_FOLDER + "Square01.java";
+		String secondVarPath = SRC_FOLDER + INS_VIS_FIELD_FOLDER + "Square02.java";
+		
 		ConflictPattern cp = getInsertFieldVisibilityPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for updating method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
@@ -51,14 +54,18 @@ public class TestMatcherVisibilities {
 	
 	@Test
 	public void deleteVisibilityInFieldTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + DEL_VIS_FIELD_FOLDER + "Square.java");
-		File firstVar = new File(SRC_FOLDER + DEL_VIS_FIELD_FOLDER + "Square01.java");
-		File secondVar = new File(SRC_FOLDER + DEL_VIS_FIELD_FOLDER + "Square02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ DEL_VIS_FIELD_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + DEL_VIS_FIELD_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + DEL_VIS_FIELD_FOLDER + "Square01.java";
+		String secondVarPath = SRC_FOLDER + DEL_VIS_FIELD_FOLDER + "Square02.java";
+		
 		ConflictPattern cp = getDeleteFieldVisibilityPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for updating method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
@@ -71,14 +78,18 @@ public class TestMatcherVisibilities {
 	
 	@Test
 	public void updateVisibilityInFieldTest() throws ApplicationException {
-		File base = new File(SRC_FOLDER + UPD_VIS_FIELD_FOLDER + "Square.java");
-		File firstVar = new File(SRC_FOLDER + UPD_VIS_FIELD_FOLDER + "Square01.java");
-		File secondVar = new File(SRC_FOLDER + UPD_VIS_FIELD_FOLDER + "Square02.java");
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ UPD_VIS_FIELD_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + UPD_VIS_FIELD_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + UPD_VIS_FIELD_FOLDER + "Square01.java";
+		String secondVarPath = SRC_FOLDER + UPD_VIS_FIELD_FOLDER + "Square02.java";
+		
 		ConflictPattern cp = getUpdateFieldVisibilityPattern();
-		ChangeInstanceHandler cih = new ChangeInstanceHandler();
-		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
-		MatchingHandler mh = new MatchingHandler();
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+				
 		assertTrue(result.size() == 1, "More than one result for updating method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
