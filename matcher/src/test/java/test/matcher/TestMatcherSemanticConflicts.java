@@ -50,6 +50,7 @@ public class TestMatcherSemanticConflicts {
 	private static final String DEPENDENCY_BASED2_FOLDER = "DependencyBased02/";
 	private static final String DEPENDENCY_BASED3_FOLDER = "DependencyBased03/";
 	private static final String DEPENDENCY_BASED4_FOLDER = "DependencyBased04/";
+	private static final String UNEXPECTED_OVERIDE_FOLDER = "UnexpectedOverriding01/";
 
 	@Test
 	public void overloadByAdditionTest() throws ApplicationException {
@@ -433,6 +434,39 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(4).getSecond().equals("k()"), 
 				"Method inserted with invocation is not k()?");
 	}
+	
+	@Test
+	public void unexpectedOverridingTest() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ UNEXPECTED_OVERIDE_FOLDER + CONFIG_FILE_NAME);
+		
+		String base1Path = SRC_FOLDER + UNEXPECTED_OVERIDE_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + UNEXPECTED_OVERIDE_FOLDER + "A01.java";
+		String base2Path = SRC_FOLDER + UNEXPECTED_OVERIDE_FOLDER + "B0.java";
+		String var2Path = SRC_FOLDER + UNEXPECTED_OVERIDE_FOLDER + "B0_1.java";
+
+		ConflictPattern cp = getUnexpectedOverriding1Pattern();
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(base1Path, var1Path, base2Path, var2Path, cp);
+		assertTrue(result.size() == 1, "More than one result for unexpected overriding 1?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("A"), "Class is not A");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("B0"), 
+				"Other class is not B0?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("b"), 
+				"Field is not b?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("n(A)"), 
+				"Inserted method is not n(A)?");
+		assertTrue(assignments.get(4).getFirst() == 4 && 
+				assignments.get(4).getSecond().equals("equals(java.lang.Object)"), 
+				"Method overriden is not equals(java.lang.Object)");
+	}
 
 	private ConflictPattern getOverloadByAdditionPattern() {
 		FreeVariable classVar = new FreeVariable(0);
@@ -713,6 +747,32 @@ public class TestMatcherSemanticConflicts {
 		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, 
 				insertedClassVar, null));
 		dp2.addActionPattern(new InsertInvocationPatternAction(methodVar1, insertedMethodVar));
+		
+		return new ConflictPattern(basePattern, dp1, dp2);
+	}
+	
+	private ConflictPattern getUnexpectedOverriding1Pattern() {
+		FreeVariable classVar1 = new FreeVariable(0);
+		FreeVariable classVar2 = new FreeVariable(1);
+		FreeVariable fieldVar1 = new FreeVariable(2);
+		FreeVariable insertedMethodVar = new FreeVariable(3);
+		FreeVariable overideMethodVar = new FreeVariable(4);
+		
+		BasePattern basePattern = new BasePattern();
+		ClassPattern classPattern1 = new ClassPattern(classVar1);
+		ClassPattern classPattern2 = new ClassPattern(classVar2);
+		FieldPattern fieldPattern = new FieldPattern(fieldVar1, null);
+		classPattern1.addFieldPattern(fieldPattern);
+		basePattern.addClassPattern(classPattern1);
+		basePattern.addClassPattern(classPattern2);
+		
+		DeltaPattern dp1 = new DeltaPattern();
+		DeltaPattern dp2 = new DeltaPattern();
+		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, classVar1, null));
+		dp1.addActionPattern(new InsertInvocationPatternAction(overideMethodVar, 
+				insertedMethodVar));
+		dp2.addActionPattern(new InsertMethodPatternAction(overideMethodVar, classVar2, 
+				Visibility.PUBLIC));
 		
 		return new ConflictPattern(basePattern, dp1, dp2);
 	}
