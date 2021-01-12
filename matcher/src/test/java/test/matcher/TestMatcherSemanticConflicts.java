@@ -51,6 +51,8 @@ public class TestMatcherSemanticConflicts {
 	private static final String DEPENDENCY_BASED3_FOLDER = "DependencyBased03/";
 	private static final String DEPENDENCY_BASED4_FOLDER = "DependencyBased04/";
 	private static final String UNEXPECTED_OVERIDE_FOLDER = "UnexpectedOverriding01/";
+	private static final String UNEXPECTED_OVERIDE2_FOLDER = "UnexpectedOverriding02/";
+
 
 	@Test
 	public void overloadByAdditionTest() throws ApplicationException {
@@ -467,6 +469,42 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(4).getSecond().equals("equals(java.lang.Object)"), 
 				"Method overriden is not equals(java.lang.Object)");
 	}
+	
+	@Test
+	public void unexpectedOverriding2Test() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ UNEXPECTED_OVERIDE2_FOLDER + CONFIG_FILE_NAME);
+		
+		String base1Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + "A01.java";
+		String base2Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + "B2.java";
+		String var2Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + "B2_01.java";
+		
+		ConflictPattern cp = getUnexpectedOverriding2Pattern();
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(base1Path, var1Path, base2Path, var2Path, cp);
+		assertTrue(result.size() == 1, "More than one result for unexpected overriding 2?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 6, "Not 6 assignments with only 6 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("A"), "Class is not A");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("B1"), 
+				"Other class is not B1?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("B2"), 
+				"Third class that extends second is not B2?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("b"), 
+				"Field is not b?");
+		assertTrue(assignments.get(4).getFirst() == 4 && 
+				assignments.get(4).getSecond().equals("m()"), 
+				"Method overriden is not m()");
+		assertTrue(assignments.get(5).getFirst() == 5 && 
+				assignments.get(5).getSecond().equals("n()"), 
+				"Method that invokes overriden method is not n()");
+	}
 
 	private ConflictPattern getOverloadByAdditionPattern() {
 		FreeVariable classVar = new FreeVariable(0);
@@ -773,6 +811,35 @@ public class TestMatcherSemanticConflicts {
 				insertedMethodVar));
 		dp2.addActionPattern(new InsertMethodPatternAction(overideMethodVar, classVar2, 
 				Visibility.PUBLIC));
+		
+		return new ConflictPattern(basePattern, dp1, dp2);
+	}
+	
+	private ConflictPattern getUnexpectedOverriding2Pattern() {
+		FreeVariable classVar1 = new FreeVariable(0);
+		FreeVariable classVar2 = new FreeVariable(1);
+		FreeVariable classVar3 = new FreeVariable(2);
+		FreeVariable fieldVar1 = new FreeVariable(3);
+		FreeVariable methodVar1 = new FreeVariable(4);
+		FreeVariable insertedMethod = new FreeVariable(5);
+		
+		BasePattern basePattern = new BasePattern();
+		ClassPattern classPattern1 = new ClassPattern(classVar1);
+		ClassPattern classPattern2 = new ClassPattern(classVar2);
+		ClassPattern classPattern3 = new ClassPattern(classVar3);
+		MethodPattern methodPattern = new MethodPattern(methodVar1, null);
+		FieldPattern fieldPattern = new FieldPattern(fieldVar1, null);
+		classPattern1.addFieldPattern(fieldPattern);
+		classPattern2.addMethodPattern(methodPattern);
+		classPattern3.setSuperClass(classPattern2);
+		basePattern.addClassPattern(classPattern1);
+		basePattern.addClassPattern(classPattern3);
+		
+		DeltaPattern dp1 = new DeltaPattern();
+		DeltaPattern dp2 = new DeltaPattern();
+		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethod, classVar1, null));
+		dp1.addActionPattern(new InsertInvocationPatternAction(methodVar1, insertedMethod));
+		dp2.addActionPattern(new InsertMethodPatternAction(methodVar1, classVar3, null));
 		
 		return new ConflictPattern(basePattern, dp1, dp2);
 	}
