@@ -15,6 +15,7 @@ import spoon.compiler.SpoonResourceHelper;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtType;
+import spoon.reflect.reference.CtFieldReference;
 import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.TypeFilter;
 
@@ -42,6 +43,40 @@ public class SpoonUtils {
 			throws ApplicationException {
 		loadClassTree(changedClass, launcher);
 		loadInvokedClasses(changedClass, launcher);
+	}
+	
+	public static void loadClass(SpoonResource resource, Launcher launcher) 
+			throws ApplicationException {
+		launcher.addInputResource(resource);
+		CtClass<?> changedClass = SpoonUtils.getCtClass(resource);
+		loadFields(changedClass, launcher);
+		loadInterfaces(changedClass, launcher);
+	}
+	
+	public static void loadFields(CtClass<?> changedClass, Launcher launcher) 
+			throws ApplicationException {
+		for(CtFieldReference<?> f: changedClass.getDeclaredFields()) {
+			CtTypeReference<?> fieldType = f.getDeclaration().getType();
+			if(!fieldType.isPrimitive()) {
+				Optional<File> srcFile = 
+						FileSystemHandler.getInstance()
+										 .getSrcFile(fieldType.getSimpleName() + ".java");
+				if(srcFile.isPresent()) {
+					launcher.addInputResource(srcFile.get().getAbsolutePath());
+				}
+			}
+		}
+	}
+	
+	public static void loadInterfaces(CtClass<?> changedClass, Launcher launcher) 
+			throws ApplicationException {
+		for(CtTypeReference<?> i: changedClass.getSuperInterfaces()) {
+			Optional<File> srcFile = 
+					FileSystemHandler.getInstance().getSrcFile(i.getSimpleName() + ".java");
+			if(srcFile.isPresent()) {
+				launcher.addInputResource(srcFile.get().getAbsolutePath());
+			}
+		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

@@ -49,7 +49,8 @@ public class DeltaInstanceHandler {
 			ConflictPattern cp) throws ApplicationException {
 		Launcher launcher = new Launcher();
 		SpoonResource resource = SpoonUtils.getSpoonResource(variant);
-		launcher.addInputResource(resource);
+		//launcher.addInputResource(resource);
+		SpoonUtils.loadClass(resource, launcher);
 		CtType<?> changedType = SpoonUtils.getCtType(resource);
 		if(changedType.isClass()) {
 			CtClass<?> changedClass = SpoonUtils.getCtClass(resource);
@@ -101,8 +102,10 @@ public class DeltaInstanceHandler {
 		SpoonResource baseResource = null, varResource = null;
 		baseResource = SpoonUtils.getSpoonResource(base);
 		varResource = SpoonUtils.getSpoonResource(variant);
-		baseLauncher.addInputResource(baseResource);
-		varLauncher.addInputResource(varResource);
+//		baseLauncher.addInputResource(baseResource);
+//		varLauncher.addInputResource(varResource);
+		SpoonUtils.loadClass(baseResource, baseLauncher);
+		SpoonUtils.loadClass(varResource, varLauncher);
 		CtType<?> baseType = SpoonUtils.getCtType(baseResource);
 		CtType<?> changedType = SpoonUtils.getCtType(varResource);
 		

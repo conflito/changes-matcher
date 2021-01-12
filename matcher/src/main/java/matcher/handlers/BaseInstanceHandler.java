@@ -19,7 +19,8 @@ public class BaseInstanceHandler {
 		SpoonResource resource = null;
 		Launcher launcher = new Launcher();
 		resource = SpoonUtils.getSpoonResource(base);
-		launcher.addInputResource(resource);
+		//launcher.addInputResource(resource);
+		SpoonUtils.loadClass(resource, launcher);
 		
 		CtType<?> changedType = SpoonUtils.getCtType(resource);
 		if(changedType.isClass()) {
@@ -28,9 +29,11 @@ public class BaseInstanceHandler {
 
 			BaseInstance result = new BaseInstance();
 			for(CtType<?> t: launcher.buildModel().getAllTypes()) {
-				ClassProcessor processor = new ClassProcessor(cp);
-				processor.process((CtClass<?>)t);
-				result.addClassInstance(processor.getClassInstance());
+				if(t.isClass()) {
+					ClassProcessor processor = new ClassProcessor(cp);
+					processor.process((CtClass<?>)t);
+					result.addClassInstance(processor.getClassInstance());
+				}
 			}
 
 			return result;
