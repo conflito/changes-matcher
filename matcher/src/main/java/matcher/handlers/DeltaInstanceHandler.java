@@ -15,6 +15,7 @@ import matcher.exceptions.ApplicationException;
 import matcher.patterns.ConflictPattern;
 import matcher.processors.DeleteActionsProcessor;
 import matcher.processors.InsertActionsProcessor;
+import matcher.processors.MoveActionsProcessor;
 import matcher.processors.UpdateActionsProcessor;
 import matcher.processors.VisibilityDeleteActionsProcessor;
 import matcher.processors.VisibilityInsertActionsProcessor;
@@ -89,9 +90,12 @@ public class DeltaInstanceHandler {
 					processUpdateAction(o, deltaInstance, cp);
 				}
 			}
+			else {
+				processMoveAction(o, deltaInstance, cp);
+			}
 		}
 	}
-	
+
 	private Diff calculateDiff(File base, File variant) throws ApplicationException {
 		Launcher baseLauncher = new Launcher(), varLauncher = new Launcher();
 		SpoonResource baseResource = null, varResource = null;
@@ -120,6 +124,14 @@ public class DeltaInstanceHandler {
 			throw new ApplicationException("Error calculating the delta", e);
 		}
 		return diff;
+	}
+	
+	private void processMoveAction(Operation<?> o, DeltaInstance deltaInstance, ConflictPattern cp) {
+		MoveActionsProcessor processor = new MoveActionsProcessor(cp);
+		o.getSrcNode().accept(processor);
+		Optional<ActionInstance> a = processor.getResult();
+		if(a.isPresent())
+			deltaInstance.addActionInstance(a.get());
 	}
 	
 	private void processDeleteVisibilityAction(Operation<?> o, DeltaInstance deltaInstance, 
