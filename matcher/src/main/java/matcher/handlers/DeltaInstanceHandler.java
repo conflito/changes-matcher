@@ -23,7 +23,6 @@ import matcher.processors.VisibilityUpdateActionsProcessor;
 import matcher.utils.SpoonUtils;
 import spoon.Launcher;
 import spoon.compiler.SpoonResource;
-import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtType;
 
@@ -47,14 +46,12 @@ public class DeltaInstanceHandler {
 	
 	private void processClassInsertion(File variant, DeltaInstance deltaInstance, 
 			ConflictPattern cp) throws ApplicationException {
-		Launcher launcher = new Launcher();
+		
 		SpoonResource resource = SpoonUtils.getSpoonResource(variant);
-		//launcher.addInputResource(resource);
-		SpoonUtils.loadClass(resource, launcher);
+
 		CtType<?> changedType = SpoonUtils.getCtType(resource);
 		if(changedType.isClass()) {
-			CtClass<?> changedClass = SpoonUtils.getCtClass(resource);
-			SpoonUtils.loadLauncher(changedClass, launcher);
+			Launcher launcher = SpoonUtils.loadLauncher(resource);
 			CtType<?> fullType = SpoonUtils.getFullChangedCtType(launcher, 
 					changedType.getQualifiedName());
 			fullType.descendantIterator().forEachRemaining(e -> {
@@ -98,25 +95,21 @@ public class DeltaInstanceHandler {
 	}
 
 	private Diff calculateDiff(File base, File variant) throws ApplicationException {
-		Launcher baseLauncher = new Launcher(), varLauncher = new Launcher();
+		Launcher baseLauncher = null, varLauncher = null;
 		SpoonResource baseResource = null, varResource = null;
 		baseResource = SpoonUtils.getSpoonResource(base);
 		varResource = SpoonUtils.getSpoonResource(variant);
-//		baseLauncher.addInputResource(baseResource);
-//		varLauncher.addInputResource(varResource);
-		SpoonUtils.loadClass(baseResource, baseLauncher);
-		SpoonUtils.loadClass(varResource, varLauncher);
+
 		CtType<?> baseType = SpoonUtils.getCtType(baseResource);
 		CtType<?> changedType = SpoonUtils.getCtType(varResource);
 		
 		if(baseType.isClass() && changedType.isClass()) {
-			CtClass<?> baseClass = SpoonUtils.getCtClass(baseResource);
-			CtClass<?> changedClass = SpoonUtils.getCtClass(varResource);
-			SpoonUtils.loadLauncher(baseClass, baseLauncher);
-			SpoonUtils.loadLauncher(changedClass, varLauncher);
+			baseLauncher = SpoonUtils.loadLauncher(baseResource);
+			varLauncher = SpoonUtils.loadLauncher(varResource);
+			return diff(SpoonUtils.getFullChangedCtType(baseLauncher, baseType.getQualifiedName())
+					, SpoonUtils.getFullChangedCtType(varLauncher, changedType.getQualifiedName()));
 		}
-		return diff(SpoonUtils.getFullChangedCtType(baseLauncher, baseType.getQualifiedName())
-				, SpoonUtils.getFullChangedCtType(varLauncher, changedType.getQualifiedName()));
+		return null;
 	}
 	
 	private Diff diff(CtType<?> first, CtType<?> second) throws ApplicationException {

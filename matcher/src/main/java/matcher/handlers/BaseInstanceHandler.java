@@ -17,15 +17,12 @@ public class BaseInstanceHandler {
 
 	public BaseInstance getBaseInstance(File base, ConflictPattern cp) throws ApplicationException {
 		SpoonResource resource = null;
-		Launcher launcher = new Launcher();
+		
 		resource = SpoonUtils.getSpoonResource(base);
-		//launcher.addInputResource(resource);
-		SpoonUtils.loadClass(resource, launcher);
 		
 		CtType<?> changedType = SpoonUtils.getCtType(resource);
 		if(changedType.isClass()) {
-			CtClass<?> changedClass = SpoonUtils.getCtClass(resource);
-			SpoonUtils.loadLauncher(changedClass, launcher);
+			Launcher launcher = SpoonUtils.loadLauncher(resource);
 
 			BaseInstance result = new BaseInstance();
 			for(CtType<?> t: launcher.buildModel().getAllTypes()) {

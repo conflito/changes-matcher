@@ -39,13 +39,17 @@ public class SpoonUtils {
 		return (CtClass<?>) getCtType(resource);
 	}
 	
-	public static void loadLauncher(CtClass<?> changedClass, Launcher launcher) 
+	public static Launcher loadLauncher(SpoonResource resource) 
 			throws ApplicationException {
+		Launcher launcher = new Launcher();
+		loadClass(resource, launcher);
+		CtClass<?> changedClass = getCtClass(resource);
 		loadClassTree(changedClass, launcher);
 		loadInvokedClasses(changedClass, launcher);
+		return launcher;
 	}
 	
-	public static void loadClass(SpoonResource resource, Launcher launcher) 
+	private static void loadClass(SpoonResource resource, Launcher launcher) 
 			throws ApplicationException {
 		launcher.addInputResource(resource);
 		CtClass<?> changedClass = SpoonUtils.getCtClass(resource);
@@ -53,7 +57,7 @@ public class SpoonUtils {
 		loadInterfaces(changedClass, launcher);
 	}
 	
-	public static void loadFields(CtClass<?> changedClass, Launcher launcher) 
+	private static void loadFields(CtClass<?> changedClass, Launcher launcher) 
 			throws ApplicationException {
 		for(CtFieldReference<?> f: changedClass.getDeclaredFields()) {
 			CtTypeReference<?> fieldType = f.getDeclaration().getType();
@@ -68,7 +72,7 @@ public class SpoonUtils {
 		}
 	}
 	
-	public static void loadInterfaces(CtClass<?> changedClass, Launcher launcher) 
+	private static void loadInterfaces(CtClass<?> changedClass, Launcher launcher) 
 			throws ApplicationException {
 		for(CtTypeReference<?> i: changedClass.getSuperInterfaces()) {
 			Optional<File> srcFile = 
@@ -80,7 +84,7 @@ public class SpoonUtils {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static void loadInvokedClasses(CtClass<?> changedClass, Launcher launcher) 
+	private static void loadInvokedClasses(CtClass<?> changedClass, Launcher launcher) 
 			throws ApplicationException {
 		List<CtInvocation<?>> invocations = 
 				changedClass.getElements(new TypeFilter(CtInvocation.class));
@@ -98,7 +102,7 @@ public class SpoonUtils {
 		}
 	}
 
-	public static void loadClassTree(CtClass<?> changedClass, Launcher launcher) 
+	private static void loadClassTree(CtClass<?> changedClass, Launcher launcher) 
 			throws ApplicationException {
 		CtTypeReference<?> superClass = changedClass.getSuperclass();
 		if(superClass != null) {
