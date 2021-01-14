@@ -55,7 +55,6 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 				FieldInstance newFieldInstance = getFieldInstance(newF.get());
 				ActionInstance result = new UpdateFieldTypeAction(fieldInstance, 
 						fieldInstance.getType(), newFieldInstance.getType());
-				System.out.println(result);
 				setResult(result);
 			}
 			
@@ -65,16 +64,38 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 	@Override
 	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
 		if(getConflictPattern().hasUpdateInvocationActions()) {
-			MethodInvocationInstance mii = new MethodInvocationInstance(
-					getMethodProcessor().getInvocationQualifiedName(invocation));
-			MethodInvocationInstance newMii = new MethodInvocationInstance(
-					getMethodProcessor().getInvocationQualifiedName((CtInvocation<?>)newOne));
-			ActionInstance result = new UpdateInvocationAction(mii, newMii);
-			System.out.println(result);
+			visitInvocationUpdate(invocation);
 		}
-		visit(invocation);
+		else {
+			visit(invocation);
+		}
+		
 	}
 	
+	private void visitInvocationUpdate(CtInvocation<?> invocation) {
+		MethodInvocationInstance mii = new MethodInvocationInstance(
+				getMethodProcessor().getInvocationQualifiedName(invocation));
+		MethodInvocationInstance newMii = new MethodInvocationInstance(
+				getMethodProcessor().getInvocationQualifiedName((CtInvocation<?>)newOne));
+		Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
+		if(possibleCaller.isPresent()) {
+			CtMethod<?> method = possibleCaller.get();
+			MethodInstance methodInstance = getMethodInstance(method);
+			ActionInstance result = new UpdateInvocationAction(mii, newMii, methodInstance);
+			setResult(result);
+		}
+		else {
+			Optional<CtConstructor<?>> constructor = getConstructorNode(invocation);
+			if(constructor.isPresent()) {
+				CtConstructor<?> c = constructor.get();
+				ClassInstance classInstance = getClassInstance(c);
+				ConstructorInstance cInstance = getConstructorInstance(c, classInstance);
+				ActionInstance result = new UpdateInvocationAction(mii, newMii, cInstance);
+				setResult(result);
+			}
+		}
+	}
+
 	private void visit(CtElement element) {
 		Optional<CtMethod<?>> method = getMethodNode(element);
 		if(method.isPresent()) {
