@@ -801,6 +801,7 @@ public class TestMatcherSemanticConflicts {
 		ClassPattern classPattern2 = new ClassPattern(classVar2);
 		FieldPattern fieldPattern = new FieldPattern(fieldVar1, null);
 		classPattern1.addFieldPattern(fieldPattern);
+		classPattern2.addExcludedMethod(overideMethodVar);
 		basePattern.addClassPattern(classPattern1);
 		basePattern.addClassPattern(classPattern2);
 		
@@ -831,6 +832,7 @@ public class TestMatcherSemanticConflicts {
 		FieldPattern fieldPattern = new FieldPattern(fieldVar1, null);
 		classPattern1.addFieldPattern(fieldPattern);
 		classPattern2.addMethodPattern(methodPattern);
+		classPattern3.addExcludedMethod(methodVar1);
 		classPattern3.setSuperClass(classPattern2);
 		basePattern.addClassPattern(classPattern1);
 		basePattern.addClassPattern(classPattern3);

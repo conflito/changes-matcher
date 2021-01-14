@@ -26,6 +26,8 @@ public class ClassPattern {
 	private List<MethodPattern> methods;
 	
 	private List<ConstructorPattern> constructors;
+	
+	private List<FreeVariable> excludedMethods;
 
 	public ClassPattern(FreeVariable freeVariable) {
 		super();
@@ -34,6 +36,7 @@ public class ClassPattern {
 		fields = new ArrayList<>();
 		methods = new ArrayList<>();
 		constructors = new ArrayList<>();
+		excludedMethods = new ArrayList<>();
 	}
 	
 	public void setSuperClass(ClassPattern superClass) {
@@ -56,6 +59,10 @@ public class ClassPattern {
 		if(!compatible.containsKey(subMethod))
 			compatible.put(subMethod, new ArrayList<>());
 		compatible.get(subMethod).add(topMethod);
+	}
+	
+	public void addExcludedMethod(FreeVariable method) {
+		excludedMethods.add(method);
 	}
 	
 	public boolean hasFields() {
@@ -218,7 +225,12 @@ public class ClassPattern {
 			   methodsHaveId(id) ||
 			   constructorsHaveId(id) ||
 			   superClassHasId(id) ||
-			   compatiblesHaveId(id);
+			   compatiblesHaveId(id) ||
+			   excludedHaveId(id);
+	}
+
+	private boolean excludedHaveId(int id) {
+		return excludedMethods.stream().anyMatch(v -> v.isId(id));
 	}
 
 	private boolean compatiblesHaveId(int id) {
@@ -256,8 +268,15 @@ public class ClassPattern {
 		cleanCompatibles();
 		if(hasSuperClass())
 			superClass.clean();
+		cleanExcludedMethods();
 	}
 	
+	private void cleanExcludedMethods() {
+		for(FreeVariable v: excludedMethods) {
+			v.clean();
+		}
+	}
+
 	private void cleanCompatibles() {
 		for(Entry<FreeVariable, List<FreeVariable>> e: compatible.entrySet()) {
 			e.getKey().clean();
@@ -299,6 +318,15 @@ public class ClassPattern {
 			superClass.setVariableValue(id, value);
 		if(compatiblesHaveId(id))
 			setVariableValueCompatibles(id, value);
+		if(excludedHaveId(id))
+			setVariableValueExcluded(id, value);
+	}
+
+	private void setVariableValueExcluded(int id, String value) {
+		for(FreeVariable v: excludedMethods) {
+			if(v.isId(id))
+				v.setValue(value);
+		}
 	}
 
 	private void setVariableValueCompatibles(int id, String value) {
@@ -343,7 +371,12 @@ public class ClassPattern {
 			   methodsFilled() &&
 			   constructorsFilled() &&
 			   superClassFilled() &&
-			   compatiblesFilled();
+			   compatiblesFilled() &&
+			   excludedFilled();
+	}
+
+	private boolean excludedFilled() {
+		return excludedMethods.stream().allMatch(v -> v.hasValue());
 	}
 
 	private boolean compatiblesFilled() {
@@ -380,11 +413,16 @@ public class ClassPattern {
 				methodsMatch(instance) &&
 				constructorsMatch(instance) &&
 				compatiblesMatch(instance) &&
-				superClassMatch(instance);
+				superClassMatch(instance) &&
+				excludedMatch(instance);
 	}
-	
+
 	public boolean matchesOne(List<ClassInstance> instances) {
 		return instances.stream().anyMatch(ci -> matches(ci));
+	}
+	
+	private boolean excludedMatch(ClassInstance instance) {
+		return excludedMethods.stream().allMatch(v -> !instance.hasMethod(v.getValue()));
 	}
 
 	private boolean compatiblesMatch(ClassInstance instance) {

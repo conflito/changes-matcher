@@ -101,6 +101,10 @@ public class ClassInstance implements Insertable, Holder{
 		this.methods.add(method);
 	}
 	
+	public boolean hasMethod(String qualifiedName) {
+		return methods.stream().anyMatch(m -> m.getQualifiedName().equals(qualifiedName));
+	}
+	
 	public void addConstructor(ConstructorInstance constructor) {
 		this.constructors.add(constructor);
 	}
