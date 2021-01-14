@@ -105,6 +105,11 @@ public class ConflictPattern {
 				secondDelta.hasUpdateFieldTypeActions();
 	}
 	
+	public boolean hasUpdateInvocationActions() {
+		return firstDelta.hasUpdateInvocationActions() ||
+				secondDelta.hasUpdateInvocationActions();
+	}
+	
 	public boolean hasVisibilityActions() {
 		return firstDelta.hasVisibilityActions() || secondDelta.hasVisibilityActions();
 	}

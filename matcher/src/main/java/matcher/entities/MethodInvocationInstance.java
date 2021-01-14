@@ -2,8 +2,9 @@ package matcher.entities;
 
 import matcher.entities.deltas.Deletable;
 import matcher.entities.deltas.Insertable;
+import matcher.entities.deltas.Updatable;
 
-public class MethodInvocationInstance implements Insertable, Deletable{
+public class MethodInvocationInstance implements Insertable, Deletable, Updatable{
 
 	private String qualifiedName;
 

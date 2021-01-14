@@ -7,9 +7,11 @@ import matcher.entities.ClassInstance;
 import matcher.entities.ConstructorInstance;
 import matcher.entities.FieldInstance;
 import matcher.entities.MethodInstance;
+import matcher.entities.MethodInvocationInstance;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.UpdateAction;
 import matcher.entities.deltas.UpdateFieldTypeAction;
+import matcher.entities.deltas.UpdateInvocationAction;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
@@ -62,6 +64,14 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
+		if(getConflictPattern().hasUpdateInvocationActions()) {
+			MethodInvocationInstance mii = new MethodInvocationInstance(
+					getMethodProcessor().getInvocationQualifiedName(invocation));
+			MethodInvocationInstance newMii = new MethodInvocationInstance(
+					getMethodProcessor().getInvocationQualifiedName((CtInvocation<?>)newOne));
+			ActionInstance result = new UpdateInvocationAction(mii, newMii);
+			System.out.println(result);
+		}
 		visit(invocation);
 	}
 	

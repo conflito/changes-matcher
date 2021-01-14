@@ -86,6 +86,10 @@ public class DeltaPattern {
 		return actions.stream().anyMatch(a -> a instanceof UpdateFieldTypePatternAction);
 	}
 	
+	public boolean hasUpdateInvocationActions() {
+		return actions.stream().anyMatch(a -> a instanceof UpdateInvocationPatternAction);
+	}
+	
 	public boolean hasVisibilityActions() {
 		return actions.stream().anyMatch(a -> a instanceof VisibilityActionPattern);
 	}
