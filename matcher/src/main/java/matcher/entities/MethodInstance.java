@@ -7,9 +7,10 @@ import java.util.stream.Collectors;
 import matcher.entities.deltas.Deletable;
 import matcher.entities.deltas.Holder;
 import matcher.entities.deltas.Insertable;
+import matcher.entities.deltas.Updatable;
 import matcher.entities.deltas.Visible;
 
-public class MethodInstance implements Insertable, Deletable, Visible, Holder{
+public class MethodInstance implements Insertable, Deletable, Visible, Holder, Updatable{
 
 	private String name;
 	

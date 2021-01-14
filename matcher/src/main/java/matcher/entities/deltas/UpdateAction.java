@@ -6,9 +6,9 @@ import matcher.entities.MethodInstance;
 
 public class UpdateAction extends ActionInstance {
 
-	private Holder entity;
+	private Updatable entity;
 
-	public UpdateAction(Holder entity) {
+	public UpdateAction(Updatable entity) {
 		super(Action.UPDATE);
 		this.entity = entity;
 	}
