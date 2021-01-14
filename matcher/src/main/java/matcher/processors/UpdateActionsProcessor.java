@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import matcher.entities.ClassInstance;
 import matcher.entities.ConstructorInstance;
+import matcher.entities.FieldInstance;
 import matcher.entities.MethodInstance;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.UpdateAction;
@@ -39,6 +40,15 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 		}
 	}
 	
+	@Override
+	public <T> void visitCtField(CtField<T> f) {
+		if(getConflictPattern().hasUpdateActions()) {
+			FieldInstance fieldInstance = getFieldInstance(f);
+			ActionInstance result = new UpdateAction(fieldInstance);
+			setResult(result);
+		}
+	}
+	
 	private void visit(CtElement element) {
 		Optional<CtMethod<?>> method = getMethodNode(element);
 		if(method.isPresent()) {
@@ -48,6 +58,12 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 			Optional<CtConstructor<?>> c = getConstructorNode(element);
 			if(c.isPresent()) {
 				c.get().accept(this);
+			}
+			else {
+				Optional<CtField<?>> f = getFieldNode(element);
+				if(f.isPresent()) {
+					f.get().accept(this);
+				}
 			}
 		}
 	}
@@ -170,12 +186,6 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtExecutableReference(CtExecutableReference<T> reference) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public <T> void visitCtField(CtField<T> f) {
 		// TODO Auto-generated method stub
 		
 	}

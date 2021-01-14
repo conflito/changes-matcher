@@ -95,4 +95,11 @@ public abstract class DeltaProcessor {
 				node.getParent(new TypeFilter(CtMethod.class)));
 		return result;
 	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected Optional<CtField<?>> getFieldNode(CtElement node){
+		Optional<CtField<?>> result = Optional.ofNullable((CtField<?>) 
+				node.getParent(new TypeFilter(CtField.class)));
+		return result;
+	}
 }
