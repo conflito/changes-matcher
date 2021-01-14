@@ -257,7 +257,7 @@ public class ClassPattern {
 	}
 
 	private boolean fieldsHaveId(int id) {
-		return fields.stream().anyMatch(f -> f.isVariableId(id));
+		return fields.stream().anyMatch(f -> f.hasVariableId(id));
 	}
 	
 	public void clean() {
@@ -360,8 +360,8 @@ public class ClassPattern {
 
 	private void setVariableValueFields(int id, String value) {
 		for(FieldPattern f: fields) {
-			if(f.isVariableId(id))
-				f.setVariableValue(value);
+			if(f.hasVariableId(id))
+				f.setVariableValue(id, value);
 		}
 	}
 	

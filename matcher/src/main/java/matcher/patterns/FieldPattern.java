@@ -8,11 +8,14 @@ public class FieldPattern {
 	private FreeVariable freeVariable;
 	
 	private Visibility visibility;
+	
+	private FreeVariable typeVar;
 
 	public FieldPattern(FreeVariable freeVar, Visibility visibility) {
 		super();
 		this.freeVariable = freeVar;
 		this.visibility = visibility;
+		this.typeVar = null;
 	}
 	
 	public FreeVariable getFreeVariable() {
@@ -23,8 +26,15 @@ public class FieldPattern {
 		return freeVariable.getId();
 	}
 	
-	public void setVariableValue(String value) {
-		freeVariable.setValue(value);
+	public void setType(FreeVariable type) {
+		this.typeVar = type;
+	}
+	
+	public void setVariableValue(int id, String value) {
+		if(freeVariable.isId(id))
+			freeVariable.setValue(value);
+		if(typeVar != null && typeVar.isId(id))
+			typeVar.setValue(value);
 	}
 	
 	public void clean() {
@@ -32,17 +42,24 @@ public class FieldPattern {
 	}
 	
 	public boolean filled() {
-		return freeVariable.hasValue();
+		return freeVariable.hasValue() && (typeVar == null || typeVar.hasValue());
 	}
 	
-	public boolean isVariableId(int id) {
-		return freeVariable.isId(id);
+	public boolean hasVariableId(int id) {
+		return freeVariable.isId(id) || (typeVar == null || typeVar.isId(id));
 	}
 	
 	public boolean matches(FieldInstance instance) {
-		return filled() && (visibility == null || sameVisibility(instance)) && sameName(instance);
+		return filled() && 
+			   (visibility == null || sameVisibility(instance)) && 
+			   sameName(instance) &&
+			   (typeVar == null || sameType(instance));
 	}
 	
+	private boolean sameType(FieldInstance instance) {
+		return instance.getType().toString().equals(typeVar.getValue());
+	}
+
 	private boolean sameVisibility(FieldInstance instance) {
 		return instance.getVisibility() == visibility;
 	}

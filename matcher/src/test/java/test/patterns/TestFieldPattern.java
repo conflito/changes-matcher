@@ -22,7 +22,7 @@ public class TestFieldPattern {
 	public void matchingFieldSameVisibilityTest() {
 		FieldInstance instance = new FieldInstance(FIELD_NAME, Visibility.PUBLIC, INT_TYPE);
 		FieldPattern pattern =  new FieldPattern(FREE_VAR, Visibility.PUBLIC);
-		pattern.setVariableValue(instance.getQualifiedName());
+		pattern.setVariableValue(0, instance.getQualifiedName());
 		assertTrue(pattern.matches(instance), "Same visibility doesn't match?");
 	}
 	
@@ -30,7 +30,7 @@ public class TestFieldPattern {
 	public void matchingFieldDifferentVisibilityTest() {
 		FieldInstance instance = new FieldInstance(FIELD_NAME, Visibility.PUBLIC, INT_TYPE);
 		FieldPattern pattern =  new FieldPattern(FREE_VAR, Visibility.PRIVATE);
-		pattern.setVariableValue(instance.getQualifiedName());
+		pattern.setVariableValue(0, instance.getQualifiedName());
 		assertFalse(pattern.matches(instance), "Different visibility matches?");
 	}
 	
@@ -38,7 +38,7 @@ public class TestFieldPattern {
 	public void matchingFieldDifferentQualifiedNamesTest() {
 		FieldInstance instance = new FieldInstance(FIELD_NAME, Visibility.PUBLIC, INT_TYPE);
 		FieldPattern pattern =  new FieldPattern(FREE_VAR, Visibility.PUBLIC);
-		pattern.setVariableValue("y");
+		pattern.setVariableValue(0, "y");
 		assertFalse(pattern.matches(instance), "Different name matches?");
 	}
 	
@@ -46,7 +46,7 @@ public class TestFieldPattern {
 	public void matchingFieldDifferentQualifiedNamesDifferentVisibilityTest() {
 		FieldInstance instance = new FieldInstance(FIELD_NAME, Visibility.PUBLIC, INT_TYPE);
 		FieldPattern pattern =  new FieldPattern(FREE_VAR, Visibility.PRIVATE);
-		pattern.setVariableValue("y");
+		pattern.setVariableValue(0, "y");
 		assertFalse(pattern.matches(instance), "Different name and visibilities matches?");
 	}
 	
@@ -54,7 +54,7 @@ public class TestFieldPattern {
 	public void matchingFieldAnyVisibilityTest() {
 		FieldInstance instance = new FieldInstance(FIELD_NAME, Visibility.PUBLIC, INT_TYPE);
 		FieldPattern pattern =  new FieldPattern(FREE_VAR, null);
-		pattern.setVariableValue(instance.getQualifiedName());
+		pattern.setVariableValue(0, instance.getQualifiedName());
 		assertTrue(pattern.matches(instance), "Any visibility doesn't match with public visibility?");
 		
 		instance = new FieldInstance(FIELD_NAME, Visibility.PACKAGE, INT_TYPE);
