@@ -54,7 +54,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
-		if(getConflictPattern().hasDeleteActions()) {
+		if(getConflictPattern().hasDeleteInvocationActions()) {
 			MethodInvocationInstance mii = new MethodInvocationInstance(
 					getMethodProcessor().getInvocationQualifiedName(invocation));
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
