@@ -69,10 +69,10 @@ public class FieldPattern {
 	}
 	
 	public String toStringDegub() {
-		return (visibility == null?"*":visibility.toString().toLowerCase()) + " field #" + getVariableId();
+		return (visibility == null?"*":visibility.toString().toLowerCase()) + " #" + getVariableId();
 	}
 	
 	public String toStringFilled() {
-		return (visibility == null?"*":visibility.toString().toLowerCase()) + " field #" + freeVariable.getValue();
+		return (visibility == null?"*":visibility.toString().toLowerCase()) + " #" + freeVariable.getValue();
 	}
 }

@@ -542,7 +542,7 @@ public class ClassPattern {
 			result.append(superClass.toStringFilled());
 		}
 		for(FieldPattern f : fields) {
-			result.append("#" + freeVariable.getValue() + " has " + f.toStringDegub() + "\n");
+			result.append("#" + freeVariable.getValue() + " has field: " + f.toStringFilled() + "\n");
 		}
 		for(ConstructorPattern c: constructors) {
 			result.append(c.toStringFilled(freeVariable.getValue()));
