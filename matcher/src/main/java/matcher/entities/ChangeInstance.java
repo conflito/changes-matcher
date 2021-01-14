@@ -61,6 +61,13 @@ public class ChangeInstance {
 	public List<String> getFieldsAccessQualifiedNames() {
 		return baseInstance.getFieldAccessesQualifiedNames();
 	}
+	
+	public List<String> getDeltaClassesQualifiedNames() {
+		List<String> firstDeltaClasses = firstDelta.getClassesQualifiedNames();
+		List<String> secondDeltaClasses = secondDelta.getClassesQualifiedNames();
+		firstDeltaClasses.addAll(secondDeltaClasses);
+		return firstDeltaClasses.stream().distinct().collect(Collectors.toList());
+	}
 
 	public List<String> getDeltaFieldsQualifiedNames() {
 		List<String> firstDeltaFields = firstDelta.getFieldsQualifiedNames();

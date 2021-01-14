@@ -1,7 +1,6 @@
 package matcher.entities.deltas;
 
 import matcher.entities.ConstructorInstance;
-import matcher.entities.FieldInstance;
 import matcher.entities.MethodInstance;
 
 public class UpdateAction extends ActionInstance {
@@ -25,18 +24,12 @@ public class UpdateAction extends ActionInstance {
 		return entity instanceof ConstructorInstance;
 	}
 	
-	public boolean isFieldUpdate() {
-		return entity instanceof FieldInstance;
-	}
-	
 	public String toString() {
 		StringBuilder result = new StringBuilder("update ");
 		if(isMethodUpdate())
 			result.append("method ");
 		if(isConstructorUpdate())
 			result.append("constructor ");
-		if(isFieldUpdate())
-			result.append("field ");
 		result.append(entity.getQualifiedName());
 		return result.toString();
 	}

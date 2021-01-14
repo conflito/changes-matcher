@@ -158,7 +158,7 @@ public class DeltaInstanceHandler {
 	}
 
 	private void processUpdateAction(Operation<?> o, DeltaInstance deltaInstance, ConflictPattern cp) {
-		UpdateActionsProcessor processor = new UpdateActionsProcessor(cp);
+		UpdateActionsProcessor processor = new UpdateActionsProcessor(cp, o.getDstNode());
 		o.getSrcNode().accept(processor);
 		Optional<ActionInstance> a = processor.getResult();
 		if(a.isPresent())

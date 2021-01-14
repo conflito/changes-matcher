@@ -82,6 +82,10 @@ public class DeltaPattern {
 		return actions.stream().anyMatch(a -> a instanceof UpdatePatternAction);
 	}
 	
+	public boolean hasUpdateFieldTypeActions() {
+		return actions.stream().anyMatch(a -> a instanceof UpdateFieldTypePatternAction);
+	}
+	
 	public boolean hasVisibilityActions() {
 		return actions.stream().anyMatch(a -> a instanceof VisibilityActionPattern);
 	}
@@ -119,6 +123,17 @@ public class DeltaPattern {
 		return result.stream().distinct().collect(Collectors.toList());
 	}
 	
+	public List<Integer> getClassesVariableIds() {
+		return actions.stream()
+					  .filter(a -> isInsertClassAction(a))
+					  .map(a -> ((InsertClassPatternAction)a).getInsertedEntityId())
+					  .collect(Collectors.toList());
+	}
+	
+	private boolean isInsertClassAction(ActionPattern a) {
+		return a instanceof InsertClassPatternAction;
+	}
+
 	private List<Integer> getInsertedMethodInvocationsVariableIds() {
 		return actions.stream()
 					  .filter(a -> isInsertInvocationAction(a))
@@ -228,15 +243,11 @@ public class DeltaPattern {
 	}
 	
 	private boolean isInsertInvocationAction(ActionPattern a) {
-		return !isInsertFieldAction(a) && !isInsertMethodAction(a) &&
-				!isInsertConstructorAction(a) && !isInsertFieldAccessAction(a) &&
-				a instanceof InsertPatternAction;
+		return a instanceof InsertInvocationPatternAction;
 	}
 	
 	private boolean isDeleteInvocationAction(ActionPattern a) {
-		return !isDeleteFieldAction(a) && !isDeleteMethodAction(a) &&
-				!isDeleteConstructorAction(a) && !isDeleteFieldAccessAction(a) &&
-				a instanceof DeletePatternAction;
+		return a instanceof DeleteInvocationPatternAction;
 	}
 
 	public List<Integer> getUpdatesVariableIds() {

@@ -28,6 +28,17 @@ public class DeltaInstance {
 		}
 		return result.toString();
 	}
+	
+	public List<String> getClassesQualifiedNames() {
+		return actions.stream()
+					  .filter(a -> isInsertClassAction(a))
+					  .map(a ->((InsertClassAction) a).getInsertedEntityQualifiedName())
+					  .collect(Collectors.toList());
+	}
+	
+	private boolean isInsertClassAction(ActionInstance a) {
+		return a instanceof InsertClassAction;
+	}
 
 	public List<String> getFieldsQualifiedNames() {
 		List<String> result = getInsertedFieldsQualifiedNames();
@@ -172,14 +183,31 @@ public class DeltaInstance {
 	}
 
 	public List<String> getUpdatesQualifiedNames() {
+		List<String> result = getUpdatedEntitiesQualifiedNames();
+		result.addAll(getUpdatedFieldsQualifiedNames());
+		return result;
+	}
+	
+	private List<String> getUpdatedEntitiesQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isUpdateAction(a))
 				  .map(a -> ((UpdateAction) a).getEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
+	private List<String> getUpdatedFieldsQualifiedNames() {
+		return actions.stream()
+				  .filter(a -> isUpdateFieldTypeAction(a))
+				  .map(a -> ((UpdateFieldTypeAction) a).getEntityQualifiedName())
+				  .collect(Collectors.toList());
+	}
+	
 	private boolean isUpdateAction(ActionInstance a) {
-		return a instanceof UpdateAction;
+		return a instanceof UpdateAction && !isUpdateFieldTypeAction(a);
+	}
+	
+	private boolean isUpdateFieldTypeAction(ActionInstance a) {
+		return a instanceof UpdateFieldTypeAction;
 	}
 
 	public List<String> getVisibilityActionsQualifiedNames() {

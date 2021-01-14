@@ -18,6 +18,10 @@ public class UpdatePatternAction extends ActionPattern {
 		return entity.getId();
 	}
 
+	public FreeVariable getEntity() {
+		return entity;
+	}
+
 	@Override
 	public boolean filled() {
 		return entity.hasValue();

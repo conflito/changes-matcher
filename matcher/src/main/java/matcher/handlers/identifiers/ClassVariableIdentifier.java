@@ -10,10 +10,26 @@ import matcher.utils.MapUtilities;
 public class ClassVariableIdentifier implements IVariableIdentifier {
 
 	@Override
-	public Map<Integer, List<String>> identify(ChangeInstance changeInstance, ConflictPattern conflictPattern) {
+	public Map<Integer, List<String>> identify(ChangeInstance changeInstance, 
+			ConflictPattern conflictPattern) {
+		
+		Map<Integer, List<String>> result = classesInBase(changeInstance, conflictPattern);
+		MapUtilities.mergeMaps(result, classesInDeltas(changeInstance, conflictPattern));
+		return result;
+	}
+	
+	private Map<Integer, List<String>> classesInBase(ChangeInstance changeInstance,
+			ConflictPattern conflictPattern){
 		List<Integer> vars = conflictPattern.getClassVariableIds();
 		List<String> cs = changeInstance.getClassQualifiedNames();
 		
+		return MapUtilities.combine(vars, cs);
+	}
+	
+	private Map<Integer, List<String>> classesInDeltas(ChangeInstance changeInstance,
+			ConflictPattern conflictPattern){
+		List<Integer> vars = conflictPattern.getDeltaClassesVariableIds();
+		List<String> cs = changeInstance.getDeltaClassesQualifiedNames();
 		return MapUtilities.combine(vars, cs);
 	}
 

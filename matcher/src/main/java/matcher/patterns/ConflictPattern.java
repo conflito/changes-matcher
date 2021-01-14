@@ -92,11 +92,17 @@ public class ConflictPattern {
 	}
 	
 	public boolean hasDeleteFieldAccessActions() {
-		return firstDelta.hasDeleteFieldAccessActions() || secondDelta.hasDeleteFieldAccessActions();
+		return firstDelta.hasDeleteFieldAccessActions() || 
+				secondDelta.hasDeleteFieldAccessActions();
 	}
 	
 	public boolean hasUpdateActions() {
 		return firstDelta.hasUpdateActions() || secondDelta.hasUpdateActions();
+	}
+	
+	public boolean hasUpdateFieldTypeActions() {
+		return firstDelta.hasUpdateFieldTypeActions() || 
+				secondDelta.hasUpdateFieldTypeActions();
 	}
 	
 	public boolean hasVisibilityActions() {
@@ -171,6 +177,13 @@ public class ConflictPattern {
 		List<Integer> secondDeltaFields = secondDelta.getFieldsVariableIds();
 		firstDeltaFields.addAll(secondDeltaFields);
 		return firstDeltaFields.stream().distinct().collect(Collectors.toList());
+	}
+	
+	public List<Integer> getDeltaClassesVariableIds() {
+		List<Integer> firstDeltaClasses = firstDelta.getClassesVariableIds();
+		List<Integer> secondDeltaClasses = secondDelta.getClassesVariableIds();
+		firstDeltaClasses.addAll(secondDeltaClasses);
+		return firstDeltaClasses.stream().distinct().collect(Collectors.toList());
 	}
 
 	public List<Integer> getDeltaMethodsVariableIds() {

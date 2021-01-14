@@ -9,6 +9,7 @@ import matcher.entities.FieldInstance;
 import matcher.entities.MethodInstance;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.UpdateAction;
+import matcher.entities.deltas.UpdateFieldTypeAction;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
@@ -16,9 +17,12 @@ import spoon.reflect.reference.*;
 import spoon.reflect.visitor.CtVisitor;
 
 public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
+		
+	private CtElement newOne;
 	
-	public UpdateActionsProcessor(ConflictPattern conflictPattern) {
+	public UpdateActionsProcessor(ConflictPattern conflictPattern, CtElement newOne) {
 		super(conflictPattern);
+		this.newOne = newOne;
 	}
 	
 	@Override
@@ -42,11 +46,23 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtField(CtField<T> f) {
-		if(getConflictPattern().hasUpdateActions()) {
-			FieldInstance fieldInstance = getFieldInstance(f);
-			ActionInstance result = new UpdateAction(fieldInstance);
-			setResult(result);
+		if(getConflictPattern().hasUpdateFieldTypeActions()) {
+			Optional<CtField<?>> newF = getFieldNode(newOne);
+			if(newF.isPresent()) {
+				FieldInstance fieldInstance = getFieldInstance(f);
+				FieldInstance newFieldInstance = getFieldInstance(newF.get());
+				ActionInstance result = new UpdateFieldTypeAction(fieldInstance, 
+						fieldInstance.getType(), newFieldInstance.getType());
+				System.out.println(result);
+				setResult(result);
+			}
+			
 		}
+	}
+	
+	@Override
+	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
+		visit(invocation);
 	}
 	
 	private void visit(CtElement element) {
@@ -232,11 +248,6 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 	public <T> void visitCtInterface(CtInterface<T> intrface) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
-		visit(invocation);
 	}
 
 	@Override
