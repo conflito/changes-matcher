@@ -27,6 +27,15 @@ public class InsertMethodPatternAction extends InsertPatternAction {
 	}
 	
 	@Override
+	public void setVariableValue(int id, String value) {
+		super.setVariableValue(id, value);
+		for(FreeVariable v: compatibles) {
+			if(v.isId(id))
+				v.setValue(value);
+		}
+	}
+	
+	@Override
 	public boolean matches(ActionInstance action) {
 		return action instanceof InsertMethodAction && filled() && matches((InsertMethodAction)action);
 	}
