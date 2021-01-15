@@ -60,6 +60,14 @@ public class BaseInstance {
 		return result;
 	}
 	
+	public List<String> getInterfacesQualifiedNames(){
+		List<String> result = new ArrayList<>();
+		for(ClassInstance ci: classInstances) {
+			result.addAll(ci.getInterfacesQualifiedNames());
+		}
+		return result;
+	}
+	
 	public List<Pair<String, List<String>>> getCompatibleQualifiedNames(){
 		List<Pair<String, List<String>>> result = new ArrayList<>();
 		for(ClassInstance ci: classInstances) {

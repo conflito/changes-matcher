@@ -27,6 +27,10 @@ public class BasePattern {
 		return classPatterns.stream().anyMatch(ClassPattern::hasMethods);
 	}
 	
+	public boolean hasInterfaces() {
+		return classPatterns.stream().anyMatch(ClassPattern::hasInterfaces);
+	}
+	
 	public boolean hasConstructors() {
 		return classPatterns.stream().anyMatch(ClassPattern::hasConstructors);
 	}
@@ -51,6 +55,14 @@ public class BasePattern {
 		List<Integer> result = new ArrayList<>();
 		for(ClassPattern c: classPatterns) {
 			result.addAll(c.getFieldVariableIds());
+		}
+		return distinct(result);
+	}
+	
+	public List<Integer> getInterfacesVariableIds(){
+		List<Integer> result = new ArrayList<>();
+		for(ClassPattern c: classPatterns) {
+			result.addAll(c.getInterfaceVariableIds());
 		}
 		return distinct(result);
 	}

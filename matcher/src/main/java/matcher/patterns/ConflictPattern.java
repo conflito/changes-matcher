@@ -30,6 +30,10 @@ public class ConflictPattern {
 	public boolean hasSuperClasses() {
 		return basePattern.hasSuperClass();
 	}
+	
+	public boolean hasInterfaces() {
+		return basePattern.hasInterfaces();
+	}
 
 	public boolean hasMethods() {
 		return basePattern.hasMethods();

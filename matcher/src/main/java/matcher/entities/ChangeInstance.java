@@ -53,6 +53,10 @@ public class ChangeInstance {
 	public List<String> getConstructorsQualifiedNames() {
 		return baseInstance.getConstructorsQualifiedNames();
 	}
+	
+	public List<String> getInterfacesQualifiedNames(){
+		return baseInstance.getInterfacesQualifiedNames();
+	}
 
 	public List<String> getClassQualifiedNames() {
 		return baseInstance.getClassQualifiedNames();
