@@ -29,29 +29,39 @@ import matcher.utils.Pair;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.util.List;
 
 public class TestMatcherSemanticConflicts {
 
-	private static final String SRC_FOLDER = "src/test/resources/SemanticConflictsInstances/";
+	private static final String SRC_FOLDER = "src"+ File.separator + "test"+ File.separator +
+			"resources" + File.separator + "SemanticConflictsInstances" + File.separator;
 	private static final String CONFIG_FILE_NAME = "config.properties";
 	
-	private static final String OVERLOAD_ADDITION_FOLDER = "AddOverloadingMByAdditionAddCall2M/";
-	private static final String FIELD_HIDING_FOLDER = "AddFieldHidingAddMethodThatUseDefFinChild/";
-	private static final String METHOD_OVERIDING_FOLDER = "AddOveridingMAddCall2MInParent/";
+	private static final String OVERLOAD_ADDITION_FOLDER = 
+			"AddOverloadingMByAdditionAddCall2M" + File.separator;
+	private static final String FIELD_HIDING_FOLDER = 
+			"AddFieldHidingAddMethodThatUseDefFinChild" + File.separator;
+	private static final String METHOD_OVERIDING_FOLDER = 
+			"AddOveridingMAddCall2MInParent" + File.separator;
 	private static final String OVERLOAD_ACCESS_CHANGE_FOLDER = 
-			"AddOverloadingMByChangeAccessibility1AddCall2M/";
+			"AddOverloadingMByChangeAccessibility1AddCall2M" + File.separator;
 	private static final String OVERLOAD_ACCESS_CHANGE2_FOLDER = 
-			"AddOverloadingMByChangeAccessibility2AddCall2M/";
-	private static final String OVERRIDING_FOLDER = "AddOverridingMAddCall2MinChild/";
-	private static final String REMOVE_OVERRIDER_FOLDER ="RemoveOverridingMAddCall2M/";
-	private static final String CHANGE_METHOD1_FOLDER ="ChangeMethod01/";
-	private static final String DEPENDENCY_BASED1_FOLDER = "DependencyBased01/";
-	private static final String DEPENDENCY_BASED2_FOLDER = "DependencyBased02/";
-	private static final String DEPENDENCY_BASED3_FOLDER = "DependencyBased03/";
-	private static final String DEPENDENCY_BASED4_FOLDER = "DependencyBased04/";
-	private static final String UNEXPECTED_OVERIDE_FOLDER = "UnexpectedOverriding01/";
-	private static final String UNEXPECTED_OVERIDE2_FOLDER = "UnexpectedOverriding02/";
+			"AddOverloadingMByChangeAccessibility2AddCall2M" + File.separator;
+	private static final String OVERRIDING_FOLDER = 
+			"AddOverridingMAddCall2MinChild" + File.separator;
+	private static final String REMOVE_OVERRIDER_FOLDER = 
+			"RemoveOverridingMAddCall2M" + File.separator;
+	private static final String CHANGE_METHOD1_FOLDER ="ChangeMethod01" + File.separator;
+//	private static final String CHANGE_METHOD2_FOLDER ="ChangeMethod02" + File.separator;
+	private static final String DEPENDENCY_BASED1_FOLDER = "DependencyBased01" + File.separator;
+	private static final String DEPENDENCY_BASED2_FOLDER = "DependencyBased02" + File.separator;
+	private static final String DEPENDENCY_BASED3_FOLDER = "DependencyBased03" + File.separator;
+	private static final String DEPENDENCY_BASED4_FOLDER = "DependencyBased04" + File.separator;
+	private static final String UNEXPECTED_OVERIDE_FOLDER = 
+			"UnexpectedOverriding01" + File.separator;
+	private static final String UNEXPECTED_OVERIDE2_FOLDER = 
+			"UnexpectedOverriding02" + File.separator;
 
 
 	@Test
@@ -315,6 +325,22 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(3).getSecond().equals("m1()"), 
 				"Other method updated is not m1()?");
 	}
+	
+//	@Test
+//	public void changeMethod2Test() throws ApplicationException {
+//		Matcher matcher = new Matcher(SRC_FOLDER 
+//				+ CHANGE_METHOD2_FOLDER + CONFIG_FILE_NAME);
+//		
+//		String basePath = SRC_FOLDER + CHANGE_METHOD2_FOLDER + "A.java";
+//		String var1Path = SRC_FOLDER + CHANGE_METHOD2_FOLDER + "A01.java";
+//		String var2Path = SRC_FOLDER + CHANGE_METHOD2_FOLDER + "A02.java";
+//		
+//		ConflictPattern cp = getChangeMethod2Pattern();
+//		
+//		List<List<Pair<Integer, String>>> result = 
+//				matcher.matchingAssignments(basePath, var1Path, var2Path, cp);
+//		System.out.println(result);
+//	}
 	
 	@Test
 	public void dependencyBased1Test() throws ApplicationException {
@@ -689,6 +715,7 @@ public class TestMatcherSemanticConflicts {
 		return new ConflictPattern(basePattern, dp1, dp2);
 	}
 	
+	
 	private ConflictPattern getChangeMethodPattern() {
 		FreeVariable classVar = new FreeVariable(0);
 		FreeVariable methodVar1 = new FreeVariable(1);
@@ -714,6 +741,52 @@ public class TestMatcherSemanticConflicts {
 
 		return new ConflictPattern(basePattern, dp1, dp2);
 	}
+	
+	
+//	private ConflictPattern getChangeMethod2Pattern() {
+//		FreeVariable classVar = new FreeVariable(0);
+//		FreeVariable iVar = new FreeVariable(1);
+//		FreeVariable b1ClassVar = new FreeVariable(2);
+//		FreeVariable b2ClassVar = new FreeVariable(3);
+//		FreeVariable methodNVar = new FreeVariable(4);
+//		FreeVariable methodM1Var = new FreeVariable(5);
+//		FreeVariable methodM2Var = new FreeVariable(6);
+//		FreeVariable methodHashVar = new FreeVariable(7);
+//		FreeVariable fieldVar = new FreeVariable(8);
+//
+//		BasePattern basePattern = new BasePattern();
+//		ClassPattern classAPattern = new ClassPattern(classVar);
+//		FieldPattern fieldPattern = new FieldPattern(fieldVar, null);
+//		fieldPattern.setType(b1ClassVar);
+//		classAPattern.addFieldPattern(fieldPattern);
+//		MethodPattern methodNPattern = new MethodPattern(methodNVar, null);
+//		methodNPattern.addMethodInvocationPattern(new MethodInvocationPattern(methodM2Var));
+//		classAPattern.addMethodPattern(methodNPattern);
+//		MethodPattern methodM1Pattern = new MethodPattern(methodM1Var, null);
+//		methodM1Pattern.addMethodInvocationPattern(new MethodInvocationPattern(methodHashVar));
+//		MethodPattern methodM2Pattern = new MethodPattern(methodM2Var, null);
+//		classAPattern.addMethodPattern(methodM2Pattern);
+//		
+//		ClassPattern classB1Pattern = new ClassPattern(b1ClassVar);
+//		ClassPattern classB2Pattern = new ClassPattern(b2ClassVar);
+//		InterfacePattern iPattern = new InterfacePattern(iVar);
+//		classB1Pattern.addInterface(iPattern);
+//		classB2Pattern.addInterface(iPattern);
+//		MethodPattern methodHashPattern = new MethodPattern(methodHashVar, null);
+//		classB1Pattern.addMethodPattern(methodHashPattern);
+//		classB2Pattern.addExcludedMethod(methodHashVar);
+//		
+//		basePattern.addClassPattern(classAPattern);
+//		basePattern.addClassPattern(classB1Pattern);
+//		basePattern.addClassPattern(classB2Pattern);
+//
+//		DeltaPattern dp1 = new DeltaPattern();
+//		DeltaPattern dp2 = new DeltaPattern();
+//		dp1.addActionPattern(new UpdateFieldTypePatternAction(fieldVar, b1ClassVar, b2ClassVar));
+//		dp2.addActionPattern(new UpdateInvocationPatternAction(methodM2Var, methodM1Var, methodNVar));
+//		
+//		return new ConflictPattern(basePattern, dp1, dp2);
+//	}
 	
 	private ConflictPattern getDependencyBased1Pattern() {
 		FreeVariable classVar = new FreeVariable(0);

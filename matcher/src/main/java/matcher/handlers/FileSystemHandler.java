@@ -16,7 +16,8 @@ public class FileSystemHandler {
 
 	private static FileSystemHandler instance;
 	
-	private static final String PROPERTIES_PATH = "src/main/resources/config.properties"; 
+	private static final String PROPERTIES_PATH = "src" + File.separator +  "main" + 
+			 File.separator + "resources" + File.separator + "config.properties"; 
 	private static final String SRC_DIR_PROPERTY = "src.dir";
 	
 	private Properties prop;
