@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import matcher.entities.ClassInstance;
 import matcher.entities.ConstructorInstance;
 import matcher.entities.FieldInstance;
+import matcher.entities.InterfaceInstance;
 import matcher.entities.MethodInstance;
 import matcher.utils.Pair;
 
@@ -27,6 +28,8 @@ public class ClassPattern {
 	
 	private List<ConstructorPattern> constructors;
 	
+	private List<InterfacePattern> interfaces;
+	
 	private List<FreeVariable> excludedMethods;
 
 	public ClassPattern(FreeVariable freeVariable) {
@@ -36,6 +39,7 @@ public class ClassPattern {
 		fields = new ArrayList<>();
 		methods = new ArrayList<>();
 		constructors = new ArrayList<>();
+		interfaces = new ArrayList<>();
 		excludedMethods = new ArrayList<>();
 	}
 	
@@ -65,6 +69,10 @@ public class ClassPattern {
 		excludedMethods.add(method);
 	}
 	
+	public void addInterface(InterfacePattern i) {
+		interfaces.add(i);
+	}
+	
 	public boolean hasFields() {
 		boolean result = !fields.isEmpty();
 		if(!result && hasSuperClass())
@@ -76,6 +84,13 @@ public class ClassPattern {
 		boolean result = !methods.isEmpty();
 		if(!result && hasSuperClass())
 			result = superClass.hasMethods();
+		return result;
+	}
+	
+	public boolean hasInterfaces() {
+		boolean result = !interfaces.isEmpty();
+		if(!result && hasSuperClass())
+			result = superClass.hasInterfaces();
 		return result;
 	}
 	
@@ -138,6 +153,15 @@ public class ClassPattern {
 		if(hasSuperClass())
 			result.addAll(superClass.getFieldVariableIds());
 
+		return result;
+	}
+	
+	public List<Integer> getInterfaceVariableIds(){
+		List<Integer> result = interfaces.stream()
+										 .map(InterfacePattern::getVariableId)
+										 .collect(Collectors.toList());
+		if(hasSuperClass())
+			result.addAll(superClass.getInterfaceVariableIds());
 		return result;
 	}
 	
@@ -226,7 +250,12 @@ public class ClassPattern {
 			   constructorsHaveId(id) ||
 			   superClassHasId(id) ||
 			   compatiblesHaveId(id) ||
-			   excludedHaveId(id);
+			   excludedHaveId(id) ||
+			   interfacesHaveId(id);
+	}
+	
+	private boolean interfacesHaveId(int id) {
+		return interfaces.stream().anyMatch(i -> i.isVariableId(id));
 	}
 
 	private boolean excludedHaveId(int id) {
@@ -269,6 +298,13 @@ public class ClassPattern {
 		if(hasSuperClass())
 			superClass.clean();
 		cleanExcludedMethods();
+		cleanInterfaces();
+	}
+	
+	private void cleanInterfaces() {
+		for(InterfacePattern i: interfaces) {
+			i.clean();
+		}
 	}
 	
 	private void cleanExcludedMethods() {
@@ -320,6 +356,14 @@ public class ClassPattern {
 			setVariableValueCompatibles(id, value);
 		if(excludedHaveId(id))
 			setVariableValueExcluded(id, value);
+		if(interfacesHaveId(id))
+			setVariableValueInterfaces(id, value);
+	}
+	
+	private void setVariableValueInterfaces(int id, String value) {
+		for(InterfacePattern i: interfaces) {
+			i.setVariableValue(id, value);
+		}
 	}
 
 	private void setVariableValueExcluded(int id, String value) {
@@ -372,7 +416,12 @@ public class ClassPattern {
 			   constructorsFilled() &&
 			   superClassFilled() &&
 			   compatiblesFilled() &&
-			   excludedFilled();
+			   excludedFilled() &&
+			   interfacesFilled();
+	}
+	
+	private boolean interfacesFilled() {
+		return interfaces.stream().allMatch(i -> i.filled());
 	}
 
 	private boolean excludedFilled() {
@@ -414,11 +463,26 @@ public class ClassPattern {
 				constructorsMatch(instance) &&
 				compatiblesMatch(instance) &&
 				superClassMatch(instance) &&
-				excludedMatch(instance);
+				excludedMatch(instance) &&
+				interfacesMatch(instance);
 	}
 
 	public boolean matchesOne(List<ClassInstance> instances) {
 		return instances.stream().anyMatch(ci -> matches(ci));
+	}
+	
+	private boolean interfacesMatch(ClassInstance instance) {
+		return interfaces.stream().allMatch(i -> 
+				interfaceMatchesOne(i, instance.getInterfaces()));
+	}
+	
+	private boolean interfaceMatchesOne(InterfacePattern ip,
+			List<InterfaceInstance> interfaceInstances) {
+		for(InterfaceInstance i: interfaceInstances) {
+			if(ip.matches(i))
+				return true;
+		}
+		return false;
 	}
 	
 	private boolean excludedMatch(ClassInstance instance) {

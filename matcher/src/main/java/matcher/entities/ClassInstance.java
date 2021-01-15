@@ -26,12 +26,15 @@ public class ClassInstance implements Insertable, Holder{
 	
 	private ClassInstance superClass;
 	
+	private List<InterfaceInstance> interfaces;
+	
 	private Map<MethodInstance, List<MethodInstance>> compatibleMethods;
 
 	public ClassInstance() {
 		this.fields = new ArrayList<>();
 		this.methods = new ArrayList<>();
 		this.constructors = new ArrayList<>();
+		this.interfaces = new ArrayList<>();
 		this.compatibleMethods = new HashMap<>();
 	}
 	
@@ -43,6 +46,7 @@ public class ClassInstance implements Insertable, Holder{
 		this.fields = new ArrayList<>();
 		this.methods = new ArrayList<>();
 		this.constructors = new ArrayList<>();
+		this.interfaces = new ArrayList<>();
 		this.compatibleMethods = new HashMap<>();
 	}
 
@@ -74,6 +78,10 @@ public class ClassInstance implements Insertable, Holder{
 		return constructors;
 	}
 
+	public List<InterfaceInstance> getInterfaces() {
+		return interfaces;
+	}
+
 	public List<MethodInstance> getCompatibles(MethodInstance m){
 		List<MethodInstance> result = new ArrayList<>();
 		if(compatibleMethods.containsKey(m))
@@ -101,8 +109,16 @@ public class ClassInstance implements Insertable, Holder{
 		this.methods.add(method);
 	}
 	
+	public void addInterface(InterfaceInstance i) {
+		this.interfaces.add(i);
+	}
+	
 	public boolean hasMethod(String qualifiedName) {
 		return methods.stream().anyMatch(m -> m.getQualifiedName().equals(qualifiedName));
+	}
+	
+	public boolean hasInterface(String interfaceName) {
+		return interfaces.stream().anyMatch(i -> i .getName().equals(interfaceName));
 	}
 	
 	public void addConstructor(ConstructorInstance constructor) {
@@ -129,6 +145,17 @@ public class ClassInstance implements Insertable, Holder{
 		List<String> result = getMethodsQualifiedNames(getMethods());
 		if(superClass != null)
 			result.addAll(superClass.getMethodsQualifiedNames());
+		return result;
+	}
+	
+	public List<String> getInterfacesQualifiedNames(){
+		List<String> result = new ArrayList<>();
+		for(InterfaceInstance i: interfaces) {
+			result.add(i.getName());
+		}
+		if(superClass != null) {
+			result.addAll(superClass.getInterfacesQualifiedNames());
+		}
 		return result;
 	}
 	
@@ -204,6 +231,10 @@ public class ClassInstance implements Insertable, Holder{
 		if(getSuperClass().isPresent()) {
 			result.append(getSuperClass().get().toStringDebug());
 			result.append(getQualifiedName() + " extends " + getSuperClass().get().getQualifiedName());
+			result.append("\n");
+		}
+		for(InterfaceInstance i: getInterfaces()) {
+			result.append(getQualifiedName() + " implements " + i.getName());
 			result.append("\n");
 		}
 		for(FieldInstance f: getFields()) {
