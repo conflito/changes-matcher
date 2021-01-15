@@ -164,6 +164,10 @@ public class ConflictPattern {
 		return basePattern.getMethodsVariableIds();
 	}
 	
+	public List<Integer> getInterfaceVariableIds(){
+		return basePattern.getInterfacesVariableIds();
+	}
+	
 	public List<Integer> getInvocationsVariableIds() {
 		return basePattern.getInvocationsVariableIds();
 	}
