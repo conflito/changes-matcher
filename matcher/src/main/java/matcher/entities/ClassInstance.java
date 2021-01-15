@@ -140,6 +140,16 @@ public class ClassInstance implements Insertable, Holder{
 		return result;
 	}
 	
+	public List<String> getFieldTypesQualifiedNames(){
+		List<String> result = getFields().stream()
+										 .filter(f -> !f.primitiveType())
+										 .map(FieldInstance::getTypeName)
+										 .collect(Collectors.toList());
+		if(superClass != null)
+			result.addAll(superClass.getFieldTypesQualifiedNames());
+		return result;
+	}
+	
 	
 	public List<String> getMethodsQualifiedNames(){
 		List<String> result = getMethodsQualifiedNames(getMethods());

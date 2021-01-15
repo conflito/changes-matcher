@@ -32,6 +32,14 @@ public class FieldInstance implements Insertable, Deletable, Visible, Updatable{
 		return type;
 	}
 	
+	public String getTypeName() {
+		return type.toString();
+	}
+	
+	public boolean primitiveType() {
+		return type.isPrimitive();
+	}
+	
 	public boolean equals(Object o) {
 		return (this == o) || (o instanceof FieldInstance && equalsFieldInstance((FieldInstance)o));
 	}

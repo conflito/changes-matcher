@@ -16,6 +16,10 @@ public class UpdateFieldTypePatternAction extends UpdatePatternAction {
 		this.newType = newType;
 	}
 	
+	public int getNewTypeVariableId() {
+		return newType.getId();
+	}
+	
 	@Override
 	public boolean filled() {
 		return super.filled() && oldType.hasValue() && newType.hasValue();

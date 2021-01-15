@@ -30,6 +30,17 @@ public class FieldPattern {
 		this.typeVar = type;
 	}
 	
+	public boolean hasType() {
+		return typeVar != null;
+	}
+	
+	/**
+	 * @requires hasType()
+	 */
+	public int getTypeVariableId() {
+		return typeVar.getId();
+	}
+	
 	public void setVariableValue(int id, String value) {
 		if(freeVariable.isId(id))
 			freeVariable.setValue(value);

@@ -45,6 +45,13 @@ public class DeltaInstance {
 		result.addAll(getDeletedFieldsQualifiedNames());
 		return result;
 	}
+	
+	public List<String> getFieldTypesQualifiedNames(){
+		return actions.stream()
+					  .filter(a -> isUpdateFieldTypeAction(a))
+					  .map(a ->((UpdateFieldTypeAction)a).getNewTypeName())
+					  .collect(Collectors.toList());
+	}
 
 	private List<String> getInsertedFieldsQualifiedNames() {
 		return actions.stream()

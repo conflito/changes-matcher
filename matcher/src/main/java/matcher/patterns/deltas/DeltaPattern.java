@@ -108,7 +108,17 @@ public class DeltaPattern {
 		result.addAll(getDeletedFieldsVariableIds());
 		return result.stream().distinct().collect(Collectors.toList());
 	}
-
+	
+	public List<Integer> getFieldTypesVariableIds(){
+		List<Integer> result = actions.stream()
+									  .filter(a -> isUpdateFieldTypeAction(a))
+									  .map(a -> 
+									  	((UpdateFieldTypePatternAction)a).getNewTypeVariableId())
+									  .collect(Collectors.toList());
+		return result;
+	}
+	
+	
 	public List<Integer> getFieldAccessesVariableIds() {
 		List<Integer> result = getInsertedFieldAccessesVariableIds();
 		result.addAll(getDeletedFieldAccessesVariableIds());
@@ -263,6 +273,10 @@ public class DeltaPattern {
 	
 	private boolean isUpdateAction(ActionPattern a) {
 		return a instanceof UpdatePatternAction;
+	}
+	
+	private boolean isUpdateFieldTypeAction(ActionPattern a) {
+		return a instanceof UpdateFieldTypePatternAction;
 	}
 
 	public List<Integer> getVisibilityActionsVariableIds() {

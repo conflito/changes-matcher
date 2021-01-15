@@ -59,6 +59,14 @@ public class BasePattern {
 		return distinct(result);
 	}
 	
+	public List<Integer> getFieldTypesVariableIds(){
+		List<Integer> result = new ArrayList<>();
+		for(ClassPattern c: classPatterns) {
+			result.addAll(c.getFieldTypesVariableIds());
+		}
+		return distinct(result);
+	}
+	
 	public List<Integer> getInterfacesVariableIds(){
 		List<Integer> result = new ArrayList<>();
 		for(ClassPattern c: classPatterns) {

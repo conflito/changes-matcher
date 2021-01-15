@@ -156,6 +156,17 @@ public class ClassPattern {
 		return result;
 	}
 	
+	public List<Integer> getFieldTypesVariableIds(){
+		List<Integer> result = new ArrayList<>();
+		for(FieldPattern f: fields) {
+			if(f.hasType())
+				result.add(f.getTypeVariableId());
+		}
+		if(hasSuperClass())
+			result.addAll(superClass.getFieldTypesVariableIds());
+		return result;
+	}
+	
 	public List<Integer> getInterfaceVariableIds(){
 		List<Integer> result = interfaces.stream()
 										 .map(InterfacePattern::getVariableId)

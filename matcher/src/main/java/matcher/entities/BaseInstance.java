@@ -44,6 +44,14 @@ public class BaseInstance {
 		return result;
 	}
 	
+	public List<String> getFieldTypesQualifiedNames(){
+		List<String> result =  new ArrayList<>();
+		for(ClassInstance ci: classInstances) {
+			result.addAll(ci.getFieldTypesQualifiedNames());
+		}
+		return result;
+	}
+	
 	public List<String> getMethodsQualifiedNames(){
 		List<String> result = new ArrayList<>();
 		for(ClassInstance ci: classInstances) {

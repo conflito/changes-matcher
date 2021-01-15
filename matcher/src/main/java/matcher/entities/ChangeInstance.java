@@ -41,6 +41,10 @@ public class ChangeInstance {
 	public List<String> getFieldsQualifiedNames(){
 		return baseInstance.getFieldsQualifiedNames();
 	}
+	
+	public List<String> getFieldTypesQualifiedNames(){
+		return baseInstance.getFieldTypesQualifiedNames();
+	}
 
 	public List<String> getMethodsQualifiedNames() {
 		return baseInstance.getMethodsQualifiedNames();
@@ -78,6 +82,13 @@ public class ChangeInstance {
 		List<String> secondDeltaFields = secondDelta.getFieldsQualifiedNames();
 		firstDeltaFields.addAll(secondDeltaFields);
 		return firstDeltaFields.stream().distinct().collect(Collectors.toList());
+	}
+	
+	public List<String> getDeltaFieldTypesQualifiedNames(){
+		List<String> firstDeltaFieldTypes = firstDelta.getFieldTypesQualifiedNames();
+		List<String> secondDeltaFieldTypes = secondDelta.getFieldTypesQualifiedNames();
+		firstDeltaFieldTypes.addAll(secondDeltaFieldTypes);
+		return firstDeltaFieldTypes.stream().distinct().collect(Collectors.toList());
 	}
 
 	public List<String> getDeltaMethodsQualifiedNames() {

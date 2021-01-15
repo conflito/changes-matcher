@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import matcher.entities.ChangeInstance;
 import matcher.handlers.identifiers.ClassVariableIdentifier;
 import matcher.handlers.identifiers.ConstructorVariableIdentifier;
+import matcher.handlers.identifiers.FieldTypeVariableIdentifier;
 import matcher.handlers.identifiers.FieldVariableIdentifier;
 import matcher.handlers.identifiers.InterfaceVariableIdentifier;
 import matcher.handlers.identifiers.MethodVariableIdentifier;
@@ -26,6 +27,7 @@ public class MatchingHandler {
 	private UpdatedEntitiesIdentifier uei;
 	private VisibilityActionsIdentifier vai;
 	private InterfaceVariableIdentifier ivi;
+	private FieldTypeVariableIdentifier ftvi;
 
 	public MatchingHandler() {
 		super();
@@ -36,6 +38,7 @@ public class MatchingHandler {
 		uei = new UpdatedEntitiesIdentifier();
 		vai = new VisibilityActionsIdentifier();
 		ivi = new InterfaceVariableIdentifier();
+		ftvi = new FieldTypeVariableIdentifier();
 	}
 	
 	public List<List<Pair<Integer, String>>> matchingAssignments(ChangeInstance ci, ConflictPattern cp){
@@ -65,12 +68,14 @@ public class MatchingHandler {
 		Map<Integer, List<String>> updates = uei.identify(ci, cp);
 		Map<Integer, List<String>> visibilities = vai.identify(ci, cp);
 		Map<Integer, List<String>> interfaces = ivi.identify(ci, cp);
+		Map<Integer, List<String>> fieldTypes = ftvi.identify(ci, cp);
 		MapUtilities.mergeMaps(result, methods);
 		MapUtilities.mergeMaps(result, constructors);
 		MapUtilities.mergeMaps(result, classes);
 		MapUtilities.mergeMaps(result, updates);
 		MapUtilities.mergeMaps(result, visibilities);
 		MapUtilities.mergeMaps(result, interfaces);
+		MapUtilities.mergeMaps(result, fieldTypes);
 		return toPairList(result);
 	}
 
