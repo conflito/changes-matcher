@@ -9,6 +9,10 @@ public class UpdateFieldTypePatternAction extends UpdatePatternAction {
 	private FreeVariable oldType;
 	private FreeVariable newType;
 	
+	public UpdateFieldTypePatternAction(FreeVariable entity) {
+		super(entity);
+	}
+	
 	public UpdateFieldTypePatternAction(FreeVariable entity, FreeVariable oldType, 
 			FreeVariable newType) {
 		super(entity);
@@ -20,9 +24,15 @@ public class UpdateFieldTypePatternAction extends UpdatePatternAction {
 		return newType.getId();
 	}
 	
+	public boolean hasNewType() {
+		return newType != null;
+	}
+	
 	@Override
 	public boolean filled() {
-		return super.filled() && oldType.hasValue() && newType.hasValue();
+		return super.filled() && 
+			   (oldType == null || oldType.hasValue()) && 
+			   (newType == null || newType.hasValue());
 	}
 	
 	@Override
@@ -34,36 +44,52 @@ public class UpdateFieldTypePatternAction extends UpdatePatternAction {
 	private boolean matches(UpdateFieldTypeAction action) {
 		return getAction() == action.getAction() &&
 			   getEntity().matches(action.getEntityQualifiedName()) &&
-			   oldType.matches(action.getOldTypeName()) &&
-			   newType.matches(action.getNewTypeName());
+			   (oldType == null || oldType.matches(action.getOldTypeName())) &&
+			   (newType == null || newType.matches(action.getNewTypeName()));
 	}
 	
 	@Override
 	public void setVariableValue(int id, String value) {
 		super.setVariableValue(id, value);
-		if(oldType.isId(id))
+		if(oldType != null && oldType.isId(id))
 			oldType.setValue(value);
-		if(newType.isId(id))
+		if(newType != null && newType.isId(id))
 			newType.setValue(value);
 	}
 	
 	@Override
 	public String toStringDebug() {
-		return "update #" + getEntityId() + " type from #" + oldType.getId() + " to #" +
-				newType.getId();
+		StringBuilder result = new StringBuilder();
+		result.append("update #" + getEntityId() + " type");
+		if(oldType != null && newType != null)
+			result.append(" from #" + oldType.getId() + " to #" + newType.getId());
+		else if(oldType != null)
+			result.append(" from #" + oldType.getId());
+		else
+			result.append(" to #" + newType.getId());
+		return result.toString();
 	}
 	
 	@Override
 	public String toStringFilled() {
-		return "update #" + getEntity().getValue() + " type from #" + oldType.getValue() 
-				+ " to #" + newType.getValue();
+		StringBuilder result = new StringBuilder();
+		result.append("update #" + getEntity().getValue() + " type");
+		if(oldType != null && newType != null)
+			result.append(" from #" + oldType.getValue() + " to #" + newType.getValue());
+		else if(oldType != null)
+			result.append(" from #" + oldType.getValue());
+		else
+			result.append(" to #" + newType.getValue());
+		return result.toString();
 	}
 
 	@Override
 	public void clean() {
 		super.clean();
-		oldType.clean();
-		newType.clean();
+		if(oldType != null)
+			oldType.clean();
+		if(newType != null)
+			newType.clean();
 	}
 	
 }
