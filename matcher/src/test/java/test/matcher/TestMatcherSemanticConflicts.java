@@ -12,6 +12,7 @@ import matcher.patterns.BasePattern;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.ConflictPattern;
 import matcher.patterns.ConstructorPattern;
+import matcher.patterns.FieldAccessPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
 import matcher.patterns.InterfacePattern;
@@ -61,6 +62,7 @@ public class TestMatcherSemanticConflicts {
 	private static final String DEPENDENCY_BASED2_FOLDER = "DependencyBased02" + File.separator;
 	private static final String DEPENDENCY_BASED3_FOLDER = "DependencyBased03" + File.separator;
 	private static final String DEPENDENCY_BASED4_FOLDER = "DependencyBased04" + File.separator;
+	private static final String DEPENDENCY_BASED5_FOLDER = "DependencyBased05" + File.separator;
 	private static final String UNEXPECTED_OVERIDE_FOLDER = 
 			"UnexpectedOverriding01" + File.separator;
 	private static final String UNEXPECTED_OVERIDE2_FOLDER = 
@@ -467,6 +469,38 @@ public class TestMatcherSemanticConflicts {
 	}
 	
 	@Test
+	public void dependencyBased5Test() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ DEPENDENCY_BASED5_FOLDER + CONFIG_FILE_NAME);
+		
+		String basePath = SRC_FOLDER + DEPENDENCY_BASED5_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + DEPENDENCY_BASED5_FOLDER + "A01.java";
+		String newClassPath = SRC_FOLDER + DEPENDENCY_BASED5_FOLDER + "B.java";
+		
+		ConflictPattern cp = getDependencyBased5Pattern();
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(basePath, var1Path, null, newClassPath, cp);
+		assertTrue(result.size() == 1, "More than one result for dependency based 5?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("A"), "Class is not A");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("x"), 
+				"Updated field is not x?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("m1()"), 
+				"Method that reads x is not m1()?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("B"), 
+				"New class is not B?");
+		assertTrue(assignments.get(4).getFirst() == 4 && 
+				assignments.get(4).getSecond().equals("k()"), 
+				"Method inserted with invocation is not k()?");
+	}
+	
+	@Test
 	public void unexpectedOverridingTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ UNEXPECTED_OVERIDE_FOLDER + CONFIG_FILE_NAME);
@@ -862,6 +896,34 @@ public class TestMatcherSemanticConflicts {
 		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, 
 				insertedClassVar, null));
 		dp2.addActionPattern(new InsertInvocationPatternAction(methodVar1, insertedMethodVar));
+		
+		return new ConflictPattern(basePattern, dp1, dp2);
+	}
+	
+	private ConflictPattern getDependencyBased5Pattern() {
+		FreeVariable classVar = new FreeVariable(0);
+		FreeVariable fieldVar = new FreeVariable(1);
+		FreeVariable methodVar = new FreeVariable(2);
+		FreeVariable insertedClassVar = new FreeVariable(3);
+		FreeVariable insertedMethodVar = new FreeVariable(4);
+		
+		BasePattern basePattern = new BasePattern();
+		ClassPattern classPattern = new ClassPattern(classVar);
+		FieldPattern fieldPattern = new FieldPattern(fieldVar, null);
+		classPattern.addFieldPattern(fieldPattern);
+		MethodPattern methodPattern = new MethodPattern(methodVar, null);
+		methodPattern.addFieldAccessPattern(new FieldAccessPattern(fieldVar, 
+				FieldAccessType.READ));
+		classPattern.addMethodPattern(methodPattern);
+		basePattern.addClassPattern(classPattern);
+		
+		DeltaPattern dp1 = new DeltaPattern();
+		DeltaPattern dp2 = new DeltaPattern();
+		dp1.addActionPattern(new UpdateFieldTypePatternAction(fieldVar));
+		dp2.addActionPattern(new InsertClassPatternAction(insertedClassVar));
+		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, 
+				insertedClassVar, null));
+		dp2.addActionPattern(new InsertInvocationPatternAction(methodVar, insertedMethodVar));
 		
 		return new ConflictPattern(basePattern, dp1, dp2);
 	}
