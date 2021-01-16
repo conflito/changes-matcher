@@ -243,6 +243,20 @@ public class ConflictPattern {
 		firstDeltaUpdates.addAll(secondDeltaUpdates);
 		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
 	}
+	
+	public List<Integer> getUpdatedFieldsVariableIds(){
+		List<Integer> firstDeltaUpdates = firstDelta.getUpdatedFieldsVariableIds();
+		List<Integer> secondDeltaUpdates = secondDelta.getUpdatedFieldsVariableIds();
+		firstDeltaUpdates.addAll(secondDeltaUpdates);
+		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
+	}
+	
+	public List<Integer> getUpdatedInvocationsVariableIds(){
+		List<Integer> firstDeltaUpdates = firstDelta.getUpdatedInvocationsVariableIds();
+		List<Integer> secondDeltaUpdates = secondDelta.getUpdatedInvocationsVariableIds();
+		firstDeltaUpdates.addAll(secondDeltaUpdates);
+		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
+	}
 
 	public List<Integer> getVisibilityActionsVariableIds() {
 		List<Integer> firstDeltaUpdates = firstDelta.getVisibilityActionsVariableIds();

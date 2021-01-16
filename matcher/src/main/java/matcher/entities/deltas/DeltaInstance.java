@@ -190,31 +190,37 @@ public class DeltaInstance {
 	}
 
 	public List<String> getUpdatesQualifiedNames() {
-		List<String> result = getUpdatedEntitiesQualifiedNames();
-		result.addAll(getUpdatedFieldsQualifiedNames());
-		return result;
-	}
-	
-	private List<String> getUpdatedEntitiesQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isUpdateAction(a))
 				  .map(a -> ((UpdateAction) a).getEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
-	private List<String> getUpdatedFieldsQualifiedNames() {
+	public List<String> getUpdatedFieldsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isUpdateFieldTypeAction(a))
 				  .map(a -> ((UpdateFieldTypeAction) a).getEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
+	public List<String> getUpdatedInvocationsQualifiedNames() {
+		return actions.stream()
+				  .filter(a -> isUpdateInvocationAction(a))
+				  .map(a -> ((UpdateInvocationAction) a).getEntityQualifiedName())
+				  .collect(Collectors.toList());
+	}
+	
 	private boolean isUpdateAction(ActionInstance a) {
-		return a instanceof UpdateAction && !isUpdateFieldTypeAction(a);
+		return a instanceof UpdateAction && !isUpdateFieldTypeAction(a) &&
+				!isUpdateInvocationAction(a);
 	}
 	
 	private boolean isUpdateFieldTypeAction(ActionInstance a) {
 		return a instanceof UpdateFieldTypeAction;
+	}
+	
+	private boolean isUpdateInvocationAction(ActionInstance a) {
+		return a instanceof UpdateInvocationAction;
 	}
 
 	public List<String> getVisibilityActionsQualifiedNames() {

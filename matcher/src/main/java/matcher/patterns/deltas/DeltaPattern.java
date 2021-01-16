@@ -271,12 +271,31 @@ public class DeltaPattern {
 				  .collect(Collectors.toList());
 	}
 	
+	public List<Integer> getUpdatedFieldsVariableIds() {
+		return actions.stream()
+				  .filter(a -> isUpdateFieldTypeAction(a))
+				  .map(a -> ((UpdateFieldTypePatternAction)a).getEntityId())
+				  .collect(Collectors.toList());
+	}
+	
+	public List<Integer> getUpdatedInvocationsVariableIds() {
+		return actions.stream()
+				  .filter(a -> isUpdateInvocationAction(a))
+				  .map(a -> ((UpdateInvocationPatternAction)a).getEntityId())
+				  .collect(Collectors.toList());
+	}
+	
 	private boolean isUpdateAction(ActionPattern a) {
-		return a instanceof UpdatePatternAction;
+		return a instanceof UpdatePatternAction && !isUpdateFieldTypeAction(a) &&
+				!isUpdateInvocationAction(a);
 	}
 	
 	private boolean isUpdateFieldTypeAction(ActionPattern a) {
 		return a instanceof UpdateFieldTypePatternAction;
+	}
+	
+	private boolean isUpdateInvocationAction(ActionPattern a) {
+		return a instanceof UpdateInvocationPatternAction;
 	}
 
 	public List<Integer> getVisibilityActionsVariableIds() {

@@ -126,6 +126,20 @@ public class ChangeInstance {
 		firstDeltaUpdates.addAll(secondDeltaUpdates);
 		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
 	}
+	
+	public List<String> getUpdatedFieldsQualifiedNames() {
+		List<String> firstDeltaUpdates = firstDelta.getUpdatedFieldsQualifiedNames();
+		List<String> secondDeltaUpdates = secondDelta.getUpdatedFieldsQualifiedNames();
+		firstDeltaUpdates.addAll(secondDeltaUpdates);
+		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
+	}
+	
+	public List<String> getUpdatedInvocationsQualifiedNames(){
+		List<String> firstDeltaUpdates = firstDelta.getUpdatedInvocationsQualifiedNames();
+		List<String> secondDeltaUpdates = secondDelta.getUpdatedInvocationsQualifiedNames();
+		firstDeltaUpdates.addAll(secondDeltaUpdates);
+		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
+	}
 
 	public List<String> getVisibilityActionsQualifiedNames() {
 		List<String> firstDeltaUpdates = firstDelta.getVisibilityActionsQualifiedNames();
