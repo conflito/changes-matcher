@@ -2,6 +2,7 @@ package test.matcher;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -25,15 +26,21 @@ import matcher.utils.Pair;
 
 public class TestMatcherInserts {
 
-	private static final String SRC_FOLDER = "src/test/resources/OperationsInstances/";
+	private static final String SRC_FOLDER = "src" + File.separator + "test" + 
+			File.separator + "resources" + File.separator + 
+			"OperationsInstances" + File.separator;
 	private static final String CONFIG_FILE_NAME = "config.properties";
 	
-	private static final String INS_FIELD_METHOD_FOLDER = "FieldAndMethodInsertInstance/";
-	private static final String INS_FIELD_CONSTR_FOLDER = "FieldAndConstructorInsertInstance/";
+	private static final String INS_FIELD_METHOD_FOLDER = 
+			"FieldAndMethodInsertInstance" + File.separator;
+	private static final String INS_FIELD_CONSTR_FOLDER = 
+			"FieldAndConstructorInsertInstance" + File.separator;
 	private static final String INS_CONSTR_COMPAT_METHOD_FOLDER = 
-			"ConstructorAndCompatibleMethodInsertInstance/";
-	private static final String INS_METHOD_WITH_INV_FOLDER = "MethodWithInvocationInsertInstance/";
-	private static final String INS_METHOD_WITH_ACCESS_FOLDER = "MethodWithFieldAccessInsertInstance/";
+			"ConstructorAndCompatibleMethodInsertInstance" + File.separator;
+	private static final String INS_METHOD_WITH_INV_FOLDER = 
+			"MethodWithInvocationInsertInstance" + File.separator;
+	private static final String INS_METHOD_WITH_ACCESS_FOLDER = 
+			"MethodWithFieldAccessInsertInstance" + File.separator;
 	
 	@Test
 	public void insertPrivateFieldAndPublicMethodTest() throws ApplicationException {

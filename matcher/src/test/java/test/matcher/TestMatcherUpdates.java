@@ -16,18 +16,24 @@ import matcher.utils.Pair;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.util.List;
 
 public class TestMatcherUpdates {
 	
-	private static final String SRC_FOLDER = "src/test/resources/OperationsInstances/";
+	private static final String SRC_FOLDER = "src" + File.separator + "test" + 
+			File.separator + "resources" + File.separator + 
+			"OperationsInstances" + File.separator;
 	private static final String CONFIG_FILE_NAME = "config.properties";
 	
-	private static final String UPD_INS_METHOD_FOLDER = "MethodUpdateWithInsertOperationInstance/";
-	private static final String UPD_DEL_METHOD_FOLDER = "MethodUpdateWithDeleteOperationInstance/";
-	private static final String UPD_INS_CONST_FOLDER = "ConstructorUpdateWithInsertOperationInstance/";
+	private static final String UPD_INS_METHOD_FOLDER = 
+			"MethodUpdateWithInsertOperationInstance" + File.separator;
+	private static final String UPD_DEL_METHOD_FOLDER = 
+			"MethodUpdateWithDeleteOperationInstance" + File.separator;
+	private static final String UPD_INS_CONST_FOLDER = 
+			"ConstructorUpdateWithInsertOperationInstance" + File.separator;
 	private static final String UPD_DEL_CONST_FOLDER = 
-			"ConstructorUpdateWithDeleteOperationInstance/";
+			"ConstructorUpdateWithDeleteOperationInstance" + File.separator;
 
 	@Test
 	public void methodUpdateWithInsertOperationTest() throws ApplicationException {

@@ -24,18 +24,26 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.util.List;
 
 public class TestMatcherDeletes {
 
-	private static final String SRC_FOLDER = "src/test/resources/OperationsInstances/";
+	private static final String SRC_FOLDER = "src" + File.separator + "test" + 
+								File.separator + "resources" + File.separator + 
+								"OperationsInstances" + File.separator;
 	private static final String CONFIG_FILE_NAME = "config.properties";
 	
-	private static final String DEL_FIELD_METHOD_FOLDER = "FieldAndMethodDeleteInstance/";
-	private static final String DEL_FIELD_CONSTR_FOLDER = "FieldAndConstructorDeleteInstance/";
-	private static final String DEL_FIELD_COMPA_METHOD_FOLDER = "FieldAndCompatibleMethodDeleteInstance/";
-	private static final String DEL_FIELD_AND_INVO_FOLDER = "MethodInvocationAndFieldDeleteInstance/";
-	private static final String DEL_FIELD_ACCESS_FOLDER = "FieldAccessAndMethodDeleteInstance/";
+	private static final String DEL_FIELD_METHOD_FOLDER = 
+			"FieldAndMethodDeleteInstance" + File.separator;
+	private static final String DEL_FIELD_CONSTR_FOLDER = 
+			"FieldAndConstructorDeleteInstance" + File.separator;
+	private static final String DEL_FIELD_COMPA_METHOD_FOLDER = 
+			"FieldAndCompatibleMethodDeleteInstance" + File.separator;
+	private static final String DEL_FIELD_AND_INVO_FOLDER = 
+			"MethodInvocationAndFieldDeleteInstance" + File.separator;
+	private static final String DEL_FIELD_ACCESS_FOLDER = 
+			"FieldAccessAndMethodDeleteInstance" + File.separator;
 
 	@Test
 	public void deletePrivateFieldAndPublicMethodTest() throws ApplicationException {

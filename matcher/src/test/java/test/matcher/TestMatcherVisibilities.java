@@ -17,16 +17,22 @@ import matcher.utils.Pair;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.util.List;
 
 public class TestMatcherVisibilities {
 	
-	private static final String SRC_FOLDER = "src/test/resources/OperationsInstances/";
+	private static final String SRC_FOLDER = "src" + File.separator + "test" + 
+			File.separator + "resources" + File.separator + 
+			"OperationsInstances" + File.separator;
 	private static final String CONFIG_FILE_NAME = "config.properties";
 	
-	private static final String INS_VIS_FIELD_FOLDER = "VisibilityFieldInsertInstance/";
-	private static final String DEL_VIS_FIELD_FOLDER = "VisibilityFieldDeleteInstance/";
-	private static final String UPD_VIS_FIELD_FOLDER = "VisibilityFieldUpdateInstance/";
+	private static final String INS_VIS_FIELD_FOLDER = 
+			"VisibilityFieldInsertInstance"+ File.separator;
+	private static final String DEL_VIS_FIELD_FOLDER = 
+			"VisibilityFieldDeleteInstance"+ File.separator;
+	private static final String UPD_VIS_FIELD_FOLDER = 
+			"VisibilityFieldUpdateInstance"+ File.separator;
 	
 	@Test
 	public void insertVisibilityInFieldTest() throws ApplicationException {
