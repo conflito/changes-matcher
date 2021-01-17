@@ -28,28 +28,32 @@ public class Matcher {
 		FileSystemHandler.getInstance().setConfigPath(configFilePath);
 	}
 	
-	public List<List<Pair<Integer, String>>> matchingAssignments(String basePath, 
-			String firstVariantPath, String secondVariantPath, ConflictPattern cp) 
-					throws ApplicationException{
-		File base = new File(basePath);
-		File firstVar = new File(firstVariantPath);
-		File secondVar = new File(secondVariantPath);
-		ChangeInstance ci = cih.getChangeInstance(base, firstVar, secondVar, cp);
+	public List<List<Pair<Integer, String>>> matchingAssignments(String[] bases,
+			String[] variants1, String[] variants2, ConflictPattern cp)
+			throws ApplicationException{
+		if(bases == null || variants1 == null || variants2 == null)
+			return null;
+		if(!sameLenght(bases, variants1, variants2))
+			return null;
+		File[] basesFile = new File[bases.length];
+		File[] variants1File = new File[variants1.length];
+		File[] variants2File = new File[variants2.length];
+		for(int i = 0; i < bases.length; i++) {
+			String base = bases[i];
+			String variant1 = variants1[i];
+			String variant2 = variants2[i];
+			if(base != null)
+				basesFile[i] = new File(base);
+			if(variant1 != null)
+				variants1File[i] = new File(variant1);
+			if(variant2 != null)
+				variants2File[i] = new File(variant2);
+		}
+		ChangeInstance ci = cih.getChangeInstance(basesFile, variants1File, variants2File, cp);
 		return mh.matchingAssignments(ci, cp);
 	}
-	
-	public List<List<Pair<Integer, String>>> matchingAssignments(String firstBasePath, 
-			String firstVariantPath, String secondBasePath, String secondVariantPath, 
-			ConflictPattern cp) throws ApplicationException{
-		File base1 = null;
-		if(firstBasePath != null)
-				base1 = new File(firstBasePath);
-		File base2 = null;
-		if(secondBasePath != null)
-			base2 = new File(secondBasePath);
-		File var1 = new File(firstVariantPath);
-		File var2 = new File(secondVariantPath);
-		ChangeInstance ci = cih.getChangeInstance(base1, base2, var1, var2, cp);
-		return mh.matchingAssignments(ci, cp);
+
+	private boolean sameLenght(String[] bases, String[] variants1, String[] variants2) {
+		return bases.length == variants1.length && bases.length == variants2.length;
 	}
 }

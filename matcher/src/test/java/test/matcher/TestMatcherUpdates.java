@@ -38,10 +38,14 @@ public class TestMatcherUpdates {
 		String firstVarPath = SRC_FOLDER + UPD_INS_METHOD_FOLDER + "Square01.java";
 		String secondVarPath = SRC_FOLDER + UPD_INS_METHOD_FOLDER + "Square02.java";
 		
+		String[] bases = {basePath};
+		String[] variants1 = {firstVarPath};
+		String[] variants2 = {secondVarPath};
+		
 		ConflictPattern cp = getUpdateMethodPattern();
 		
 		List<List<Pair<Integer, String>>> result = 
-				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
 		assertTrue(result.size() == 1, "More than one result for updating method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -62,10 +66,14 @@ public class TestMatcherUpdates {
 		String firstVarPath = SRC_FOLDER + UPD_DEL_METHOD_FOLDER + "Shape01.java";
 		String secondVarPath = SRC_FOLDER + UPD_DEL_METHOD_FOLDER + "Shape02.java";
 		
+		String[] bases = {basePath};
+		String[] variants1 = {firstVarPath};
+		String[] variants2 = {secondVarPath};
+		
 		ConflictPattern cp = getUpdateMethodPattern();
 		
 		List<List<Pair<Integer, String>>> result = 
-			matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+			matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
 		assertTrue(result.size() == 1, "More than one result for updating method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -86,10 +94,14 @@ public class TestMatcherUpdates {
 		String firstVarPath = SRC_FOLDER + UPD_INS_CONST_FOLDER + "Square01.java";
 		String secondVarPath = SRC_FOLDER + UPD_INS_CONST_FOLDER + "Square02.java";
 		
+		String[] bases = {basePath};
+		String[] variants1 = {firstVarPath};
+		String[] variants2 = {secondVarPath};
+		
 		ConflictPattern cp = getUpdateConstructorPattern();
 		
 		List<List<Pair<Integer, String>>> result = 
-				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
 		assertTrue(result.size() == 1, "More than one result for updating method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -110,10 +122,14 @@ public class TestMatcherUpdates {
 		String firstVarPath = SRC_FOLDER + UPD_DEL_CONST_FOLDER + "Square01.java";
 		String secondVarPath = SRC_FOLDER + UPD_DEL_CONST_FOLDER + "Square02.java";
 		
+		String[] bases = {basePath};
+		String[] variants1 = {firstVarPath};
+		String[] variants2 = {secondVarPath};
+		
 		ConflictPattern cp = getUpdateConstructorPattern();
 		
-		List<List<Pair<Integer, String>>> result = 
-				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+		List<List<Pair<Integer, String>>> result =
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
 		assertTrue(result.size() == 1, "More than one result for updating method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -139,7 +155,12 @@ public class TestMatcherUpdates {
 		DeltaPattern dp2 = new DeltaPattern();
 		dp1.addActionPattern(new UpdatePatternAction(methodVar));
 		
-		return new ConflictPattern(basePattern, dp1, dp2);
+		ConflictPattern conflict = new ConflictPattern();
+		conflict.setBasePattern(basePattern);
+		conflict.addDeltaPattern(dp1);
+		conflict.addDeltaPattern(dp2);
+		
+		return conflict;
 	}
 	
 	private ConflictPattern getUpdateConstructorPattern() {
@@ -156,6 +177,11 @@ public class TestMatcherUpdates {
 		DeltaPattern dp2 = new DeltaPattern();
 		dp1.addActionPattern(new UpdatePatternAction(cVar));
 		
-		return new ConflictPattern(basePattern, dp1, dp2);
+		ConflictPattern conflict = new ConflictPattern();
+		conflict.setBasePattern(basePattern);
+		conflict.addDeltaPattern(dp1);
+		conflict.addDeltaPattern(dp2);
+		
+		return conflict;
 	}
 }

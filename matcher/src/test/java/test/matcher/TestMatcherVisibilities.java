@@ -37,10 +37,14 @@ public class TestMatcherVisibilities {
 		String firstVarPath = SRC_FOLDER + INS_VIS_FIELD_FOLDER + "Square01.java";
 		String secondVarPath = SRC_FOLDER + INS_VIS_FIELD_FOLDER + "Square02.java";
 		
+		String[] bases = {basePath};
+		String[] variants1 = {firstVarPath};
+		String[] variants2 = {secondVarPath};
+		
 		ConflictPattern cp = getInsertFieldVisibilityPattern();
 		
 		List<List<Pair<Integer, String>>> result = 
-				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
 		assertTrue(result.size() == 1, "More than one result for updating method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -61,10 +65,14 @@ public class TestMatcherVisibilities {
 		String firstVarPath = SRC_FOLDER + DEL_VIS_FIELD_FOLDER + "Square01.java";
 		String secondVarPath = SRC_FOLDER + DEL_VIS_FIELD_FOLDER + "Square02.java";
 		
+		String[] bases = {basePath};
+		String[] variants1 = {firstVarPath};
+		String[] variants2 = {secondVarPath};
+		
 		ConflictPattern cp = getDeleteFieldVisibilityPattern();
 		
 		List<List<Pair<Integer, String>>> result = 
-				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
 		assertTrue(result.size() == 1, "More than one result for updating method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -85,10 +93,14 @@ public class TestMatcherVisibilities {
 		String firstVarPath = SRC_FOLDER + UPD_VIS_FIELD_FOLDER + "Square01.java";
 		String secondVarPath = SRC_FOLDER + UPD_VIS_FIELD_FOLDER + "Square02.java";
 		
+		String[] bases = {basePath};
+		String[] variants1 = {firstVarPath};
+		String[] variants2 = {secondVarPath};
+		
 		ConflictPattern cp = getUpdateFieldVisibilityPattern();
 		
 		List<List<Pair<Integer, String>>> result = 
-				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
 				
 		assertTrue(result.size() == 1, "More than one result for updating method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -115,7 +127,12 @@ public class TestMatcherVisibilities {
 		dp1.addActionPattern(new VisibilityActionPattern(Action.INSERT, Visibility.PRIVATE, 
 				null, fieldvar));
 		
-		return new ConflictPattern(basePattern, dp1, dp2);
+		ConflictPattern conflict = new ConflictPattern();
+		conflict.setBasePattern(basePattern);
+		conflict.addDeltaPattern(dp1);
+		conflict.addDeltaPattern(dp2);
+		
+		return conflict;
 	}
 	
 	private ConflictPattern getDeleteFieldVisibilityPattern() {
@@ -133,7 +150,12 @@ public class TestMatcherVisibilities {
 		dp1.addActionPattern(new VisibilityActionPattern(Action.DELETE, null, 
 				Visibility.PRIVATE, fieldvar));
 		
-		return new ConflictPattern(basePattern, dp1, dp2);
+		ConflictPattern conflict = new ConflictPattern();
+		conflict.setBasePattern(basePattern);
+		conflict.addDeltaPattern(dp1);
+		conflict.addDeltaPattern(dp2);
+		
+		return conflict;
 	}
 	
 	private ConflictPattern getUpdateFieldVisibilityPattern() {
@@ -151,7 +173,12 @@ public class TestMatcherVisibilities {
 		dp1.addActionPattern(new VisibilityActionPattern(Action.UPDATE, Visibility.PROTECTED, 
 				Visibility.PRIVATE, fieldvar));
 		
-		return new ConflictPattern(basePattern, dp1, dp2);
+		ConflictPattern conflict = new ConflictPattern();
+		conflict.setBasePattern(basePattern);
+		conflict.addDeltaPattern(dp1);
+		conflict.addDeltaPattern(dp2);
+		
+		return conflict;
 	}
 
 }

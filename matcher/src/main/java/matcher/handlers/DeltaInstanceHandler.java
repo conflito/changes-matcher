@@ -1,6 +1,7 @@
 package matcher.handlers;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,9 +55,18 @@ public class DeltaInstanceHandler {
 			Launcher launcher = SpoonUtils.loadLauncher(resource);
 			CtType<?> fullType = SpoonUtils.getFullChangedCtType(launcher, 
 					changedType.getQualifiedName());
-			fullType.descendantIterator().forEachRemaining(e -> {
-				processInsert(e, deltaInstance, cp);
-			});
+			processNewClassInsertedElements(fullType, deltaInstance, cp);
+		}
+	}
+	
+	private void processNewClassInsertedElements(CtType<?> type, DeltaInstance deltaInstance,
+			ConflictPattern cp) {
+		Iterator<CtElement> iterator = type.descendantIterator();
+		while(iterator.hasNext()) {
+			CtElement element = iterator.next();
+			if(InsertActionsProcessor.ofInsertInterest(element)) {
+				processInsert(element, deltaInstance, cp);
+			}
 		}
 	}
 	

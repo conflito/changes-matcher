@@ -1,6 +1,8 @@
 package matcher.handlers;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import matcher.entities.BaseInstance;
 import matcher.entities.ChangeInstance;
@@ -17,47 +19,56 @@ public class ChangeInstanceHandler {
 		this.bih = new BaseInstanceHandler();
 		this.dih = new DeltaInstanceHandler();
 	}
-
-	public ChangeInstance getChangeInstance(File base, File variant, File variant2, 
-			ConflictPattern cp) throws ApplicationException {
-		BaseInstance baseInstance = bih.getBaseInstance(base, cp);
-		if(baseInstance == null)
+	
+	public ChangeInstance getChangeInstance(File[] bases, File[] variants1, File[] variants2, 
+			ConflictPattern  cp) throws ApplicationException {
+		if(bases == null || variants1 == null || variants2 == null)
 			return null;
-		DeltaInstance firstDelta = dih.getDeltaInstance(base, variant, cp);
-		DeltaInstance secondDelta = dih.getDeltaInstance(base, variant2, cp);
-		return new ChangeInstance(baseInstance, firstDelta, secondDelta);
+		if(!sameLenght(bases, variants1, variants2))
+			return null;
+		BaseInstance baseInstance = processBases(bases, cp);
+		List<DeltaInstance> deltas = processDeltas(bases, variants1, variants2, cp);
+		ChangeInstance result = new ChangeInstance();
+		result.setBaseInstance(baseInstance);
+		result.addDeltaInstances(deltas);
+		return result;
 	}
 	
-	public ChangeInstance getChangeInstance(File base1, File base2, File variant1, File variant2,
-			ConflictPattern cp) throws ApplicationException {
-		if(base1 == null && base2 == null)
-			return null;
-		BaseInstance baseInstance = null;
-		if(base1 != null) {
-			baseInstance = bih.getBaseInstance(base1, cp);
-			if(baseInstance == null)
-				return null;
-		}
+	private boolean sameLenght(File[] bases, File[] variants1, File[] variants2) {
+		return bases.length == variants1.length && bases.length == variants2.length;
+	}
 
-		BaseInstance baseInstance2 = null;
-		if(base2 != null) {
-			baseInstance2 = bih.getBaseInstance(base2, cp);
-			if(baseInstance2 == null)
-				return null;
+	private BaseInstance processBases(File[] bases, ConflictPattern  cp) 
+			throws ApplicationException {
+		BaseInstance result = new BaseInstance();
+		for(File f: bases) {
+			if(f != null) {
+				BaseInstance b = bih.getBaseInstance(f, cp);
+				if(b != null) {
+					result.merge(b);
+				}
+			}
 		}
-		
-		DeltaInstance firstDelta = dih.getDeltaInstance(base1, variant1, cp);
-		DeltaInstance secondDelta = dih.getDeltaInstance(base2, variant2, cp);
-		
-		if(baseInstance != null && baseInstance2 != null) {
-			baseInstance.merge(baseInstance2);
-			return new ChangeInstance(baseInstance, firstDelta, secondDelta);
+		return result;
+	}
+	
+	private List<DeltaInstance> processDeltas(File[] bases, File[] variants1, File[] variants2, 
+			ConflictPattern  cp) throws ApplicationException {
+		List<DeltaInstance> result = new ArrayList<>();
+		for(int i = 0; i < bases.length; i++) {
+			File base = bases[i];
+			File variant1 = variants1[i];
+			File variant2 = variants2[i];
+			DeltaInstance di;
+			if(variant1 != null) {
+				di = dih.getDeltaInstance(base, variant1, cp);
+				result.add(di);
+			}
+			if(variant2 != null) {
+				di = dih.getDeltaInstance(base, variant2, cp);
+				result.add(di);
+			}
 		}
-		else if(baseInstance2 != null) {
-			return new ChangeInstance(baseInstance2, firstDelta, secondDelta);
-		}
-		else {
-			return new ChangeInstance(baseInstance, firstDelta, secondDelta);
-		}		
+		return result;
 	}
 }

@@ -1,5 +1,6 @@
 package matcher.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,33 +9,37 @@ import matcher.entities.deltas.DeltaInstance;
 public class ChangeInstance {
 
 	private BaseInstance baseInstance;
-	private DeltaInstance firstDelta;
-	private DeltaInstance secondDelta;
 	
-	public ChangeInstance(BaseInstance baseInstance, DeltaInstance firstDelta, DeltaInstance secondDelta) {
-		super();
+	private List<DeltaInstance> deltas;
+	
+	public ChangeInstance() {
+		deltas = new ArrayList<>();
+	}
+	
+	public void setBaseInstance(BaseInstance baseInstance) {
 		this.baseInstance = baseInstance;
-		this.firstDelta = firstDelta;
-		this.secondDelta = secondDelta;
+	}
+	
+	public void addDeltaInstance(DeltaInstance deltaInstance) {
+		deltas.add(deltaInstance);
+	}
+	
+	public void addDeltaInstances(List<DeltaInstance> deltaInstances) {
+		deltaInstances.forEach(d -> addDeltaInstance(d));
 	}
 
 	public BaseInstance getBaseInstance() {
 		return baseInstance;
 	}
-
-	public DeltaInstance getFirstDelta() {
-		return firstDelta;
-	}
-
-	public DeltaInstance getSecondDelta() {
-		return secondDelta;
+	
+	public List<DeltaInstance> getDeltaInstances(){
+		return deltas;
 	}
 	
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append(baseInstance.toStringDebug() + "\n---------\n");
-		result.append(firstDelta.toString() + "\n---------\n");
-		result.append(secondDelta.toString() + "\n---------\n");
+		deltas.forEach(d -> result.append(d.toString()  + "\n---------\n"));
 		return result.toString();
 	}
 	
@@ -71,81 +76,70 @@ public class ChangeInstance {
 	}
 	
 	public List<String> getDeltaClassesQualifiedNames() {
-		List<String> firstDeltaClasses = firstDelta.getClassesQualifiedNames();
-		List<String> secondDeltaClasses = secondDelta.getClassesQualifiedNames();
-		firstDeltaClasses.addAll(secondDeltaClasses);
-		return firstDeltaClasses.stream().distinct().collect(Collectors.toList());
+		List<String> result = new ArrayList<>();
+		deltas.forEach(d -> result.addAll(d.getClassesQualifiedNames()));
+		return result.stream().distinct().collect(Collectors.toList());
 	}
 
 	public List<String> getDeltaFieldsQualifiedNames() {
-		List<String> firstDeltaFields = firstDelta.getFieldsQualifiedNames();
-		List<String> secondDeltaFields = secondDelta.getFieldsQualifiedNames();
-		firstDeltaFields.addAll(secondDeltaFields);
-		return firstDeltaFields.stream().distinct().collect(Collectors.toList());
+		List<String> result = new ArrayList<>();
+		deltas.forEach(d -> result.addAll(d.getFieldsQualifiedNames()));
+		return result.stream().distinct().collect(Collectors.toList());
 	}
 	
 	public List<String> getDeltaFieldTypesQualifiedNames(){
-		List<String> firstDeltaFieldTypes = firstDelta.getFieldTypesQualifiedNames();
-		List<String> secondDeltaFieldTypes = secondDelta.getFieldTypesQualifiedNames();
-		firstDeltaFieldTypes.addAll(secondDeltaFieldTypes);
-		return firstDeltaFieldTypes.stream().distinct().collect(Collectors.toList());
+		List<String> result = new ArrayList<>();
+		deltas.forEach(d -> result.addAll(d.getFieldTypesQualifiedNames()));
+		return result.stream().distinct().collect(Collectors.toList());
 	}
 
 	public List<String> getDeltaMethodsQualifiedNames() {
-		List<String> firstDeltaMethods = firstDelta.getMethodsQualifiedNames();
-		List<String> secondDeltaMethods = secondDelta.getMethodsQualifiedNames();
-		firstDeltaMethods.addAll(secondDeltaMethods);
-		return firstDeltaMethods.stream().distinct().collect(Collectors.toList());
+		List<String> result = new ArrayList<>();
+		deltas.forEach(d -> result.addAll(d.getMethodsQualifiedNames()));
+		return result.stream().distinct().collect(Collectors.toList());
 	}
 
 	public List<String> getDeltaConstructorsQualifiedNames() {
-		List<String> firstDeltaConstructors = firstDelta.getConstructorsQualifiedNames();
-		List<String> secondDeltaConstructors = secondDelta.getConstructorsQualifiedNames();
-		firstDeltaConstructors.addAll(secondDeltaConstructors);
-		return firstDeltaConstructors.stream().distinct().collect(Collectors.toList());
+		List<String> result = new ArrayList<>();
+		deltas.forEach(d -> result.addAll(d.getConstructorsQualifiedNames()));
+		return result.stream().distinct().collect(Collectors.toList());
 	}
 
 	public List<String> getDeltaInvocationsQualifiedNames() {
-		List<String> firstDeltaInvocations = firstDelta.getInvocationsQualifiedNames();
-		List<String> secondDeltaInvocations = secondDelta.getInvocationsQualifiedNames();
-		firstDeltaInvocations.addAll(secondDeltaInvocations);
-		return firstDeltaInvocations.stream().distinct().collect(Collectors.toList());
+		List<String> result = new ArrayList<>();
+		deltas.forEach(d -> result.addAll(d.getInvocationsQualifiedNames()));
+		return result.stream().distinct().collect(Collectors.toList());
 	}
 
 	public List<String> getDeltaFieldsAccessQualifiedNames() {
-		List<String> firstDeltaAccesses = firstDelta.getFieldAccessesQualifiedNames();
-		List<String> secondDeltaAccesses = secondDelta.getFieldAccessesQualifiedNames();
-		firstDeltaAccesses.addAll(secondDeltaAccesses);
-		return firstDeltaAccesses.stream().distinct().collect(Collectors.toList());
+		List<String> result = new ArrayList<>();
+		deltas.forEach(d -> result.addAll(d.getFieldAccessesQualifiedNames()));
+		return result.stream().distinct().collect(Collectors.toList());
 
 	}
 
 	public List<String> getUpdatedQualifiedNames() {
-		List<String> firstDeltaUpdates = firstDelta.getUpdatesQualifiedNames();
-		List<String> secondDeltaUpdates = secondDelta.getUpdatesQualifiedNames();
-		firstDeltaUpdates.addAll(secondDeltaUpdates);
-		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
+		List<String> result = new ArrayList<>();
+		deltas.forEach(d -> result.addAll(d.getUpdatesQualifiedNames()));
+		return result.stream().distinct().collect(Collectors.toList());
 	}
 	
 	public List<String> getUpdatedFieldsQualifiedNames() {
-		List<String> firstDeltaUpdates = firstDelta.getUpdatedFieldsQualifiedNames();
-		List<String> secondDeltaUpdates = secondDelta.getUpdatedFieldsQualifiedNames();
-		firstDeltaUpdates.addAll(secondDeltaUpdates);
-		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
+		List<String> result = new ArrayList<>();
+		deltas.forEach(d -> result.addAll(d.getUpdatedFieldsQualifiedNames()));
+		return result.stream().distinct().collect(Collectors.toList());
 	}
 	
 	public List<String> getUpdatedInvocationsQualifiedNames(){
-		List<String> firstDeltaUpdates = firstDelta.getUpdatedInvocationsQualifiedNames();
-		List<String> secondDeltaUpdates = secondDelta.getUpdatedInvocationsQualifiedNames();
-		firstDeltaUpdates.addAll(secondDeltaUpdates);
-		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
+		List<String> result = new ArrayList<>();
+		deltas.forEach(d -> result.addAll(d.getUpdatedInvocationsQualifiedNames()));
+		return result.stream().distinct().collect(Collectors.toList());
 	}
 
 	public List<String> getVisibilityActionsQualifiedNames() {
-		List<String> firstDeltaUpdates = firstDelta.getVisibilityActionsQualifiedNames();
-		List<String> secondDeltaUpdates = secondDelta.getVisibilityActionsQualifiedNames();
-		firstDeltaUpdates.addAll(secondDeltaUpdates);
-		return firstDeltaUpdates.stream().distinct().collect(Collectors.toList());
+		List<String> result = new ArrayList<>();
+		deltas.forEach(d -> result.addAll(d.getVisibilityActionsQualifiedNames()));
+		return result.stream().distinct().collect(Collectors.toList());
 	}
 	
 }

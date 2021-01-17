@@ -46,10 +46,14 @@ public class TestMatcherDeletes {
 		String firstVarPath = SRC_FOLDER + DEL_FIELD_METHOD_FOLDER + "Square01.java";
 		String secondVarPath = SRC_FOLDER + DEL_FIELD_METHOD_FOLDER + "Square02.java";
 		
+		String[] bases = {basePath};
+		String[] variants1 = {firstVarPath};
+		String[] variants2 = {secondVarPath};
+		
 		ConflictPattern cp = getDeletePrivateFieldAndPublicMethodPattern();
 		
 		List<List<Pair<Integer, String>>> result =
-				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
 		assertTrue(result.size() == 1, "More than one result for deleting private "
 				+ "field and public method?");
@@ -72,10 +76,14 @@ public class TestMatcherDeletes {
 		String firstVarPath = SRC_FOLDER + DEL_FIELD_CONSTR_FOLDER + "Square01.java";
 		String secondVarPath = SRC_FOLDER + DEL_FIELD_CONSTR_FOLDER + "Square02.java";
 		
+		String[] bases = {basePath};
+		String[] variants1 = {firstVarPath};
+		String[] variants2 = {secondVarPath};
+		
 		ConflictPattern cp = getDeletePrivateFieldAndPublicConstructorPattern();
 		
 		List<List<Pair<Integer, String>>> result = 
-				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
 		assertTrue(result.size() == 1, "More than one result for deleting private "
 				+ "field and constructor method?");
@@ -99,10 +107,14 @@ public class TestMatcherDeletes {
 		String firstVarPath = SRC_FOLDER + DEL_FIELD_COMPA_METHOD_FOLDER + "Square01.java";
 		String secondVarPath = SRC_FOLDER + DEL_FIELD_COMPA_METHOD_FOLDER + "Square02.java";
 		
+		String[] bases = {basePath};
+		String[] variants1 = {firstVarPath};
+		String[] variants2 = {secondVarPath};
+		
 		ConflictPattern cp = getDeleteFieldAndCompatibleMethodPattern();
 		
 		List<List<Pair<Integer, String>>> result = 
-				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
 		assertTrue(result.size() == 1, "More than one result for deleting field and compatible method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -129,10 +141,14 @@ public class TestMatcherDeletes {
 		String firstVarPath = SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + "Shape01.java";
 		String secondVarPath = SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + "Shape02.java";
 		
+		String[] bases = {basePath};
+		String[] variants1 = {firstVarPath};
+		String[] variants2 = {secondVarPath};
+		
 		ConflictPattern cp = getDeleteFieldAndMethodInvocationPattern();
 		
 		List<List<Pair<Integer, String>>> result = 
-				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
 		assertTrue(result.size() == 1, "More than one result for deleting field and method invocation?");
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -156,10 +172,14 @@ public class TestMatcherDeletes {
 		String firstVarPath = SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + "Square01.java";
 		String secondVarPath = SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + "Square02.java";
 		
+		String[] bases = {basePath};
+		String[] variants1 = {firstVarPath};
+		String[] variants2 = {secondVarPath};
+		
 		ConflictPattern cp = getDeleteFieldAccessAndMethodPattern();
 		
 		List<List<Pair<Integer, String>>> result =
-				matcher.matchingAssignments(basePath, firstVarPath, secondVarPath, cp);
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
 				
 		assertTrue(result.size() == 1, "More than one result for deleting field and compatible method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -193,8 +213,13 @@ public class TestMatcherDeletes {
 		DeltaPattern dp2 = new DeltaPattern();
 		dp1.addActionPattern(new DeleteFieldPatternAction(fieldVar, classVar, Visibility.PRIVATE));
 		dp2.addActionPattern(new DeleteMethodPatternAction(methodVar, classVar, Visibility.PUBLIC));
-
-		return new ConflictPattern(basePattern, dp1, dp2);
+		
+		ConflictPattern conflict = new ConflictPattern();
+		conflict.setBasePattern(basePattern);
+		conflict.addDeltaPattern(dp1);
+		conflict.addDeltaPattern(dp2);
+		
+		return conflict;
 	}
 	
 	private ConflictPattern getDeletePrivateFieldAndPublicConstructorPattern() {
@@ -214,7 +239,12 @@ public class TestMatcherDeletes {
 		dp1.addActionPattern(new DeleteFieldPatternAction(fieldVar, classVar, Visibility.PRIVATE));
 		dp2.addActionPattern(new DeleteConstructorPatternAction(constVar, classVar, Visibility.PUBLIC));
 
-		return new ConflictPattern(basePattern, dp1, dp2);
+		ConflictPattern conflict = new ConflictPattern();
+		conflict.setBasePattern(basePattern);
+		conflict.addDeltaPattern(dp1);
+		conflict.addDeltaPattern(dp2);
+		
+		return conflict;
 	}
 	
 	private ConflictPattern getDeleteFieldAndCompatibleMethodPattern() {
@@ -238,7 +268,12 @@ public class TestMatcherDeletes {
 		dp1.addActionPattern(new DeleteFieldPatternAction(fieldVar, classVar, null));
 		dp2.addActionPattern(new DeleteMethodPatternAction(subMethodVar, classVar, null));
 		
-		return new ConflictPattern(basePattern, dp1, dp2);
+		ConflictPattern conflict = new ConflictPattern();
+		conflict.setBasePattern(basePattern);
+		conflict.addDeltaPattern(dp1);
+		conflict.addDeltaPattern(dp2);
+		
+		return conflict;
 	}
 	
 	private ConflictPattern getDeleteFieldAndMethodInvocationPattern() {
@@ -260,7 +295,12 @@ public class TestMatcherDeletes {
 		dp1.addActionPattern(new DeleteFieldPatternAction(fieldVar, classVar, null));
 		dp2.addActionPattern(new DeleteInvocationPatternAction(methodVar, methodVar));
 		
-		return new ConflictPattern(basePattern, dp1, dp2);
+		ConflictPattern conflict = new ConflictPattern();
+		conflict.setBasePattern(basePattern);
+		conflict.addDeltaPattern(dp1);
+		conflict.addDeltaPattern(dp2);
+		
+		return conflict;
 	}
 	
 	private ConflictPattern getDeleteFieldAccessAndMethodPattern() {
@@ -286,6 +326,11 @@ public class TestMatcherDeletes {
 		dp1.addActionPattern(new DeleteFieldAccessPatternAction(fieldVar, methodVar1, null));
 		dp2.addActionPattern(new DeleteMethodPatternAction(methodVar2, classVar, null));
 		
-		return new ConflictPattern(basePattern, dp1, dp2);
+		ConflictPattern conflict = new ConflictPattern();
+		conflict.setBasePattern(basePattern);
+		conflict.addDeltaPattern(dp1);
+		conflict.addDeltaPattern(dp2);
+		
+		return conflict;
 	}
 }
