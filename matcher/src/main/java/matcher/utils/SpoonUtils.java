@@ -2,6 +2,8 @@ package matcher.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,22 +44,27 @@ public class SpoonUtils {
 	public static Launcher loadLauncher(SpoonResource resource) 
 			throws ApplicationException {
 		Launcher launcher = new Launcher();
-		loadClass(resource, launcher);
+		Set<String> loaded = new HashSet<>();
+		loadClass(resource, launcher, loaded);
 		CtClass<?> changedClass = getCtClass(resource);
-		loadClassTree(changedClass, launcher);
-		loadInvokedClasses(changedClass, launcher);
+		loadClassTree(changedClass, launcher, loaded);
+		loadInvokedClasses(changedClass, launcher, loaded);
 		return launcher;
 	}
 	
-	private static void loadClass(SpoonResource resource, Launcher launcher) 
+	private static void loadClass(SpoonResource resource, Launcher launcher, Set<String> loaded) 
 			throws ApplicationException {
-		launcher.addInputResource(resource);
+		CtType<?> changedType = getCtType(resource);
+		if(!loaded.contains(changedType.getQualifiedName())) {
+			launcher.addInputResource(resource);
+			loaded.add(changedType.getQualifiedName());
+		}
 		CtClass<?> changedClass = SpoonUtils.getCtClass(resource);
-		loadFields(changedClass, launcher);
-		loadInterfaces(changedClass, launcher);
+		loadFields(changedClass, launcher, loaded);
+		loadInterfaces(changedClass, launcher, loaded);
 	}
 	
-	private static void loadFields(CtClass<?> changedClass, Launcher launcher) 
+	private static void loadFields(CtClass<?> changedClass, Launcher launcher, Set<String> loaded) 
 			throws ApplicationException {
 		for(CtFieldReference<?> f: changedClass.getDeclaredFields()) {
 			CtTypeReference<?> fieldType = f.getDeclaration().getType();
@@ -66,25 +73,36 @@ public class SpoonUtils {
 						FileSystemHandler.getInstance()
 										 .getSrcFile(fieldType.getSimpleName() + ".java");
 				if(srcFile.isPresent()) {
-					launcher.addInputResource(srcFile.get().getAbsolutePath());
+					SpoonResource resource = getSpoonResource(srcFile.get());
+					CtType<?> type = getCtType(resource);
+					if(!loaded.contains(type.getQualifiedName())) {
+						launcher.addInputResource(resource);
+						loaded.add(type.getQualifiedName());
+					}
+
 				}
 			}
 		}
 	}
 	
-	private static void loadInterfaces(CtClass<?> changedClass, Launcher launcher) 
+	private static void loadInterfaces(CtClass<?> changedClass, Launcher launcher, Set<String> loaded) 
 			throws ApplicationException {
 		for(CtTypeReference<?> i: changedClass.getSuperInterfaces()) {
 			Optional<File> srcFile = 
 					FileSystemHandler.getInstance().getSrcFile(i.getSimpleName() + ".java");
 			if(srcFile.isPresent()) {
-				launcher.addInputResource(srcFile.get().getAbsolutePath());
+				SpoonResource resource = getSpoonResource(srcFile.get());
+				CtType<?> type = getCtType(resource);
+				if(!loaded.contains(type.getQualifiedName())) {
+					launcher.addInputResource(resource);
+					loaded.add(type.getQualifiedName());
+				}
 			}
 		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static void loadInvokedClasses(CtClass<?> changedClass, Launcher launcher) 
+	private static void loadInvokedClasses(CtClass<?> changedClass, Launcher launcher, Set<String> loaded) 
 			throws ApplicationException {
 		List<CtInvocation<?>> invocations = 
 				changedClass.getElements(new TypeFilter(CtInvocation.class));
@@ -96,13 +114,19 @@ public class SpoonUtils {
 		for(CtInvocation<?> invocation: invocations) {
 			String simpleName = invocation.getExecutable().getDeclaringType().getSimpleName();
 			Optional<File> srcFile = FileSystemHandler.getInstance().getSrcFile(simpleName + ".java");
-			if(srcFile.isPresent()) {
-				launcher.addInputResource(srcFile.get().getAbsolutePath());
+			if(srcFile.isPresent() && !loaded.contains(srcFile.get().getAbsolutePath())) {
+				SpoonResource resource = getSpoonResource(srcFile.get());
+				CtType<?> type = getCtType(resource);
+				if(!loaded.contains(type.getQualifiedName())) {
+					launcher.addInputResource(resource);
+					loaded.add(type.getQualifiedName());
+				}
+				
 			}
 		}
 	}
 
-	private static void loadClassTree(CtClass<?> changedClass, Launcher launcher) 
+	private static void loadClassTree(CtClass<?> changedClass, Launcher launcher, Set<String> loaded) 
 			throws ApplicationException {
 		CtTypeReference<?> superClass = changedClass.getSuperclass();
 		if(superClass != null) {
@@ -111,9 +135,13 @@ public class SpoonUtils {
 			if(superFile.isPresent()) {
 				File sf = superFile.get();
 				SpoonResource resource = SpoonUtils.getSpoonResource(sf);
-				CtClass<?> sc = SpoonUtils.getCtClass(resource);
-				launcher.addInputResource(sf.getAbsolutePath());
-				loadClassTree(sc, launcher);
+				CtType<?> type = getCtType(resource);
+				CtClass<?> sc = getCtClass(resource);
+				if(!loaded.contains(type.getQualifiedName())) {
+					launcher.addInputResource(resource);
+					loaded.add(type.getQualifiedName());
+				}
+				loadClassTree(sc, launcher, loaded);
 			}
 		}
 	}
