@@ -56,8 +56,11 @@ public class ClassProcessor extends AbstractProcessor<CtClass<?>>{
 	private void processInterfaces(CtClass<?> element) {
 		InterfaceProcessor interfaceProcessor = new InterfaceProcessor();
 		element.getSuperInterfaces().forEach(i -> {
-			interfaceProcessor.process((CtInterface<?>)i);
-			classInstance.addInterface(interfaceProcessor.getInterfaceInstance());
+			if(i.isInterface()) {
+				interfaceProcessor.process(i);
+				classInstance.addInterface(interfaceProcessor.getInterfaceInstance());
+			}
+			
 		});
 	}
 
