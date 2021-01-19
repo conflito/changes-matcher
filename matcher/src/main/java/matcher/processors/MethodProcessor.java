@@ -17,6 +17,7 @@ import spoon.reflect.code.CtFieldRead;
 import spoon.reflect.code.CtFieldWrite;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtMethod;
+import spoon.reflect.declaration.CtType;
 import spoon.reflect.reference.CtFieldReference;
 import spoon.reflect.visitor.filter.TypeFilter;
 
@@ -96,8 +97,11 @@ public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
 		return invocation.getExecutable().getSignature().replace(",", ", ");
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private String getInvocationClassName(CtInvocation<?> invocation) {
-		return invocation.getTarget().getType().getSimpleName();
+		CtType<?> parent = (CtType<?>)invocation.getExecutable()
+				  .getParent(new TypeFilter(CtType.class));
+		return parent.getSimpleName();
 	}
 
 	public String getFieldQualifiedName(CtFieldReference<?> field) {
