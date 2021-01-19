@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import matcher.entities.ClassInstance;
 import matcher.entities.ConstructorInstance;
 import matcher.entities.FieldInstance;
-import matcher.entities.InterfaceInstance;
 import matcher.entities.MethodInstance;
 import matcher.patterns.ConflictPattern;
 import spoon.processing.AbstractProcessor;
@@ -17,6 +16,7 @@ import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtType;
 import spoon.reflect.reference.CtFieldReference;
 import spoon.reflect.reference.CtTypeReference;
+import spoon.reflect.declaration.CtInterface;
 
 public class ClassProcessor extends AbstractProcessor<CtClass<?>>{
 
@@ -54,9 +54,10 @@ public class ClassProcessor extends AbstractProcessor<CtClass<?>>{
 	}
 
 	private void processInterfaces(CtClass<?> element) {
+		InterfaceProcessor interfaceProcessor = new InterfaceProcessor();
 		element.getSuperInterfaces().forEach(i -> {
-			String name = i.getSimpleName();
-			classInstance.addInterface(new InterfaceInstance(name));
+			interfaceProcessor.process((CtInterface<?>)i);
+			classInstance.addInterface(interfaceProcessor.getInterfaceInstance());
 		});
 	}
 
