@@ -13,6 +13,7 @@ import matcher.patterns.ConflictPattern;
 import spoon.processing.AbstractProcessor;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtConstructor;
+import spoon.reflect.declaration.CtType;
 import spoon.reflect.visitor.filter.TypeFilter;
 
 public class ConstructorProcessor extends AbstractProcessor<CtConstructor<?>>{
@@ -64,8 +65,10 @@ public class ConstructorProcessor extends AbstractProcessor<CtConstructor<?>>{
 				+*/ invocation.getExecutable().getSignature().replace(",", ", ");
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private String getInvocationClassName(CtInvocation<?> invocation) {
-		return invocation.getTarget().getType().getSimpleName();
-	}
+		CtType<?> parent = (CtType<?>)invocation.getExecutable()
+				  .getParent(new TypeFilter(CtType.class));
+		return parent.getSimpleName();	}
 
 }
