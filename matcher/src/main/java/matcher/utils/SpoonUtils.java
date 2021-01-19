@@ -69,9 +69,18 @@ public class SpoonUtils {
 		for(CtFieldReference<?> f: changedClass.getDeclaredFields()) {
 			CtTypeReference<?> fieldType = f.getDeclaration().getType();
 			if(!fieldType.isPrimitive()) {
-				Optional<File> srcFile = 
-						FileSystemHandler.getInstance()
-										 .getSrcFile(fieldType.getSimpleName() + ".java");
+				Optional<File> srcFile;
+				if(isComposedField(fieldType)) {
+					srcFile = 
+							FileSystemHandler.getInstance()
+											 .getSrcFile(fieldType.getAccessType()
+													 			  .getSimpleName() + ".java");
+				}
+				else {
+					srcFile = FileSystemHandler.getInstance()
+											   .getSrcFile(fieldType.getSimpleName() + ".java");
+				}
+				
 				if(srcFile.isPresent()) {
 					SpoonResource resource = getSpoonResource(srcFile.get());
 					CtType<?> type = getCtType(resource);
@@ -85,6 +94,14 @@ public class SpoonUtils {
 		}
 	}
 	
+	private static boolean isComposedField(CtTypeReference<?> fieldType)  {
+		try {
+			fieldType.getAccessType();
+			return true;
+		}
+		catch(Exception e) {}
+		return false;
+	}
 	private static void loadInterfaces(CtClass<?> changedClass, Launcher launcher, Set<String> loaded) 
 			throws ApplicationException {
 		for(CtTypeReference<?> i: changedClass.getSuperInterfaces()) {
@@ -112,17 +129,21 @@ public class SpoonUtils {
 						.equals(changedClass.getQualifiedName()))
 				.collect(Collectors.toList());
 		for(CtInvocation<?> invocation: invocations) {
-			String simpleName = invocation.getExecutable().getDeclaringType().getSimpleName();
-			Optional<File> srcFile = FileSystemHandler.getInstance().getSrcFile(simpleName + ".java");
-			if(srcFile.isPresent() && !loaded.contains(srcFile.get().getAbsolutePath())) {
-				SpoonResource resource = getSpoonResource(srcFile.get());
-				CtType<?> type = getCtType(resource);
-				if(!loaded.contains(type.getQualifiedName())) {
-					launcher.addInputResource(resource);
-					loaded.add(type.getQualifiedName());
+			if(invocation.getExecutable() != null 
+					&& invocation.getExecutable().getDeclaringType() != null) {
+				String simpleName = invocation.getExecutable().getDeclaringType().getSimpleName();
+				Optional<File> srcFile = FileSystemHandler.getInstance().getSrcFile(simpleName + ".java");
+				if(srcFile.isPresent() && !loaded.contains(srcFile.get().getAbsolutePath())) {
+					SpoonResource resource = getSpoonResource(srcFile.get());
+					CtType<?> type = getCtType(resource);
+					if(!loaded.contains(type.getQualifiedName())) {
+						launcher.addInputResource(resource);
+						loaded.add(type.getQualifiedName());
+					}
+					
 				}
-				
 			}
+			
 		}
 	}
 
