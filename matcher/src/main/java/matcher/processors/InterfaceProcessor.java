@@ -2,9 +2,9 @@ package matcher.processors;
 
 import matcher.entities.InterfaceInstance;
 import spoon.processing.AbstractProcessor;
-import spoon.reflect.declaration.CtInterface;
+import spoon.reflect.reference.CtTypeReference;
 
-public class InterfaceProcessor extends AbstractProcessor<CtInterface<?>>{
+public class InterfaceProcessor extends AbstractProcessor<CtTypeReference<?>>{
 
 	private InterfaceInstance interfaceInstance;
 	
@@ -13,7 +13,7 @@ public class InterfaceProcessor extends AbstractProcessor<CtInterface<?>>{
 	}
 
 	@Override
-	public void process(CtInterface<?> element) {
+	public void process(CtTypeReference<?> element) {
 		interfaceInstance = new InterfaceInstance(element.getSimpleName());
 	}
 
