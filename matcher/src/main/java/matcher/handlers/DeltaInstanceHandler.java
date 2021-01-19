@@ -113,7 +113,8 @@ public class DeltaInstanceHandler {
 		CtType<?> baseType = SpoonUtils.getCtType(baseResource);
 		CtType<?> changedType = SpoonUtils.getCtType(varResource);
 		
-		if(baseType.isClass() && changedType.isClass()) {
+		if(baseType != null && baseType.isClass() 
+				&& changedType != null &&changedType.isClass()) {
 			baseLauncher = SpoonUtils.loadLauncher(baseResource);
 			varLauncher = SpoonUtils.loadLauncher(varResource);
 			return diff(SpoonUtils.getFullChangedCtType(baseLauncher, baseType.getQualifiedName())
