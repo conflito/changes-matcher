@@ -16,7 +16,6 @@ import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtType;
 import spoon.reflect.reference.CtFieldReference;
 import spoon.reflect.reference.CtTypeReference;
-import spoon.reflect.declaration.CtInterface;
 
 public class ClassProcessor extends AbstractProcessor<CtClass<?>>{
 
