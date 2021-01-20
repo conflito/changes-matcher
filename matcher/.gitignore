@@ -3,4 +3,4 @@
 /.project
 /.classpath
 /src/test/java/test/matcher/TestRealInstances.java
-src/test/resources/ConfigFilesForRealMergeScenarios/
+/src/test/resources/ConfigFilesForRealMergeScenarios/
