@@ -102,8 +102,8 @@ public class SpoonUtils {
 		catch(Exception e) {}
 		return false;
 	}
-	private static void loadInterfaces(CtClass<?> changedClass, Launcher launcher, Set<String> loaded) 
-			throws ApplicationException {
+	private static void loadInterfaces(CtClass<?> changedClass, Launcher launcher, 
+			Set<String> loaded) throws ApplicationException {
 		for(CtTypeReference<?> i: changedClass.getSuperInterfaces()) {
 			Optional<File> srcFile = 
 					FileSystemHandler.getInstance().getSrcFile(i.getSimpleName() + ".java");
@@ -119,15 +119,11 @@ public class SpoonUtils {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static void loadInvokedClasses(CtClass<?> changedClass, Launcher launcher, Set<String> loaded) 
-			throws ApplicationException {
+	private static void loadInvokedClasses(CtClass<?> changedClass, Launcher launcher, 
+			Set<String> loaded) throws ApplicationException {
 		List<CtInvocation<?>> invocations = 
 				changedClass.getElements(new TypeFilter(CtInvocation.class));
-		invocations = invocations.stream()
-				.filter(i -> !i.toString().equals("super()") &&
-						!getInvocationClassQualifiedName(i)
-						.equals(changedClass.getQualifiedName()))
-				.collect(Collectors.toList());
+		invocations = filterInvocations(changedClass.getQualifiedName(), invocations);
 		for(CtInvocation<?> invocation: invocations) {
 			if(invocation.getExecutable() != null 
 					&& invocation.getExecutable().getDeclaringType() != null) {
@@ -146,9 +142,17 @@ public class SpoonUtils {
 			
 		}
 	}
+	
+	private static List<CtInvocation<?>> filterInvocations(String classQualifiedName, 
+				List<CtInvocation<?>> invocations){
+		return invocations.stream()
+						  .filter(i -> !i.toString().equals("super()") &&
+								  !getInvocationClassQualifiedName(i).equals(classQualifiedName))
+						  .collect(Collectors.toList());
+	}
 
-	private static void loadClassTree(CtClass<?> changedClass, Launcher launcher, Set<String> loaded) 
-			throws ApplicationException {
+	private static void loadClassTree(CtClass<?> changedClass, Launcher launcher, 
+			Set<String> loaded) throws ApplicationException {
 		CtTypeReference<?> superClass = changedClass.getSuperclass();
 		if(superClass != null) {
 			Optional<File> superFile = 
