@@ -21,6 +21,7 @@ public class UpdateFieldTypeAction extends UpdateAction {
 		return newType.toString();
 	}
 	
+	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder("update field ");
 		result.append(getEntityQualifiedName() + " type from ");

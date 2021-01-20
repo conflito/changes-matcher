@@ -7,6 +7,10 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public class MapUtilities {
+	
+	private MapUtilities() {
+		
+	}
 
 	public static void mergeMaps(Map<Integer, List<String>> first, 
 			Map<Integer, List<String>> second) {

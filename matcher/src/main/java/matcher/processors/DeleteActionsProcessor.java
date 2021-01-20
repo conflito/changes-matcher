@@ -92,8 +92,8 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	public <T> void visitCtFieldRead(CtFieldRead<T> fieldRead) {
 		if(getConflictPattern().hasDeleteFieldAccessActions()) {
 			String fieldQualifiedName = fieldRead.getVariable().getSimpleName();
-					//getMethodProcessor().getFieldQualifiedName(fieldRead.getVariable());
-			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.READ);
+			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName
+					, FieldAccessType.READ);
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(fieldRead);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
@@ -108,8 +108,8 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	public <T> void visitCtFieldWrite(CtFieldWrite<T> fieldWrite) {
 		if(getConflictPattern().hasDeleteFieldAccessActions()) {
 			String fieldQualifiedName = fieldWrite.getVariable().getSimpleName();
-					//getMethodProcessor().getFieldQualifiedName(fieldWrite.getVariable());
-			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, FieldAccessType.WRITE);
+			FieldAccessInstance fai = new FieldAccessInstance(fieldQualifiedName, 
+					FieldAccessType.WRITE);
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(fieldWrite);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();

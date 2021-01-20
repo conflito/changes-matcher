@@ -1,6 +1,7 @@
 package matcher;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import matcher.entities.ChangeInstance;
@@ -32,9 +33,9 @@ public class Matcher {
 			String[] variants1, String[] variants2, ConflictPattern cp)
 			throws ApplicationException{
 		if(bases == null || variants1 == null || variants2 == null)
-			return null;
+			return new ArrayList<>();
 		if(!sameLenght(bases, variants1, variants2))
-			return null;
+			return new ArrayList<>();
 		File[] basesFile = new File[bases.length];
 		File[] variants1File = new File[variants1.length];
 		File[] variants2File = new File[variants2.length];

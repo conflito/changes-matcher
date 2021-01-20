@@ -231,6 +231,10 @@ public class ClassInstance implements Insertable, Holder{
 	public boolean equals(Object o) {
 		return (this == o) || (o instanceof ClassInstance && equalsClassInstance((ClassInstance)o));
 	}
+	
+	public int hashCode() {
+		return getQualifiedName().hashCode();
+	}
 
 	private boolean equalsClassInstance(ClassInstance o) {
 		return getQualifiedName().equals(o.getQualifiedName());
@@ -238,9 +242,10 @@ public class ClassInstance implements Insertable, Holder{
 	
 	public String toStringDebug() {
 		StringBuilder result = new StringBuilder();
-		if(getSuperClass().isPresent()) {
-			result.append(getSuperClass().get().toStringDebug());
-			result.append(getQualifiedName() + " extends " + getSuperClass().get().getQualifiedName());
+		Optional<ClassInstance> superClassOp = getSuperClass();
+		if(superClassOp.isPresent()) {
+			result.append(superClassOp.get().toStringDebug());
+			result.append(getQualifiedName() + " extends " + superClassOp.get().getQualifiedName());
 			result.append("\n");
 		}
 		for(InterfaceInstance i: getInterfaces()) {

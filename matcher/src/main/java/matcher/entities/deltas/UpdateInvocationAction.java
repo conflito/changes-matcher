@@ -19,6 +19,7 @@ public class UpdateInvocationAction extends UpdateAction {
 		return holder.getQualifiedName();
 	}
 	
+	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder("update invocation ");
 		result.append(getEntityQualifiedName() + " in ");

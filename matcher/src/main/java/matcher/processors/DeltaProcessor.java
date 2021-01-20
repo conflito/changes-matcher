@@ -64,8 +64,7 @@ public abstract class DeltaProcessor {
 	
 	protected FieldInstance getFieldInstance(CtField<?> field) {
 		fieldProcessor.process(field);
-		FieldInstance fieldInstance = fieldProcessor.getFieldInstance();
-		return fieldInstance;
+		return fieldProcessor.getFieldInstance();
 	}
 	
 	protected ConstructorInstance getConstructorInstance(CtConstructor<?> constructor, 
@@ -78,28 +77,24 @@ public abstract class DeltaProcessor {
 	
 	protected MethodInstance getMethodInstance(CtMethod<?> method) {
 		methodProcessor.process(method);
-		MethodInstance methodInstance = methodProcessor.getMethodInstance();
-		return methodInstance;
+		return methodProcessor.getMethodInstance();
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Optional<CtConstructor<?>> getConstructorNode(CtElement node) {
-		Optional<CtConstructor<?>> result = Optional.ofNullable((CtConstructor<?>) 
-				node.getParent(new TypeFilter(CtConstructor.class)));
-		return result;
+		return Optional.ofNullable((CtConstructor<?>) 
+							node.getParent(new TypeFilter(CtConstructor.class)));
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Optional<CtMethod<?>> getMethodNode(CtElement node) {
-		Optional<CtMethod<?>> result = Optional.ofNullable((CtMethod<?>) 
-				node.getParent(new TypeFilter(CtMethod.class)));
-		return result;
+		return Optional.ofNullable((CtMethod<?>) 
+							node.getParent(new TypeFilter(CtMethod.class)));
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Optional<CtField<?>> getFieldNode(CtElement node){
-		Optional<CtField<?>> result = Optional.ofNullable((CtField<?>) 
-				node.getParent(new TypeFilter(CtField.class)));
-		return result;
+		return Optional.ofNullable((CtField<?>) 
+							node.getParent(new TypeFilter(CtField.class)));
 	}
 }

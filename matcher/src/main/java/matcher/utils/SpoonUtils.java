@@ -23,6 +23,10 @@ import spoon.reflect.visitor.filter.TypeFilter;
 
 public class SpoonUtils {
 	
+	private SpoonUtils() {
+		
+	}
+	
 	public static SpoonResource getSpoonResource(File f) throws ApplicationException {
 		SpoonResource resource;
 		try {

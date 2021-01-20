@@ -111,20 +111,4 @@ public class MatchingHandler {
 			result.add(curr);
 		}
 	}
-	
-//	private List<Pair<Integer, List<String>>> forwardCheck(List<Pair<Integer, List<String>>> values, 
-//			String value) {
-//		List<Pair<Integer, List<String>>> result = new ArrayList<>();
-//		for(Pair<Integer, List<String>> p: values) {
-//			List<String> trimmedValues = new ArrayList<>();
-//			for(String s: p.getSecond()) {
-//				if(!s.equals(value))
-//					trimmedValues.add(s);
-//			}
-//			result.add(new Pair<>(p.getFirst(), trimmedValues));
-//		}
-//		return result;
-//	}
-
-
 }

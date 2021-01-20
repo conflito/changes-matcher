@@ -110,13 +110,12 @@ public class DeltaPattern {
 	}
 	
 	public List<Integer> getFieldTypesVariableIds(){
-		List<Integer> result = actions.stream()
-									  .filter(a -> isUpdateFieldTypeAction(a))
-									  .map(a -> (UpdateFieldTypePatternAction)a)
-									  .filter(a -> a.hasNewType())
-									  .map(a -> a.getNewTypeVariableId())
-									  .collect(Collectors.toList());
-		return result;
+		return actions.stream()
+					  .filter(a -> isUpdateFieldTypeAction(a))
+					  .map(a -> (UpdateFieldTypePatternAction)a)
+					  .filter(UpdateFieldTypePatternAction::hasNewType)
+					  .map(UpdateFieldTypePatternAction::getNewTypeVariableId)
+					  .collect(Collectors.toList());
 	}
 	
 	

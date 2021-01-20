@@ -68,63 +68,63 @@ public class ConflictPattern {
 	}
 	
 	public boolean hasInsertInvocationActions() {
-		return deltaPatterns.stream().anyMatch(d -> d.hasInsertInvocationActions());
+		return deltaPatterns.stream().anyMatch(DeltaPattern::hasInsertInvocationActions);
 	}
 	
 	public boolean hasInsertMethodActions() {
-		return deltaPatterns.stream().anyMatch(d -> d.hasInsertMethodActions());
+		return deltaPatterns.stream().anyMatch(DeltaPattern::hasInsertMethodActions);
 	}
 	
 	public boolean hasInsertConstructorActions() {
-		return deltaPatterns.stream().anyMatch(d -> d.hasInsertConstructorActions());
+		return deltaPatterns.stream().anyMatch(DeltaPattern::hasInsertConstructorActions);
 	}
 	
 	public boolean hasInsertFieldActions() {
-		return deltaPatterns.stream().anyMatch(d -> d.hasInsertFieldActions());
+		return deltaPatterns.stream().anyMatch(DeltaPattern::hasInsertFieldActions);
 	}
 	
 	public boolean hasInsertFieldAccessActions() {
-		return deltaPatterns.stream().anyMatch(d -> d.hasInsertFieldAccessActions());
+		return deltaPatterns.stream().anyMatch(DeltaPattern::hasInsertFieldAccessActions);
 	}
 	
 	public boolean hasInsertClassActions() {
-		return deltaPatterns.stream().anyMatch(d -> d.hasInsertClassActions());
+		return deltaPatterns.stream().anyMatch(DeltaPattern::hasInsertClassActions);
 	}
 	
 	public boolean hasDeleteInvocationActions() {
-		return deltaPatterns.stream().anyMatch(d -> d.hasDeleteInvocationActions());
+		return deltaPatterns.stream().anyMatch(DeltaPattern::hasDeleteInvocationActions);
 	}
 	
 	public boolean hasDeleteFieldActions() {
-		return deltaPatterns.stream().anyMatch(d -> d.hasDeleteFieldActions());
+		return deltaPatterns.stream().anyMatch(DeltaPattern::hasDeleteFieldActions);
 	}
 	
 	public boolean hasDeleteMethodActions() {
-		return deltaPatterns.stream().anyMatch(d -> d.hasDeleteMethodActions());
+		return deltaPatterns.stream().anyMatch(DeltaPattern::hasDeleteMethodActions);
 	}
 	
 	public boolean hasDeleteConstructorsActions() {
-		return deltaPatterns.stream().anyMatch(d -> d.hasDeleteConstructorsActions());
+		return deltaPatterns.stream().anyMatch(DeltaPattern::hasDeleteConstructorsActions);
 	}
 	
 	public boolean hasDeleteFieldAccessActions() {
-		return deltaPatterns.stream().anyMatch(d -> d.hasDeleteFieldAccessActions());
+		return deltaPatterns.stream().anyMatch(DeltaPattern::hasDeleteFieldAccessActions);
 	}
 	
 	public boolean hasUpdateActions() {
-		return deltaPatterns.stream().anyMatch(d -> d.hasUpdateActions());
+		return deltaPatterns.stream().anyMatch(DeltaPattern::hasUpdateActions);
 	}
 	
 	public boolean hasUpdateFieldTypeActions() {
-		return deltaPatterns.stream().anyMatch(d -> d.hasUpdateFieldTypeActions());
+		return deltaPatterns.stream().anyMatch(DeltaPattern::hasUpdateFieldTypeActions);
 	}
 	
 	public boolean hasUpdateInvocationActions() {
-		return deltaPatterns.stream().anyMatch(d -> d.hasUpdateInvocationActions());
+		return deltaPatterns.stream().anyMatch(DeltaPattern::hasUpdateInvocationActions);
 	}
 	
 	public boolean hasVisibilityActions() {
-		return deltaPatterns.stream().anyMatch(d -> d.hasVisibilityActions());
+		return deltaPatterns.stream().anyMatch(DeltaPattern::hasVisibilityActions);
 	}
 	
 	public boolean matches(ChangeInstance instance) {
@@ -136,11 +136,11 @@ public class ConflictPattern {
 	
 	private boolean differentVariableMatch() {
 		return differentVariables.stream().allMatch(p ->
-				p.getFirst().getValue() != p.getSecond().getValue());
+				!p.getFirst().getValue().equals(p.getSecond().getValue()));
 	}
 
 	private boolean deltasFilled() {
-		return deltaPatterns.stream().allMatch(d -> d.filled());
+		return deltaPatterns.stream().allMatch(DeltaPattern::filled);
 	}
 
 	private boolean deltasMatch(ChangeInstance instance) {
@@ -253,13 +253,13 @@ public class ConflictPattern {
 
 	public List<Integer> getDeltaFieldAccessVariableIds() {
 		List<Integer> result = new ArrayList<>();
-		deltaPatterns.forEach(d -> d.getFieldAccessesVariableIds());
+		deltaPatterns.forEach(d -> result.addAll(d.getFieldAccessesVariableIds()));
 		return result.stream().distinct().collect(Collectors.toList());
 	}
 
 	public List<Integer> getUpdatedVariableIds() {
 		List<Integer> result = new ArrayList<>();
-		deltaPatterns.forEach(d -> d.getUpdatesVariableIds());
+		deltaPatterns.forEach(d -> result.addAll(d.getUpdatesVariableIds()));
 		return result.stream().distinct().collect(Collectors.toList());
 	}
 	

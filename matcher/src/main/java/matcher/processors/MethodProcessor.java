@@ -59,7 +59,7 @@ public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
 	private void processFieldWrites(CtMethod<?> element) {
 		List<CtFieldWrite<?>> fieldWrites = element.getElements(new TypeFilter(CtFieldWrite.class));
 		for(CtFieldWrite<?> fieldWrite: fieldWrites) {
-			String qualifiedName = fieldWrite.getVariable().getSimpleName();//getFieldQualifiedName(fieldWrite.getVariable());
+			String qualifiedName = fieldWrite.getVariable().getSimpleName();
 			FieldAccessInstance access = new FieldAccessInstance(qualifiedName, FieldAccessType.WRITE);
 			methodInstance.addFieldAccess(access);
 		}
@@ -70,7 +70,7 @@ public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
 	private void processFieldReads(CtMethod<?> element) {
 		List<CtFieldRead<?>> fieldReads = element.getElements(new TypeFilter(CtFieldRead.class));
 		for(CtFieldRead<?> fieldRead: fieldReads) {
-			String qualifiedName = fieldRead.getVariable().getSimpleName();//getFieldQualifiedName(fieldRead.getVariable());
+			String qualifiedName = fieldRead.getVariable().getSimpleName();
 			FieldAccessInstance access = new FieldAccessInstance(qualifiedName, FieldAccessType.READ);
 			methodInstance.addFieldAccess(access);
 		}

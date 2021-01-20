@@ -57,7 +57,9 @@ public class ConstructorInstance implements Insertable, Deletable, Visible, Hold
 	}
 	
 	public List<String> getInvocationsQualifiedNames() {
-		return invocations.stream().map(i -> i.getQualifiedName()).collect(Collectors.toList());
+		return invocations.stream()
+						  .map(MethodInvocationInstance::getQualifiedName)
+						  .collect(Collectors.toList());
 	}
 	
 	public String getSimpleName() {

@@ -35,7 +35,8 @@ public class DeltaInstanceHandler {
 		if(base != null) {
 			Diff diff = calculateDiff(base, variant);
 			DeltaInstance deltaInstance = new DeltaInstance();
-			processOperations(diff.getAllOperations(), deltaInstance, cp);
+			if(diff != null)
+				processOperations(diff.getAllOperations(), deltaInstance, cp);
 			return deltaInstance;
 		}
 		else {
@@ -75,38 +76,56 @@ public class DeltaInstanceHandler {
 			DeltaInstance deltaInstance, ConflictPattern cp) {
 		for(Operation<?> o: operations) {
 			if(isInsert(o)) {
-				if(isVisibilityAction(o)) {
-					processInsertVisibilityAction(o, deltaInstance, cp);
-				}
-				else {
-					processInsertAction(o, deltaInstance, cp);
-				}	
+				processInsertOperation(o, deltaInstance, cp);
 			}
 			else if(isDelete(o)) {
-				if(isVisibilityAction(o)) {
-					processDeleteVisibilityAction(o, deltaInstance, cp);
-				}
-				else {
-					processDeleteAction(o, deltaInstance, cp);
-				}
+				processDeleteOperation(o, deltaInstance, cp);
 			}
 			else if(isUpdate(o)) {
-				if(isVisibilityAction(o)) {
-					processUpdateVisibilityAction(o, deltaInstance, cp);
-				}
-				else {
-					processUpdateAction(o, deltaInstance, cp);
-				}
+				processUpdateOperation(o, deltaInstance, cp);
 			}
 			else {
-				processMoveAction(o, deltaInstance, cp);
+				processMoveOperation(o, deltaInstance, cp);
 			}
 		}
 	}
+	
+	private void processInsertOperation(Operation<?> o, DeltaInstance deltaInstance, 
+			ConflictPattern cp) {
+		if(isVisibilityAction(o)) {
+			processInsertVisibilityAction(o, deltaInstance, cp);
+		}
+		else {
+			processInsertAction(o, deltaInstance, cp);
+		}	
+	}
+	
+	private void processDeleteOperation(Operation<?> o, DeltaInstance deltaInstance, 
+			ConflictPattern cp) {
+		if(isVisibilityAction(o)) {
+			processDeleteVisibilityAction(o, deltaInstance, cp);
+		}
+		else {
+			processDeleteAction(o, deltaInstance, cp);
+		}
+	}
 
+	private void processUpdateOperation(Operation<?> o, DeltaInstance deltaInstance, 
+			ConflictPattern cp) {
+		if(isVisibilityAction(o)) {
+			processUpdateVisibilityAction(o, deltaInstance, cp);
+		}
+		else {
+			processUpdateAction(o, deltaInstance, cp);
+		}
+	}
+	
 	private Diff calculateDiff(File base, File variant) throws ApplicationException {
-		Launcher baseLauncher = null, varLauncher = null;
-		SpoonResource baseResource = null, varResource = null;
+		Launcher baseLauncher = null;
+		Launcher varLauncher = null;
+		SpoonResource baseResource = null;
+		SpoonResource varResource = null;
+		
 		baseResource = SpoonUtils.getSpoonResource(base);
 		varResource = SpoonUtils.getSpoonResource(variant);
 
@@ -133,7 +152,7 @@ public class DeltaInstanceHandler {
 		return diff;
 	}
 	
-	private void processMoveAction(Operation<?> o, DeltaInstance deltaInstance, ConflictPattern cp) {
+	private void processMoveOperation(Operation<?> o, DeltaInstance deltaInstance, ConflictPattern cp) {
 		MoveActionsProcessor processor = new MoveActionsProcessor(cp);
 		o.getSrcNode().accept(processor);
 		Optional<ActionInstance> a = processor.getResult();

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import matcher.entities.ClassInstance;
@@ -432,11 +433,11 @@ public class ClassPattern {
 	}
 	
 	private boolean interfacesFilled() {
-		return interfaces.stream().allMatch(i -> i.filled());
+		return interfaces.stream().allMatch(InterfacePattern::filled);
 	}
 
 	private boolean excludedFilled() {
-		return excludedMethods.stream().allMatch(v -> v.hasValue());
+		return excludedMethods.stream().allMatch(FreeVariable::hasValue);
 	}
 
 	private boolean compatiblesFilled() {
@@ -532,8 +533,9 @@ public class ClassPattern {
 	}
 
 	private boolean superClassMatch(ClassInstance instance) {
-		if(hasSuperClass() && instance.getSuperClass().isPresent())
-			return superClass.matches(instance.getSuperClass().get());
+		Optional<ClassInstance> superClassOp = instance.getSuperClass();
+		if(hasSuperClass() && superClassOp.isPresent())
+			return superClass.matches(superClassOp.get());
 		return true;
 	}
 
