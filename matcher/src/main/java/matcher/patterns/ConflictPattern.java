@@ -168,20 +168,6 @@ public class ConflictPattern {
 		deltaPatterns.forEach(d -> d.clean());
 	}
 	
-	public String toStringDebug() {
-		StringBuilder result = new StringBuilder();
-		result.append(basePattern.toStringDebug() + "\n----------------\n");
-		deltaPatterns.forEach(d -> result.append(d.toStringDebug() + "\n----------------\n"));
-		return result.toString();
-	}
-	
-	public String toStringFilled() {
-		StringBuilder result = new StringBuilder();
-		result.append(basePattern.toStringFilled() + "\n----------------\n");
-		deltaPatterns.forEach(d -> result.append(d.toStringFilled() + "\n----------------\n"));
-		return result.toString();
-	}
-	
 	public List<Integer> getFieldsVariableIds(){
 		return basePattern.getFieldsVariableIds();
 	}

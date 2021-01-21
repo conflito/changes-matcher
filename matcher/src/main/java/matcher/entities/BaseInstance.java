@@ -8,13 +8,19 @@ import matcher.utils.Pair;
 public class BaseInstance {
 
 	private List<ClassInstance> classInstances;
+	private List<InterfaceInstance> interfaceInstances;
 	
 	public BaseInstance() {
 		this.classInstances = new ArrayList<>();
+		this.interfaceInstances = new ArrayList<>();
 	}
 	
 	public List<ClassInstance> getClassInstances() {
 		return classInstances;
+	}
+	
+	public List<InterfaceInstance> getInterfaceInstances(){
+		return interfaceInstances;
 	}
 
 	public void addClassInstance(ClassInstance classInstance) {
@@ -22,9 +28,17 @@ public class BaseInstance {
 			classInstances.add(classInstance);
 	}
 	
+	public void addInterfaceInstance(InterfaceInstance interfaceInstace) {
+		if(!interfaceInstances.contains(interfaceInstace))
+			interfaceInstances.add(interfaceInstace);
+	}
+	
 	public void merge(BaseInstance b) {
 		for(ClassInstance c: b.classInstances) {
 			addClassInstance(c);
+		}
+		for(InterfaceInstance i: b.interfaceInstances) {
+			addInterfaceInstance(i);
 		}
 	}
 	
@@ -32,6 +46,9 @@ public class BaseInstance {
 		StringBuilder result = new StringBuilder();
 		for(ClassInstance c: classInstances) {
 			result.append(c.toStringDebug() + "\n");
+		}
+		for(InterfaceInstance i: interfaceInstances) {
+			result.append(i.toStringDebug() + "\n");
 		}
 		return result.toString();
 	}
@@ -72,6 +89,9 @@ public class BaseInstance {
 		List<String> result = new ArrayList<>();
 		for(ClassInstance ci: classInstances) {
 			result.addAll(ci.getInterfacesQualifiedNames());
+		}
+		for(InterfaceInstance i: interfaceInstances) {
+			result.add(i.getQualifiedName());
 		}
 		return result;
 	}

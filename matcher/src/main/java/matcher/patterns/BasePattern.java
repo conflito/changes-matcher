@@ -9,14 +9,20 @@ import matcher.entities.BaseInstance;
 public class BasePattern {
 
 	private List<ClassPattern> classPatterns;
+	private List<InterfacePattern> interfacePatterns;
 
 	public BasePattern() {
 		super();
 		classPatterns =  new ArrayList<>();
+		interfacePatterns = new ArrayList<>();
 	}
 	
 	public void addClassPattern(ClassPattern pattern) {
 		classPatterns.add(pattern);
+	}
+	
+	public void addInterfacePattern(InterfacePattern pattern) {
+		interfacePatterns.add(pattern);
 	}
 	
 	public boolean hasFields() {
@@ -28,7 +34,8 @@ public class BasePattern {
 	}
 	
 	public boolean hasInterfaces() {
-		return classPatterns.stream().anyMatch(ClassPattern::hasInterfaces);
+		return !interfacePatterns.isEmpty() ||
+				classPatterns.stream().anyMatch(ClassPattern::hasInterfaces);
 	}
 	
 	public boolean hasConstructors() {
@@ -71,6 +78,9 @@ public class BasePattern {
 		List<Integer> result = new ArrayList<>();
 		for(ClassPattern c: classPatterns) {
 			result.addAll(c.getInterfaceVariableIds());
+		}
+		for(InterfacePattern i: interfacePatterns) {
+			result.add(i.getVariableId());
 		}
 		return distinct(result);
 	}
@@ -125,38 +135,25 @@ public class BasePattern {
 		for(ClassPattern c: classPatterns) {
 			c.clean();
 		}
+		for(InterfacePattern i: interfacePatterns) {
+			i.clean();
+		}
 	}
 	
 	public boolean filled() {
-		return classPatterns.stream().allMatch(ClassPattern::filled);
+		return interfacePatterns.stream().allMatch(InterfacePattern::filled) &&
+					classPatterns.stream().allMatch(ClassPattern::filled);
 	}
 	
 	public boolean matches(BaseInstance instance) {
 		return filled() && 
+			   interfacePatterns.stream()
+			   				  	.allMatch(i -> i.matchesOne(instance.getInterfaceInstances())) &&
 			   classPatterns.stream().allMatch(c-> c.matchesOne(instance.getClassInstances()));
 	}
 	
 	private List<Integer> distinct(List<Integer> list){
 		return list.stream().distinct().collect(Collectors.toList());
 	}
-	
-	public String toStringDebug() {
-		StringBuilder result = new StringBuilder();
-		
-		for(ClassPattern c: classPatterns)
-			result.append(c.toStringDebug() + "\n");
-		
-		return result.toString();
-	}
-
-	public String toStringFilled() {
-		StringBuilder result = new StringBuilder();
-		
-		for(ClassPattern c: classPatterns)
-			result.append(c.toStringFilled() + "\n");
-		
-		return result.toString();
-	}
-
 
 }

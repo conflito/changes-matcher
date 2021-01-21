@@ -1,14 +1,12 @@
 package matcher.patterns;
 
-import java.util.List;
+import matcher.entities.InterfaceImplementationInstance;
 
-import matcher.entities.InterfaceInstance;
-
-public class InterfacePattern {
+public class InterfaceImplementationPattern {
 
 	private FreeVariable freeVariable;
 
-	public InterfacePattern(FreeVariable freeVariable) {
+	public InterfaceImplementationPattern(FreeVariable freeVariable) {
 		super();
 		this.freeVariable = freeVariable;
 	}
@@ -38,15 +36,11 @@ public class InterfacePattern {
 		return freeVariable.hasValue();
 	}
 	
-	public boolean matches(InterfaceInstance i) {
+	public boolean matches(InterfaceImplementationInstance i) {
 		return filled() && sameName(i);
 	}
-	
-	public boolean matchesOne(List<InterfaceInstance> instances) {
-		return instances.stream().anyMatch(i-> matches(i));
-	}
 
-	private boolean sameName(InterfaceInstance i) {
-		return i.getQualifiedName().equals(getFreeVariable().getValue());
+	private boolean sameName(InterfaceImplementationInstance i) {
+		return i.getName().equals(getFreeVariable().getValue());
 	}
 }

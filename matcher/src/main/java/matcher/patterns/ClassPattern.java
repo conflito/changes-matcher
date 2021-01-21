@@ -29,7 +29,7 @@ public class ClassPattern {
 	
 	private List<ConstructorPattern> constructors;
 	
-	private List<InterfacePattern> interfaces;
+	private List<InterfaceImplementationPattern> interfaces;
 	
 	private List<FreeVariable> excludedMethods;
 
@@ -70,7 +70,7 @@ public class ClassPattern {
 		excludedMethods.add(method);
 	}
 	
-	public void addInterface(InterfacePattern i) {
+	public void addInterface(InterfaceImplementationPattern i) {
 		interfaces.add(i);
 	}
 	
@@ -170,7 +170,7 @@ public class ClassPattern {
 	
 	public List<Integer> getInterfaceVariableIds(){
 		List<Integer> result = interfaces.stream()
-										 .map(InterfacePattern::getVariableId)
+										 .map(InterfaceImplementationPattern::getVariableId)
 										 .collect(Collectors.toList());
 		if(hasSuperClass())
 			result.addAll(superClass.getInterfaceVariableIds());
@@ -314,7 +314,7 @@ public class ClassPattern {
 	}
 	
 	private void cleanInterfaces() {
-		for(InterfacePattern i: interfaces) {
+		for(InterfaceImplementationPattern i: interfaces) {
 			i.clean();
 		}
 	}
@@ -373,7 +373,7 @@ public class ClassPattern {
 	}
 	
 	private void setVariableValueInterfaces(int id, String value) {
-		for(InterfacePattern i: interfaces) {
+		for(InterfaceImplementationPattern i: interfaces) {
 			i.setVariableValue(id, value);
 		}
 	}
@@ -433,7 +433,7 @@ public class ClassPattern {
 	}
 	
 	private boolean interfacesFilled() {
-		return interfaces.stream().allMatch(InterfacePattern::filled);
+		return interfaces.stream().allMatch(InterfaceImplementationPattern::filled);
 	}
 
 	private boolean excludedFilled() {
@@ -488,7 +488,7 @@ public class ClassPattern {
 				interfaceMatchesOne(i, instance.getInterfaces()));
 	}
 	
-	private boolean interfaceMatchesOne(InterfacePattern ip,
+	private boolean interfaceMatchesOne(InterfaceImplementationPattern ip,
 			List<InterfaceImplementationInstance> interfaceInstances) {
 		for(InterfaceImplementationInstance i: interfaceInstances) {
 			if(ip.matches(i))

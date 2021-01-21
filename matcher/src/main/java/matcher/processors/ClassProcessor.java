@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import matcher.entities.ClassInstance;
 import matcher.entities.ConstructorInstance;
 import matcher.entities.FieldInstance;
+import matcher.entities.InterfaceImplementationInstance;
 import matcher.entities.MethodInstance;
 import matcher.patterns.ConflictPattern;
 import spoon.processing.AbstractProcessor;
@@ -21,12 +22,12 @@ public class ClassProcessor extends AbstractProcessor<CtClass<?>>{
 
 	private ClassInstance classInstance;
 	private ConflictPattern conflictPattern;
-		
+
 	public ClassProcessor(ConflictPattern conflictPattern) {
 		super();
 		this.conflictPattern = conflictPattern;
 	}
-	
+
 	public ClassInstance getClassInstance() {
 		return classInstance;
 	}
@@ -49,17 +50,13 @@ public class ClassProcessor extends AbstractProcessor<CtClass<?>>{
 			if(conflictPattern.hasInterfaces())
 				processInterfaces(element);
 		}
-		
+
 	}
 
 	private void processInterfaces(CtClass<?> element) {
-		InterfaceProcessor interfaceProcessor = new InterfaceProcessor();
 		element.getSuperInterfaces().forEach(i -> {
-			if(i.isInterface()) {
-				interfaceProcessor.process(i);
-				classInstance.addInterface(interfaceProcessor.getInterfaceInstance());
-			}
-			
+			classInstance.addInterface(new InterfaceImplementationInstance(i.getQualifiedName()));
+
 		});
 	}
 
@@ -93,7 +90,7 @@ public class ClassProcessor extends AbstractProcessor<CtClass<?>>{
 			FieldInstance field = fieldProcessor.getFieldInstance();
 			classInstance.addField(field);
 		}
-		
+
 	}
 
 	private List<MethodInstance> processMethods(CtClass<?> element) {
