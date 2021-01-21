@@ -14,6 +14,7 @@ import matcher.patterns.ConstructorPattern;
 import matcher.patterns.FieldAccessPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
+import matcher.patterns.InterfaceImplementationPattern;
 import matcher.patterns.InterfacePattern;
 import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
@@ -363,7 +364,7 @@ public class TestMatcherSemanticConflicts {
 				"Other method updated is not m1()?");
 	}
 
-	//	@Test
+//	@Test
 	public void changeMethod2Test() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ CHANGE_METHOD2_FOLDER + CONFIG_FILE_NAME);
@@ -418,7 +419,7 @@ public class TestMatcherSemanticConflicts {
 				"Method inserted with invocation is not k()?");
 	}
 
-	@Test
+//	@Test
 	public void dependencyBased2Test() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEPENDENCY_BASED2_FOLDER + CONFIG_FILE_NAME);
@@ -637,10 +638,9 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-
 		assertTrue(result.size() == 1, "More than one result for unexpected overriding 1?");
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
+		assertTrue(assignments.size() == 6, "Not 6 assignments with only 5 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("A"), "Class is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
@@ -655,6 +655,9 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(4).getFirst() == 4 && 
 				assignments.get(4).getSecond().equals("equals(java.lang.Object)"), 
 				"Method overriden is not equals(java.lang.Object)");
+		assertTrue(assignments.get(5).getFirst() == 5 && 
+				assignments.get(5).getSecond().equals("B"), 
+				"Interface is not B?");
 	}
 
 	@Test
@@ -675,10 +678,9 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-
 		assertTrue(result.size() == 1, "More than one result for unexpected overriding 2?");
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 6, "Not 6 assignments with only 6 variables?");
+		assertTrue(assignments.size() == 7, "Not 7 assignments with only 7 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("A"), "Class is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
@@ -696,6 +698,9 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(5).getFirst() == 5 && 
 				assignments.get(5).getSecond().equals("n()"), 
 				"Method that invokes overriden method is not n()");
+		assertTrue(assignments.get(6).getFirst() == 6 && 
+				assignments.get(6).getSecond().equals("B"), 
+				"Interface is not B?");
 	}
 
 	private ConflictPattern getOverloadByAdditionPattern() {
@@ -965,6 +970,7 @@ public class TestMatcherSemanticConflicts {
 		FreeVariable fieldVar = new FreeVariable(8);
 
 		BasePattern basePattern = new BasePattern();
+		
 		ClassPattern classAPattern = new ClassPattern(classVar);
 		FieldPattern fieldPattern = new FieldPattern(fieldVar, null);
 		fieldPattern.setType(b1ClassVar);
@@ -978,9 +984,11 @@ public class TestMatcherSemanticConflicts {
 		classAPattern.addMethodPattern(methodM1Pattern);
 		classAPattern.addMethodPattern(methodM2Pattern);
 
+		InterfacePattern interfacePattern = new InterfacePattern(iVar);
+		
 		ClassPattern classB1Pattern = new ClassPattern(b1ClassVar);
 		//		ClassPattern classB2Pattern = new ClassPattern(b2ClassVar);
-		InterfacePattern iPattern = new InterfacePattern(iVar);
+		InterfaceImplementationPattern iPattern = new InterfaceImplementationPattern(iVar);
 		classB1Pattern.addInterface(iPattern);
 		//		classB2Pattern.addInterface(iPattern);
 		MethodPattern methodHashPattern = new MethodPattern(methodHashVar, null);
@@ -989,6 +997,7 @@ public class TestMatcherSemanticConflicts {
 
 		basePattern.addClassPattern(classAPattern);
 		basePattern.addClassPattern(classB1Pattern);
+		basePattern.addInterfacePattern(interfacePattern);
 		//		basePattern.addClassPattern(classB2Pattern);
 
 		DeltaPattern dp1 = new DeltaPattern();
@@ -1000,7 +1009,6 @@ public class TestMatcherSemanticConflicts {
 		conflict.setBasePattern(basePattern);
 		conflict.addDeltaPattern(dp1);
 		conflict.addDeltaPattern(dp2);
-
 		return conflict;
 	}
 
@@ -1132,13 +1140,20 @@ public class TestMatcherSemanticConflicts {
 		FreeVariable fieldVar1 = new FreeVariable(2);
 		FreeVariable insertedMethodVar = new FreeVariable(3);
 		FreeVariable overideMethodVar = new FreeVariable(4);
+		FreeVariable iVar = new FreeVariable(5);
 
 		BasePattern basePattern = new BasePattern();
+		InterfacePattern iPattern = new InterfacePattern(iVar);
 		ClassPattern classPattern1 = new ClassPattern(classVar1);
 		ClassPattern classPattern2 = new ClassPattern(classVar2);
 		FieldPattern fieldPattern = new FieldPattern(fieldVar1, null);
+		fieldPattern.setType(iVar);
 		classPattern1.addFieldPattern(fieldPattern);
+		
+		classPattern2.addInterface(new InterfaceImplementationPattern(iVar));
 		classPattern2.addExcludedMethod(overideMethodVar);
+		
+		basePattern.addInterfacePattern(iPattern);
 		basePattern.addClassPattern(classPattern1);
 		basePattern.addClassPattern(classPattern2);
 
@@ -1165,17 +1180,23 @@ public class TestMatcherSemanticConflicts {
 		FreeVariable fieldVar1 = new FreeVariable(3);
 		FreeVariable methodVar1 = new FreeVariable(4);
 		FreeVariable insertedMethod = new FreeVariable(5);
+		FreeVariable iVar = new FreeVariable(6);
 
 		BasePattern basePattern = new BasePattern();
+		InterfacePattern iPattern = new InterfacePattern(iVar);
 		ClassPattern classPattern1 = new ClassPattern(classVar1);
 		ClassPattern classPattern2 = new ClassPattern(classVar2);
 		ClassPattern classPattern3 = new ClassPattern(classVar3);
 		MethodPattern methodPattern = new MethodPattern(methodVar1, null);
 		FieldPattern fieldPattern = new FieldPattern(fieldVar1, null);
+		fieldPattern.setType(iVar);
 		classPattern1.addFieldPattern(fieldPattern);
+		classPattern2.addInterface(new InterfaceImplementationPattern(iVar));
 		classPattern2.addMethodPattern(methodPattern);
 		classPattern3.addExcludedMethod(methodVar1);
 		classPattern3.setSuperClass(classPattern2);
+		
+		basePattern.addInterfacePattern(iPattern);
 		basePattern.addClassPattern(classPattern1);
 		basePattern.addClassPattern(classPattern3);
 
