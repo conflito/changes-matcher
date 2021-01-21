@@ -50,8 +50,10 @@ public class SpoonUtils {
 		Launcher launcher = new Launcher();
 		Set<String> loaded = new HashSet<>();
 		loadClass(resource, launcher, loaded);
-		CtClass<?> changedClass = getCtClass(resource);
-		loadInvokedClasses(changedClass, launcher, loaded);
+		if(getCtType(resource).isClass()) {
+			CtClass<?> changedClass = getCtClass(resource);
+			loadInvokedClasses(changedClass, launcher, loaded);
+		}
 		return launcher;
 	}
 	
