@@ -51,7 +51,6 @@ public class SpoonUtils {
 		Set<String> loaded = new HashSet<>();
 		loadClass(resource, launcher, loaded);
 		CtClass<?> changedClass = getCtClass(resource);
-		loadClassTree(changedClass, launcher, loaded);
 		loadInvokedClasses(changedClass, launcher, loaded);
 		return launcher;
 	}
@@ -63,9 +62,12 @@ public class SpoonUtils {
 			launcher.addInputResource(resource);
 			loaded.add(changedType.getQualifiedName());
 		}
-		CtClass<?> changedClass = SpoonUtils.getCtClass(resource);
-		loadFields(changedClass, launcher, loaded);
-		loadInterfaces(changedClass, launcher, loaded);
+		if(changedType.isClass()) {
+			CtClass<?> changedClass = SpoonUtils.getCtClass(resource);
+			loadFields(changedClass, launcher, loaded);
+			loadInterfaces(changedClass, launcher, loaded);
+			loadClassTree(changedClass, launcher, loaded);
+		}
 	}
 	
 	private static void loadFields(CtClass<?> changedClass, Launcher launcher, Set<String> loaded) 
@@ -87,12 +89,7 @@ public class SpoonUtils {
 				
 				if(srcFile.isPresent()) {
 					SpoonResource resource = getSpoonResource(srcFile.get());
-					CtType<?> type = getCtType(resource);
-					if(!loaded.contains(type.getQualifiedName())) {
-						launcher.addInputResource(resource);
-						loaded.add(type.getQualifiedName());
-					}
-
+					loadClass(resource, launcher, loaded);
 				}
 			}
 		}
@@ -135,12 +132,7 @@ public class SpoonUtils {
 				Optional<File> srcFile = FileSystemHandler.getInstance().getSrcFile(simpleName + ".java");
 				if(srcFile.isPresent()) {
 					SpoonResource resource = getSpoonResource(srcFile.get());
-					CtType<?> type = getCtType(resource);
-					if(!loaded.contains(type.getQualifiedName())) {
-						launcher.addInputResource(resource);
-						loaded.add(type.getQualifiedName());
-					}
-					
+					loadClass(resource, launcher, loaded);
 				}
 			}
 			
@@ -164,13 +156,7 @@ public class SpoonUtils {
 			if(superFile.isPresent()) {
 				File sf = superFile.get();
 				SpoonResource resource = SpoonUtils.getSpoonResource(sf);
-				CtType<?> type = getCtType(resource);
-				CtClass<?> sc = getCtClass(resource);
-				if(!loaded.contains(type.getQualifiedName())) {
-					launcher.addInputResource(resource);
-					loaded.add(type.getQualifiedName());
-				}
-				loadClassTree(sc, launcher, loaded);
+				loadClass(resource, launcher, loaded);
 			}
 		}
 	}
