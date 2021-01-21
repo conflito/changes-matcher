@@ -129,6 +129,9 @@ public class BasePattern {
 		for(ClassPattern c: classPatterns) {
 			c.setVariableValue(id, value);
 		}
+		for(InterfacePattern i: interfacePatterns) {
+			i.setVariableValue(id, value);
+		}
 	}
 	
 	public void clean() {
