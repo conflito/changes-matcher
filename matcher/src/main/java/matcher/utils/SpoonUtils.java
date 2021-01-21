@@ -133,7 +133,7 @@ public class SpoonUtils {
 					&& invocation.getExecutable().getDeclaringType() != null) {
 				String simpleName = invocation.getExecutable().getDeclaringType().getSimpleName();
 				Optional<File> srcFile = FileSystemHandler.getInstance().getSrcFile(simpleName + ".java");
-				if(srcFile.isPresent() && !loaded.contains(srcFile.get().getAbsolutePath())) {
+				if(srcFile.isPresent()) {
 					SpoonResource resource = getSpoonResource(srcFile.get());
 					CtType<?> type = getCtType(resource);
 					if(!loaded.contains(type.getQualifiedName())) {
