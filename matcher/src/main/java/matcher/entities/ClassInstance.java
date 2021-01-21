@@ -26,7 +26,7 @@ public class ClassInstance implements Insertable, Holder{
 	
 	private ClassInstance superClass;
 	
-	private List<InterfaceInstance> interfaces;
+	private List<InterfaceImplementationInstance> interfaces;
 	
 	private Map<MethodInstance, List<MethodInstance>> compatibleMethods;
 
@@ -78,7 +78,7 @@ public class ClassInstance implements Insertable, Holder{
 		return constructors;
 	}
 
-	public List<InterfaceInstance> getInterfaces() {
+	public List<InterfaceImplementationInstance> getInterfaces() {
 		return interfaces;
 	}
 
@@ -109,7 +109,7 @@ public class ClassInstance implements Insertable, Holder{
 		this.methods.add(method);
 	}
 	
-	public void addInterface(InterfaceInstance i) {
+	public void addInterface(InterfaceImplementationInstance i) {
 		this.interfaces.add(i);
 	}
 	
@@ -160,7 +160,7 @@ public class ClassInstance implements Insertable, Holder{
 	
 	public List<String> getInterfacesQualifiedNames(){
 		List<String> result = new ArrayList<>();
-		for(InterfaceInstance i: interfaces) {
+		for(InterfaceImplementationInstance i: interfaces) {
 			result.add(i.getName());
 		}
 		if(superClass != null) {
@@ -248,7 +248,7 @@ public class ClassInstance implements Insertable, Holder{
 			result.append(getQualifiedName() + " extends " + superClassOp.get().getQualifiedName());
 			result.append("\n");
 		}
-		for(InterfaceInstance i: getInterfaces()) {
+		for(InterfaceImplementationInstance i: getInterfaces()) {
 			result.append(getQualifiedName() + " implements " + i.getName());
 			result.append("\n");
 		}

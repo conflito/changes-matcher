@@ -1,6 +1,6 @@
 package matcher.patterns;
 
-import matcher.entities.InterfaceInstance;
+import matcher.entities.InterfaceImplementationInstance;
 
 public class InterfacePattern {
 
@@ -36,11 +36,11 @@ public class InterfacePattern {
 		return freeVariable.hasValue();
 	}
 	
-	public boolean matches(InterfaceInstance i) {
+	public boolean matches(InterfaceImplementationInstance i) {
 		return filled() && sameName(i);
 	}
 
-	private boolean sameName(InterfaceInstance i) {
+	private boolean sameName(InterfaceImplementationInstance i) {
 		return i.getName().equals(getFreeVariable().getValue());
 	}
 }

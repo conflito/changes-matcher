@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import matcher.entities.ClassInstance;
 import matcher.entities.ConstructorInstance;
 import matcher.entities.FieldInstance;
-import matcher.entities.InterfaceInstance;
+import matcher.entities.InterfaceImplementationInstance;
 import matcher.entities.MethodInstance;
 import matcher.utils.Pair;
 
@@ -489,8 +489,8 @@ public class ClassPattern {
 	}
 	
 	private boolean interfaceMatchesOne(InterfacePattern ip,
-			List<InterfaceInstance> interfaceInstances) {
-		for(InterfaceInstance i: interfaceInstances) {
+			List<InterfaceImplementationInstance> interfaceInstances) {
+		for(InterfaceImplementationInstance i: interfaceInstances) {
 			if(ip.matches(i))
 				return true;
 		}

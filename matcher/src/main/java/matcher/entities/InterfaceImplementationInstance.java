@@ -1,10 +1,10 @@
 package matcher.entities;
 
-public class InterfaceInstance {
+public class InterfaceImplementationInstance {
 
 	private String name;
 
-	public InterfaceInstance(String name) {
+	public InterfaceImplementationInstance(String name) {
 		super();
 		this.name = name;
 	}
