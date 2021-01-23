@@ -9,7 +9,6 @@ import matcher.entities.ChangeInstance;
 import matcher.entities.deltas.DeltaInstance;
 import matcher.exceptions.ApplicationException;
 import matcher.patterns.ConflictPattern;
-import matcher.utils.SpoonHandler;
 
 public class ChangeInstanceHandler {
 

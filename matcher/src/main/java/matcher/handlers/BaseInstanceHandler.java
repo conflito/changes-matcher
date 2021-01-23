@@ -7,7 +7,6 @@ import matcher.exceptions.ApplicationException;
 import matcher.patterns.ConflictPattern;
 import matcher.processors.ClassProcessor;
 import matcher.processors.InterfaceProcessor;
-import matcher.utils.SpoonHandler;
 import spoon.Launcher;
 import spoon.compiler.SpoonResource;
 import spoon.reflect.declaration.CtClass;

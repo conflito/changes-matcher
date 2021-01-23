@@ -1,4 +1,4 @@
-package matcher.utils;
+package matcher.handlers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import gumtree.spoon.AstComparator;
 import matcher.exceptions.ApplicationException;
-import matcher.handlers.FileSystemHandler;
 import spoon.Launcher;
 import spoon.compiler.SpoonResource;
 import spoon.compiler.SpoonResourceHelper;

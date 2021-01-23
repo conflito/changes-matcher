@@ -21,7 +21,6 @@ import matcher.processors.UpdateActionsProcessor;
 import matcher.processors.VisibilityDeleteActionsProcessor;
 import matcher.processors.VisibilityInsertActionsProcessor;
 import matcher.processors.VisibilityUpdateActionsProcessor;
-import matcher.utils.SpoonHandler;
 import spoon.Launcher;
 import spoon.compiler.SpoonResource;
 import spoon.reflect.declaration.CtElement;
