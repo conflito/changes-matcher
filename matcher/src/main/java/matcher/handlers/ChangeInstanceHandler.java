@@ -9,6 +9,7 @@ import matcher.entities.ChangeInstance;
 import matcher.entities.deltas.DeltaInstance;
 import matcher.exceptions.ApplicationException;
 import matcher.patterns.ConflictPattern;
+import spoon.reflect.declaration.CtType;
 
 public class ChangeInstanceHandler {
 
@@ -19,8 +20,8 @@ public class ChangeInstanceHandler {
 	
 	public ChangeInstanceHandler(int trackLimit){
 		this.spoonHandler = new SpoonHandler(trackLimit);
-		this.bih = new BaseInstanceHandler(spoonHandler);
-		this.dih = new DeltaInstanceHandler(spoonHandler);
+		this.bih = new BaseInstanceHandler();
+		this.dih = new DeltaInstanceHandler();
 	}
 	
 	public ChangeInstance getChangeInstance(File[] bases, File[] variants1, File[] variants2, 
@@ -29,28 +30,28 @@ public class ChangeInstanceHandler {
 			return null;
 		if(!sameLenght(bases, variants1, variants2))
 			return null;
-		BaseInstance baseInstance = processBases(bases, cp);
-		List<DeltaInstance> deltas = processDeltas(bases, variants1, variants2, cp);
+		
 		ChangeInstance result = new ChangeInstance();
+		spoonHandler.loadLaunchers(bases, variants1, variants2);
+		spoonHandler.buildLaunchers();
+		BaseInstance baseInstance = processBases(cp);
+		List<DeltaInstance> deltas = processDeltas(bases, variants1, variants2, cp);
+		
 		result.setBaseInstance(baseInstance);
 		result.addDeltaInstances(deltas);
+
 		return result;
 	}
+
 	
 	private boolean sameLenght(File[] bases, File[] variants1, File[] variants2) {
 		return bases.length == variants1.length && bases.length == variants2.length;
 	}
-
-	private BaseInstance processBases(File[] bases, ConflictPattern  cp) 
-			throws ApplicationException {
+	
+	private BaseInstance processBases(ConflictPattern cp) {
 		BaseInstance result = new BaseInstance();
-		for(File f: bases) {
-			if(f != null) {
-				BaseInstance b = bih.getBaseInstance(f, cp);
-				if(b != null) {
-					result.merge(b);
-				}
-			}
+		for(CtType<?> type: spoonHandler.baseTypes()) {
+			result.merge(bih.getBaseInstance(type, cp));
 		}
 		return result;
 	}
@@ -62,14 +63,28 @@ public class ChangeInstanceHandler {
 			File base = bases[i];
 			File variant1 = variants1[i];
 			File variant2 = variants2[i];
-			DeltaInstance di;
+			
+			CtType<?> baseType = null;
+			CtType<?> var1Type = null;
+			CtType<?> var2Type = null;
+			if(base != null) {
+				CtType<?> basicType = spoonHandler.getCtType(spoonHandler.getSpoonResource(base));
+				baseType = spoonHandler.getFullChangedCtType(
+								spoonHandler.getBaseLauncher(), basicType.getQualifiedName());
+			}
 			if(variant1 != null) {
-				di = dih.getDeltaInstance(base, variant1, cp);
-				result.add(di);
+				CtType<?> basicType = spoonHandler.getCtType(
+						spoonHandler.getSpoonResource(variant1));
+				var1Type = spoonHandler.getFullChangedCtType(
+						spoonHandler.getVariantLauncher1(), basicType.getQualifiedName());
+				result.add(dih.getDeltaInstance(baseType, var1Type, cp));
 			}
 			if(variant2 != null) {
-				di = dih.getDeltaInstance(base, variant2, cp);
-				result.add(di);
+				CtType<?> basicType = spoonHandler.getCtType(
+						spoonHandler.getSpoonResource(variant2));
+				var2Type = spoonHandler.getFullChangedCtType(
+						spoonHandler.getVariantLauncher2(), basicType.getQualifiedName());
+				result.add(dih.getDeltaInstance(baseType, var2Type, cp));
 			}
 		}
 		return result;
