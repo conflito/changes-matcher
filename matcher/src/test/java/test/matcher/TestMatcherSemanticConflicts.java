@@ -364,7 +364,7 @@ public class TestMatcherSemanticConflicts {
 				"Other method updated is not m1()?");
 	}
 
-//	@Test
+	@Test
 	public void changeMethod2Test() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ CHANGE_METHOD2_FOLDER + CONFIG_FILE_NAME);
@@ -376,13 +376,42 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
 		String[] variants2 = {var2Path};
-
+		
 		ConflictPattern cp = getChangeMethod2Pattern();
+		
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		result.forEach(l -> System.out.println(l));
+		assertTrue(result.size() == 1, "More than one result for change method 2?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 9, "Not 9 assignments with only 9 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("A"), "Class is not A");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("B"), 
+				"Interface is not B?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("B1"), 
+				"Class that implements hashCode is not B1?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("B2"), 
+				"Class that does not implement hashCode is not B2?");
+		assertTrue(assignments.get(4).getFirst() == 4 && 
+				assignments.get(4).getSecond().equals("n(B)"), 
+				"Method that has its invocation updated is not n(B)?");
+		assertTrue(assignments.get(5).getFirst() == 5 && 
+				assignments.get(5).getSecond().equals("m1(B)"), 
+				"The new invocation is not of method m1(B)?");
+		assertTrue(assignments.get(6).getFirst() == 6 && 
+				assignments.get(6).getSecond().equals("m2(B)"), 
+				"The old invocation is not of method m2(B)?");
+		assertTrue(assignments.get(7).getFirst() == 7 && 
+				assignments.get(7).getSecond().equals("hashCode()"), 
+				"The method that B1 has that B2 doesn't isn't hashCode()?");
+		assertTrue(assignments.get(8).getFirst() == 8 && 
+				assignments.get(8).getSecond().equals("b"), 
+				"The updated field is not b");
 	}
 
 	@Test
@@ -987,18 +1016,18 @@ public class TestMatcherSemanticConflicts {
 		InterfacePattern interfacePattern = new InterfacePattern(iVar);
 		
 		ClassPattern classB1Pattern = new ClassPattern(b1ClassVar);
-		//		ClassPattern classB2Pattern = new ClassPattern(b2ClassVar);
+		ClassPattern classB2Pattern = new ClassPattern(b2ClassVar);
 		InterfaceImplementationPattern iPattern = new InterfaceImplementationPattern(iVar);
 		classB1Pattern.addInterface(iPattern);
-		//		classB2Pattern.addInterface(iPattern);
+		classB2Pattern.addInterface(iPattern);
 		MethodPattern methodHashPattern = new MethodPattern(methodHashVar, null);
 		classB1Pattern.addMethodPattern(methodHashPattern);
-		//		classB2Pattern.addExcludedMethod(methodHashVar);
+		classB2Pattern.addExcludedMethod(methodHashVar);
 
 		basePattern.addClassPattern(classAPattern);
 		basePattern.addClassPattern(classB1Pattern);
 		basePattern.addInterfacePattern(interfacePattern);
-		//		basePattern.addClassPattern(classB2Pattern);
+		basePattern.addClassPattern(classB2Pattern);
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
