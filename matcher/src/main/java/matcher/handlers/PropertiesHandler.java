@@ -30,7 +30,7 @@ public class PropertiesHandler {
 		}
 	}
 	
-	public String getConfigFilePath() {
+	public String getSourceDirPath() {
 		return prop.getProperty(SRC_DIR_PROPERTY_KEY);
 	}
 	
