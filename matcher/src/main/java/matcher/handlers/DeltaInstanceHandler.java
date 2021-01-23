@@ -29,6 +29,12 @@ import spoon.reflect.declaration.CtType;
 
 public class DeltaInstanceHandler {
 	
+	private SpoonUtils spoonHandler;
+	
+	public DeltaInstanceHandler(SpoonUtils spoonHandler) {
+		this.spoonHandler = spoonHandler;
+	}
+
 	public DeltaInstance getDeltaInstance(File base, File variant, ConflictPattern cp) 
 			throws ApplicationException {
 
@@ -49,12 +55,12 @@ public class DeltaInstanceHandler {
 	private void processClassInsertion(File variant, DeltaInstance deltaInstance, 
 			ConflictPattern cp) throws ApplicationException {
 		
-		SpoonResource resource = SpoonUtils.getSpoonResource(variant);
+		SpoonResource resource = spoonHandler.getSpoonResource(variant);
 
-		CtType<?> changedType = SpoonUtils.getCtType(resource);
+		CtType<?> changedType = spoonHandler.getCtType(resource);
 		if(changedType.isClass()) {
-			Launcher launcher = SpoonUtils.loadLauncher(resource);
-			CtType<?> fullType = SpoonUtils.getFullChangedCtType(launcher, 
+			Launcher launcher = spoonHandler.loadLauncher(resource);
+			CtType<?> fullType = spoonHandler.getFullChangedCtType(launcher, 
 					changedType.getQualifiedName());
 			processNewClassInsertedElements(fullType, deltaInstance, cp);
 		}
@@ -126,18 +132,18 @@ public class DeltaInstanceHandler {
 		SpoonResource baseResource = null;
 		SpoonResource varResource = null;
 		
-		baseResource = SpoonUtils.getSpoonResource(base);
-		varResource = SpoonUtils.getSpoonResource(variant);
+		baseResource = spoonHandler.getSpoonResource(base);
+		varResource = spoonHandler.getSpoonResource(variant);
 
-		CtType<?> baseType = SpoonUtils.getCtType(baseResource);
-		CtType<?> changedType = SpoonUtils.getCtType(varResource);
+		CtType<?> baseType = spoonHandler.getCtType(baseResource);
+		CtType<?> changedType = spoonHandler.getCtType(varResource);
 		
 		if(baseType != null && baseType.isClass() 
 				&& changedType != null &&changedType.isClass()) {
-			baseLauncher = SpoonUtils.loadLauncher(baseResource);
-			varLauncher = SpoonUtils.loadLauncher(varResource);
-			return diff(SpoonUtils.getFullChangedCtType(baseLauncher, baseType.getQualifiedName())
-					, SpoonUtils.getFullChangedCtType(varLauncher, changedType.getQualifiedName()));
+			baseLauncher = spoonHandler.loadLauncher(baseResource);
+			varLauncher = spoonHandler.loadLauncher(varResource);
+			return diff(spoonHandler.getFullChangedCtType(baseLauncher, baseType.getQualifiedName())
+					, spoonHandler.getFullChangedCtType(varLauncher, changedType.getQualifiedName()));
 		}
 		return null;
 	}

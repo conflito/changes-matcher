@@ -15,15 +15,21 @@ import spoon.reflect.declaration.CtType;
 
 
 public class BaseInstanceHandler {
+	
+	private SpoonUtils spoonHandler;
+	
+	public BaseInstanceHandler(SpoonUtils spoonHandler) {
+		this.spoonHandler = spoonHandler;
+	}
 
 	public BaseInstance getBaseInstance(File base, ConflictPattern cp) throws ApplicationException {
 		SpoonResource resource = null;
 		
-		resource = SpoonUtils.getSpoonResource(base);
+		resource = spoonHandler.getSpoonResource(base);
 		
-		CtType<?> changedType = SpoonUtils.getCtType(resource);
+		CtType<?> changedType = spoonHandler.getCtType(resource);
 		if(changedType.isClass()) {
-			Launcher launcher = SpoonUtils.loadLauncher(resource);
+			Launcher launcher = spoonHandler.loadLauncher(resource);
 
 			BaseInstance result = new BaseInstance();
 			for(CtType<?> t: launcher.buildModel().getAllTypes()) {
