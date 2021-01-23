@@ -1,14 +1,10 @@
 package matcher.handlers;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
+
 
 import matcher.exceptions.ApplicationException;
 
@@ -16,32 +12,10 @@ public class FileSystemHandler {
 
 	private static FileSystemHandler instance;
 	
-	private static final String PROPERTIES_PATH = "src" + File.separator +  "main" + 
-			 File.separator + "resources" + File.separator + "config.properties"; 
-	private static final String SRC_DIR_PROPERTY = "src.dir";
+	private String srcDir;
 	
-	private Properties prop;
-	
-	private FileSystemHandler() throws ApplicationException {
-		try(InputStream input = new FileInputStream(PROPERTIES_PATH)){
-			prop = new Properties();
-			prop.load(input);
-		} catch (FileNotFoundException e) {
-			throw new ApplicationException("Invalid properties file", e);
-		} catch (IOException e) {
-			throw new ApplicationException("Error reading properties file", e);
-		}
-	}
-	
-	public void setConfigPath(String path) throws ApplicationException {
-		try(InputStream input = new FileInputStream(path)){
-			prop = new Properties();
-			prop.load(input);
-		} catch (FileNotFoundException e) {
-			throw new ApplicationException("Invalid properties file", e);
-		} catch (IOException e) {
-			throw new ApplicationException("Error reading properties file", e);
-		}
+	private FileSystemHandler(String srcDir) throws ApplicationException {
+		this.srcDir = srcDir;
 	}
 	
 	public boolean fromTheSystem(String fileName) {
@@ -49,7 +23,7 @@ public class FileSystemHandler {
 	}
 	
 	public Optional<File> getSrcFile(String fileName){
-		String dirName = prop.getProperty(SRC_DIR_PROPERTY);
+		String dirName = srcDir;
 		if(dirName == null)
 			return Optional.empty();
 		File dir = new File(dirName);
@@ -73,9 +47,13 @@ public class FileSystemHandler {
 		return null;
 	}
 	
+	public static void createInstance(String path) throws ApplicationException {
+		instance = new FileSystemHandler(path);
+	}
+	
 	public static FileSystemHandler getInstance() throws ApplicationException {
 		if(instance == null)
-			instance = new FileSystemHandler();
+			throw new ApplicationException("FileSystemHandler hasn't been built yet");
 		return instance;
 	}
 }

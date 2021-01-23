@@ -9,6 +9,7 @@ import matcher.exceptions.ApplicationException;
 import matcher.handlers.ChangeInstanceHandler;
 import matcher.handlers.FileSystemHandler;
 import matcher.handlers.MatchingHandler;
+import matcher.handlers.PropertiesHandler;
 import matcher.patterns.ConflictPattern;
 import matcher.utils.Pair;
 
@@ -26,7 +27,8 @@ public class Matcher {
 	public Matcher(String configFilePath) throws ApplicationException {
 		cih = new ChangeInstanceHandler();
 		mh = new MatchingHandler();
-		FileSystemHandler.getInstance().setConfigPath(configFilePath);
+		PropertiesHandler.createInstance(configFilePath);
+		FileSystemHandler.createInstance(PropertiesHandler.getInstance().getConfigFilePath());
 	}
 	
 	public List<List<Pair<Integer, String>>> matchingAssignments(String[] bases,
