@@ -18,17 +18,12 @@ public class Matcher {
 	private ChangeInstanceHandler cih;
 	private MatchingHandler mh;
 	
-	
-	public Matcher() {
-		cih = new ChangeInstanceHandler();
-		mh = new MatchingHandler();
-	}
-	
 	public Matcher(String configFilePath) throws ApplicationException {
-		cih = new ChangeInstanceHandler();
-		mh = new MatchingHandler();
 		PropertiesHandler.createInstance(configFilePath);
 		FileSystemHandler.createInstance(PropertiesHandler.getInstance().getConfigFilePath());
+		
+		cih = new ChangeInstanceHandler(PropertiesHandler.getInstance().getTrackLimit());
+		mh = new MatchingHandler();
 	}
 	
 	public List<List<Pair<Integer, String>>> matchingAssignments(String[] bases,
