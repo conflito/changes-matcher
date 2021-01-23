@@ -12,7 +12,10 @@ public class PropertiesHandler {
 
 	private static PropertiesHandler instance;
 	
-	private final String SRC_DIR_PROPERTY_KEY = "src.dir";
+	private static final String SRC_DIR_PROPERTY_KEY = "src.dir";
+	private static final String TRACK_LIMIT_KEY = "track.limit";
+	
+	private static final int DEFAULT_TRACK_LIMIT = 5;
 	
 	private Properties prop;
 	
@@ -29,6 +32,15 @@ public class PropertiesHandler {
 	
 	public String getConfigFilePath() {
 		return prop.getProperty(SRC_DIR_PROPERTY_KEY);
+	}
+	
+	public int getTrackLimit() {
+		try {
+			return Integer.parseInt(prop.getProperty(TRACK_LIMIT_KEY));
+		}
+		catch(Exception e) {
+			return DEFAULT_TRACK_LIMIT;
+		}
 	}
 	
 	public static void createInstance(String path) throws ApplicationException {
