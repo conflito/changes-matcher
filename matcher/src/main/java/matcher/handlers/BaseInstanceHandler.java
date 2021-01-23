@@ -7,7 +7,7 @@ import matcher.exceptions.ApplicationException;
 import matcher.patterns.ConflictPattern;
 import matcher.processors.ClassProcessor;
 import matcher.processors.InterfaceProcessor;
-import matcher.utils.SpoonUtils;
+import matcher.utils.SpoonHandler;
 import spoon.Launcher;
 import spoon.compiler.SpoonResource;
 import spoon.reflect.declaration.CtClass;
@@ -16,9 +16,9 @@ import spoon.reflect.declaration.CtType;
 
 public class BaseInstanceHandler {
 	
-	private SpoonUtils spoonHandler;
+	private SpoonHandler spoonHandler;
 	
-	public BaseInstanceHandler(SpoonUtils spoonHandler) {
+	public BaseInstanceHandler(SpoonHandler spoonHandler) {
 		this.spoonHandler = spoonHandler;
 	}
 

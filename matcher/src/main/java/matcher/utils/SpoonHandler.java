@@ -21,11 +21,11 @@ import spoon.reflect.reference.CtFieldReference;
 import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.TypeFilter;
 
-public class SpoonUtils {
+public class SpoonHandler {
 		
 	private int trackLimit;
 	
-	public SpoonUtils(int trackLimit) {
+	public SpoonHandler(int trackLimit) {
 		this.trackLimit = trackLimit;
 	}
 	

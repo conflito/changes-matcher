@@ -21,7 +21,7 @@ import matcher.processors.UpdateActionsProcessor;
 import matcher.processors.VisibilityDeleteActionsProcessor;
 import matcher.processors.VisibilityInsertActionsProcessor;
 import matcher.processors.VisibilityUpdateActionsProcessor;
-import matcher.utils.SpoonUtils;
+import matcher.utils.SpoonHandler;
 import spoon.Launcher;
 import spoon.compiler.SpoonResource;
 import spoon.reflect.declaration.CtElement;
@@ -29,9 +29,9 @@ import spoon.reflect.declaration.CtType;
 
 public class DeltaInstanceHandler {
 	
-	private SpoonUtils spoonHandler;
+	private SpoonHandler spoonHandler;
 	
-	public DeltaInstanceHandler(SpoonUtils spoonHandler) {
+	public DeltaInstanceHandler(SpoonHandler spoonHandler) {
 		this.spoonHandler = spoonHandler;
 	}
 

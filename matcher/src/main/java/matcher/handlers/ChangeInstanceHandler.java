@@ -9,17 +9,17 @@ import matcher.entities.ChangeInstance;
 import matcher.entities.deltas.DeltaInstance;
 import matcher.exceptions.ApplicationException;
 import matcher.patterns.ConflictPattern;
-import matcher.utils.SpoonUtils;
+import matcher.utils.SpoonHandler;
 
 public class ChangeInstanceHandler {
 
 	private BaseInstanceHandler bih;
 	private DeltaInstanceHandler dih;
 
-	private SpoonUtils spoonHandler;
+	private SpoonHandler spoonHandler;
 	
 	public ChangeInstanceHandler(int trackLimit){
-		this.spoonHandler = new SpoonUtils(trackLimit);
+		this.spoonHandler = new SpoonHandler(trackLimit);
 		this.bih = new BaseInstanceHandler(spoonHandler);
 		this.dih = new DeltaInstanceHandler(spoonHandler);
 	}
