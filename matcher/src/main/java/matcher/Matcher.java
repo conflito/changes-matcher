@@ -20,7 +20,7 @@ public class Matcher {
 	
 	public Matcher(String configFilePath) throws ApplicationException {
 		PropertiesHandler.createInstance(configFilePath);
-		FileSystemHandler.createInstance(PropertiesHandler.getInstance().getConfigFilePath());
+		FileSystemHandler.createInstance(PropertiesHandler.getInstance().getSourceDirPath());
 		
 		cih = new ChangeInstanceHandler(PropertiesHandler.getInstance().getTrackLimit());
 		mh = new MatchingHandler();
