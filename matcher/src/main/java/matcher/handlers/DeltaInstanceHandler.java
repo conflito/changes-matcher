@@ -1,6 +1,5 @@
 package matcher.handlers;
 
-import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -21,24 +20,20 @@ import matcher.processors.UpdateActionsProcessor;
 import matcher.processors.VisibilityDeleteActionsProcessor;
 import matcher.processors.VisibilityInsertActionsProcessor;
 import matcher.processors.VisibilityUpdateActionsProcessor;
-import spoon.Launcher;
-import spoon.compiler.SpoonResource;
 import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtType;
 
 public class DeltaInstanceHandler {
 	
-	private SpoonHandler spoonHandler;
 	
-	public DeltaInstanceHandler(SpoonHandler spoonHandler) {
-		this.spoonHandler = spoonHandler;
+	public DeltaInstanceHandler() {
+		
 	}
-
-	public DeltaInstance getDeltaInstance(File base, File variant, ConflictPattern cp) 
+	
+	public DeltaInstance getDeltaInstance(CtType<?> base, CtType<?> variant, ConflictPattern cp) 
 			throws ApplicationException {
-
 		if(base != null) {
-			Diff diff = calculateDiff(base, variant);
+			Diff diff = diff(base, variant);
 			DeltaInstance deltaInstance = new DeltaInstance();
 			if(diff != null)
 				processOperations(diff.getAllOperations(), deltaInstance, cp);
@@ -51,21 +46,7 @@ public class DeltaInstanceHandler {
 		}
 	}
 	
-	private void processClassInsertion(File variant, DeltaInstance deltaInstance, 
-			ConflictPattern cp) throws ApplicationException {
-		
-		SpoonResource resource = spoonHandler.getSpoonResource(variant);
-
-		CtType<?> changedType = spoonHandler.getCtType(resource);
-		if(changedType.isClass()) {
-			Launcher launcher = spoonHandler.loadLauncher(resource);
-			CtType<?> fullType = spoonHandler.getFullChangedCtType(launcher, 
-					changedType.getQualifiedName());
-			processNewClassInsertedElements(fullType, deltaInstance, cp);
-		}
-	}
-	
-	private void processNewClassInsertedElements(CtType<?> type, DeltaInstance deltaInstance,
+	private void processClassInsertion(CtType<?> type, DeltaInstance deltaInstance,
 			ConflictPattern cp) {
 		Iterator<CtElement> iterator = type.descendantIterator();
 		while(iterator.hasNext()) {
@@ -123,28 +104,6 @@ public class DeltaInstanceHandler {
 		else {
 			processUpdateAction(o, deltaInstance, cp);
 		}
-	}
-	
-	private Diff calculateDiff(File base, File variant) throws ApplicationException {
-		Launcher baseLauncher = null;
-		Launcher varLauncher = null;
-		SpoonResource baseResource = null;
-		SpoonResource varResource = null;
-		
-		baseResource = spoonHandler.getSpoonResource(base);
-		varResource = spoonHandler.getSpoonResource(variant);
-
-		CtType<?> baseType = spoonHandler.getCtType(baseResource);
-		CtType<?> changedType = spoonHandler.getCtType(varResource);
-		
-		if(baseType != null && baseType.isClass() 
-				&& changedType != null &&changedType.isClass()) {
-			baseLauncher = spoonHandler.loadLauncher(baseResource);
-			varLauncher = spoonHandler.loadLauncher(varResource);
-			return diff(spoonHandler.getFullChangedCtType(baseLauncher, baseType.getQualifiedName())
-					, spoonHandler.getFullChangedCtType(varLauncher, changedType.getQualifiedName()));
-		}
-		return null;
 	}
 	
 	private Diff diff(CtType<?> first, CtType<?> second) throws ApplicationException {
