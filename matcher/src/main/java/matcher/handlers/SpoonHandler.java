@@ -24,10 +24,38 @@ public class SpoonHandler {
 		
 	private int trackLimit;
 	
+	private Launcher baseLauncher;
+	private Launcher variantLauncher1;
+	private Launcher variantLauncher2;
+	
+	private Set<String> baseLoaded;
+	private Set<String> variant1Loaded;
+	private Set<String> variant2Loaded;
+	
 	public SpoonHandler(int trackLimit) {
 		this.trackLimit = trackLimit;
+		
+		this.baseLauncher = new Launcher();
+		this.variantLauncher1 = new Launcher();
+		this.variantLauncher2 = new Launcher();
+		
+		this.baseLoaded = new HashSet<>();
+		this.variant1Loaded = new HashSet<>();
+		this.variant2Loaded = new HashSet<>();
 	}
 	
+	public Launcher getBaseLauncher() {
+		return baseLauncher;
+	}
+
+	public Launcher getVariantLauncher1() {
+		return variantLauncher1;
+	}
+
+	public Launcher getVariantLauncher2() {
+		return variantLauncher2;
+	}
+
 	public SpoonResource getSpoonResource(File f) throws ApplicationException {
 		SpoonResource resource;
 		try {
@@ -56,13 +84,77 @@ public class SpoonHandler {
 		return launcher;
 	}
 	
+	public void buildLaunchers() {
+		baseLauncher.buildModel();
+		variantLauncher1.buildModel();
+		variantLauncher2.buildModel();
+	}
+	
+	public Iterable<CtType<?>> baseTypes(){
+		return baseLauncher.getModel().getAllTypes();
+	}
+	
+	public void loadLaunchers(File[] bases, File[] variants1, File[] variants2) 
+					throws ApplicationException {
+		for(int i = 0; i < bases.length; i++) {
+			loadLaunchers(bases[i], variants1[i], variants2[i]);
+		}
+	}
+	
+	public void loadLaunchers(File base, File variant1, File variant2) 
+					throws ApplicationException {		
+		if(base != null) {
+			SpoonResource baseResource = getSpoonResource(base);
+			loadClass(baseResource, baseLauncher, baseLoaded, 0);
+		}
+		
+		if(base != null && variant1 != null) {
+			SpoonResource variantResource1 = getSpoonResource(variant1);
+			CtType<?> var1 = getCtType(variantResource1);
+			loadClass(variantResource1, variantLauncher1, variant1Loaded, 0);
+			loadTypesInDelta(baseLauncher, baseLoaded, variant1Loaded, var1);
+		}
+		else if(variant1 != null) {
+			SpoonResource variantResource1 = getSpoonResource(variant1);
+			loadClass(variantResource1, variantLauncher1, variant1Loaded, 0);
+		}
+		
+		if(base != null && variant2 != null) {
+			SpoonResource variantResource2 = getSpoonResource(variant2);
+			CtType<?> var2 = getCtType(variantResource2);
+			loadClass(variantResource2, variantLauncher2, variant2Loaded, 0);
+			loadTypesInDelta(baseLauncher, baseLoaded, variant2Loaded, var2);
+		}
+		else if(variant2 != null) {
+			SpoonResource variantResource2 = getSpoonResource(variant2);
+			loadClass(variantResource2, variantLauncher2, variant2Loaded, 0);
+		}
+		
+		
+	}
+	
+	private void loadTypesInDelta(Launcher baseLauncher, Set<String> baseLoaded, 
+			Set<String> variantLoaded, CtType<?> varType) throws ApplicationException {
+		for(String s: variantLoaded) {
+			if(!varType.getSimpleName().equals(s) && !baseLoaded.contains(s)) {
+				Optional<File> srcFile = FileSystemHandler.getInstance().getSrcFile(s + ".java");
+				if(srcFile.isPresent()) {
+					baseLauncher.addInputResource(getSpoonResource(srcFile.get()));
+					baseLoaded.add(varType.getSimpleName());
+				}
+					
+			}
+		}
+	}
+	
+	
 	private void loadClass(SpoonResource resource, Launcher launcher, Set<String> loaded
 			, int currentStep) throws ApplicationException {
 		if(currentStep <= trackLimit) {
 			CtType<?> changedType = getCtType(resource);
-			if(!loaded.contains(changedType.getQualifiedName())) {
+			if(!loaded.contains(changedType.getSimpleName())) {
 				launcher.addInputResource(resource);
-				loaded.add(changedType.getQualifiedName());
+				loaded.add(changedType.getSimpleName());
 			}
 			if(changedType.isClass()) {
 				CtClass<?> changedClass = getCtClass(resource);
@@ -115,9 +207,9 @@ public class SpoonHandler {
 			if(srcFile.isPresent()) {
 				SpoonResource resource = getSpoonResource(srcFile.get());
 				CtType<?> type = getCtType(resource);
-				if(!loaded.contains(type.getQualifiedName())) {
+				if(!loaded.contains(type.getSimpleName())) {
 					launcher.addInputResource(resource);
-					loaded.add(type.getQualifiedName());
+					loaded.add(type.getSimpleName());
 				}
 			}
 		}
@@ -166,7 +258,7 @@ public class SpoonHandler {
 	}
 	
 	public CtType<?> getFullChangedCtType(Launcher launcher, String changedType){
-		List<CtType<?>> l = launcher.buildModel()
+		List<CtType<?>> l = launcher.getModel()
 									.getAllTypes()
 									.stream()
 									.filter(c -> c.getQualifiedName().equals(changedType))
