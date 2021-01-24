@@ -87,6 +87,8 @@ public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
 						MethodInvocationInstance mii = 
 								new MethodInvocationInstance(getInvocationQualifiedName(invocation));
 						methodInstance.addMethodInvocation(mii);
+						methodInstance.addDirectDependencyName(getInvocationClassName(invocation)
+								+ "." + getInvocationQualifiedName(invocation));
 					}
 				} catch (ApplicationException e) {}
 			}

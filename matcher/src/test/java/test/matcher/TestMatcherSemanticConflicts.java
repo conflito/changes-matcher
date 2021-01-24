@@ -966,6 +966,7 @@ public class TestMatcherSemanticConflicts {
 		MethodPattern methodPattern2 = new MethodPattern(methodVar2, null);
 		MethodPattern methodPattern3 = new MethodPattern(methodVar3, null);
 		methodPattern1.addMethodInvocationPattern(new MethodInvocationPattern(methodVar2));
+		methodPattern1.addDependendency(methodVar2);
 		methodPattern1.addMethodInvocationPattern(new MethodInvocationPattern(methodVar3));
 		classPattern.addMethodPattern(methodPattern1);
 		classPattern.addMethodPattern(methodPattern2);

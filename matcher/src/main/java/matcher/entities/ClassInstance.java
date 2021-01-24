@@ -271,12 +271,16 @@ public class ClassInstance implements Insertable, Holder{
 				result.append(m.getQualifiedName() + " " + fai.getAccessType() + " " + fai.getQualifiedName());
 				result.append("\n");
 			}
-			for(MethodInvocationInstance mii: m.getInvocations()) {
-				result.append(m.getQualifiedName() + " invokes " + mii.getQualifiedName());
-				result.append("\n");
-			}
+//			for(MethodInvocationInstance mii: m.getInvocations()) {
+//				result.append(m.getQualifiedName() + " invokes " + mii.getQualifiedName());
+//				result.append("\n");
+//			}
 			for(MethodInstance compatible: getCompatibles(m)) {
 				result.append(m.getQualifiedName() + " compatible with " + compatible.getQualifiedName());
+				result.append("\n");
+			}
+			for(MethodInstance dependency: m.getDirectDependencies()) {
+				result.append(m.getQualifiedName() + " depends on " + dependency.getQualifiedName());
 				result.append("\n");
 			}
 		}

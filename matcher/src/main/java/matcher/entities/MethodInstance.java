@@ -1,7 +1,9 @@
 package matcher.entities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import matcher.entities.deltas.Deletable;
@@ -23,6 +25,10 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder, U
 	private List<MethodInvocationInstance> invocations;
 	
 	private List<FieldAccessInstance> fieldAccesses;
+	
+	private List<MethodInstance> directDependencies;
+	
+	private List<String> directDependenciesNames;
 
 	public MethodInstance(String name, Visibility visibility, Type returnType) {
 		super();
@@ -32,6 +38,9 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder, U
 		this.parameters = new ArrayList<>();
 		this.invocations = new ArrayList<>();
 		this.fieldAccesses = new ArrayList<>();
+		
+		this.directDependenciesNames = new ArrayList<>();
+		this.directDependencies = new ArrayList<>();
 	}
 
 	public MethodInstance(String name, Visibility visibility, Type returnType, 
@@ -43,6 +52,47 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder, U
 		this.parameters = parameters;
 		this.invocations = new ArrayList<>();
 		this.fieldAccesses = new ArrayList<>();
+		
+		this.directDependenciesNames = new ArrayList<>();
+		this.directDependencies = new ArrayList<>();
+	}
+	
+	public void addDirectDependencyName(String name) {
+		this.directDependenciesNames.add(name);
+	}
+	
+	public List<String> getDirectDependenciesNames(){
+		return directDependenciesNames;
+	}
+	
+	public List<MethodInstance> getDirectDependencies(){
+		return directDependencies;
+	}
+	
+	public void addDirectDependency(MethodInstance m) {
+		directDependencies.add(m);
+	}
+	
+	public boolean dependsOn(String methodName) {
+		return dependsOn(methodName, new HashSet<>());
+	}
+	
+	private boolean dependsOn(String methodName, Set<String> visited) {
+		if(!visited.contains(getQualifiedName())) {
+			visited.add(getQualifiedName());
+			boolean result = 
+					directDependencies.stream()
+									  .anyMatch(m -> m.getQualifiedName().equals(methodName));
+			if(!result) {
+				for(MethodInstance m: directDependencies) {
+					if(m.dependsOn(methodName, visited)) {
+						result = true;
+					}
+				}
+			}
+			return result;
+		}
+		return false;
 	}
 
 	public String getName() {
