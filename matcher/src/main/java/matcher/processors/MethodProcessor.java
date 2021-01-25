@@ -8,7 +8,6 @@ import matcher.entities.FieldAccessType;
 import matcher.entities.MethodInstance;
 import matcher.entities.Type;
 import matcher.entities.Visibility;
-import matcher.exceptions.ApplicationException;
 import matcher.handlers.FileSystemHandler;
 import matcher.patterns.ConflictPattern;
 import spoon.processing.AbstractProcessor;
@@ -79,14 +78,14 @@ public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
 		List<CtInvocation<?>> invocations = element.getElements(new TypeFilter(CtInvocation.class));
 		for(CtInvocation<?> invocation: invocations) {
 			if(!invocation.toString().equals("super()")){
-				String invocationSrcName = getInvocationClassSimpleName(invocation) + ".java";
 				try {
+					String invocationSrcName = getInvocationClassSimpleName(invocation) + ".java";
 					if(FileSystemHandler.getInstance().fromTheSystem(invocationSrcName)) {
 						methodInstance.addDirectDependencyName(
 								getInvocationClassQualifiedName(invocation)
 								+ "." + getInvocationQualifiedName(invocation));
 					}
-				} catch (ApplicationException e) {}
+				} catch (Exception e) {}
 			}
 		}
 	}

@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import matcher.entities.ConstructorInstance;
 import matcher.entities.Type;
 import matcher.entities.Visibility;
-import matcher.exceptions.ApplicationException;
 import matcher.handlers.FileSystemHandler;
 import matcher.patterns.ConflictPattern;
 import spoon.processing.AbstractProcessor;
@@ -45,14 +44,14 @@ public class ConstructorProcessor extends AbstractProcessor<CtConstructor<?>>{
 		List<CtInvocation<?>> invocations = element.getElements(new TypeFilter(CtInvocation.class));
 		for(CtInvocation<?> invocation: invocations) {
 			if(!invocation.toString().equals("super()")) {
-				String invocationClassName = getInvocationClassSimpleName(invocation) + ".java";
 				try {
+					String invocationClassName = getInvocationClassSimpleName(invocation) + ".java";
 					if(FileSystemHandler.getInstance().fromTheSystem(invocationClassName)) {
 						constructorInstance.addDirectDependencyName(
 								getInvocationClassQualifiedName(invocation)
 								+ "." + getInvocationQualifiedName(invocation));
 					}
-				} catch (ApplicationException e) {}
+				} catch (Exception e) {}
 
 			}
 		}
