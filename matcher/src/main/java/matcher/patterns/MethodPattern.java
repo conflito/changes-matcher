@@ -42,10 +42,6 @@ public class MethodPattern {
 		return !dependencies.isEmpty();
 	}
 	
-	public boolean hasDependencies() {
-		return !dependencies.isEmpty();
-	}
-	
 	public FreeVariable getFreeVariable() {
 		return freeVariable;
 	}
@@ -76,10 +72,6 @@ public class MethodPattern {
 		return freeVariable.isId(id);
 	}
 	
-	private boolean invocationsHasVariableId(int id) {
-		return dependencies.stream().anyMatch(v -> v.isId(id));
-	}
-	
 	private boolean dependenciesHasVariableId(int id) {
 		return dependencies.stream().anyMatch(d -> d.isId(id));
 	}
@@ -90,7 +82,6 @@ public class MethodPattern {
 	
 	public boolean hasVariableId(int id) {
 		return isVariableId(id) ||
-			   invocationsHasVariableId(id) ||
 			   dependenciesHasVariableId(id) ||
 			   fieldAccessesHasVariableId(id);
 	}
@@ -102,14 +93,11 @@ public class MethodPattern {
 			setVariableValueFieldAccesses(id, value);
 		else if(dependenciesHasVariableId(id))
 			setVariableValueDependencies(id, value);
-		else
-			setVariableValueInvocations(id, value);
 			
 	}
 	
 	public void clean() {
 		freeVariable.clean();
-		cleanInvocations();
 		cleanDependencies();
 		cleanFieldAccesses();
 	}
@@ -119,22 +107,11 @@ public class MethodPattern {
 			f.clean();
 		}
 	}
-
-	private void cleanInvocations() {
-		dependencies.forEach(v -> v.clean());
-	}
 	
 	private void cleanDependencies() {
 		dependencies.forEach(v -> v.clean());
 	}
 
-	private void setVariableValueInvocations(int id, String value) {
-		for(FreeVariable v: dependencies) {
-			if(v.isId(id))
-				v.setValue(value);
-		}
-	}
-	
 	private void setVariableValueDependencies(int id, String value) {
 		for(FreeVariable v: dependencies) {
 			if(v.isId(id))
@@ -167,7 +144,6 @@ public class MethodPattern {
 		return filled() &&
 			   (visibility == null || sameVisibility(instance)) &&
 			   sameName(instance) &&
-			   invocationsMatch(instance) &&
 			   dependenciesMatch(instance) &&
 			   fieldAccessesMatch(instance);
 	}
@@ -186,17 +162,9 @@ public class MethodPattern {
 		return false;
 	}
 
-	private boolean invocationsMatch(MethodInstance instance) {
+	private boolean dependenciesMatch(MethodInstance instance) {
 		return dependencies.stream()
 						   .allMatch(v -> instance.dependsOn(v.getValue()));
-	}
-	
-	private boolean dependenciesMatch(MethodInstance instance) {
-		for(FreeVariable v: dependencies) {
-			if(!instance.dependsOn(v.getValue()))
-				return false;
-		}
-		return true;
 	}
 
 	private boolean sameName(MethodInstance instance) {
