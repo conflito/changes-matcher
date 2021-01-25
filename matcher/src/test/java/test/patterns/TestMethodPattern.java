@@ -6,12 +6,10 @@ import org.junit.jupiter.api.Test;
 import matcher.entities.FieldAccessInstance;
 import matcher.entities.FieldAccessType;
 import matcher.entities.MethodInstance;
-import matcher.entities.MethodInvocationInstance;
 import matcher.entities.Type;
 import matcher.entities.Visibility;
 import matcher.patterns.FieldAccessPattern;
 import matcher.patterns.FreeVariable;
-import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
 import spoon.reflect.factory.TypeFactory;
 
@@ -68,16 +66,14 @@ public class TestMethodPattern {
 	
 	@Test
 	public void matchingMethodWithOneInvocation() {
-		MethodInvocationInstance methodInvocationInstance = new MethodInvocationInstance("m()");
 		MethodInstance instance = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		instance.addMethodInvocation(methodInvocationInstance);
+		instance.addDirectDependency(instance);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
 		FreeVariable freeVar1 = new FreeVariable(1);
 		
 		MethodPattern pattern = new MethodPattern(freeVar0, Visibility.PUBLIC);
-		MethodInvocationPattern methodInvocationPattern = new MethodInvocationPattern(freeVar1);
-		pattern.addMethodInvocationPattern(methodInvocationPattern);
+		pattern.addDependency(freeVar1);
 		
 		pattern.setVariableValue(0, instance.getQualifiedName());
 		pattern.setVariableValue(1, "m()");
@@ -129,16 +125,14 @@ public class TestMethodPattern {
 	
 	@Test
 	public void matchingMethodWithOneInvocationNotFullyFilled() {
-		MethodInvocationInstance methodInvocationInstance = new MethodInvocationInstance("m()");
 		MethodInstance instance = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		instance.addMethodInvocation(methodInvocationInstance);
+		instance.addDirectDependency(instance);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
 		FreeVariable freeVar1 = new FreeVariable(1);
 		
 		MethodPattern pattern = new MethodPattern(freeVar0, Visibility.PUBLIC);
-		MethodInvocationPattern methodInvocationPattern = new MethodInvocationPattern(freeVar1);
-		pattern.addMethodInvocationPattern(methodInvocationPattern);
+		pattern.addDependency(freeVar1);
 		
 		pattern.setVariableValue(1, "m()");
 		
@@ -169,18 +163,16 @@ public class TestMethodPattern {
 	
 	@Test
 	public void matchingMethodWithTwoInvocationPatternRequiresOne() {
-		MethodInvocationInstance methodInvocationInstance = new MethodInvocationInstance("m()");
-		MethodInvocationInstance methodInvocationInstance2 = new MethodInvocationInstance("n()");
 		MethodInstance instance = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		instance.addMethodInvocation(methodInvocationInstance);
-		instance.addMethodInvocation(methodInvocationInstance2);
+		MethodInstance instance2 = new MethodInstance("n", Visibility.PUBLIC, INT_TYPE);
+		instance.addDirectDependency(instance);
+		instance.addDirectDependency(instance2);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
 		FreeVariable freeVar1 = new FreeVariable(1);
 		
 		MethodPattern pattern = new MethodPattern(freeVar0, Visibility.PUBLIC);
-		MethodInvocationPattern methodInvocationPattern = new MethodInvocationPattern(freeVar1);
-		pattern.addMethodInvocationPattern(methodInvocationPattern);
+		pattern.addDependency(freeVar1);
 		
 		pattern.setVariableValue(0, instance.getQualifiedName());
 		pattern.setVariableValue(1, "m()");
@@ -226,16 +218,14 @@ public class TestMethodPattern {
 	
 	@Test
 	public void matchingMethodWithOneInvocationButNoMatch() {
-		MethodInvocationInstance methodInvocationInstance = new MethodInvocationInstance("m()");
 		MethodInstance instance = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		instance.addMethodInvocation(methodInvocationInstance);
+		instance.addDirectDependency(instance);
 
 		FreeVariable freeVar0 = new FreeVariable(0);
 		FreeVariable freeVar1 = new FreeVariable(1);
 		
 		MethodPattern pattern = new MethodPattern(freeVar0, Visibility.PUBLIC);
-		MethodInvocationPattern methodInvocationPattern = new MethodInvocationPattern(freeVar1);
-		pattern.addMethodInvocationPattern(methodInvocationPattern);
+		pattern.addDependency(freeVar1);
 		
 		pattern.setVariableValue(0, instance.getQualifiedName());
 		pattern.setVariableValue(1, "n()");
@@ -268,11 +258,10 @@ public class TestMethodPattern {
 	
 	@Test
 	public void matchingMethodWithInvocationAndFieldAccess() {
-		MethodInvocationInstance methodInvocationInstance = new MethodInvocationInstance("m()");
 		FieldAccessInstance fieldAccessInstance = 
 				new FieldAccessInstance("x", FieldAccessType.READ);
 		MethodInstance instance = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		instance.addMethodInvocation(methodInvocationInstance);
+		instance.addDirectDependency(instance);
 		instance.addFieldAccess(fieldAccessInstance);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
@@ -280,10 +269,9 @@ public class TestMethodPattern {
 		FreeVariable freeVar2 = new FreeVariable(2);
 		
 		MethodPattern pattern = new MethodPattern(freeVar0, Visibility.PUBLIC);
-		MethodInvocationPattern methodInvocationPattern = new MethodInvocationPattern(freeVar1);
 		FieldAccessPattern fieldAccessPattern = 
 				new FieldAccessPattern(freeVar2, null);
-		pattern.addMethodInvocationPattern(methodInvocationPattern);
+		pattern.addDependency(freeVar1);
 		pattern.addFieldAccessPattern(fieldAccessPattern);
 		
 		pattern.setVariableValue(0, instance.getQualifiedName());
@@ -297,11 +285,10 @@ public class TestMethodPattern {
 	
 	@Test
 	public void matchingMethodWithInvocationAndWrongFieldAccess() {
-		MethodInvocationInstance methodInvocationInstance = new MethodInvocationInstance("m()");
 		FieldAccessInstance fieldAccessInstance = 
 				new FieldAccessInstance("x", FieldAccessType.READ);
 		MethodInstance instance = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		instance.addMethodInvocation(methodInvocationInstance);
+		instance.addDirectDependency(instance);
 		instance.addFieldAccess(fieldAccessInstance);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
@@ -309,10 +296,9 @@ public class TestMethodPattern {
 		FreeVariable freeVar2 = new FreeVariable(2);
 		
 		MethodPattern pattern = new MethodPattern(freeVar0, Visibility.PUBLIC);
-		MethodInvocationPattern methodInvocationPattern = new MethodInvocationPattern(freeVar1);
 		FieldAccessPattern fieldAccessPattern = 
 				new FieldAccessPattern(freeVar2, null);
-		pattern.addMethodInvocationPattern(methodInvocationPattern);
+		pattern.addDependency(freeVar1);
 		pattern.addFieldAccessPattern(fieldAccessPattern);
 		
 		pattern.setVariableValue(0, instance.getQualifiedName());
@@ -326,11 +312,10 @@ public class TestMethodPattern {
 	
 	@Test
 	public void matchingMethodWithWrongInvocationAndFieldAccess() {
-		MethodInvocationInstance methodInvocationInstance = new MethodInvocationInstance("m()");
 		FieldAccessInstance fieldAccessInstance = 
 				new FieldAccessInstance("x", FieldAccessType.READ);
 		MethodInstance instance = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		instance.addMethodInvocation(methodInvocationInstance);
+		instance.addDirectDependency(instance);
 		instance.addFieldAccess(fieldAccessInstance);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
@@ -338,10 +323,9 @@ public class TestMethodPattern {
 		FreeVariable freeVar2 = new FreeVariable(2);
 		
 		MethodPattern pattern = new MethodPattern(freeVar0, Visibility.PUBLIC);
-		MethodInvocationPattern methodInvocationPattern = new MethodInvocationPattern(freeVar1);
 		FieldAccessPattern fieldAccessPattern = 
 				new FieldAccessPattern(freeVar2, null);
-		pattern.addMethodInvocationPattern(methodInvocationPattern);
+		pattern.addDependency(freeVar1);
 		pattern.addFieldAccessPattern(fieldAccessPattern);
 		
 		pattern.setVariableValue(0, instance.getQualifiedName());
@@ -354,11 +338,10 @@ public class TestMethodPattern {
 	
 	@Test
 	public void matchingMethodWithInvocationAndFieldAccessBothWrong() {
-		MethodInvocationInstance methodInvocationInstance = new MethodInvocationInstance("m()");
 		FieldAccessInstance fieldAccessInstance = 
 				new FieldAccessInstance("x", FieldAccessType.READ);
 		MethodInstance instance = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		instance.addMethodInvocation(methodInvocationInstance);
+		instance.addDirectDependency(instance);
 		instance.addFieldAccess(fieldAccessInstance);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
@@ -366,10 +349,9 @@ public class TestMethodPattern {
 		FreeVariable freeVar2 = new FreeVariable(2);
 		
 		MethodPattern pattern = new MethodPattern(freeVar0, Visibility.PUBLIC);
-		MethodInvocationPattern methodInvocationPattern = new MethodInvocationPattern(freeVar1);
 		FieldAccessPattern fieldAccessPattern = 
 				new FieldAccessPattern(freeVar2, null);
-		pattern.addMethodInvocationPattern(methodInvocationPattern);
+		pattern.addDependency(freeVar1);
 		pattern.addFieldAccessPattern(fieldAccessPattern);
 		
 		pattern.setVariableValue(0, instance.getQualifiedName());

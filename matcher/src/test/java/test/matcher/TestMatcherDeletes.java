@@ -10,7 +10,6 @@ import matcher.patterns.ConstructorPattern;
 import matcher.patterns.FieldAccessPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
-import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
 import matcher.patterns.deltas.DeleteConstructorPatternAction;
 import matcher.patterns.deltas.DeleteFieldAccessPatternAction;
@@ -157,7 +156,6 @@ public class TestMatcherDeletes {
 		
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		
 		assertTrue(result.size() == 1, "More than one result for deleting field and method invocation?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 3, "Not 3 assignments with only 3 variables?");
@@ -293,8 +291,7 @@ public class TestMatcherDeletes {
 		ClassPattern classPattern = new ClassPattern(classVar);
 		FieldPattern fieldPattern = new FieldPattern(fieldVar, null);
 		MethodPattern methodPattern = new MethodPattern(methodVar, null);
-		MethodInvocationPattern invoPattern = new MethodInvocationPattern(methodVar);
-		methodPattern.addMethodInvocationPattern(invoPattern);
+		methodPattern.addDependency(methodVar);
 		classPattern.addFieldPattern(fieldPattern);
 		classPattern.addMethodPattern(methodPattern);
 		basePattern.addClassPattern(classPattern);

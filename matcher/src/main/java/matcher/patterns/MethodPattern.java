@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import matcher.entities.FieldAccessInstance;
 import matcher.entities.MethodInstance;
-import matcher.entities.MethodInvocationInstance;
 import matcher.entities.Visibility;
 
 public class MethodPattern {
@@ -14,9 +13,7 @@ public class MethodPattern {
 	private FreeVariable freeVariable;
 	
 	private Visibility visibility;
-	
-	private List<MethodInvocationPattern> invocations;
-	
+		
 	private List<FieldAccessPattern> fieldAccesses;
 	
 	private List<FreeVariable> dependencies;
@@ -25,16 +22,11 @@ public class MethodPattern {
 		super();
 		this.freeVariable = freeVariable;
 		this.visibility = visibility;
-		invocations = new ArrayList<>();
 		fieldAccesses = new ArrayList<>();
 		dependencies = new ArrayList<>();
 	}
 	
-	public void addMethodInvocationPattern(MethodInvocationPattern pattern) {
-		invocations.add(pattern);
-	}
-	
-	public void addDependendency(FreeVariable v) {
+	public void addDependency(FreeVariable v) {
 		dependencies.add(v);
 	}
 	
@@ -47,7 +39,7 @@ public class MethodPattern {
 	}
 	
 	public boolean hasInvocations() {
-		return !invocations.isEmpty();
+		return !dependencies.isEmpty();
 	}
 	
 	public boolean hasDependencies() {
@@ -63,9 +55,9 @@ public class MethodPattern {
 	}
 	
 	public List<Integer> getInvocationsVariableIds(){
-		return invocations.stream()
-						  .map(MethodInvocationPattern::getVariableId)
-						  .collect(Collectors.toList());
+		return dependencies.stream()
+						   .map(FreeVariable::getId)
+						   .collect(Collectors.toList());
 	}
 	
 	public List<Integer> getDependenciesVariableIds(){
@@ -85,7 +77,7 @@ public class MethodPattern {
 	}
 	
 	private boolean invocationsHasVariableId(int id) {
-		return invocations.stream().anyMatch(invocation -> invocation.isVariableId(id));
+		return dependencies.stream().anyMatch(v -> v.isId(id));
 	}
 	
 	private boolean dependenciesHasVariableId(int id) {
@@ -129,9 +121,7 @@ public class MethodPattern {
 	}
 
 	private void cleanInvocations() {
-		for(MethodInvocationPattern i: invocations) {
-			i.clean();
-		}
+		dependencies.forEach(v -> v.clean());
 	}
 	
 	private void cleanDependencies() {
@@ -139,9 +129,9 @@ public class MethodPattern {
 	}
 
 	private void setVariableValueInvocations(int id, String value) {
-		for(MethodInvocationPattern pattern: invocations) {
-			if(pattern.isVariableId(id))
-				pattern.setVariableValue(value);
+		for(FreeVariable v: dependencies) {
+			if(v.isId(id))
+				v.setValue(value);
 		}
 	}
 	
@@ -161,16 +151,12 @@ public class MethodPattern {
 	}
 	
 	public boolean filled() {
-		return freeVariable.hasValue() && invocationsFilled() && dependenciesFilled() 
+		return freeVariable.hasValue() && dependenciesFilled() 
 				&& fieldAccessesFilled();
 	}
 
 	private boolean fieldAccessesFilled() {
 		return fieldAccesses.stream().allMatch(FieldAccessPattern::filled);
-	}
-
-	private boolean invocationsFilled() {
-		return invocations.stream().allMatch(MethodInvocationPattern::filled);
 	}
 	
 	private boolean dependenciesFilled() {
@@ -201,8 +187,8 @@ public class MethodPattern {
 	}
 
 	private boolean invocationsMatch(MethodInstance instance) {
-		return invocations.stream()
-				  .allMatch(i -> invocationMatchesOne(i, instance.getInvocations()));
+		return dependencies.stream()
+						   .allMatch(v -> instance.dependsOn(v.getValue()));
 	}
 	
 	private boolean dependenciesMatch(MethodInstance instance) {
@@ -211,15 +197,6 @@ public class MethodPattern {
 				return false;
 		}
 		return true;
-	}
-
-	private boolean invocationMatchesOne(MethodInvocationPattern invocation, 
-					List<MethodInvocationInstance> invocations) {
-		for(MethodInvocationInstance i: invocations) {
-			if(invocation.matches(i))
-				return true;
-		}
-		return false;
 	}
 
 	private boolean sameName(MethodInstance instance) {
@@ -236,10 +213,10 @@ public class MethodPattern {
 		result.append("#" + classVariableId + " has " + 
 					(visibility == null?"*":visibility.toString().toLowerCase()));
 		result.append(" method #" + getVariableId() + "\n");
-//		
-//		for(MethodInvocationPattern i: invocations) {
-//			result.append("#" + getVariableId() + " invokes #" + i.getVariableId() + "\n");
-//		}
+		
+		for(FreeVariable v: dependencies) {
+			result.append("#" + getVariableId() + " depends on #" + v.getId() + "\n");
+		}
 		for(FieldAccessPattern f: fieldAccesses) {
 			String access = null;
 			if(f.isAnyAccess())
@@ -258,9 +235,9 @@ public class MethodPattern {
 					(visibility == null?"*":visibility.toString().toLowerCase()));
 		result.append(" method #" + freeVariable.getValue() + "\n");
 		
-//		for(MethodInvocationPattern i: invocations) {
-//			result.append("#" + freeVariable.getValue() + " invokes #" + i.getFreeVariable().getValue() + "\n");
-//		}
+		for(FreeVariable v: dependencies) {
+			result.append("#" + freeVariable.getValue() + " depends on #" + v.getValue() + "\n");
+		}
 		for(FieldAccessPattern f: fieldAccesses) {
 			String access = null;
 			if(f.isAnyAccess())

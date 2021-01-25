@@ -49,11 +49,6 @@ public class ChangeInstanceHandler {
 	}
 	
 	private BaseInstance processBases(ConflictPattern cp) {
-//		BaseInstance result = new BaseInstance();
-//		for(CtType<?> type: spoonHandler.baseTypes()) {
-//			result.merge(bih.getBaseInstance(type, cp));
-//		}
-//		return result;
 		return bih.getBaseInstance(spoonHandler.baseTypes(), cp);
 	}
 	

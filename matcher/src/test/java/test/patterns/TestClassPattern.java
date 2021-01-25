@@ -220,23 +220,19 @@ public class TestClassPattern {
 	public void matchingClassWithMethodWithInvocationTest() {
 		ClassInstance instance = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
 		MethodInstance method = new MethodInstance("m", Visibility.PUBLIC, INT_TYPE);
-		MethodInvocationInstance invocation = new MethodInvocationInstance("m()");
-		method.addMethodInvocation(invocation);
+		method.addDirectDependency(method);
 		instance.addMethod(method);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
 		FreeVariable freeVar1 = new FreeVariable(1);
-		FreeVariable freeVar2 = new FreeVariable(2);
 		
 		ClassPattern pattern = new ClassPattern(freeVar0);
 		MethodPattern methodPattern = new MethodPattern(freeVar1, null);
-		MethodInvocationPattern invocationPattern = new MethodInvocationPattern(freeVar2);
-		methodPattern.addMethodInvocationPattern(invocationPattern);
+		methodPattern.addDependency(freeVar1);
 		pattern.addMethodPattern(methodPattern);
 		
 		pattern.setVariableValue(0, instance.getQualifiedName());
 		pattern.setVariableValue(1, method.getQualifiedName());
-		pattern.setVariableValue(2, "m()");
 		
 		assertTrue(pattern.matches(instance), "Class with method with invocation "
 				+ "doesn't match?");

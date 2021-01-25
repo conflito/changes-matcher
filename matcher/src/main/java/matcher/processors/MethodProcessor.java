@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import matcher.entities.FieldAccessInstance;
 import matcher.entities.FieldAccessType;
 import matcher.entities.MethodInstance;
-import matcher.entities.MethodInvocationInstance;
 import matcher.entities.Type;
 import matcher.entities.Visibility;
 import matcher.exceptions.ApplicationException;
@@ -17,7 +16,6 @@ import spoon.reflect.code.CtFieldRead;
 import spoon.reflect.code.CtFieldWrite;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.declaration.CtType;
 import spoon.reflect.reference.CtFieldReference;
 import spoon.reflect.visitor.filter.TypeFilter;
 
@@ -81,13 +79,11 @@ public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
 		List<CtInvocation<?>> invocations = element.getElements(new TypeFilter(CtInvocation.class));
 		for(CtInvocation<?> invocation: invocations) {
 			if(!invocation.toString().equals("super()")){
-				String invocationSrcName = getInvocationClassName(invocation) + ".java";
+				String invocationSrcName = getInvocationClassSimpleName(invocation) + ".java";
 				try {
 					if(FileSystemHandler.getInstance().fromTheSystem(invocationSrcName)) {
-						MethodInvocationInstance mii = 
-								new MethodInvocationInstance(getInvocationQualifiedName(invocation));
-						methodInstance.addMethodInvocation(mii);
-						methodInstance.addDirectDependencyName(getInvocationClassName(invocation)
+						methodInstance.addDirectDependencyName(
+								getInvocationClassQualifiedName(invocation)
 								+ "." + getInvocationQualifiedName(invocation));
 					}
 				} catch (ApplicationException e) {}
@@ -99,11 +95,12 @@ public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
 		return invocation.getExecutable().getSignature().replace(",", ", ");
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private String getInvocationClassName(CtInvocation<?> invocation) {
-		CtType<?> parent = (CtType<?>)invocation.getExecutable()
-				  .getParent(new TypeFilter(CtType.class));
-		return parent.getSimpleName();
+	private String getInvocationClassSimpleName(CtInvocation<?> invocation) {
+		return invocation.getExecutable().getDeclaringType().getSimpleName();
+	}
+	
+	private String getInvocationClassQualifiedName(CtInvocation<?> invocation) {
+		return invocation.getExecutable().getDeclaringType().getQualifiedName();
 	}
 
 	public String getFieldQualifiedName(CtFieldReference<?> field) {

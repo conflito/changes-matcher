@@ -21,9 +21,7 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder, U
 	private Type returnType;
 	
 	private List<Type> parameters;
-	
-	private List<MethodInvocationInstance> invocations;
-	
+		
 	private List<FieldAccessInstance> fieldAccesses;
 	
 	private List<MethodInstance> directDependencies;
@@ -36,7 +34,6 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder, U
 		this.visibility = visibility;
 		this.returnType = returnType;
 		this.parameters = new ArrayList<>();
-		this.invocations = new ArrayList<>();
 		this.fieldAccesses = new ArrayList<>();
 		
 		this.directDependenciesNames = new ArrayList<>();
@@ -50,7 +47,6 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder, U
 		this.visibility = visibility;
 		this.returnType = returnType;
 		this.parameters = parameters;
-		this.invocations = new ArrayList<>();
 		this.fieldAccesses = new ArrayList<>();
 		
 		this.directDependenciesNames = new ArrayList<>();
@@ -123,10 +119,6 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder, U
 		return parameters;
 	}
 
-	public List<MethodInvocationInstance> getInvocations() {
-		return invocations;
-	}
-
 	public List<FieldAccessInstance> getFieldAccesses() {
 		return fieldAccesses;
 	}
@@ -138,9 +130,9 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder, U
 	}
 
 	public List<String> getInvocationsQualifiedNames() {
-		return invocations.stream()
-						  .map(MethodInvocationInstance::getQualifiedName)
-						  .collect(Collectors.toList());
+		return directDependencies.stream()
+								  	  .map(MethodInstance::getQualifiedName)
+								  	  .collect(Collectors.toList());
 	}
 	
 	public boolean isCompatibleWith(MethodInstance m) {
@@ -173,10 +165,6 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder, U
 		this.fieldAccesses.add(access);
 	}
 	
-	public void addMethodInvocation(MethodInvocationInstance invocation) {
-		this.invocations.add(invocation);
-	}
-	
 	public boolean equals(Object o) {
 		return (this == o) || (o instanceof MethodInstance && equalsMethodInstance((MethodInstance)o));
 	}
@@ -189,5 +177,8 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder, U
 		return getQualifiedName().hashCode();
 	}
 
+	public String toString() {
+		return getQualifiedName();
+	}
 
 }

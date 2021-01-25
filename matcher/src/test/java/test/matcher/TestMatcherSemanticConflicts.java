@@ -16,7 +16,6 @@ import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
 import matcher.patterns.InterfaceImplementationPattern;
 import matcher.patterns.InterfacePattern;
-import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
 import matcher.patterns.deltas.DeleteMethodPatternAction;
 import matcher.patterns.deltas.DeltaPattern;
@@ -448,7 +447,7 @@ public class TestMatcherSemanticConflicts {
 				"Method inserted with invocation is not k()?");
 	}
 
-//	@Test
+	@Test
 	public void dependencyBased2Test() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEPENDENCY_BASED2_FOLDER + CONFIG_FILE_NAME);
@@ -965,9 +964,8 @@ public class TestMatcherSemanticConflicts {
 		MethodPattern methodPattern1 = new MethodPattern(methodVar1, null);
 		MethodPattern methodPattern2 = new MethodPattern(methodVar2, null);
 		MethodPattern methodPattern3 = new MethodPattern(methodVar3, null);
-		methodPattern1.addMethodInvocationPattern(new MethodInvocationPattern(methodVar2));
-		methodPattern1.addDependendency(methodVar2);
-		methodPattern1.addMethodInvocationPattern(new MethodInvocationPattern(methodVar3));
+		methodPattern1.addDependency(methodVar2);
+		methodPattern1.addDependency(methodVar3);
 		classPattern.addMethodPattern(methodPattern1);
 		classPattern.addMethodPattern(methodPattern2);
 		classPattern.addMethodPattern(methodPattern3);
@@ -1006,10 +1004,10 @@ public class TestMatcherSemanticConflicts {
 		fieldPattern.setType(b1ClassVar);
 		classAPattern.addFieldPattern(fieldPattern);
 		MethodPattern methodNPattern = new MethodPattern(methodNVar, null);
-		methodNPattern.addMethodInvocationPattern(new MethodInvocationPattern(methodM2Var));
+		methodNPattern.addDependency(methodM2Var);
 		classAPattern.addMethodPattern(methodNPattern);
 		MethodPattern methodM1Pattern = new MethodPattern(methodM1Var, null);
-		methodM1Pattern.addMethodInvocationPattern(new MethodInvocationPattern(methodHashVar));
+		methodM1Pattern.addDependency(methodHashVar);
 		MethodPattern methodM2Pattern = new MethodPattern(methodM2Var, null);
 		classAPattern.addMethodPattern(methodM1Pattern);
 		classAPattern.addMethodPattern(methodM2Pattern);
@@ -1052,7 +1050,7 @@ public class TestMatcherSemanticConflicts {
 		ClassPattern classPattern = new ClassPattern(classVar);
 		MethodPattern methodPattern1 = new MethodPattern(methodVar1, null);
 		MethodPattern methodPattern2 = new MethodPattern(methodVar2, null);
-		methodPattern1.addMethodInvocationPattern(new MethodInvocationPattern(methodVar2));
+		methodPattern1.addDependency(methodVar2);
 		classPattern.addMethodPattern(methodPattern1);
 		classPattern.addMethodPattern(methodPattern2);
 		basePattern.addClassPattern(classPattern);
@@ -1082,7 +1080,7 @@ public class TestMatcherSemanticConflicts {
 		ClassPattern classPattern = new ClassPattern(classVar);
 		MethodPattern methodPattern1 = new MethodPattern(methodVar1, null);
 		MethodPattern methodPattern2 = new MethodPattern(methodVar2, null);
-		methodPattern1.addMethodInvocationPattern(new MethodInvocationPattern(methodVar2));
+		methodPattern1.addDependency(methodVar2);
 		classPattern.addMethodPattern(methodPattern1);
 		classPattern.addMethodPattern(methodPattern2);
 		basePattern.addClassPattern(classPattern);
