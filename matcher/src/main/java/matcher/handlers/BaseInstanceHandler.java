@@ -25,44 +25,44 @@ public class BaseInstanceHandler {
 		constructorsByQualifiedName = new HashMap<>();
 	}
 	
-	public BaseInstance getBaseInstance(CtType<?> type, ConflictPattern cp) {
-		BaseInstance result = new BaseInstance();
-		if(type.isClass()) {
-			ClassProcessor processor = new ClassProcessor(cp);
-			processor.process((CtClass<?>)type);
-			result.addClassInstance(processor.getClassInstance());
-		}
-		if(type.isInterface() && cp.hasInterfaces()) {
-			InterfaceProcessor processor = new InterfaceProcessor();
-			processor.process(type.getReference());
-			result.addInterfaceInstance(processor.getInterfaceInstance());
-		}
-		return result;
-	}
-	
 	public BaseInstance getBaseInstance(Iterable<CtType<?>> types, ConflictPattern cp) {
 		BaseInstance result = new BaseInstance();
 		for(CtType<?> type: types) {
 			if(type.isClass()) {
-				ClassProcessor processor = new ClassProcessor(cp);
-				processor.process((CtClass<?>)type);
-				ClassInstance classInstance = processor.getClassInstance();
-				result.addClassInstance(classInstance);
-				for(MethodInstance m: classInstance.getMethods()) {
-					String key = classInstance.getQualifiedName() + "." + m.getQualifiedName();
-					methodsByQualifiedName.put(key, m);
-				}
-				for(ConstructorInstance c: classInstance.getConstructors()) {
-					String key = c.getQualifiedName();
-					constructorsByQualifiedName.put(key, c);
-				}
+				processBase(result, type, cp);
 			}
 			if(type.isInterface() && cp.hasInterfaces()) {
-				InterfaceProcessor processor = new InterfaceProcessor();
-				processor.process(type.getReference());
-				result.addInterfaceInstance(processor.getInterfaceInstance());
+				processInterface(result, type);
 			}
 		}
+		assignMethodDependencies();
+		assignConstructorDependencies();
+		
+		return result;
+	}
+	
+	private void processBase(BaseInstance result, CtType<?> type, ConflictPattern cp) {
+		ClassProcessor processor = new ClassProcessor(cp);
+		processor.process((CtClass<?>)type);
+		ClassInstance classInstance = processor.getClassInstance();
+		result.addClassInstance(classInstance);
+		for(MethodInstance m: classInstance.getMethods()) {
+			String key = classInstance.getQualifiedName() + "." + m.getQualifiedName();
+			methodsByQualifiedName.put(key, m);
+		}
+		for(ConstructorInstance c: classInstance.getConstructors()) {
+			String key = c.getQualifiedName();
+			constructorsByQualifiedName.put(key, c);
+		}
+	}
+	
+	private void processInterface(BaseInstance result, CtType<?> type) {
+		InterfaceProcessor processor = new InterfaceProcessor();
+		processor.process(type.getReference());
+		result.addInterfaceInstance(processor.getInterfaceInstance());
+	}
+	
+	private void assignMethodDependencies() {
 		for(MethodInstance m: methodsByQualifiedName.values()) {
 			for(String s: m.getDirectDependenciesNames()) {
 				if(methodsByQualifiedName.containsKey(s)) {
@@ -70,13 +70,14 @@ public class BaseInstanceHandler {
 				}
 			}
 		}
+	}
+	
+	private void assignConstructorDependencies() {
 		for(ConstructorInstance c: constructorsByQualifiedName.values()) {
 			for(String s: c.getDirectDependenciesNames()) {
 				if(methodsByQualifiedName.containsKey(s))
 					c.addDirectDependency(methodsByQualifiedName.get(s));
 			}
 		}
-		
-		return result;
 	}
 }
