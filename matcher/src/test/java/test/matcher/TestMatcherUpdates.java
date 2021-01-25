@@ -163,8 +163,10 @@ public class TestMatcherUpdates {
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 		
 		return conflict;
 	}
@@ -185,8 +187,10 @@ public class TestMatcherUpdates {
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 		
 		return conflict;
 	}

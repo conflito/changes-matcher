@@ -208,6 +208,8 @@ public class TestMatcherInserts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
+		assertTrue(result.size() == 1, "More than one result for insert method "
+				+ "with field access?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 3, "Not 3 assignments with only 3 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
@@ -234,8 +236,10 @@ public class TestMatcherInserts {
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 		
 		return conflict;
 	}
@@ -255,8 +259,10 @@ public class TestMatcherInserts {
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 		
 		return conflict;
 	}
@@ -276,8 +282,10 @@ public class TestMatcherInserts {
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 		
 		return conflict;
 	}
@@ -304,8 +312,10 @@ public class TestMatcherInserts {
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 		
 		return conflict;
 	}
@@ -327,8 +337,10 @@ public class TestMatcherInserts {
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 		
 		return conflict;
 	}
@@ -350,8 +362,10 @@ public class TestMatcherInserts {
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 		
 		return conflict;
 	}

@@ -755,8 +755,10 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 
 		return conflict;
 	}
@@ -784,8 +786,10 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 
 		return conflict;
 	}
@@ -818,8 +822,10 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 
 		return conflict;
 	}
@@ -852,8 +858,10 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 
 		return conflict;
 	}
@@ -886,8 +894,10 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 
 		return conflict;
 	}
@@ -916,8 +926,10 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 
 		return conflict;
 	}
@@ -946,8 +958,10 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 
 		return conflict;
 	}
@@ -978,8 +992,10 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 		conflict.addDifferentVariablesRule(methodVar2, methodVar3);
 
 		return conflict;
@@ -1035,8 +1051,10 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 		return conflict;
 	}
 
@@ -1063,8 +1081,10 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 
 		return conflict;
 	}
@@ -1095,8 +1115,10 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 
 		return conflict;
 	}
@@ -1123,8 +1145,10 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 
 		return conflict;
 	}
@@ -1156,8 +1180,10 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 
 		return conflict;
 	}
@@ -1195,8 +1221,10 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 
 		return conflict;
 	}
@@ -1236,8 +1264,10 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-		conflict.addDeltaPattern(dp1);
-		conflict.addDeltaPattern(dp2);
+//		conflict.addDeltaPattern(dp1);
+//		conflict.addDeltaPattern(dp2);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
 		conflict.addDifferentVariablesRule(classVar1, classVar3);
 
 		return conflict;
