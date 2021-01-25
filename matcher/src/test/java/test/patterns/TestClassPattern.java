@@ -9,7 +9,6 @@ import matcher.entities.FieldAccessInstance;
 import matcher.entities.FieldAccessType;
 import matcher.entities.FieldInstance;
 import matcher.entities.MethodInstance;
-import matcher.entities.MethodInvocationInstance;
 import matcher.entities.Type;
 import matcher.entities.Visibility;
 import matcher.patterns.ClassPattern;
@@ -17,7 +16,6 @@ import matcher.patterns.ConstructorPattern;
 import matcher.patterns.FieldAccessPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
-import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
 import spoon.reflect.factory.TypeFactory;
 
@@ -333,11 +331,11 @@ public class TestClassPattern {
 	}
 	
 	@Test
-	public void matchingClassWithSConstructorWithInvocationTest() {
+	public void matchingClassWithConstructorWithInvocationTest() {
 		ClassInstance instance = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
 		ConstructorInstance constructor = new ConstructorInstance(Visibility.PUBLIC);
-		MethodInvocationInstance invocation = new MethodInvocationInstance("a.b.C.m()");
-		constructor.addMethodInvocation(invocation);
+		MethodInstance invocation = new MethodInstance("m", Visibility.PUBLIC, STRING_TYPE);
+		constructor.addDirectDependency(invocation);
 		constructor.setClassInstance(instance);
 		instance.addConstructor(constructor);
 		
@@ -347,13 +345,12 @@ public class TestClassPattern {
 		
 		ClassPattern pattern = new ClassPattern(freeVar0);
 		ConstructorPattern constructorPattern = new ConstructorPattern(freeVar1, null);
-		MethodInvocationPattern invocationPattern = new MethodInvocationPattern(freeVar2);
-		constructorPattern.addMethodInvocationPattern(invocationPattern);
+		constructorPattern.addDependency(freeVar2);
 		pattern.addConstructorPattern(constructorPattern);
 		
 		pattern.setVariableValue(0, instance.getQualifiedName());
 		pattern.setVariableValue(1, constructor.getQualifiedName());
-		pattern.setVariableValue(2, "a.b.C.m()");
+		pattern.setVariableValue(2, "m()");
 		
 		assertTrue(pattern.matches(instance), "Method with constructor with invocation "
 				+ "doesn't match?");

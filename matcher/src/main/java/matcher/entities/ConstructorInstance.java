@@ -13,26 +13,60 @@ import matcher.entities.deltas.Visible;
 public class ConstructorInstance implements Insertable, Deletable, Visible, Holder, Updatable{
 
 	private Visibility visibility;
-	
+
 	private List<Type> parameters;
-	
+
 	private ClassInstance classInstance;
-	
-	private List<MethodInvocationInstance> invocations;
-	
+
+	private List<MethodInstance> directDependencies;
+
+	private List<String> directDependenciesNames;
+
 	public ConstructorInstance(Visibility visibility) {
 		super();
 		this.visibility = visibility;
 		this.parameters = new ArrayList<>();
-		this.invocations = new ArrayList<>();
+		this.directDependencies = new ArrayList<>();
+		this.directDependenciesNames = new ArrayList<>();
 	}
-	
+
 	public ConstructorInstance(Visibility visibility, List<Type> parameters) {
 		super();
 		this.visibility = visibility;
 		this.parameters = parameters;
-		this.invocations = new ArrayList<>();
+		this.directDependencies = new ArrayList<>();
+		this.directDependenciesNames = new ArrayList<>();
 	}
+
+	public void addDirectDependencyName(String name) {
+		this.directDependenciesNames.add(name);
+	}
+
+	public List<String> getDirectDependenciesNames(){
+		return directDependenciesNames;
+	}
+
+	public List<MethodInstance> getDirectDependencies(){
+		return directDependencies;
+	}
+
+	public void addDirectDependency(MethodInstance m) {
+		directDependencies.add(m);
+	}
+
+	public boolean dependsOn(String methodName) {
+		boolean result = 
+				directDependencies.stream()
+							      .anyMatch(m -> m.getQualifiedName().equals(methodName));
+		if(!result) {
+			for(MethodInstance m: directDependencies) {
+				if(m.dependsOn(methodName))
+					result = true;
+			}
+		}
+		return result;
+	}
+
 
 	public Visibility getVisibility() {
 		return visibility;
@@ -45,35 +79,27 @@ public class ConstructorInstance implements Insertable, Deletable, Visible, Hold
 	public void setClassInstance(ClassInstance classInstance) {
 		this.classInstance = classInstance;
 	}
-	
-	public List<MethodInvocationInstance> getInvocations(){
-		return invocations;
-	}
-	
+
 	public String getQualifiedName() {
 		return classInstance.getQualifiedName() + "." 
-					  							+ classInstance.getName() 
-					  							+ parametersToString();
+				+ classInstance.getName() 
+				+ parametersToString();
 	}
-	
+
 	public List<String> getInvocationsQualifiedNames() {
-		return invocations.stream()
-						  .map(MethodInvocationInstance::getQualifiedName)
-						  .collect(Collectors.toList());
+		return directDependencies.stream()
+								 .map(MethodInstance::getQualifiedName)
+								 .collect(Collectors.toList());
 	}
-	
+
 	public String getSimpleName() {
 		return classInstance.getName() + parametersToString();
 	}
-	
+
 	private String parametersToString() {
 		return getParameters().toString().replace("[", "(").replace("]", ")");
 	}
-	
-	public void addMethodInvocation(MethodInvocationInstance invocation) {
-		this.invocations.add(invocation);
-	}
-	
+
 	public boolean equals(Object o) {
 		return (this == o) || (o instanceof ConstructorInstance 
 				&& equalsConstructorInstance((ConstructorInstance)o));
@@ -82,7 +108,7 @@ public class ConstructorInstance implements Insertable, Deletable, Visible, Hold
 	private boolean equalsConstructorInstance(ConstructorInstance o) {
 		return getQualifiedName().equals(o.getQualifiedName());
 	}
-	
+
 	public int hashCode() {
 		return getQualifiedName().hashCode();
 	}

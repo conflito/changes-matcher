@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import matcher.entities.ConstructorInstance;
-import matcher.entities.MethodInvocationInstance;
 import matcher.entities.Visibility;
 
 public class ConstructorPattern {
@@ -14,21 +13,22 @@ public class ConstructorPattern {
 	
 	private Visibility visibility;
 	
-	private List<MethodInvocationPattern> invocations;
+	
+	private List<FreeVariable> dependencies;
 
 	public ConstructorPattern(FreeVariable freeVariable, Visibility visibility) {
 		super();
 		this.freeVariable = freeVariable;
 		this.visibility = visibility;
-		invocations = new ArrayList<>();
+		dependencies = new ArrayList<>();
 	}
 	
-	public void addMethodInvocationPattern(MethodInvocationPattern pattern) {
-		invocations.add(pattern);
+	public void addDependency(FreeVariable v) {
+		dependencies.add(v);
 	}
 	
 	public boolean hasInvocations() {
-		return !invocations.isEmpty();
+		return !dependencies.isEmpty();
 	}
 	
 	public FreeVariable getFreeVariable() {
@@ -40,9 +40,9 @@ public class ConstructorPattern {
 	}
 	
 	public List<Integer> getInvocationsVariableIds(){
-		return invocations.stream()
-						  .map(MethodInvocationPattern::getVariableId)
-						  .collect(Collectors.toList());
+		return dependencies.stream()
+				   .map(FreeVariable::getId)
+				   .collect(Collectors.toList());
 	}
 	
 	public boolean isVariableId(int id) {
@@ -51,61 +51,50 @@ public class ConstructorPattern {
 	
 	public boolean hasVariableId(int id) {
 		return isVariableId(id) ||
-			   invocations.stream().anyMatch(invocation -> invocation.isVariableId(id));
+			   dependencies.stream().anyMatch(v -> v.isId(id));
 	}
 	
 	public void setVariableValue(int id, String value) {
 		if(isVariableId(id))
 			freeVariable.setValue(value);
 		else 
-			setVariableValueInvocations(id, value);
+			setVariableValueDependencies(id, value);
 	}
 	
 	public void clean() {
 		freeVariable.clean();
-		cleanInvocations();
+		cleanDependencies();
 	}
 	
-	private void cleanInvocations() {
-		for(MethodInvocationPattern i: invocations) {
-			i.clean();
-		}
+	private void cleanDependencies() {
+		dependencies.forEach(v -> v.clean());
 	}
 	
-	private void setVariableValueInvocations(int id, String value) {
-		for(MethodInvocationPattern pattern: invocations) {
-			if(pattern.isVariableId(id))
-				pattern.setVariableValue(value);
+	private void setVariableValueDependencies(int id, String value) {
+		for(FreeVariable v: dependencies) {
+			if(v.isId(id))
+				v.setValue(value);
 		}
 	}
 
 	public boolean filled() {
-		return freeVariable.hasValue() && invocationsFilled();
+		return freeVariable.hasValue() && dependenciesFilled();
 	}
 
-	private boolean invocationsFilled() {
-		return invocations.stream().allMatch(MethodInvocationPattern::filled);
+	private boolean dependenciesFilled() {
+		return dependencies.stream().allMatch(v -> v.hasValue());
 	}
 	
 	public boolean matches(ConstructorInstance instance) {
 		return filled() && 
 				(visibility == null || sameVisibility(instance)) &&  
 				sameName(instance) &&
-				invocationsMatch(instance);
-	}
-
-	private boolean invocationsMatch(ConstructorInstance instance) {
-		return invocations.stream()
-						  .allMatch(i -> invocationMatchesOne(i, instance.getInvocations()));
+				dependenciesMatch(instance);
 	}
 	
-	private boolean invocationMatchesOne(MethodInvocationPattern invocation, 
-			List<MethodInvocationInstance> invocations) {
-		for(MethodInvocationInstance i: invocations) {
-			if(invocation.matches(i))
-				return true;
-		}
-		return false;
+	private boolean dependenciesMatch(ConstructorInstance instance) {
+		return dependencies.stream()
+						   .allMatch(v -> instance.dependsOn(v.getValue()));
 	}
 
 	private boolean sameName(ConstructorInstance instance) {
@@ -123,8 +112,8 @@ public class ConstructorPattern {
 				(visibility == null?"*":visibility.toString().toLowerCase()));
 		result.append(" constructor #" + getVariableId() + "\n");
 		
-		for(MethodInvocationPattern i: invocations) {
-			result.append("#" + getVariableId() + " invokes #" + i.getVariableId() + "\n");
+		for(FreeVariable v: dependencies) {
+			result.append("#" + getVariableId() + " depends on #" + v.getId() + "\n");
 		}
 		
 		return result.toString();
@@ -137,8 +126,8 @@ public class ConstructorPattern {
 				(visibility == null?"*":visibility.toString().toLowerCase()));
 		result.append(" constructor #" + freeVariable.getValue() + "\n");
 		
-		for(MethodInvocationPattern i: invocations) {
-			result.append("#" + freeVariable.getValue() + " invokes #" + i.getFreeVariable().getValue() + "\n");
+		for(FreeVariable v: dependencies) {
+			result.append("#" + freeVariable.getValue() + " depends on #" + v.getValue() + "\n");
 		}
 		
 		return result.toString();

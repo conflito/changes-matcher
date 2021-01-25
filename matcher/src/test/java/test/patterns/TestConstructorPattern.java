@@ -5,17 +5,21 @@ import org.junit.jupiter.api.Test;
 
 import matcher.entities.ClassInstance;
 import matcher.entities.ConstructorInstance;
-import matcher.entities.MethodInvocationInstance;
+import matcher.entities.MethodInstance;
+import matcher.entities.Type;
 import matcher.entities.Visibility;
 import matcher.patterns.ConstructorPattern;
 import matcher.patterns.FreeVariable;
-import matcher.patterns.MethodInvocationPattern;
+import spoon.reflect.factory.TypeFactory;
 
 public class TestConstructorPattern {
 
 	private final String CLASS_NAME = "Test";
 	private final String CLASS_QUALIFIED_NAME = "a.b.Test";
 	private final ClassInstance CLASS_INSTANCE = new ClassInstance(CLASS_NAME, CLASS_QUALIFIED_NAME);
+	
+	private final TypeFactory FACTORY = new TypeFactory();
+	private final Type STRING_TYPE = new Type(FACTORY.get(String.class).getReference());
 	
 	@Test
 	public void matchingSimpleConstructor() {
@@ -70,37 +74,35 @@ public class TestConstructorPattern {
 	
 	@Test
 	public void matchingConstructorWithOneInvocation() {
-		MethodInvocationInstance methodInvocationInstance = new MethodInvocationInstance("a.b.C.m()");
 		ConstructorInstance instance =  new ConstructorInstance(Visibility.PUBLIC);
-		instance.addMethodInvocation(methodInvocationInstance);
+		MethodInstance invocation = new MethodInstance("m", Visibility.PUBLIC, STRING_TYPE);
+		instance.addDirectDependency(invocation);
 		instance.setClassInstance(CLASS_INSTANCE);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
 		FreeVariable freeVar1 = new FreeVariable(1);
 		
 		ConstructorPattern constructorPattern = new ConstructorPattern(freeVar0, Visibility.PUBLIC);
-		MethodInvocationPattern methodInvocationPattern = new MethodInvocationPattern(freeVar1);
-		constructorPattern.addMethodInvocationPattern(methodInvocationPattern);
+		constructorPattern.addDependency(freeVar1);
 		
 		constructorPattern.setVariableValue(0, instance.getQualifiedName());
-		constructorPattern.setVariableValue(1, "a.b.C.m()");
+		constructorPattern.setVariableValue(1, "m()");
 		
 		assertTrue(constructorPattern.matches(instance), "Constructor with one invocation doesn't match?");
 	}
 	
 	@Test
 	public void matchingConstructorWithOneInvocationNotFullyFilled() {
-		MethodInvocationInstance methodInvocationInstance = new MethodInvocationInstance("a.b.C.m()");
 		ConstructorInstance instance =  new ConstructorInstance(Visibility.PUBLIC);
-		instance.addMethodInvocation(methodInvocationInstance);
+		MethodInstance invocation = new MethodInstance("m", Visibility.PUBLIC, STRING_TYPE);
+		instance.addDirectDependency(invocation);
 		instance.setClassInstance(CLASS_INSTANCE);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
 		FreeVariable freeVar1 = new FreeVariable(1);
 		
 		ConstructorPattern constructorPattern = new ConstructorPattern(freeVar0, Visibility.PUBLIC);
-		MethodInvocationPattern methodInvocationPattern = new MethodInvocationPattern(freeVar1);
-		constructorPattern.addMethodInvocationPattern(methodInvocationPattern);
+		constructorPattern.addDependency(freeVar1);
 		
 		constructorPattern.setVariableValue(0, instance.getQualifiedName());
 		
@@ -111,27 +113,26 @@ public class TestConstructorPattern {
 	
 	@Test
 	public void matchingConstructorWithTwoInvocationPatternRequiresOne() {
-		MethodInvocationInstance methodInvocationInstance = new MethodInvocationInstance("a.b.C.m()");
-		MethodInvocationInstance methodInvocationInstance2 = new MethodInvocationInstance("a.b.C.n()");
 		ConstructorInstance instance =  new ConstructorInstance(Visibility.PUBLIC);
-		instance.addMethodInvocation(methodInvocationInstance);
-		instance.addMethodInvocation(methodInvocationInstance2);
+		MethodInstance invocation = new MethodInstance("m", Visibility.PUBLIC, STRING_TYPE);
+		MethodInstance invocation2 = new MethodInstance("n", Visibility.PUBLIC, STRING_TYPE);
+		instance.addDirectDependency(invocation);
+		instance.addDirectDependency(invocation2);
 		instance.setClassInstance(CLASS_INSTANCE);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
 		FreeVariable freeVar1 = new FreeVariable(1);
 		
 		ConstructorPattern constructorPattern = new ConstructorPattern(freeVar0, Visibility.PUBLIC);
-		MethodInvocationPattern methodInvocationPattern = new MethodInvocationPattern(freeVar1);
-		constructorPattern.addMethodInvocationPattern(methodInvocationPattern);
+		constructorPattern.addDependency(freeVar1);
 		
 		constructorPattern.setVariableValue(0, instance.getQualifiedName());
-		constructorPattern.setVariableValue(1, "a.b.C.m()");
+		constructorPattern.setVariableValue(1, "m()");
 		
 		assertTrue(constructorPattern.matches(instance), "Constructor with two invocations "
 				+ "and pattern requiring one doesn't match first invocation?");
 
-		constructorPattern.setVariableValue(1, "a.b.C.n()");
+		constructorPattern.setVariableValue(1, "n()");
 		
 		assertTrue(constructorPattern.matches(instance), "Constructor with two invocations "
 				+ "and pattern requiring one doesn't match second invocation?");
@@ -139,20 +140,19 @@ public class TestConstructorPattern {
 	
 	@Test
 	public void matchingConstructorWithOneInvocationButNoMatch() {
-		MethodInvocationInstance methodInvocationInstance = new MethodInvocationInstance("a.b.C.m()");
 		ConstructorInstance instance =  new ConstructorInstance(Visibility.PUBLIC);
-		instance.addMethodInvocation(methodInvocationInstance);
+		MethodInstance invocation = new MethodInstance("m", Visibility.PUBLIC, STRING_TYPE);
+		instance.addDirectDependency(invocation);
 		instance.setClassInstance(CLASS_INSTANCE);
 		
 		FreeVariable freeVar0 = new FreeVariable(0);
 		FreeVariable freeVar1 = new FreeVariable(1);
 		
 		ConstructorPattern constructorPattern = new ConstructorPattern(freeVar0, Visibility.PUBLIC);
-		MethodInvocationPattern methodInvocationPattern = new MethodInvocationPattern(freeVar1);
-		constructorPattern.addMethodInvocationPattern(methodInvocationPattern);
+		constructorPattern.addDependency(freeVar1);
 		
 		constructorPattern.setVariableValue(0, instance.getQualifiedName());
-		constructorPattern.setVariableValue(1, "a.b.C.n()");
+		constructorPattern.setVariableValue(1, "n()");
 		
 		assertFalse(constructorPattern.matches(instance), "Constructor with one invocation and "
 				+ "pattern with a different value doesn't match?");

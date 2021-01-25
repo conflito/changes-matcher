@@ -259,8 +259,9 @@ public class ClassInstance implements Insertable, Holder{
 		for(ConstructorInstance c: getConstructors()) {
 			result.append(getQualifiedName() + " has constructor " + c.getVisibility() + " " + c.getSimpleName());
 			result.append("\n");
-			for(MethodInvocationInstance mii: c.getInvocations()) {
-				result.append(c.getQualifiedName() + " invokes " + mii.getQualifiedName());
+
+			for(MethodInstance dependency: c.getDirectDependencies()) {
+				result.append(c.getQualifiedName() + " depends on " + dependency.getQualifiedName());
 				result.append("\n");
 			}
 		}
