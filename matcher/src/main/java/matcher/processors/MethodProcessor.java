@@ -85,8 +85,10 @@ public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 		for(CtInvocation<?> invocation: invocations) {
 			if(!invocation.toString().equals("super()")){
 				try {
-					String invocationSrcName = getInvocationClassSimpleName(invocation) + ".java";
-					if(FileSystemHandler.getInstance().fromTheSystem(invocationSrcName)) {
+					String className = getInvocationClassSimpleName(invocation);
+					String invocationSrcName = className + ".java";
+					if(className.equals("Object") || 
+							FileSystemHandler.getInstance().fromTheSystem(invocationSrcName)) {
 						String invocationFullName = getInvocationClassQualifiedName(invocation)
 								+ "." + getInvocationQualifiedName(invocation);
 						if(!invocationsVisited.contains(invocationFullName)) {
