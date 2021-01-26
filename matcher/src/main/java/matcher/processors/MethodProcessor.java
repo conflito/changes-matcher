@@ -1,6 +1,8 @@
 package matcher.processors;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import matcher.entities.FieldAccessInstance;
@@ -15,6 +17,7 @@ import spoon.reflect.code.CtFieldWrite;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.reference.CtFieldReference;
+import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.TypeFilter;
 
 public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
@@ -27,6 +30,11 @@ public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 
 	@Override
 	public MethodInstance process(CtMethod<?> element) {
+		Set<String> invocationsVisited = new HashSet<>();
+		return process(element, invocationsVisited);
+	}
+	
+	private MethodInstance process(CtMethod<?> element, Set<String> invocationsVisited) {
 		Visibility visibility = Visibility.PACKAGE;
 		if(element.getVisibility() != null)
 			visibility = Visibility.valueOf(element.getVisibility().toString().toUpperCase());
@@ -37,7 +45,7 @@ public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 		MethodInstance methodInstance = 
 				new MethodInstance(element.getSimpleName(), visibility, returnType, parameters);
 		if(conflictPattern.hasInvocations())
-			processInvocations(element, methodInstance);
+			processInvocations(element, methodInstance, invocationsVisited);
 		if(conflictPattern.hasFieldAccesses())
 			processFieldAccesses(element, methodInstance);
 		return methodInstance;
@@ -70,20 +78,38 @@ public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void processInvocations(CtMethod<?> element, MethodInstance methodInstance) {
+	private void processInvocations(CtMethod<?> element, MethodInstance methodInstance, 
+			Set<String> invocationsVisited) {
 		List<CtInvocation<?>> invocations = element.getElements(new TypeFilter(CtInvocation.class));
+		MethodProcessor invocationsProcessor = new MethodProcessor(conflictPattern);
 		for(CtInvocation<?> invocation: invocations) {
 			if(!invocation.toString().equals("super()")){
 				try {
 					String invocationSrcName = getInvocationClassSimpleName(invocation) + ".java";
 					if(FileSystemHandler.getInstance().fromTheSystem(invocationSrcName)) {
-						methodInstance.addDirectDependencyName(
-								getInvocationClassQualifiedName(invocation)
-								+ "." + getInvocationQualifiedName(invocation));
+						String invocationFullName = getInvocationClassQualifiedName(invocation)
+								+ "." + getInvocationQualifiedName(invocation);
+						if(!invocationsVisited.contains(invocationFullName)) {
+							invocationsVisited.add(invocationFullName);
+							CtMethod<?> invokedMethod = getMethodFromInvocation(invocation);
+							methodInstance.addDirectDependency(
+									invocationsProcessor.process(invokedMethod, 
+											invocationsVisited));
+						}
 					}
 				} catch (Exception e) {}
 			}
 		}
+	}
+	
+	private CtMethod<?> getMethodFromInvocation(CtInvocation<?> invocation){
+		String invokedName = invocation.getExecutable().getSimpleName();
+		CtTypeReference<?>[] types = invocation.getExecutable().getParameters()
+				.toArray(new CtTypeReference<?>[0]);
+		return invocation.getExecutable()
+			.getDeclaringType()
+			.getTypeDeclaration()
+			.getMethod(invokedName, types);
 	}
 
 	public String getInvocationQualifiedName(CtInvocation<?> invocation) {

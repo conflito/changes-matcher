@@ -26,8 +26,6 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder, U
 	
 	private List<MethodInstance> directDependencies;
 	
-	private List<String> directDependenciesNames;
-
 	public MethodInstance(String name, Visibility visibility, Type returnType) {
 		super();
 		this.name = name;
@@ -35,8 +33,6 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder, U
 		this.returnType = returnType;
 		this.parameters = new ArrayList<>();
 		this.fieldAccesses = new ArrayList<>();
-		
-		this.directDependenciesNames = new ArrayList<>();
 		this.directDependencies = new ArrayList<>();
 	}
 
@@ -48,17 +44,7 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder, U
 		this.returnType = returnType;
 		this.parameters = parameters;
 		this.fieldAccesses = new ArrayList<>();
-		
-		this.directDependenciesNames = new ArrayList<>();
 		this.directDependencies = new ArrayList<>();
-	}
-	
-	public void addDirectDependencyName(String name) {
-		this.directDependenciesNames.add(name);
-	}
-	
-	public List<String> getDirectDependenciesNames(){
-		return directDependenciesNames;
 	}
 	
 	public List<MethodInstance> getDirectDependencies(){

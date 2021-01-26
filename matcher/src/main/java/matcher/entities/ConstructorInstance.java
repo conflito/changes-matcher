@@ -20,14 +20,11 @@ public class ConstructorInstance implements Insertable, Deletable, Visible, Hold
 
 	private List<MethodInstance> directDependencies;
 
-	private List<String> directDependenciesNames;
-
 	public ConstructorInstance(Visibility visibility) {
 		super();
 		this.visibility = visibility;
 		this.parameters = new ArrayList<>();
 		this.directDependencies = new ArrayList<>();
-		this.directDependenciesNames = new ArrayList<>();
 	}
 
 	public ConstructorInstance(Visibility visibility, List<Type> parameters) {
@@ -35,15 +32,6 @@ public class ConstructorInstance implements Insertable, Deletable, Visible, Hold
 		this.visibility = visibility;
 		this.parameters = parameters;
 		this.directDependencies = new ArrayList<>();
-		this.directDependenciesNames = new ArrayList<>();
-	}
-
-	public void addDirectDependencyName(String name) {
-		this.directDependenciesNames.add(name);
-	}
-
-	public List<String> getDirectDependenciesNames(){
-		return directDependenciesNames;
 	}
 
 	public List<MethodInstance> getDirectDependencies(){

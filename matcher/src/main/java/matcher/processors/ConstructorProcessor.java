@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import matcher.entities.ConstructorInstance;
+import matcher.entities.MethodInstance;
 import matcher.entities.Type;
 import matcher.entities.Visibility;
 import matcher.handlers.FileSystemHandler;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtConstructor;
+import spoon.reflect.declaration.CtMethod;
+import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.TypeFilter;
 
 public class ConstructorProcessor extends Processor<ConstructorInstance, CtConstructor<?>>{
@@ -43,26 +46,28 @@ public class ConstructorProcessor extends Processor<ConstructorInstance, CtConst
 				try {
 					String invocationClassName = getInvocationClassSimpleName(invocation) + ".java";
 					if(FileSystemHandler.getInstance().fromTheSystem(invocationClassName)) {
-						constructorInstance.addDirectDependencyName(
-								getInvocationClassQualifiedName(invocation)
-								+ "." + getInvocationQualifiedName(invocation));
+						MethodInstance invoked = 
+								new MethodProcessor(conflictPattern).process(getMethodFromInvocation(invocation));
+						constructorInstance.addDirectDependency(invoked);
 					}
 				} catch (Exception e) {}
 
 			}
 		}
 	}
-
-	private String getInvocationQualifiedName(CtInvocation<?> invocation) {
-		return invocation.getExecutable().getSignature().replace(",", ", ");
+	
+	private CtMethod<?> getMethodFromInvocation(CtInvocation<?> invocation){
+		String invokedName = invocation.getExecutable().getSimpleName();
+		CtTypeReference<?>[] types = invocation.getExecutable().getParameters()
+				.toArray(new CtTypeReference<?>[0]);
+		return invocation.getExecutable()
+			.getDeclaringType()
+			.getTypeDeclaration()
+			.getMethod(invokedName, types);
 	}
 	
 	private String getInvocationClassSimpleName(CtInvocation<?> invocation) {
 		return invocation.getExecutable().getDeclaringType().getSimpleName();
-	}
-	
-	private String getInvocationClassQualifiedName(CtInvocation<?> invocation) {
-		return invocation.getExecutable().getDeclaringType().getQualifiedName();
 	}
 
 }
