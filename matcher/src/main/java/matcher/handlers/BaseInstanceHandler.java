@@ -43,8 +43,7 @@ public class BaseInstanceHandler {
 	
 	private void processBase(BaseInstance result, CtType<?> type, ConflictPattern cp) {
 		ClassProcessor processor = new ClassProcessor(cp);
-		processor.process((CtClass<?>)type);
-		ClassInstance classInstance = processor.getClassInstance();
+		ClassInstance classInstance = processor.process((CtClass<?>)type);
 		result.addClassInstance(classInstance);
 		for(MethodInstance m: classInstance.getMethods()) {
 			String key = classInstance.getQualifiedName() + "." + m.getQualifiedName();
@@ -58,8 +57,7 @@ public class BaseInstanceHandler {
 	
 	private void processInterface(BaseInstance result, CtType<?> type) {
 		InterfaceProcessor processor = new InterfaceProcessor();
-		processor.process(type.getReference());
-		result.addInterfaceInstance(processor.getInterfaceInstance());
+		result.addInterfaceInstance(processor.process(type.getReference()));
 	}
 	
 	private void assignMethodDependencies() {

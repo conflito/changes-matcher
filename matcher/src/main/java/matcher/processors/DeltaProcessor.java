@@ -58,26 +58,22 @@ public abstract class DeltaProcessor {
 	}
 	
 	protected ClassInstance getClassInstance(CtClass<?> c) {
-		classProcessor.process(c);
-		return classProcessor.getClassInstance();
+		return classProcessor.process(c);
 	}
 	
 	protected FieldInstance getFieldInstance(CtField<?> field) {
-		fieldProcessor.process(field);
-		return fieldProcessor.getFieldInstance();
+		return fieldProcessor.process(field);
 	}
 	
 	protected ConstructorInstance getConstructorInstance(CtConstructor<?> constructor, 
 			ClassInstance classInstance) {
-		constructorProcessor.process(constructor);
-		ConstructorInstance constructorInstance = constructorProcessor.getConstructorInstance();
+		ConstructorInstance constructorInstance = constructorProcessor.process(constructor);
 		constructorInstance.setClassInstance(classInstance);
 		return constructorInstance;
 	}
 	
 	protected MethodInstance getMethodInstance(CtMethod<?> method) {
-		methodProcessor.process(method);
-		return methodProcessor.getMethodInstance();
+		return methodProcessor.process(method);
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })

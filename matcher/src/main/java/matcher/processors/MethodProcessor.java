@@ -10,7 +10,6 @@ import matcher.entities.Type;
 import matcher.entities.Visibility;
 import matcher.handlers.FileSystemHandler;
 import matcher.patterns.ConflictPattern;
-import spoon.processing.AbstractProcessor;
 import spoon.reflect.code.CtFieldRead;
 import spoon.reflect.code.CtFieldWrite;
 import spoon.reflect.code.CtInvocation;
@@ -18,21 +17,16 @@ import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.reference.CtFieldReference;
 import spoon.reflect.visitor.filter.TypeFilter;
 
-public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
+public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 
-	private MethodInstance methodInstance;
 	private ConflictPattern conflictPattern;
 
 	public MethodProcessor(ConflictPattern conflictPattern) {
 		this.conflictPattern = conflictPattern;
 	}
 
-	public MethodInstance getMethodInstance() {
-		return methodInstance;
-	}
-
 	@Override
-	public void process(CtMethod<?> element) {
+	public MethodInstance process(CtMethod<?> element) {
 		Visibility visibility = Visibility.PACKAGE;
 		if(element.getVisibility() != null)
 			visibility = Visibility.valueOf(element.getVisibility().toString().toUpperCase());
@@ -40,20 +34,22 @@ public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
 				.map(p -> new Type(p.getType()))
 				.collect(Collectors.toList());
 		Type returnType = new Type(element.getType());
-		methodInstance = new MethodInstance(element.getSimpleName(), visibility, returnType, parameters);
+		MethodInstance methodInstance = 
+				new MethodInstance(element.getSimpleName(), visibility, returnType, parameters);
 		if(conflictPattern.hasInvocations())
-			processInvocations(element);
+			processInvocations(element, methodInstance);
 		if(conflictPattern.hasFieldAccesses())
-			processFieldAccesses(element);
+			processFieldAccesses(element, methodInstance);
+		return methodInstance;
 	}
 
-	private void processFieldAccesses(CtMethod<?> element) {
-		processFieldReads(element);
-		processFieldWrites(element);
+	private void processFieldAccesses(CtMethod<?> element, MethodInstance methodInstance) {
+		processFieldReads(element, methodInstance);
+		processFieldWrites(element, methodInstance);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void processFieldWrites(CtMethod<?> element) {
+	private void processFieldWrites(CtMethod<?> element, MethodInstance methodInstance) {
 		List<CtFieldWrite<?>> fieldWrites = element.getElements(new TypeFilter(CtFieldWrite.class));
 		for(CtFieldWrite<?> fieldWrite: fieldWrites) {
 			String qualifiedName = fieldWrite.getVariable().getSimpleName();
@@ -64,7 +60,7 @@ public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void processFieldReads(CtMethod<?> element) {
+	private void processFieldReads(CtMethod<?> element, MethodInstance methodInstance) {
 		List<CtFieldRead<?>> fieldReads = element.getElements(new TypeFilter(CtFieldRead.class));
 		for(CtFieldRead<?> fieldRead: fieldReads) {
 			String qualifiedName = fieldRead.getVariable().getSimpleName();
@@ -74,7 +70,7 @@ public class MethodProcessor extends AbstractProcessor<CtMethod<?>>{
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void processInvocations(CtMethod<?> element) {
+	private void processInvocations(CtMethod<?> element, MethodInstance methodInstance) {
 		List<CtInvocation<?>> invocations = element.getElements(new TypeFilter(CtInvocation.class));
 		for(CtInvocation<?> invocation: invocations) {
 			if(!invocation.toString().equals("super()")){
