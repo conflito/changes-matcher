@@ -591,7 +591,7 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);				
 
-		assertTrue(result.size() == 1, "More than one result for dependency based 2?");
+		assertTrue(result.size() == 1, "More than one result for dependency based 4?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
