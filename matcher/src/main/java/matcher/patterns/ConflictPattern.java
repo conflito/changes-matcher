@@ -41,11 +41,13 @@ public class ConflictPattern {
 	}
 
 	public boolean hasInvocations() {
-		return basePattern.hasInvocations();
+		return basePattern.hasInvocations() || firstDelta.hasInvocations() ||
+				secondDelta.hasInvocations();
 	}
 
 	public boolean hasFieldAccesses() {
-		return basePattern.hasFieldAccesses();
+		return basePattern.hasFieldAccesses() || firstDelta.hasFieldAccesses() ||
+				secondDelta.hasFieldAccesses();
 	}
 
 	public boolean hasSuperClasses() {

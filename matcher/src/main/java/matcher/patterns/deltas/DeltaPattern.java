@@ -34,6 +34,77 @@ public class DeltaPattern {
 		}
 	}
 	
+	public boolean hasInvocations() {
+		return hasInsertInvocationActions() || hasDeleteInvocationActions() ||
+			   hasUpdateInvocationActions() || hasMethodInsertsWithInvocations() ||
+			   hasConstructorInsertedWithInvocations() || hasClassInsertsWithInvocations();
+	}
+
+	public boolean hasFieldAccesses() {
+		return hasInsertFieldAccessActions() || hasDeleteFieldAccessActions() ||
+			   hasMethodInsertsWithFieldAccesses() || hasClassInsertsWithFieldAccesses();
+	}
+	
+	private boolean hasClassInsertsWithFieldAccesses() {
+		for(ActionPattern a: actions) {
+			if(isInsertClassAction(a)) {
+				InsertClassPatternAction ima = (InsertClassPatternAction) a;
+				if(ima.hasFieldAccesses()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean hasMethodInsertsWithFieldAccesses() {
+		for(ActionPattern a: actions) {
+			if(isInsertMethodAction(a)) {
+				InsertMethodPatternAction ima = (InsertMethodPatternAction) a;
+				if(ima.hasFieldAccesses()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	private boolean hasClassInsertsWithInvocations() {
+		for(ActionPattern a: actions) {
+			if(isInsertClassAction(a)) {
+				InsertClassPatternAction ima = (InsertClassPatternAction) a;
+				if(ima.hasInvocations()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean hasMethodInsertsWithInvocations() {
+		for(ActionPattern a: actions) {
+			if(isInsertMethodAction(a)) {
+				InsertMethodPatternAction ima = (InsertMethodPatternAction) a;
+				if(ima.hasInvocations()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	private boolean hasConstructorInsertedWithInvocations() {
+		for(ActionPattern a: actions) {
+			if(isInsertConstructorAction(a)) {
+				InsertConstructorPatternAction ima = (InsertConstructorPatternAction) a;
+				if(ima.hasInvocations()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	public boolean hasInsertInvocationActions() {
 		return actions.stream().anyMatch(a -> a instanceof InsertInvocationPatternAction);
 	}
@@ -128,7 +199,19 @@ public class DeltaPattern {
 	public List<Integer> getMethodsVariableIds() {
 		List<Integer> result = getInsertedMethodsVariableIds();
 		result.addAll(getDeletedMethodsVariableIds());
+		result.addAll(getMethodsInInsertedClassesVariableIds());
 		return result.stream().distinct().collect(Collectors.toList());
+	}
+
+	private List<Integer> getMethodsInInsertedClassesVariableIds(){
+		List<Integer> result = new ArrayList<>();
+		for(ActionPattern a: actions) {
+			if(isInsertClassAction(a)) {
+				InsertClassPatternAction icpa = (InsertClassPatternAction) a;
+				result.addAll(icpa.getMethodsVariableIds());
+			}
+		}
+		return result;
 	}
 	
 	public List<Integer> getInvocationsVariableIds() {
@@ -140,7 +223,7 @@ public class DeltaPattern {
 	public List<Integer> getClassesVariableIds() {
 		return actions.stream()
 					  .filter(a -> isInsertClassAction(a))
-					  .map(a -> ((InsertClassPatternAction)a).getInsertedEntityId())
+					  .map(a -> ((InsertClassPatternAction)a).getInsertedClassVariableId())
 					  .collect(Collectors.toList());
 	}
 	
@@ -151,7 +234,7 @@ public class DeltaPattern {
 	private List<Integer> getInsertedMethodInvocationsVariableIds() {
 		return actions.stream()
 					  .filter(a -> isInsertInvocationAction(a))
-					  .map(a -> ((InsertPatternAction)a).getInsertedEntityId())
+					  .map(a -> ((InsertInvocationPatternAction)a).getInsertedInvocationVariableId())
 					  .collect(Collectors.toList());
 	}
 	
@@ -171,7 +254,7 @@ public class DeltaPattern {
 	private List<Integer> getInsertedConstructorsVariableIds() {
 		return actions.stream()
 				  .filter(a -> isInsertConstructorAction(a))
-				  .map(a -> ((InsertConstructorPatternAction)a).getInsertedEntityId())
+				  .map(a -> ((InsertConstructorPatternAction)a).getInsertedConstructorVariableId())
 				  .collect(Collectors.toList());
 	}
 	
@@ -185,7 +268,7 @@ public class DeltaPattern {
 	private List<Integer> getInsertedMethodsVariableIds(){
 		return actions.stream()
 					  .filter(a -> isInsertMethodAction(a))
-					  .map(a -> ((InsertMethodPatternAction)a).getInsertedEntityId())
+					  .map(a -> ((InsertMethodPatternAction)a).getInsertedMethodVariableId())
 					  .collect(Collectors.toList());
 	}
 	
@@ -199,7 +282,7 @@ public class DeltaPattern {
 	private List<Integer> getInsertedFieldsVariableIds(){
 		return actions.stream()
 					  .filter(a -> isInsertFieldAction(a))
-					  .map(a -> ((InsertFieldPatternAction)a).getInsertedEntityId())
+					  .map(a -> ((InsertFieldPatternAction)a).getInsertedFieldVariableId())
 					  .collect(Collectors.toList());
 	}
 	
@@ -213,7 +296,7 @@ public class DeltaPattern {
 	private List<Integer> getInsertedFieldAccessesVariableIds() {
 		return actions.stream()
 				  .filter(a -> isInsertFieldAccessAction(a))
-				  .map(a -> ((InsertFieldAccessPatternAction)a).getInsertedEntityId())
+				  .map(a -> ((InsertFieldAccessPatternAction)a).getInsertedFieldAccessVariableId())
 				  .collect(Collectors.toList());
 	}
 	
