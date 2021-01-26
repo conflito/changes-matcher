@@ -16,11 +16,11 @@ import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
 import matcher.patterns.InterfaceImplementationPattern;
 import matcher.patterns.InterfacePattern;
+import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
 import matcher.patterns.deltas.DeleteMethodPatternAction;
 import matcher.patterns.deltas.DeltaPattern;
 import matcher.patterns.deltas.InsertClassPatternAction;
-import matcher.patterns.deltas.InsertFieldAccessPatternAction;
 import matcher.patterns.deltas.InsertFieldPatternAction;
 import matcher.patterns.deltas.InsertInvocationPatternAction;
 import matcher.patterns.deltas.InsertMethodPatternAction;
@@ -86,7 +86,6 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-
 		assertTrue(result.size() == 1, "More than one result for overloading method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
@@ -464,7 +463,6 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-
 		assertTrue(result.size() == 1, "More than one result for dependency based 2?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
@@ -745,18 +743,23 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodVar1, classVar, 
-				Visibility.PUBLIC));
-		dp1.addActionPattern(new InsertInvocationPatternAction(methodVar, insertedMethodVar1));
-		InsertMethodPatternAction impa = new InsertMethodPatternAction(insertedMethodVar2, classVar, 
-				Visibility.PUBLIC);
-		impa.addCompatible(methodVar);
+		
+		MethodPattern insertedMethodPattern1 = 
+				new MethodPattern(insertedMethodVar1, Visibility.PUBLIC);
+		MethodPattern insertedMethodPattern2 =
+				new MethodPattern(insertedMethodVar2, Visibility.PUBLIC);
+		insertedMethodPattern1.addDependency(methodVar);
+		
+		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern1, classPattern));
+		
+		InsertMethodPatternAction impa = 
+				new InsertMethodPatternAction(insertedMethodPattern2, classPattern);
+		impa.addCompatible(methodPattern);
+		
 		dp2.addActionPattern(impa);
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 
@@ -779,15 +782,22 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
+		
+		MethodPattern insertedMethodPattern = new MethodPattern(insertedMethodVar, null);
+		FieldAccessPattern insertedAccessPattern = 
+				new FieldAccessPattern(fieldVar, FieldAccessType.WRITE);
+		insertedMethodPattern.addFieldAccessPattern(insertedAccessPattern);
+		
+		FieldPattern insertedFieldPattern = new FieldPattern(fieldVar, null);
+		
+		
+		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
-		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, classVar, null));
-		dp1.addActionPattern(new InsertFieldAccessPatternAction(fieldVar, insertedMethodVar, FieldAccessType.WRITE));
-		dp2.addActionPattern(new InsertFieldPatternAction(fieldVar, classVar, null));
+		dp2.addActionPattern(new InsertFieldPatternAction(insertedFieldPattern, classPattern));
+
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 
@@ -815,15 +825,21 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new InsertInvocationPatternAction(methodVar, cVar));
-		dp2.addActionPattern(new InsertMethodPatternAction(methodVar, classVar, Visibility.PACKAGE));
-		dp2.addActionPattern(new InsertFieldAccessPatternAction(fieldVar, methodVar, 
-				FieldAccessType.WRITE));
+		
+		MethodInvocationPattern insertedInvocationPattern = 
+				new MethodInvocationPattern(methodVar);
+		MethodPattern insertedMethodPattern = new MethodPattern(methodVar, Visibility.PACKAGE);
+		FieldAccessPattern insertedAccessPattern = 
+				new FieldAccessPattern(fieldVar, FieldAccessType.WRITE);
+		insertedMethodPattern.addFieldAccessPattern(insertedAccessPattern);
+		
+		dp1.addActionPattern(
+				new InsertInvocationPatternAction(insertedInvocationPattern, cPattern));
+		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
+
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 
@@ -850,16 +866,18 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, classVar, 
-				Visibility.PUBLIC));
-		dp1.addActionPattern(new InsertInvocationPatternAction(topMethodVar, insertedMethodVar));
+		
+		MethodPattern insertedMethodPattern = 
+				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
+		insertedMethodPattern.addDependency(topMethodVar);
+		
+		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
+
 		dp2.addActionPattern(new VisibilityActionPattern(Action.UPDATE, Visibility.PUBLIC, 
 				Visibility.PRIVATE, subMethodVar));
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 
@@ -886,16 +904,18 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, classVar, 
-				Visibility.PUBLIC));
-		dp1.addActionPattern(new InsertInvocationPatternAction(subMethodVar, insertedMethodVar));
+		
+		MethodPattern insertedMethodPattern = 
+				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
+		insertedMethodPattern.addDependency(subMethodVar);
+		
+		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
+
 		dp2.addActionPattern(new VisibilityActionPattern(Action.UPDATE, Visibility.PRIVATE, 
 				Visibility.PUBLIC, subMethodVar));
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 
@@ -918,16 +938,19 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, classVar, 
-				Visibility.PUBLIC));
-		dp1.addActionPattern(new InsertInvocationPatternAction(methodVar, insertedMethodVar));
-		dp2.addActionPattern(new InsertMethodPatternAction(methodVar, classVar, 
-				Visibility.PUBLIC));
+		
+		MethodPattern insertedMethodPattern1 = 
+				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
+		MethodPattern insertedMethodPattern2 = new MethodPattern(methodVar, Visibility.PUBLIC);
+		insertedMethodPattern1.addDependency(methodVar);
+		
+		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern1, classPattern));
+
+		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern2, classPattern));
+
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 
@@ -951,15 +974,17 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, classVar, 
-				Visibility.PUBLIC));
-		dp1.addActionPattern(new InsertInvocationPatternAction(methodVar, insertedMethodVar));
+		
+		MethodPattern insertedMethodPattern = 
+				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
+		insertedMethodPattern.addDependency(methodVar);
+		
+		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
+
 		dp2.addActionPattern(new DeleteMethodPatternAction(methodVar, classVar, null));
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 
@@ -992,8 +1017,6 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		conflict.addDifferentVariablesRule(methodVar2, methodVar3);
@@ -1051,8 +1074,6 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		return conflict;
@@ -1075,14 +1096,17 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
+		
+		MethodPattern insertedMethodPattern = 
+				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
+		insertedMethodPattern.addDependency(methodVar1);
+		
 		dp1.addActionPattern(new UpdatePatternAction(methodVar2));
-		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, classVar, null));
-		dp2.addActionPattern(new InsertInvocationPatternAction(methodVar1, insertedMethodVar));
+
+		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 
@@ -1107,16 +1131,20 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new UpdatePatternAction(methodVar2));
-		dp2.addActionPattern(new InsertClassPatternAction(insertedClassVar));
-		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, 
-				insertedClassVar, null));
-		dp2.addActionPattern(new InsertInvocationPatternAction(methodVar1, insertedMethodVar));
+		
+		ClassPattern insertedClassPattern = new ClassPattern(insertedClassVar);
+		MethodPattern insertedMethodPattern = 
+				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
 
+		insertedMethodPattern.addDependency(methodVar1);
+		insertedClassPattern.addMethodPattern(insertedMethodPattern);
+		
+		dp1.addActionPattern(new UpdatePatternAction(methodVar2));
+
+		dp2.addActionPattern(new InsertClassPatternAction(insertedClassPattern));
+		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 
@@ -1137,16 +1165,19 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
+		
+		ClassPattern insertedClassPattern = new ClassPattern(insertedClassVar);
+		MethodPattern insertedMethodPattern = 
+				new MethodPattern(insertedMethodVar, null);
+		insertedMethodPattern.addDependency(methodVar1);
+		insertedClassPattern.addMethodPattern(insertedMethodPattern);
+		
 		dp1.addActionPattern(new UpdatePatternAction(methodVar1));
-		dp2.addActionPattern(new InsertClassPatternAction(insertedClassVar));
-		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, 
-				insertedClassVar, null));
-		dp2.addActionPattern(new InsertInvocationPatternAction(methodVar1, insertedMethodVar));
 
+		dp2.addActionPattern(new InsertClassPatternAction(insertedClassPattern));
+		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 
@@ -1172,16 +1203,19 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
+		
+		ClassPattern insertedClassPattern = new ClassPattern(insertedClassVar);
+		MethodPattern insertedMethodPattern = 
+				new MethodPattern(insertedMethodVar, null);
+		insertedMethodPattern.addDependency(methodVar);
+		insertedClassPattern.addMethodPattern(insertedMethodPattern);
+		
 		dp1.addActionPattern(new UpdateFieldTypePatternAction(fieldVar));
-		dp2.addActionPattern(new InsertClassPatternAction(insertedClassVar));
-		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, 
-				insertedClassVar, null));
-		dp2.addActionPattern(new InsertInvocationPatternAction(methodVar, insertedMethodVar));
 
+		dp2.addActionPattern(new InsertClassPatternAction(insertedClassPattern));
+		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 
@@ -1213,16 +1247,20 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodVar, classVar1, null));
-		dp1.addActionPattern(new InsertInvocationPatternAction(overideMethodVar, 
-				insertedMethodVar));
-		dp2.addActionPattern(new InsertMethodPatternAction(overideMethodVar, classVar2, 
-				Visibility.PUBLIC));
+		
+		MethodPattern insertedMethodPattern1 = 
+				new MethodPattern(insertedMethodVar, null);
+		MethodPattern insertedMethodPattern2 = 
+				new MethodPattern(overideMethodVar, Visibility.PUBLIC);
+		insertedMethodPattern1.addDependency(overideMethodVar);
+		
+		dp1.addActionPattern(
+				new InsertMethodPatternAction(insertedMethodPattern1, classPattern1));
+		dp2.addActionPattern(
+				new InsertMethodPatternAction(insertedMethodPattern2, classPattern2));
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 
@@ -1258,14 +1296,24 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethod, classVar1, null));
-		dp1.addActionPattern(new InsertInvocationPatternAction(methodVar1, insertedMethod));
-		dp2.addActionPattern(new InsertMethodPatternAction(methodVar1, classVar3, null));
+		
+		MethodPattern insertedMethodPattern1 =
+				new MethodPattern(insertedMethod, null);
+		insertedMethodPattern1.addDependency(methodVar1);
+		
+		ClassPattern holder = new ClassPattern(classVar3);
+		holder.setSuperClass(classPattern2);
+		MethodPattern insertedMethodPattern2 =
+				new MethodPattern(methodVar1, null);
+		
+		dp1.addActionPattern(
+				new InsertMethodPatternAction(insertedMethodPattern1, classPattern1));
+
+		dp2.addActionPattern(
+				new InsertMethodPatternAction(insertedMethodPattern2, holder));
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		conflict.addDifferentVariablesRule(classVar1, classVar3);

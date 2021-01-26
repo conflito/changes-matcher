@@ -13,14 +13,14 @@ import matcher.exceptions.ApplicationException;
 import matcher.patterns.BasePattern;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.ConflictPattern;
+import matcher.patterns.ConstructorPattern;
+import matcher.patterns.FieldAccessPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
 import matcher.patterns.MethodPattern;
 import matcher.patterns.deltas.DeltaPattern;
 import matcher.patterns.deltas.InsertConstructorPatternAction;
-import matcher.patterns.deltas.InsertFieldAccessPatternAction;
 import matcher.patterns.deltas.InsertFieldPatternAction;
-import matcher.patterns.deltas.InsertInvocationPatternAction;
 import matcher.patterns.deltas.InsertMethodPatternAction;
 import matcher.utils.Pair;
 
@@ -229,15 +229,17 @@ public class TestMatcherInserts {
 		BasePattern basePattern = new BasePattern();
 		ClassPattern classPattern = new ClassPattern(classVar);
 		basePattern.addClassPattern(classPattern);
+		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new InsertFieldPatternAction(fieldVar, classVar, Visibility.PRIVATE));
-		dp2.addActionPattern(new InsertMethodPatternAction(methodVar,classVar, Visibility.PUBLIC));
 		
+		FieldPattern insertedFieldPattern = new FieldPattern(fieldVar, Visibility.PRIVATE);
+		MethodPattern insertedMethodPattern = new MethodPattern(methodVar, Visibility.PUBLIC);
+		dp1.addActionPattern(new InsertFieldPatternAction(insertedFieldPattern, classPattern));
+		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
+
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		
@@ -252,15 +254,17 @@ public class TestMatcherInserts {
 		BasePattern basePattern = new BasePattern();
 		ClassPattern classPattern = new ClassPattern(classVar);
 		basePattern.addClassPattern(classPattern);
+		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new InsertFieldPatternAction(fieldVar, classVar, Visibility.PUBLIC));
-		dp2.addActionPattern(new InsertMethodPatternAction(methodVar,classVar, Visibility.PUBLIC));
 		
+		FieldPattern insertedFieldPattern = new FieldPattern(fieldVar, Visibility.PUBLIC);
+		MethodPattern insertedMethodPattern = new MethodPattern(methodVar, Visibility.PUBLIC);
+		dp1.addActionPattern(new InsertFieldPatternAction(insertedFieldPattern, classPattern));
+		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
+
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		
@@ -275,15 +279,18 @@ public class TestMatcherInserts {
 		BasePattern basePattern = new BasePattern();
 		ClassPattern classPattern = new ClassPattern(classVar);
 		basePattern.addClassPattern(classPattern);
+		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new InsertFieldPatternAction(fieldVar, classVar, Visibility.PRIVATE));
-		dp2.addActionPattern(new InsertConstructorPatternAction(constVar, classVar, null));
+		
+		FieldPattern insertedFieldPattern = new FieldPattern(fieldVar, Visibility.PRIVATE);
+		ConstructorPattern insertedConstructorPattern = new ConstructorPattern(constVar, null);
+		dp1.addActionPattern(new InsertFieldPatternAction(insertedFieldPattern, classPattern));
+		dp2.addActionPattern(
+				new InsertConstructorPatternAction(insertedConstructorPattern, classPattern));
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		
@@ -305,15 +312,19 @@ public class TestMatcherInserts {
 		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new InsertConstructorPatternAction(constVar, classVar, null));
-		InsertMethodPatternAction mInsert = new InsertMethodPatternAction(insertMethodVar, classVar, null);
-		mInsert.addCompatible(methodVar);
+		
+		ConstructorPattern insertedConstructorPattern = new ConstructorPattern(constVar, null);
+		dp1.addActionPattern(
+				new InsertConstructorPatternAction(insertedConstructorPattern, classPattern));
+		
+		MethodPattern insertedMethodPattern = new MethodPattern(insertMethodVar, null);
+		InsertMethodPatternAction mInsert = 
+				new InsertMethodPatternAction(insertedMethodPattern, classPattern);
+		mInsert.addCompatible(methodPattern);
 		dp2.addActionPattern(mInsert);
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		
@@ -330,15 +341,17 @@ public class TestMatcherInserts {
 		MethodPattern methodPattern = new MethodPattern(methodVar, null);
 		classPattern.addMethodPattern(methodPattern);
 		basePattern.addClassPattern(classPattern);
+		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp2.addActionPattern(new InsertMethodPatternAction(insMethodVar2, classVar, null));
-		dp2.addActionPattern(new InsertInvocationPatternAction(methodVar, insMethodVar2));
 		
+		MethodPattern insertedMethodPattern = new MethodPattern(insMethodVar2, null);
+		insertedMethodPattern.addDependency(methodVar);
+		
+		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
+
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		
@@ -355,15 +368,20 @@ public class TestMatcherInserts {
 		FieldPattern fieldPattern = new FieldPattern(fieldVar, null);
 		classPattern.addFieldPattern(fieldPattern);
 		basePattern.addClassPattern(classPattern);
+		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp2.addActionPattern(new InsertMethodPatternAction(insMethodVar2, classVar, null));
-		dp2.addActionPattern(new InsertFieldAccessPatternAction(fieldVar, insMethodVar2, null));
 		
+		MethodPattern insertedMethodPattern = new MethodPattern(insMethodVar2, null);
+		FieldAccessPattern fieldAccessPattern = new FieldAccessPattern(fieldVar, null);
+		insertedMethodPattern.addFieldAccessPattern(fieldAccessPattern);
+		
+		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
+//		dp2.addActionPattern(
+//				new InsertFieldAccessPatternAction(fieldAccessPattern, insertedMethodPattern));
+
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		

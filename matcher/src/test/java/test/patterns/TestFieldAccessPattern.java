@@ -18,7 +18,7 @@ public class TestFieldAccessPattern {
 		FieldAccessInstance instance = new FieldAccessInstance(ACCESS_QUALIFIED_NAME, 
 				FieldAccessType.READ);
 		FieldAccessPattern pattern = new FieldAccessPattern(FREE_VAR, FieldAccessType.READ);
-		pattern.setVariableValue(instance.getQualifiedName());
+		pattern.setVariableValue(0, instance.getQualifiedName());
 		assertTrue(pattern.matches(instance), "Same access doesn't match?");
 	}
 	
@@ -27,7 +27,7 @@ public class TestFieldAccessPattern {
 		FieldAccessInstance instance = new FieldAccessInstance(ACCESS_QUALIFIED_NAME, 
 				FieldAccessType.READ);
 		FieldAccessPattern pattern = new FieldAccessPattern(FREE_VAR, null);
-		pattern.setVariableValue(instance.getQualifiedName());
+		pattern.setVariableValue(0, instance.getQualifiedName());
 		assertTrue(pattern.matches(instance), "Any access doesn't match?");
 	}
 	
@@ -36,7 +36,7 @@ public class TestFieldAccessPattern {
 		FieldAccessInstance instance = new FieldAccessInstance(ACCESS_QUALIFIED_NAME, 
 				FieldAccessType.READ);
 		FieldAccessPattern pattern = new FieldAccessPattern(FREE_VAR, FieldAccessType.WRITE);
-		pattern.setVariableValue(instance.getQualifiedName());
+		pattern.setVariableValue(0, instance.getQualifiedName());
 		assertFalse(pattern.matches(instance), "Different accesses match?");
 	}
 	
@@ -45,7 +45,7 @@ public class TestFieldAccessPattern {
 		FieldAccessInstance instance = new FieldAccessInstance(ACCESS_QUALIFIED_NAME, 
 				FieldAccessType.READ);
 		FieldAccessPattern pattern = new FieldAccessPattern(FREE_VAR, FieldAccessType.READ);
-		pattern.setVariableValue("a.b.C.d");
+		pattern.setVariableValue(0, "a.b.C.d");
 		assertFalse(pattern.matches(instance), "Different names match?");
 	}
 	
@@ -54,7 +54,7 @@ public class TestFieldAccessPattern {
 		FieldAccessInstance instance = new FieldAccessInstance(ACCESS_QUALIFIED_NAME, 
 				FieldAccessType.READ);
 		FieldAccessPattern pattern = new FieldAccessPattern(FREE_VAR, null);
-		pattern.setVariableValue("a.b.C.d");
+		pattern.setVariableValue(0, "a.b.C.d");
 		assertFalse(pattern.matches(instance), "Different names (with any access) match?");
 	}
 }
