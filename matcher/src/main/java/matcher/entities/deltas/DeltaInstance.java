@@ -32,7 +32,7 @@ public class DeltaInstance {
 	public List<String> getClassesQualifiedNames() {
 		return actions.stream()
 					  .filter(a -> isInsertClassAction(a))
-					  .map(a ->((InsertClassAction) a).getInsertedEntityQualifiedName())
+					  .map(a ->((InsertClassAction) a).getInsertedClassQualifiedName())
 					  .collect(Collectors.toList());
 	}
 	
@@ -56,7 +56,7 @@ public class DeltaInstance {
 	private List<String> getInsertedFieldsQualifiedNames() {
 		return actions.stream()
 					  .filter(a -> isInsertFieldAction(a))
-					  .map(a -> ((InsertFieldAction) a).getInsertedEntityQualifiedName())
+					  .map(a -> ((InsertFieldAction) a).getInsertedFieldQualifiedName())
 					  .collect(Collectors.toList());
 	}
 	
@@ -78,13 +78,25 @@ public class DeltaInstance {
 	public List<String> getMethodsQualifiedNames() {
 		List<String> result = getInsertedMethodsQualifiedNames();
 		result.addAll(getDeletedMethodsQualifiedNames());
+		result.addAll(getInsertedMethodsInInsertedClassesQualifiedNames());
+		return result;
+	}
+	
+	private List<String> getInsertedMethodsInInsertedClassesQualifiedNames(){
+		List<String> result = new ArrayList<>();
+		for(ActionInstance a: actions) {
+			if(isInsertClassAction(a)) {
+				InsertClassAction ica = (InsertClassAction) a;
+				result.addAll(ica.getInsertedMethodsQualifiedName());
+			}
+		}
 		return result;
 	}
 
 	private List<String> getInsertedMethodsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isInsertMethodAction(a))
-				  .map(a -> ((InsertMethodAction) a).getInsertedEntityQualifiedName())
+				  .map(a -> ((InsertMethodAction) a).getInsertedMethodQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
@@ -112,7 +124,7 @@ public class DeltaInstance {
 	private List<String> getInsertedConstructorsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isInsertConstructorAction(a))
-				  .map(a -> ((InsertConstructorAction) a).getInsertedEntityQualifiedName())
+				  .map(a -> ((InsertConstructorAction) a).getInsertedConstructorQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
@@ -140,7 +152,7 @@ public class DeltaInstance {
 	private List<String> getInsertedInvocationsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isInsertInvocationAction(a))
-				  .map(a -> ((InsertAction) a).getInsertedEntityQualifiedName())
+				  .map(a -> ((InsertInvocationAction) a).getInsertedInvocationQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
@@ -152,13 +164,11 @@ public class DeltaInstance {
 	}
 	
 	private boolean isInsertInvocationAction(ActionInstance a) {
-		return !isInsertFieldAction(a) && !isInsertConstructorAction(a) &&
-				!isInsertMethodAction(a) && !isInsertFieldAccessAction(a) && a instanceof InsertAction;
+		return a instanceof InsertInvocationAction;
 	}
 	
 	private boolean isDeleteInvocationAction(ActionInstance a) {
-		return !isDeleteFieldAction(a) && !isDeleteConstructorAction(a) &&
-				!isDeleteMethodAction(a) && !isDeleteFieldAccessAction(a) && a instanceof DeleteAction;
+		return a instanceof DeleteInvocationAction;
 	}
 	
 	public List<String> getFieldAccessesQualifiedNames() {
@@ -170,7 +180,7 @@ public class DeltaInstance {
 	private List<String> getInsertedFieldAccessesQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isInsertFieldAccessAction(a))
-				  .map(a -> ((InsertFieldAccessAction) a).getInsertedEntityQualifiedName())
+				  .map(a -> ((InsertFieldAccessAction) a).getInsertedFieldAccessQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
