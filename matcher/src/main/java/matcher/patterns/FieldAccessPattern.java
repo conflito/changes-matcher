@@ -31,8 +31,9 @@ public class FieldAccessPattern {
 		return freeVariable.isId(id);
 	}
 	
-	public void setVariableValue(String value) {
-		freeVariable.setValue(value);
+	public void setVariableValue(int id, String value) {
+		if(isVariableId(id))
+			freeVariable.setValue(value);
 	}
 	
 	public void clean() {

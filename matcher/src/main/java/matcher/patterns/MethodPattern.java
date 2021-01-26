@@ -121,8 +121,7 @@ public class MethodPattern {
 
 	private void setVariableValueFieldAccesses(int id, String value) {
 		for(FieldAccessPattern pattern: fieldAccesses) {
-			if(pattern.isVariableId(id))
-				pattern.setVariableValue(value);
+			pattern.setVariableValue(id, value);
 		}
 		
 	}
