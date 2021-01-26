@@ -238,9 +238,24 @@ public class SpoonHandler {
 	private List<CtInvocation<?>> filterInvocations(String classQualifiedName, 
 				List<CtInvocation<?>> invocations){
 		return invocations.stream()
-						  .filter(i -> !i.toString().equals("super()") &&
-								  !getInvocationClassQualifiedName(i).equals(classQualifiedName))
+						  .filter(i -> isNotSuperInvocation(i) &&
+								  !fromTheSameClass(i, classQualifiedName))
 						  .collect(Collectors.toList());
+	}
+	
+	private boolean fromTheSameClass(CtInvocation<?> invocation
+			, String classQualifiedName) {
+		try {
+			return getInvocationClassQualifiedName(invocation).equals(classQualifiedName);
+		}
+		catch(Exception e) {
+			return false;
+		}
+	}
+	
+	private boolean isNotSuperInvocation(CtInvocation<?> invocation) {
+		String invocationName = invocation.toString();
+		return !invocationName.equals("super()") && !invocationName.startsWith("super.");
 	}
 
 	private void loadClassTree(CtClass<?> changedClass, Launcher launcher, 
@@ -266,10 +281,7 @@ public class SpoonHandler {
 		return l.get(0);
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private String getInvocationClassQualifiedName(CtInvocation<?> invocation) {
-		CtType<?> parent = (CtType<?>)invocation.getExecutable()
-												  .getParent(new TypeFilter(CtType.class));
-		return parent.getQualifiedName();
+		return invocation.getExecutable().getDeclaringType().getQualifiedName();
 	}
 }
