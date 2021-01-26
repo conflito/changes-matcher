@@ -1,26 +1,38 @@
 package matcher.entities.deltas;
 
-import matcher.entities.FieldAccessType;
+import matcher.entities.FieldAccessInstance;
+import matcher.entities.MethodInstance;
 
 public class InsertFieldAccessAction extends InsertAction {
 
-	private FieldAccessType accessType;
+	private FieldAccessInstance insertedFieldAccess;
+	
+	private MethodInstance holderMethod;
 
-	public InsertFieldAccessAction(Insertable insertedEntity, Holder holderEntity, 
-			FieldAccessType accessType) {
-		super(insertedEntity, holderEntity);
-		this.accessType = accessType;
+	public InsertFieldAccessAction(FieldAccessInstance insertedFieldAccess, 
+			MethodInstance holderMethod) {
+		super();
+		this.insertedFieldAccess = insertedFieldAccess;
+		this.holderMethod = holderMethod;
+	}
+
+	public FieldAccessInstance getInsertedFieldAccess() {
+		return insertedFieldAccess;
 	}
 	
-	public FieldAccessType getAccessType() {
-		return accessType;
+	public String getInsertedFieldAccessQualifiedName() {
+		return insertedFieldAccess.getQualifiedName();
 	}
-	
+
+	public MethodInstance getHolderMethod() {
+		return holderMethod;
+	}
+
 	public String toString() {
-		StringBuilder result = new StringBuilder("insert " + accessType.toString().toLowerCase() 
-				+ " of field ");
-		result.append(getInsertedEntityQualifiedName() + " in ");
-		result.append(getHolderEntityQualifiedName());
+		StringBuilder result = new StringBuilder("insert " + 
+				insertedFieldAccess.getAccessType().toString().toLowerCase() + " of field ");
+		result.append(insertedFieldAccess.getQualifiedName() + " in ");
+		result.append(holderMethod.getQualifiedName());
 		return result.toString();
 	}
 

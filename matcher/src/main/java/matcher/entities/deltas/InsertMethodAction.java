@@ -3,43 +3,55 @@ package matcher.entities.deltas;
 import java.util.ArrayList;
 import java.util.List;
 
-import matcher.entities.Visibility;
+import matcher.entities.ClassInstance;
+import matcher.entities.MethodInstance;
 
 public class InsertMethodAction extends InsertAction {
-
-	private Visibility visibility;
 	
-	private List<Holder> compatibles;
-
-	public InsertMethodAction(Insertable insertedEntity, Holder holderEntity, 
-			Visibility visibility) {
-		super(insertedEntity, holderEntity);
-		this.visibility = visibility;
-		compatibles = new ArrayList<>();
+	private MethodInstance insertedMethod;
+	
+	private ClassInstance holderClass;
+	
+	private List<MethodInstance> compatibles;
+	
+	public InsertMethodAction(MethodInstance insertedMethod, ClassInstance holderClass) {
+		super();
+		this.insertedMethod = insertedMethod;
+		this.holderClass = holderClass;
+		this.compatibles = new ArrayList<>();
 	}
 	
-	public Visibility getVisibility() {
-		return visibility;
+	public MethodInstance getInsertedMethod() {
+		return insertedMethod;
 	}
 	
-	public List<Holder> getCompatibles() {
+	public String getInsertedMethodQualifiedName() {
+		return insertedMethod.getQualifiedName();
+	}
+
+	public ClassInstance getHolderClass() {
+		return holderClass;
+	}
+
+	public List<MethodInstance> getCompatibles() {
 		return compatibles;
 	}
 
-	public void addCompatible(Holder compatible) {
+	public void addCompatible(MethodInstance compatible) {
 		compatibles.add(compatible);
 	}
 	
 	public String toString() {
-		StringBuilder result = new StringBuilder("insert " + visibility.toString().toLowerCase() 
-				+ " method ");
-		result.append(getInsertedEntityQualifiedName() + " in ");
-		result.append(getHolderEntityQualifiedName());
+		StringBuilder result = new StringBuilder("insert " + 
+				insertedMethod.getVisibility().toString().toLowerCase() + " method ");
+		result.append(insertedMethod.getQualifiedName() + " in ");
+		result.append(holderClass.getQualifiedName());
+		result.append("\n" + insertedMethod.getDirectDependencies());
 		if(!compatibles.isEmpty()) {
 			result.append("\n");
-			for(Holder h: compatibles) {
-				result.append(getInsertedEntityQualifiedName() + " compatible with ");
-				result.append(h.getQualifiedName() + "\n");
+			for(MethodInstance m: compatibles) {
+				result.append(insertedMethod.getQualifiedName() + " compatible with ");
+				result.append(m.getQualifiedName() + "\n");
 			}			
 		}
 		return result.toString();

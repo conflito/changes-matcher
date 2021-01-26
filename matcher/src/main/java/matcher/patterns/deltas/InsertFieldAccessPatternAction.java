@@ -1,30 +1,66 @@
 package matcher.patterns.deltas;
 
-import matcher.entities.FieldAccessType;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.InsertFieldAccessAction;
-import matcher.patterns.FreeVariable;
+import matcher.patterns.FieldAccessPattern;
+import matcher.patterns.MethodPattern;
 
 public class InsertFieldAccessPatternAction extends InsertPatternAction {
 
-	private FieldAccessType accessType;
-
-	public InsertFieldAccessPatternAction(FreeVariable insertedEntity, FreeVariable holderEntity, 
-			FieldAccessType accessType) {
-		super(insertedEntity, holderEntity);
-		this.accessType = accessType;
+	private FieldAccessPattern insertedFieldAccessPattern;
+	
+	private MethodPattern holderMethodPattern;
+	
+	public InsertFieldAccessPatternAction(FieldAccessPattern insertedFieldAccessPattern,
+			MethodPattern holderMethodPattern) {
+		super();
+		this.insertedFieldAccessPattern = insertedFieldAccessPattern;
+		this.holderMethodPattern = holderMethodPattern;
 	}
 	
+	public int getInsertedFieldAccessVariableId() {
+		return insertedFieldAccessPattern.getVariableId();
+	}
+
 	@Override
 	public boolean matches(ActionInstance action) {
-		return action instanceof InsertFieldAccessAction && filled() && matches((InsertFieldAccessAction)action);
+		return action instanceof InsertFieldAccessAction && filled() 
+				&& matches((InsertFieldAccessAction)action);
 	}
 	
 	private boolean matches(InsertFieldAccessAction action) {
 		return getAction() == action.getAction() &&
-			   getInsertedEntity().matches(action.getInsertedEntityQualifiedName()) &&
-			   getHolderEntity().matches(action.getHolderEntityQualifiedName()) &&
-			   (accessType == null || accessType == action.getAccessType());
+			   insertedFieldAccessPattern.matches(action.getInsertedFieldAccess()) &&
+			   holderMethodPattern.matches(action.getHolderMethod());
+	}
+
+	@Override
+	public void setVariableValue(int id, String value) {
+		insertedFieldAccessPattern.setVariableValue(id, value);
+		holderMethodPattern.setVariableValue(id, value);
+	}
+
+	@Override
+	public boolean filled() {
+		return insertedFieldAccessPattern.filled() && holderMethodPattern.filled();
+	}
+	
+	@Override
+	public void clean() {
+		insertedFieldAccessPattern.clean();
+		holderMethodPattern.clean();
+	}
+
+	@Override
+	public String toStringDebug() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String toStringFilled() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

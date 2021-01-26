@@ -1,26 +1,37 @@
 package matcher.entities.deltas;
 
-import matcher.entities.Visibility;
+import matcher.entities.ClassInstance;
+import matcher.entities.ConstructorInstance;
 
 public class InsertConstructorAction extends InsertAction {
-
-	private Visibility visibility;
-
-	public InsertConstructorAction(Insertable insertedEntity, Holder holderEntity, 
-			Visibility visibility) {
-		super(insertedEntity, holderEntity);
-		this.visibility = visibility;
+	
+	private ConstructorInstance insertedConstructor;
+	
+	private ClassInstance holderClass;
+	
+	public InsertConstructorAction(ConstructorInstance insertedConstructor, ClassInstance holderClass) {
+		super();
+		this.insertedConstructor = insertedConstructor;
+		this.holderClass = holderClass;
 	}
 	
-	public Visibility getVisibility() {
-		return visibility;
+	public ConstructorInstance getInsertedConstructor() {
+		return insertedConstructor;
 	}
 	
+	public String getInsertedConstructorQualifiedName() {
+		return insertedConstructor.getQualifiedName();
+	}
+
+	public ClassInstance getHolderClass() {
+		return holderClass;
+	}
+
 	public String toString() {
-		StringBuilder result = new StringBuilder("insert " + visibility.toString().toLowerCase() 
-				+ " constructor ");
-		result.append(getInsertedEntityQualifiedName() + " in ");
-		result.append(getHolderEntityQualifiedName());
+		StringBuilder result = new StringBuilder("insert " + 
+				insertedConstructor.getVisibility().toString().toLowerCase() + " constructor ");
+		result.append(insertedConstructor.getQualifiedName() + " in ");
+		result.append(holderClass.getQualifiedName());
 		return result.toString();
 	}
 

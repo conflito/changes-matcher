@@ -3,48 +3,60 @@ package matcher.patterns.deltas;
 import java.util.ArrayList;
 import java.util.List;
 
-import matcher.entities.Visibility;
+import matcher.entities.MethodInstance;
 import matcher.entities.deltas.ActionInstance;
-import matcher.entities.deltas.Holder;
 import matcher.entities.deltas.InsertMethodAction;
-import matcher.patterns.FreeVariable;
+import matcher.patterns.ClassPattern;
+import matcher.patterns.MethodPattern;
 
 public class InsertMethodPatternAction extends InsertPatternAction {
 
-	private Visibility visibility;
+	private MethodPattern insertedMethodPattern;
 	
-	private List<FreeVariable> compatibles;
+	private ClassPattern holderClassPattern;
+	
+	private List<MethodPattern> compatibles;
+	
+	public InsertMethodPatternAction(MethodPattern insertedMethodPattern, ClassPattern holderClassPattern) {
+		super();
+		this.insertedMethodPattern = insertedMethodPattern;
+		this.holderClassPattern = holderClassPattern;
+		this.compatibles = new ArrayList<>();
+	}
 
-	public InsertMethodPatternAction(FreeVariable insertedEntity, FreeVariable holderEntity, 
-			Visibility visibility) {
-		super(insertedEntity, holderEntity);
-		this.visibility = visibility;
-		compatibles = new ArrayList<>();
+	public void addCompatible(MethodPattern methodPattern) {
+		compatibles.add(methodPattern);
 	}
 	
-	public void addCompatible(FreeVariable var) {
-		compatibles.add(var);
+	public int getInsertedMethodVariableId() {
+		return insertedMethodPattern.getVariableId();
+	}
+	
+	public boolean hasInvocations() {
+		return insertedMethodPattern.hasInvocations();
+	}
+	
+	public boolean hasFieldAccesses() {
+		return insertedMethodPattern.hasFieldAccesses();
 	}
 	
 	@Override
 	public void setVariableValue(int id, String value) {
-		super.setVariableValue(id, value);
-		for(FreeVariable v: compatibles) {
-			if(v.isId(id))
-				v.setValue(value);
-		}
+		insertedMethodPattern.setVariableValue(id, value);
+		holderClassPattern.setVariableValue(id, value);
+		compatibles.forEach(m -> m.setVariableValue(id, value));
 	}
 	
 	@Override
 	public boolean matches(ActionInstance action) {
-		return action instanceof InsertMethodAction && filled() && matches((InsertMethodAction)action);
+		return action instanceof InsertMethodAction && filled() && 
+				matches((InsertMethodAction)action);
 	}
 	
 	private boolean matches(InsertMethodAction action) {
 		return getAction() == action.getAction() &&
-			   getInsertedEntity().matches(action.getInsertedEntityQualifiedName()) &&
-			   getHolderEntity().matches(action.getHolderEntityQualifiedName()) &&
-			   (visibility == null || visibility == action.getVisibility()) &&
+			   insertedMethodPattern.matches(action.getInsertedMethod()) &&
+			   holderClassPattern.matches(action.getHolderClass()) &&
 			   compatiblesMatch(action);
 	}
 	
@@ -52,16 +64,33 @@ public class InsertMethodPatternAction extends InsertPatternAction {
 		return compatibles.stream().allMatch(v -> matchesOne(v, action.getCompatibles()));
 	}
 
-	private boolean matchesOne(FreeVariable v, List<Holder> compatibles) {
-		return compatibles.stream().anyMatch(h -> v.matches(h.getQualifiedName()));
+	private boolean matchesOne(MethodPattern pattern, List<MethodInstance> compatibles) {
+		return compatibles.stream().anyMatch(m -> pattern.matches(m));
 	}
 	
 	@Override
 	public void clean() {
-		super.clean();
-		for(FreeVariable v: compatibles) {
-			v.clean();
-		}
+		insertedMethodPattern.clean();
+		holderClassPattern.clean();
+		compatibles.forEach(m -> m.clean());
+	}
+
+	@Override
+	public boolean filled() {
+		return insertedMethodPattern.filled() && holderClassPattern.filled() &&
+				compatibles.stream().allMatch(m -> m.filled());
+	}
+
+	@Override
+	public String toStringDebug() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String toStringFilled() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
