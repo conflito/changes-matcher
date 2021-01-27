@@ -67,6 +67,7 @@ public class TestMatcherSemanticConflicts {
 			"UnexpectedOverriding01" + File.separator;
 	private static final String UNEXPECTED_OVERIDE2_FOLDER = 
 			"UnexpectedOverriding02" + File.separator;
+	private static final String PARALLEL_CHANGED_FOLDER = "ParallelChanges" + File.separator;
 
 
 	@Test
@@ -728,6 +729,34 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(6).getSecond().equals("B"), 
 				"Interface is not B?");
 	}
+	
+	@Test
+	public void parallelChangesTest() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ PARALLEL_CHANGED_FOLDER + CONFIG_FILE_NAME);
+
+		String basePath = SRC_FOLDER + PARALLEL_CHANGED_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + PARALLEL_CHANGED_FOLDER + "A01.java";
+		String var2Path = SRC_FOLDER + PARALLEL_CHANGED_FOLDER + "A02.java";
+
+		String[] bases = {basePath};
+		String[] variants1 = {var1Path};
+		String[] variants2 = {var2Path};
+
+		ConflictPattern cp = getParallelChangedPattern();
+
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
+
+		assertTrue(result.size() == 1, "More than one result for parallel changes?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("A"), "Class is not A");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("m()"), 
+				"Updated method is not m()?");
+	}
 
 	private ConflictPattern getOverloadByAdditionPattern() {
 		FreeVariable classVar = new FreeVariable(0);
@@ -1322,6 +1351,29 @@ public class TestMatcherSemanticConflicts {
 		conflict.setSecondDeltaPattern(dp2);
 		conflict.addDifferentVariablesRule(classVar1, classVar3);
 
+		return conflict;
+	}
+	
+	private ConflictPattern getParallelChangedPattern() {
+		FreeVariable classVar = new FreeVariable(0);
+		FreeVariable methodVar = new FreeVariable(1);
+		
+		BasePattern basePattern = new BasePattern();
+		ClassPattern classPattern = new ClassPattern(classVar);
+		MethodPattern methodPattern = new MethodPattern(methodVar, null);
+		classPattern.addMethodPattern(methodPattern);
+		basePattern.addClassPattern(classPattern);
+		
+		DeltaPattern dp1 = new DeltaPattern();
+		DeltaPattern dp2 = new DeltaPattern();
+		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern));
+		dp2.addActionPattern(new UpdateMethodPatternAction(methodPattern));
+		
+		ConflictPattern conflict = new ConflictPattern();
+		conflict.setBasePattern(basePattern);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
+		
 		return conflict;
 	}
 }
