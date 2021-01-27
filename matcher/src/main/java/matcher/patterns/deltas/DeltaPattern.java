@@ -241,7 +241,7 @@ public class DeltaPattern {
 	private List<Integer> getDeletedMethodInvocationsVariableIds() {
 		return actions.stream()
 					  .filter(a -> isDeleteInvocationAction(a))
-					  .map(a -> ((DeletePatternAction)a).getDeletedEntityId())
+					  .map(a -> ((DeleteInvocationPatternAction)a).getDeletedInvocationVariableId())
 					  .collect(Collectors.toList());
 	}
 
@@ -261,7 +261,7 @@ public class DeltaPattern {
 	private List<Integer> getDeletedConstructorsVariableIds(){
 		return actions.stream()
 				  .filter(a -> isDeleteConstructorAction(a))
-				  .map(a -> ((DeleteConstructorPatternAction)a).getDeletedEntityId())
+				  .map(a -> ((DeleteConstructorPatternAction)a).getDeletedConstructorVariableId())
 				  .collect(Collectors.toList());
 	}
 
@@ -275,7 +275,7 @@ public class DeltaPattern {
 	private List<Integer> getDeletedMethodsVariableIds(){
 		return actions.stream()
 					  .filter(a -> isDeleteMethodAction(a))
-					  .map(a -> ((DeleteMethodPatternAction)a).getDeletedEntityId())
+					  .map(a -> ((DeleteMethodPatternAction)a).getDeletedMethodVariableId())
 					  .collect(Collectors.toList());
 	}
 	
@@ -289,7 +289,7 @@ public class DeltaPattern {
 	private List<Integer> getDeletedFieldsVariableIds() {
 		return actions.stream()
 				  .filter(a -> isDeleteFieldAction(a))
-				  .map(a -> ((DeleteFieldPatternAction)a).getDeletedEntityId())
+				  .map(a -> ((DeleteFieldPatternAction)a).getDeletedFieldVariableId())
 				  .collect(Collectors.toList());
 	}
 
@@ -303,7 +303,7 @@ public class DeltaPattern {
 	private List<Integer> getDeletedFieldAccessesVariableIds(){
 		return actions.stream()
 				  .filter(a -> isDeleteFieldAccessAction(a))
-				  .map(a -> ((DeleteFieldAccessPatternAction)a).getDeletedEntityId())
+				  .map(a -> ((DeleteFieldAccessPatternAction)a).getDeletedFieldAccessVariableId())
 				  .collect(Collectors.toList());
 	}
 

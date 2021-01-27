@@ -1,26 +1,38 @@
 package matcher.entities.deltas;
 
 
-import matcher.entities.Visibility;
+import matcher.entities.ClassInstance;
+import matcher.entities.MethodInstance;
 
 public class DeleteMethodAction extends DeleteAction {
 
-	private Visibility visibility;
+	private MethodInstance deletedMethod;
+	
+	private ClassInstance holderClass;
+	
+	public DeleteMethodAction(MethodInstance insertedMethod, ClassInstance holderClass) {
+		super();
+		this.deletedMethod = insertedMethod;
+		this.holderClass = holderClass;
+	}
 
-	public DeleteMethodAction(Deletable deletedEntity, Holder holderEntity, Visibility visibility) {
-		super(deletedEntity, holderEntity);
-		this.visibility = visibility;
+	public MethodInstance getDeletedMethod() {
+		return deletedMethod;
+	}
+
+	public ClassInstance getHolderClass() {
+		return holderClass;
 	}
 	
-	public Visibility getVisibility() {
-		return visibility;
+	public String getDeletedMethodQualifiedName() {
+		return deletedMethod.getQualifiedName();
 	}
-	
+
 	public String toString() {
-		StringBuilder result = new StringBuilder("delete " + visibility.toString().toLowerCase() 
-				+ " method ");
-		result.append(getDeletedEntityQualifiedName() + " in ");
-		result.append(getHolderEntityQualifiedName());
+		StringBuilder result = new StringBuilder("delete " + 
+				deletedMethod.getVisibility().toString().toLowerCase() + " method ");
+		result.append(deletedMethod.getQualifiedName()+ " in ");
+		result.append(deletedMethod.getQualifiedName());
 		return result.toString();
 	}
 }

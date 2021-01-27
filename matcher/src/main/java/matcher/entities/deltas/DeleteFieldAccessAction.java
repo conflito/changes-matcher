@@ -1,25 +1,38 @@
 package matcher.entities.deltas;
 
-import matcher.entities.FieldAccessType;
+import matcher.entities.FieldAccessInstance;
+import matcher.entities.MethodInstance;
 
 public class DeleteFieldAccessAction extends DeleteAction{
 
-	private FieldAccessType accessType;
+	private FieldAccessInstance deletedFieldAccess;
+	
+	private MethodInstance holderMethod;
+	
+	public DeleteFieldAccessAction(FieldAccessInstance deletedFieldAccess, 
+			MethodInstance holderMethod) {
+		super();
+		this.deletedFieldAccess = deletedFieldAccess;
+		this.holderMethod = holderMethod;
+	}
 
-	public DeleteFieldAccessAction(Deletable deletedEntity, Holder holderEntity, FieldAccessType accessType) {
-		super(deletedEntity, holderEntity);
-		this.accessType = accessType;
+	public FieldAccessInstance getDeletedFieldAccess() {
+		return deletedFieldAccess;
 	}
-	
-	public FieldAccessType getAccessType() {
-		return accessType;
+
+	public MethodInstance getHolderMethod() {
+		return holderMethod;
 	}
-	
+
+	public String getDeletedFieldAccessQualifiedName() {
+		return deletedFieldAccess.getQualifiedName();
+	}
+
 	public String toString() {
-		StringBuilder result = new StringBuilder("delete " + accessType.toString().toLowerCase() 
-				+ " of field ");
-		result.append(getDeletedEntityQualifiedName() + " in ");
-		result.append(getHolderEntityQualifiedName());
+		StringBuilder result = new StringBuilder("delete " + 
+				deletedFieldAccess.getAccessType().toString().toLowerCase() + " of field ");
+		result.append(deletedFieldAccess.getQualifiedName() + " in ");
+		result.append(holderMethod.getQualifiedName());
 		return result.toString();
 	}
 }

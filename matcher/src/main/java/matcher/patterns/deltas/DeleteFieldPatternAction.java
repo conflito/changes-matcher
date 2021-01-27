@@ -1,17 +1,24 @@
 package matcher.patterns.deltas;
 
-import matcher.entities.Visibility;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.DeleteFieldAction;
-import matcher.patterns.FreeVariable;
+import matcher.patterns.ClassPattern;
+import matcher.patterns.FieldPattern;
 
 public class DeleteFieldPatternAction extends DeletePatternAction {
 
-	private Visibility visibility;
+	private FieldPattern deletedFieldPattern;
+	
+	private ClassPattern holderClassPattern;
+	
+	public DeleteFieldPatternAction(FieldPattern deletedFieldPattern, ClassPattern holderClassPattern) {
+		super();
+		this.deletedFieldPattern = deletedFieldPattern;
+		this.holderClassPattern = holderClassPattern;
+	}
 
-	public DeleteFieldPatternAction(FreeVariable deletedEntity, FreeVariable holderEntity, Visibility visibility) {
-		super(deletedEntity, holderEntity);
-		this.visibility = visibility;
+	public int getDeletedFieldVariableId() {
+		return deletedFieldPattern.getVariableId();
 	}
 	
 	@Override
@@ -21,8 +28,36 @@ public class DeleteFieldPatternAction extends DeletePatternAction {
 	
 	private boolean matches(DeleteFieldAction action) {
 		return getAction() == action.getAction() &&
-			   getDeletedEntity().matches(action.getDeletedEntityQualifiedName()) &&
-			   getHolderEntity().matches(action.getHolderEntityQualifiedName()) &&
-			   (visibility == null || visibility == action.getVisibility());
+			   deletedFieldPattern.matches(action.getDeletedField()) &&
+			   holderClassPattern.matches(action.getHolderClass());
+	}
+
+	@Override
+	public void setVariableValue(int id, String value) {
+		deletedFieldPattern.setVariableValue(id, value);
+		holderClassPattern.setVariableValue(id, value);
+	}
+
+	@Override
+	public boolean filled() {
+		return deletedFieldPattern.filled() && holderClassPattern.filled();
+	}
+	
+	@Override
+	public void clean() {
+		deletedFieldPattern.clean();
+		holderClassPattern.clean();
+	}
+
+	@Override
+	public String toStringDebug() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String toStringFilled() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -63,7 +63,7 @@ public class DeltaInstance {
 	private List<String> getDeletedFieldsQualifiedNames(){
 		return actions.stream()
 				  .filter(a -> isDeleteFieldAction(a))
-				  .map(a -> ((DeleteFieldAction) a).getDeletedEntityQualifiedName())
+				  .map(a -> ((DeleteFieldAction) a).getDeletedFieldQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
@@ -103,7 +103,7 @@ public class DeltaInstance {
 	private List<String> getDeletedMethodsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isDeleteMethodAction(a))
-				  .map(a -> ((DeleteMethodAction) a).getDeletedEntityQualifiedName())
+				  .map(a -> ((DeleteMethodAction) a).getDeletedMethodQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
@@ -131,7 +131,7 @@ public class DeltaInstance {
 	private List<String> getDeletedConstructorsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isDeleteConstructorAction(a))
-				  .map(a -> ((DeleteConstructorAction) a).getDeletedEntityQualifiedName())
+				  .map(a -> ((DeleteConstructorAction) a).getDeletedConstructorQualifiedName())
 				  .collect(Collectors.toList());
 	}
 
@@ -159,7 +159,7 @@ public class DeltaInstance {
 	private List<String> getDeletedInvocationsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isDeleteInvocationAction(a))
-				  .map(a -> ((DeleteAction) a).getDeletedEntityQualifiedName())
+				  .map(a -> ((DeleteInvocationAction) a).getDeletedInvocationQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
@@ -187,7 +187,7 @@ public class DeltaInstance {
 	private List<String> getDeletedFieldAccessesQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isDeleteFieldAccessAction(a))
-				  .map(a -> ((DeleteFieldAccessAction) a).getDeletedEntityQualifiedName())
+				  .map(a -> ((DeleteFieldAccessAction) a).getDeletedFieldAccessQualifiedName())
 				  .collect(Collectors.toList());
 	}
 

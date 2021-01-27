@@ -1,25 +1,37 @@
 package matcher.entities.deltas;
 
-import matcher.entities.Visibility;
+import matcher.entities.ClassInstance;
+import matcher.entities.ConstructorInstance;
 
 public class DeleteConstructorAction extends DeleteAction {
 	
-	private Visibility visibility;
+	private ConstructorInstance deletedConstructor;
+	
+	private ClassInstance holderClass;
+	
+	public DeleteConstructorAction(ConstructorInstance deletedConstructor, ClassInstance holderClass) {
+		super();
+		this.deletedConstructor = deletedConstructor;
+		this.holderClass = holderClass;
+	}
 
-	public DeleteConstructorAction(Deletable deletedEntity, Holder holderEntity, Visibility visibility) {
-		super(deletedEntity, holderEntity);
-		this.visibility = visibility;
+	public ConstructorInstance getDeletedConstructor() {
+		return deletedConstructor;
 	}
-	
-	public Visibility getVisibility() {
-		return visibility;
+
+	public ClassInstance getHolderClass() {
+		return holderClass;
 	}
-	
+
+	public String getDeletedConstructorQualifiedName() {
+		return deletedConstructor.getQualifiedName();
+	}
+
 	public String toString() {
-		StringBuilder result = new StringBuilder("delete " + visibility.toString().toLowerCase() 
-				+ " constructor ");
-		result.append(getDeletedEntityQualifiedName() + " in ");
-		result.append(getHolderEntityQualifiedName());
+		StringBuilder result = new StringBuilder("delete " + 
+				deletedConstructor.getVisibility().toString().toLowerCase() + " constructor ");
+		result.append(deletedConstructor.getQualifiedName() + " in ");
+		result.append(holderClass.getQualifiedName());
 		return result.toString();
 	}
 }

@@ -1,20 +1,28 @@
 package matcher.patterns.deltas;
 
-import matcher.entities.FieldAccessType;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.DeleteFieldAccessAction;
-import matcher.patterns.FreeVariable;
+import matcher.patterns.FieldAccessPattern;
+import matcher.patterns.MethodPattern;
 
 public class DeleteFieldAccessPatternAction extends DeletePatternAction {
 
-	private FieldAccessType accessType;
-
-	public DeleteFieldAccessPatternAction(FreeVariable deletedEntity, FreeVariable holderEntity,
-			FieldAccessType accessType) {
-		super(deletedEntity, holderEntity);
-		this.accessType = accessType;
+	private FieldAccessPattern deletedFieldAccessPattern;
+	
+	private MethodPattern holderMethodPattern;
+	
+	public DeleteFieldAccessPatternAction(FieldAccessPattern deletedFieldAccessPattern,
+			MethodPattern holderMethodPattern) {
+		super();
+		this.deletedFieldAccessPattern = deletedFieldAccessPattern;
+		this.holderMethodPattern = holderMethodPattern;
 	}
 	
+	public int getDeletedFieldAccessVariableId() {
+		return deletedFieldAccessPattern.getVariableId();
+	}
+
+
 	@Override
 	public boolean matches(ActionInstance action) {
 		return action instanceof DeleteFieldAccessAction && filled() 
@@ -23,8 +31,36 @@ public class DeleteFieldAccessPatternAction extends DeletePatternAction {
 	
 	private boolean matches(DeleteFieldAccessAction action) {
 		return getAction() == action.getAction() &&
-			   getDeletedEntity().matches(action.getDeletedEntityQualifiedName()) &&
-			   getHolderEntity().matches(action.getHolderEntityQualifiedName()) &&
-			   (accessType == null || accessType == action.getAccessType());
+			   deletedFieldAccessPattern.matches(action.getDeletedFieldAccess()) &&
+			   holderMethodPattern.matches(action.getHolderMethod());
+	}
+	
+	@Override
+	public void setVariableValue(int id, String value) {
+		deletedFieldAccessPattern.setVariableValue(id, value);
+		holderMethodPattern.setVariableValue(id, value);
+	}
+
+	@Override
+	public boolean filled() {
+		return deletedFieldAccessPattern.filled() && holderMethodPattern.filled();
+	}
+	
+	@Override
+	public void clean() {
+		deletedFieldAccessPattern.clean();
+		holderMethodPattern.clean();
+	}
+
+	@Override
+	public String toStringDebug() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String toStringFilled() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
