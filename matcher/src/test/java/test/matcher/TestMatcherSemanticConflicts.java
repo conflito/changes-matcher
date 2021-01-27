@@ -981,7 +981,8 @@ public class TestMatcherSemanticConflicts {
 		
 		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
-		dp2.addActionPattern(new DeleteMethodPatternAction(methodVar, classVar, null));
+//		dp2.addActionPattern(new DeleteMethodPatternAction(methodVar, classVar, null));
+		dp2.addActionPattern(new DeleteMethodPatternAction(methodPattern, classPattern));
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);

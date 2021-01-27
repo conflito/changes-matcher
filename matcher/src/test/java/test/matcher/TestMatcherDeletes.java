@@ -10,6 +10,7 @@ import matcher.patterns.ConstructorPattern;
 import matcher.patterns.FieldAccessPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
+import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
 import matcher.patterns.deltas.DeleteConstructorPatternAction;
 import matcher.patterns.deltas.DeleteFieldAccessPatternAction;
@@ -215,15 +216,15 @@ public class TestMatcherDeletes {
 		classPattern.addFieldPattern(fieldPattern);
 		classPattern.addMethodPattern(methodPattern);
 		basePattern.addClassPattern(classPattern);
+		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new DeleteFieldPatternAction(fieldVar, classVar, Visibility.PRIVATE));
-		dp2.addActionPattern(new DeleteMethodPatternAction(methodVar, classVar, Visibility.PUBLIC));
+		
+		dp1.addActionPattern(new DeleteFieldPatternAction(fieldPattern, classPattern));
+		dp2.addActionPattern(new DeleteMethodPatternAction(methodPattern, classPattern));
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		
@@ -242,15 +243,15 @@ public class TestMatcherDeletes {
 		classPattern.addFieldPattern(fieldPattern);
 		classPattern.addConstructorPattern(cPattern);
 		basePattern.addClassPattern(classPattern);
+		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new DeleteFieldPatternAction(fieldVar, classVar, Visibility.PRIVATE));
-		dp2.addActionPattern(new DeleteConstructorPatternAction(constVar, classVar, Visibility.PUBLIC));
+		
+		dp1.addActionPattern(new DeleteFieldPatternAction(fieldPattern, classPattern));
+		dp2.addActionPattern(new DeleteConstructorPatternAction(cPattern, classPattern));
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		
@@ -273,15 +274,15 @@ public class TestMatcherDeletes {
 		classPattern.addMethodPattern(subMethodPattern);
 		classPattern.addCompatible(subMethodVar, topMethodVar);
 		basePattern.addClassPattern(classPattern);
+		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new DeleteFieldPatternAction(fieldVar, classVar, null));
-		dp2.addActionPattern(new DeleteMethodPatternAction(subMethodVar, classVar, null));
+		
+		dp1.addActionPattern(new DeleteFieldPatternAction(fieldPattern, classPattern));
+		dp2.addActionPattern(new DeleteMethodPatternAction(subMethodPattern, classPattern));
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		
@@ -301,15 +302,17 @@ public class TestMatcherDeletes {
 		classPattern.addFieldPattern(fieldPattern);
 		classPattern.addMethodPattern(methodPattern);
 		basePattern.addClassPattern(classPattern);
+		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new DeleteFieldPatternAction(fieldVar, classVar, null));
-		dp2.addActionPattern(new DeleteInvocationPatternAction(methodVar, methodVar));
+		
+		MethodInvocationPattern deletedInvocation = new MethodInvocationPattern(methodVar);
+		
+		dp1.addActionPattern(new DeleteFieldPatternAction(fieldPattern, classPattern));
+		dp2.addActionPattern(new DeleteInvocationPatternAction(deletedInvocation, methodPattern));
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		
@@ -336,13 +339,12 @@ public class TestMatcherDeletes {
 		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new DeleteFieldAccessPatternAction(fieldVar, methodVar1, null));
-		dp2.addActionPattern(new DeleteMethodPatternAction(methodVar2, classVar, null));
+		
+		dp1.addActionPattern(new DeleteFieldAccessPatternAction(accessPattern, methodPattern1));
+		dp2.addActionPattern(new DeleteMethodPatternAction(methodPattern2, classPattern));
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		
