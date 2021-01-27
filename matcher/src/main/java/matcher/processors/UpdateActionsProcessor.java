@@ -10,7 +10,7 @@ import matcher.entities.MethodInstance;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.UpdateConstructorAction;
 import matcher.entities.deltas.UpdateFieldTypeAction;
-import matcher.entities.deltas.UpdateInvocationAction;
+import matcher.entities.deltas.UpdateDependencyAction;
 import matcher.entities.deltas.UpdateMethodAction;
 import matcher.handlers.SpoonHandler;
 import matcher.patterns.ConflictPattern;
@@ -87,7 +87,7 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 				MethodInstance oldMethodInstance = getMethodInstance(oldMethod);
 				MethodInstance newMethodInstance = getMethodInstance(newMethod);
 				ActionInstance result = 
-						new UpdateInvocationAction(oldMethodInstance, newMethodInstance, 
+						new UpdateDependencyAction(oldMethodInstance, newMethodInstance, 
 								oldDependency, newDependency);
 				setResult(result);
 			}
@@ -104,7 +104,7 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 					ConstructorInstance cInstance = getConstructorInstance(c, classInstance);
 					ConstructorInstance nCInstance = getConstructorInstance(nC, classInstance);
 					ActionInstance result = 
-							new UpdateInvocationAction(cInstance, nCInstance, 
+							new UpdateDependencyAction(cInstance, nCInstance, 
 									oldDependency, newDependency);
 					setResult(result);
 				}

@@ -25,7 +25,7 @@ import matcher.patterns.deltas.InsertFieldPatternAction;
 import matcher.patterns.deltas.InsertInvocationPatternAction;
 import matcher.patterns.deltas.InsertMethodPatternAction;
 import matcher.patterns.deltas.UpdateFieldTypePatternAction;
-import matcher.patterns.deltas.UpdateInvocationPatternAction;
+import matcher.patterns.deltas.UpdateDependencyPatternAction;
 import matcher.patterns.deltas.UpdateMethodPatternAction;
 import matcher.patterns.deltas.VisibilityActionPattern;
 import matcher.utils.Pair;
@@ -1074,7 +1074,7 @@ public class TestMatcherSemanticConflicts {
 		dp1.addActionPattern(new UpdateFieldTypePatternAction(fieldPattern, b2ClassVar));
 
 		dp2.addActionPattern(
-				new UpdateInvocationPatternAction(methodNPattern, methodM2Var, methodM1Var));
+				new UpdateDependencyPatternAction(methodNPattern, methodM2Var, methodM1Var));
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);

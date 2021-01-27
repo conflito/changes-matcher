@@ -3,7 +3,7 @@ package matcher.entities.deltas;
 import matcher.entities.ConstructorInstance;
 import matcher.entities.MethodInstance;
 
-public class UpdateInvocationAction extends UpdateAction {
+public class UpdateDependencyAction extends UpdateAction {
 	
 	private MethodInstance previousHolderMethod;
 	
@@ -17,7 +17,7 @@ public class UpdateInvocationAction extends UpdateAction {
 	
 	private MethodInstance newDependency;
 
-	public UpdateInvocationAction(ConstructorInstance previousHolderConstructor,
+	public UpdateDependencyAction(ConstructorInstance previousHolderConstructor,
 			ConstructorInstance newHolderConstructor, MethodInstance oldDependency, MethodInstance newDependency) {
 		super();
 		this.previousHolderConstructor = previousHolderConstructor;
@@ -26,7 +26,7 @@ public class UpdateInvocationAction extends UpdateAction {
 		this.newDependency = newDependency;
 	}
 
-	public UpdateInvocationAction(MethodInstance previousHolderMethod, MethodInstance newHolderMethod,
+	public UpdateDependencyAction(MethodInstance previousHolderMethod, MethodInstance newHolderMethod,
 			MethodInstance oldDependency, MethodInstance newDependency) {
 		super();
 		this.previousHolderMethod = previousHolderMethod;

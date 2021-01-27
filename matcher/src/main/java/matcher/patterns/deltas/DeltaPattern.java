@@ -158,7 +158,7 @@ public class DeltaPattern {
 	}
 	
 	public boolean hasUpdateInvocationActions() {
-		return actions.stream().anyMatch(a -> a instanceof UpdateInvocationPatternAction);
+		return actions.stream().anyMatch(a -> a instanceof UpdateDependencyPatternAction);
 	}
 	
 	public boolean hasVisibilityActions() {
@@ -378,7 +378,7 @@ public class DeltaPattern {
 	public List<Integer> getUpdatedInvocationsVariableIds() {
 		return actions.stream()
 				  .filter(a -> isUpdateInvocationAction(a))
-				  .map(a -> ((UpdateInvocationPatternAction)a).getNewInvocationVariableId())
+				  .map(a -> ((UpdateDependencyPatternAction)a).getNewInvocationVariableId())
 				  .collect(Collectors.toList());
 	}
 	
@@ -395,7 +395,7 @@ public class DeltaPattern {
 	}
 	
 	private boolean isUpdateInvocationAction(ActionPattern a) {
-		return a instanceof UpdateInvocationPatternAction;
+		return a instanceof UpdateDependencyPatternAction;
 	}
 
 	public List<Integer> getVisibilityActionsVariableIds() {

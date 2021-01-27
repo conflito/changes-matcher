@@ -216,7 +216,7 @@ public class DeltaInstance {
 	public List<String> getUpdatedInvocationsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isUpdateInvocationAction(a))
-				  .map(a -> ((UpdateInvocationAction) a).getUpdatedEntityQualifiedName())
+				  .map(a -> ((UpdateDependencyAction) a).getUpdatedEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
@@ -230,7 +230,7 @@ public class DeltaInstance {
 	}
 	
 	private boolean isUpdateInvocationAction(ActionInstance a) {
-		return a instanceof UpdateInvocationAction;
+		return a instanceof UpdateDependencyAction;
 	}
 
 	public List<String> getVisibilityActionsQualifiedNames() {

@@ -1,12 +1,12 @@
 package matcher.patterns.deltas;
 
 import matcher.entities.deltas.ActionInstance;
-import matcher.entities.deltas.UpdateInvocationAction;
+import matcher.entities.deltas.UpdateDependencyAction;
 import matcher.patterns.ConstructorPattern;
 import matcher.patterns.FreeVariable;
 import matcher.patterns.MethodPattern;
 
-public class UpdateInvocationPatternAction extends UpdatePatternAction {
+public class UpdateDependencyPatternAction extends UpdatePatternAction {
 	
 	private MethodPattern holderMethodPattern;
 	
@@ -16,7 +16,7 @@ public class UpdateInvocationPatternAction extends UpdatePatternAction {
 	
 	private FreeVariable newDependency;
 
-	public UpdateInvocationPatternAction(MethodPattern holderMethodPattern, FreeVariable oldDependency,
+	public UpdateDependencyPatternAction(MethodPattern holderMethodPattern, FreeVariable oldDependency,
 			FreeVariable newDependency) {
 		super();
 		this.holderMethodPattern = holderMethodPattern;
@@ -24,7 +24,7 @@ public class UpdateInvocationPatternAction extends UpdatePatternAction {
 		this.newDependency = newDependency;
 	}
 
-	public UpdateInvocationPatternAction(ConstructorPattern holderConstructorPattern, FreeVariable oldDependency,
+	public UpdateDependencyPatternAction(ConstructorPattern holderConstructorPattern, FreeVariable oldDependency,
 			FreeVariable newDependency) {
 		super();
 		this.holderConstructorPattern = holderConstructorPattern;
@@ -60,17 +60,17 @@ public class UpdateInvocationPatternAction extends UpdatePatternAction {
 
 	@Override
 	public boolean matches(ActionInstance action) {
-		return action instanceof UpdateInvocationAction && filled() && 
-				matches((UpdateInvocationAction)action);
+		return action instanceof UpdateDependencyAction && filled() && 
+				matches((UpdateDependencyAction)action);
 	}
 	
-	private boolean matches(UpdateInvocationAction action) {
+	private boolean matches(UpdateDependencyAction action) {
 		return getAction() == action.getAction() &&
 			   dependenciesMatch(action) &&
 			   holderMatches(action);
 	}
 	
-	private boolean dependenciesMatch(UpdateInvocationAction action) {
+	private boolean dependenciesMatch(UpdateDependencyAction action) {
 		if(updatedInMethod() && action.updatedInMethod())
 			return action.getPreviousHolderMethod().dependsOn(oldDependency.getValue()) &&
 				action.getNewHolderMethod().dependsOn(newDependency.getValue());
@@ -80,7 +80,7 @@ public class UpdateInvocationPatternAction extends UpdatePatternAction {
 		return false;
 	}
 
-	private boolean holderMatches(UpdateInvocationAction action) {
+	private boolean holderMatches(UpdateDependencyAction action) {
 		if(updatedInConstructor() && action.updatedInMethod())
 			return holderConstructorPattern.matches(action.getHolderConstructor());
 		else if(updatedInMethod() && action.updatedInMethod())
