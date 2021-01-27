@@ -17,7 +17,9 @@ import matcher.entities.deltas.InsertFieldAccessAction;
 import matcher.entities.deltas.InsertFieldAction;
 import matcher.entities.deltas.InsertInvocationAction;
 import matcher.entities.deltas.InsertMethodAction;
-import matcher.entities.deltas.UpdateAction;
+import matcher.entities.deltas.UpdateConstructorAction;
+import matcher.entities.deltas.UpdateMethodAction;
+import matcher.handlers.SpoonHandler;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
@@ -88,7 +90,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
 		if(getConflictPattern().hasInsertInvocationActions()) {
 			MethodInvocationInstance mii = new MethodInvocationInstance(
-					getMethodProcessor().getInvocationQualifiedName(invocation));
+					SpoonHandler.getInvocationQualifiedName(invocation));
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
@@ -147,7 +149,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
 				MethodInstance methodInstance = getMethodInstance(method);
-				ActionInstance result = new UpdateAction(methodInstance);
+				ActionInstance result = new UpdateMethodAction(methodInstance);
 				setResult(result);
 			}
 			else {
@@ -155,7 +157,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 				if(c.isPresent()) {
 					ClassInstance holderInstance = getClassInstance(c.get());
 					ConstructorInstance cInstance = getConstructorInstance(c.get(), holderInstance);
-					ActionInstance result = new UpdateAction(cInstance);
+					ActionInstance result = new UpdateConstructorAction(cInstance);
 					setResult(result);
 				}
 			}

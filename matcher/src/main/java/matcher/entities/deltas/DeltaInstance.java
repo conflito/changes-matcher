@@ -202,21 +202,21 @@ public class DeltaInstance {
 	public List<String> getUpdatesQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isUpdateAction(a))
-				  .map(a -> ((UpdateAction) a).getEntityQualifiedName())
+				  .map(a -> ((UpdateAction) a).getUpdatedEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
 	public List<String> getUpdatedFieldsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isUpdateFieldTypeAction(a))
-				  .map(a -> ((UpdateFieldTypeAction) a).getEntityQualifiedName())
+				  .map(a -> ((UpdateFieldTypeAction) a).getUpdatedEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	
 	public List<String> getUpdatedInvocationsQualifiedNames() {
 		return actions.stream()
 				  .filter(a -> isUpdateInvocationAction(a))
-				  .map(a -> ((UpdateInvocationAction) a).getEntityQualifiedName())
+				  .map(a -> ((UpdateInvocationAction) a).getUpdatedEntityQualifiedName())
 				  .collect(Collectors.toList());
 	}
 	

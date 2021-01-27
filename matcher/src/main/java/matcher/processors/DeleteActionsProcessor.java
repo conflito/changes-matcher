@@ -16,7 +16,9 @@ import matcher.entities.deltas.DeleteFieldAccessAction;
 import matcher.entities.deltas.DeleteFieldAction;
 import matcher.entities.deltas.DeleteInvocationAction;
 import matcher.entities.deltas.DeleteMethodAction;
-import matcher.entities.deltas.UpdateAction;
+import matcher.entities.deltas.UpdateConstructorAction;
+import matcher.entities.deltas.UpdateMethodAction;
+import matcher.handlers.SpoonHandler;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
@@ -34,8 +36,6 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 		if(getConflictPattern().hasDeleteConstructorsActions()) {
 			ClassInstance holderInstance = getClassInstance(c);
 			ConstructorInstance deletedInstance = getConstructorInstance(c, holderInstance);
-//			ActionInstance result = new DeleteConstructorAction(insertedInstance, holderInstance, 
-//					insertedInstance.getVisibility());
 			ActionInstance result = new DeleteConstructorAction(deletedInstance, holderInstance);
 			setResult(result);
 		}
@@ -47,8 +47,6 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 		if(getConflictPattern().hasDeleteFieldActions()) {
 			ClassInstance holderInstance = getClassInstance(field);
 			FieldInstance deletedInstance = getFieldInstance(field);
-//			ActionInstance result = new DeleteFieldAction(deletedInstance, holderInstance, 
-//					deletedInstance.getVisibility());
 			ActionInstance result = new DeleteFieldAction(deletedInstance, holderInstance);
 			setResult(result);
 		}
@@ -58,7 +56,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
 		if(getConflictPattern().hasDeleteInvocationActions()) {
 			MethodInvocationInstance mii = new MethodInvocationInstance(
-					getMethodProcessor().getInvocationQualifiedName(invocation));
+					SpoonHandler.getInvocationQualifiedName(invocation));
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
@@ -84,8 +82,6 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 		if(getConflictPattern().hasDeleteMethodActions()) {
 			ClassInstance holderInstance = getClassInstance(method);
 			MethodInstance deletedInstance = getMethodInstance(method);
-//			ActionInstance result =  new DeleteMethodAction(deletedInstance, holderInstance, 
-//					deletedInstance.getVisibility());
 			ActionInstance result =  new DeleteMethodAction(deletedInstance, holderInstance);
 			setResult(result);
 		}
@@ -101,7 +97,6 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
 				MethodInstance methodInstance = getMethodInstance(method);
-//				ActionInstance result = new DeleteFieldAccessAction(fai, methodInstance, fai.getAccessType());
 				ActionInstance result = new DeleteFieldAccessAction(fai, methodInstance);
 				setResult(result);
 			}
@@ -118,7 +113,6 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
 				MethodInstance methodInstance = getMethodInstance(method);
-//				ActionInstance result = new DeleteFieldAccessAction(fai, methodInstance, fai.getAccessType());
 				ActionInstance result = new DeleteFieldAccessAction(fai, methodInstance);
 				setResult(result);
 			}
@@ -131,7 +125,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
 				MethodInstance methodInstance = getMethodInstance(method);
-				ActionInstance result = new UpdateAction(methodInstance);
+				ActionInstance result = new UpdateMethodAction(methodInstance);
 				setResult(result);
 			}
 			else {
@@ -139,7 +133,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 				if(c.isPresent()) {
 					ClassInstance holderInstance = getClassInstance(c.get());
 					ConstructorInstance cInstance = getConstructorInstance(c.get(), holderInstance);
-					ActionInstance result = new UpdateAction(cInstance);
+					ActionInstance result = new UpdateConstructorAction(cInstance);
 					setResult(result);
 				}
 			}

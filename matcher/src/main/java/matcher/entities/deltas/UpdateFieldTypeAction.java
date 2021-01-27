@@ -1,20 +1,26 @@
 package matcher.entities.deltas;
 
+import matcher.entities.FieldInstance;
 import matcher.entities.Type;
 
 public class UpdateFieldTypeAction extends UpdateAction {
 
-	private Type oldType;
+	private FieldInstance updatedField;
+	
 	private Type newType;
 	
-	public UpdateFieldTypeAction(Updatable entity, Type oldType, Type newType) {
-		super(entity);
-		this.oldType = oldType;
+	public UpdateFieldTypeAction(FieldInstance updatedField, Type newType) {
+		super();
+		this.updatedField = updatedField;
 		this.newType = newType;
 	}
 	
-	public String getOldTypeName() {
-		return oldType.toString();
+	public FieldInstance getUpdatedField() {
+		return updatedField;
+	}
+
+	public Type getNewType() {
+		return newType;
 	}
 	
 	public String getNewTypeName() {
@@ -22,10 +28,17 @@ public class UpdateFieldTypeAction extends UpdateAction {
 	}
 	
 	@Override
+	public String getUpdatedEntityQualifiedName() {
+		return updatedField.getQualifiedName();
+	}
+
+	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder("update field ");
-		result.append(getEntityQualifiedName() + " type from ");
-		result.append(getOldTypeName() + " to " + getNewTypeName());
+		result.append(updatedField.getQualifiedName() + " type from ");
+		result.append(updatedField.getType() + " to " + newType);
 		return result.toString();
 	}
+
+	
 }

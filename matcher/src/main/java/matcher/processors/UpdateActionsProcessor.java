@@ -7,11 +7,12 @@ import matcher.entities.ClassInstance;
 import matcher.entities.ConstructorInstance;
 import matcher.entities.FieldInstance;
 import matcher.entities.MethodInstance;
-import matcher.entities.MethodInvocationInstance;
 import matcher.entities.deltas.ActionInstance;
-import matcher.entities.deltas.UpdateAction;
+import matcher.entities.deltas.UpdateConstructorAction;
 import matcher.entities.deltas.UpdateFieldTypeAction;
 import matcher.entities.deltas.UpdateInvocationAction;
+import matcher.entities.deltas.UpdateMethodAction;
+import matcher.handlers.SpoonHandler;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
@@ -31,7 +32,7 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 	public <T> void visitCtMethod(CtMethod<T> method) {
 		if(getConflictPattern().hasUpdateActions()) {
 			MethodInstance methodInstance = getMethodInstance(method);
-			ActionInstance result = new UpdateAction(methodInstance);
+			ActionInstance result = new UpdateMethodAction(methodInstance);
 			setResult(result);
 		}
 	}
@@ -41,7 +42,7 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 		if(getConflictPattern().hasUpdateActions()) {
 			ClassInstance holderInstance = getClassInstance(c);
 			ConstructorInstance cInstance = getConstructorInstance(c, holderInstance);
-			ActionInstance result = new UpdateAction(cInstance);
+			ActionInstance result = new UpdateConstructorAction(cInstance);
 			setResult(result);
 		}
 	}
@@ -53,8 +54,8 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 			if(newF.isPresent()) {
 				FieldInstance fieldInstance = getFieldInstance(f);
 				FieldInstance newFieldInstance = getFieldInstance(newF.get());
-				ActionInstance result = new UpdateFieldTypeAction(fieldInstance, 
-						fieldInstance.getType(), newFieldInstance.getType());
+				ActionInstance result = 
+						new UpdateFieldTypeAction(fieldInstance, newFieldInstance.getType());
 				setResult(result);
 			}
 			
@@ -73,25 +74,41 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 	}
 	
 	private void visitInvocationUpdate(CtInvocation<?> invocation) {
-		MethodInvocationInstance mii = new MethodInvocationInstance(
-				getMethodProcessor().getInvocationQualifiedName(invocation));
-		MethodInvocationInstance newMii = new MethodInvocationInstance(
-				getMethodProcessor().getInvocationQualifiedName((CtInvocation<?>)newOne));
+		CtMethod<?> oldInvocation = SpoonHandler.getMethodFromInvocation(invocation);
+		CtMethod<?> newInvocation = SpoonHandler.getMethodFromInvocation((CtInvocation<?>)newOne);
+		MethodInstance oldDependency = getMethodInstance(oldInvocation);
+		MethodInstance newDependency = getMethodInstance(newInvocation);
 		Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
 		if(possibleCaller.isPresent()) {
-			CtMethod<?> method = possibleCaller.get();
-			MethodInstance methodInstance = getMethodInstance(method);
-			ActionInstance result = new UpdateInvocationAction(mii, newMii, methodInstance);
-			setResult(result);
+			Optional<CtMethod<?>> newPossibleCaller = getMethodNode(newOne);
+			if(newPossibleCaller.isPresent()) {
+				CtMethod<?> oldMethod = possibleCaller.get();
+				CtMethod<?> newMethod = newPossibleCaller.get();
+				MethodInstance oldMethodInstance = getMethodInstance(oldMethod);
+				MethodInstance newMethodInstance = getMethodInstance(newMethod);
+				ActionInstance result = 
+						new UpdateInvocationAction(oldMethodInstance, newMethodInstance, 
+								oldDependency, newDependency);
+				setResult(result);
+			}
+
 		}
 		else {
 			Optional<CtConstructor<?>> constructor = getConstructorNode(invocation);
 			if(constructor.isPresent()) {
-				CtConstructor<?> c = constructor.get();
-				ClassInstance classInstance = getClassInstance(c);
-				ConstructorInstance cInstance = getConstructorInstance(c, classInstance);
-				ActionInstance result = new UpdateInvocationAction(mii, newMii, cInstance);
-				setResult(result);
+				Optional<CtConstructor<?>> newConstructor = getConstructorNode(invocation);
+				if(newConstructor.isPresent()) {
+					CtConstructor<?> c = constructor.get();
+					CtConstructor<?> nC = newConstructor.get();
+					ClassInstance classInstance = getClassInstance(c);
+					ConstructorInstance cInstance = getConstructorInstance(c, classInstance);
+					ConstructorInstance nCInstance = getConstructorInstance(nC, classInstance);
+					ActionInstance result = 
+							new UpdateInvocationAction(cInstance, nCInstance, 
+									oldDependency, newDependency);
+					setResult(result);
+				}
+				
 			}
 		}
 	}

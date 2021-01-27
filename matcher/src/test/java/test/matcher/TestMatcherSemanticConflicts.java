@@ -26,7 +26,7 @@ import matcher.patterns.deltas.InsertInvocationPatternAction;
 import matcher.patterns.deltas.InsertMethodPatternAction;
 import matcher.patterns.deltas.UpdateFieldTypePatternAction;
 import matcher.patterns.deltas.UpdateInvocationPatternAction;
-import matcher.patterns.deltas.UpdatePatternAction;
+import matcher.patterns.deltas.UpdateMethodPatternAction;
 import matcher.patterns.deltas.VisibilityActionPattern;
 import matcher.utils.Pair;
 
@@ -981,7 +981,6 @@ public class TestMatcherSemanticConflicts {
 		
 		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
-//		dp2.addActionPattern(new DeleteMethodPatternAction(methodVar, classVar, null));
 		dp2.addActionPattern(new DeleteMethodPatternAction(methodPattern, classPattern));
 
 		ConflictPattern conflict = new ConflictPattern();
@@ -1013,8 +1012,9 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new UpdatePatternAction(methodVar2));
-		dp2.addActionPattern(new UpdatePatternAction(methodVar3));
+		
+		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern2));
+		dp2.addActionPattern(new UpdateMethodPatternAction(methodPattern3));
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
@@ -1070,9 +1070,12 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new UpdateFieldTypePatternAction(fieldVar, b1ClassVar, b2ClassVar));
-		dp2.addActionPattern(new UpdateInvocationPatternAction(methodM2Var, methodM1Var, methodNVar));
+		
+		dp1.addActionPattern(new UpdateFieldTypePatternAction(fieldPattern, b2ClassVar));
 
+		dp2.addActionPattern(
+				new UpdateInvocationPatternAction(methodNPattern, methodM2Var, methodM1Var));
+		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
@@ -1102,7 +1105,7 @@ public class TestMatcherSemanticConflicts {
 				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
 		insertedMethodPattern.addDependency(methodVar1);
 		
-		dp1.addActionPattern(new UpdatePatternAction(methodVar2));
+		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern2));
 
 		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
@@ -1140,7 +1143,7 @@ public class TestMatcherSemanticConflicts {
 		insertedMethodPattern.addDependency(methodVar1);
 		insertedClassPattern.addMethodPattern(insertedMethodPattern);
 		
-		dp1.addActionPattern(new UpdatePatternAction(methodVar2));
+		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern2));
 
 		dp2.addActionPattern(new InsertClassPatternAction(insertedClassPattern));
 		
@@ -1173,7 +1176,7 @@ public class TestMatcherSemanticConflicts {
 		insertedMethodPattern.addDependency(methodVar1);
 		insertedClassPattern.addMethodPattern(insertedMethodPattern);
 		
-		dp1.addActionPattern(new UpdatePatternAction(methodVar1));
+		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern1));
 
 		dp2.addActionPattern(new InsertClassPatternAction(insertedClassPattern));
 		
@@ -1211,7 +1214,7 @@ public class TestMatcherSemanticConflicts {
 		insertedMethodPattern.addDependency(methodVar);
 		insertedClassPattern.addMethodPattern(insertedMethodPattern);
 		
-		dp1.addActionPattern(new UpdateFieldTypePatternAction(fieldVar));
+		dp1.addActionPattern(new UpdateFieldTypePatternAction(fieldPattern));
 
 		dp2.addActionPattern(new InsertClassPatternAction(insertedClassPattern));
 		

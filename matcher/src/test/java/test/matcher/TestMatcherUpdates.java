@@ -11,7 +11,8 @@ import matcher.patterns.ConstructorPattern;
 import matcher.patterns.FreeVariable;
 import matcher.patterns.MethodPattern;
 import matcher.patterns.deltas.DeltaPattern;
-import matcher.patterns.deltas.UpdatePatternAction;
+import matcher.patterns.deltas.UpdateConstructorPatternAction;
+import matcher.patterns.deltas.UpdateMethodPatternAction;
 import matcher.utils.Pair;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -159,12 +160,10 @@ public class TestMatcherUpdates {
 		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new UpdatePatternAction(methodVar));
+		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern));
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		
@@ -183,12 +182,10 @@ public class TestMatcherUpdates {
 		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new UpdatePatternAction(cVar));
+		dp1.addActionPattern(new UpdateConstructorPatternAction(cPattern));
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
-//		conflict.addDeltaPattern(dp1);
-//		conflict.addDeltaPattern(dp2);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		

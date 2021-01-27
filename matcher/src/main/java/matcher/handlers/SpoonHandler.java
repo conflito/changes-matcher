@@ -15,6 +15,7 @@ import spoon.compiler.SpoonResource;
 import spoon.compiler.SpoonResourceHelper;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtClass;
+import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtType;
 import spoon.reflect.reference.CtFieldReference;
 import spoon.reflect.reference.CtTypeReference;
@@ -281,7 +282,31 @@ public class SpoonHandler {
 		return l.get(0);
 	}
 	
-	private String getInvocationClassQualifiedName(CtInvocation<?> invocation) {
+	public static CtMethod<?> getMethodFromInvocation(CtInvocation<?> invocation){
+		String invokedName = invocation.getExecutable().getSimpleName();
+		CtTypeReference<?>[] types = invocation.getExecutable().getParameters()
+				.toArray(new CtTypeReference<?>[0]);
+		return invocation.getExecutable()
+			.getDeclaringType()
+			.getTypeDeclaration()
+			.getMethod(invokedName, types);
+	}
+
+	public static String getInvocationQualifiedName(CtInvocation<?> invocation) {
+		return invocation.getExecutable().getSignature().replace(",", ", ");
+	}
+
+	public static String getInvocationClassSimpleName(CtInvocation<?> invocation) {
+		return invocation.getExecutable().getDeclaringType().getSimpleName();
+	}
+	
+	public static String getInvocationClassQualifiedName(CtInvocation<?> invocation) {
 		return invocation.getExecutable().getDeclaringType().getQualifiedName();
+	}
+
+	public static String getFieldQualifiedName(CtFieldReference<?> field) {
+		String fieldName = field.getSimpleName();
+		String classQualifiedName =  field.getFieldDeclaration().getTopLevelType().getQualifiedName();
+		return classQualifiedName + "." + fieldName;
 	}
 }

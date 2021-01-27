@@ -7,7 +7,8 @@ import matcher.entities.ClassInstance;
 import matcher.entities.ConstructorInstance;
 import matcher.entities.MethodInstance;
 import matcher.entities.deltas.ActionInstance;
-import matcher.entities.deltas.UpdateAction;
+import matcher.entities.deltas.UpdateConstructorAction;
+import matcher.entities.deltas.UpdateMethodAction;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.CtAnnotationFieldAccess;
 import spoon.reflect.code.CtArrayRead;
@@ -109,7 +110,7 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 		if(method.isPresent()) {
 			if(getConflictPattern().hasUpdateActions()) {
 				MethodInstance methodInstance = getMethodInstance(method.get());
-				ActionInstance result = new UpdateAction(methodInstance);
+				ActionInstance result = new UpdateMethodAction(methodInstance);
 				setResult(result);
 			}
 		}
@@ -120,7 +121,7 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 					ClassInstance holderInstance = getClassInstance(c.get());
 					ConstructorInstance cInstance = getConstructorInstance(c.get(), 
 							holderInstance);
-					ActionInstance result = new UpdateAction(cInstance);
+					ActionInstance result = new UpdateConstructorAction(cInstance);
 					setResult(result);
 				}
 			}

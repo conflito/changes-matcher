@@ -11,13 +11,12 @@ import matcher.entities.MethodInstance;
 import matcher.entities.Type;
 import matcher.entities.Visibility;
 import matcher.handlers.FileSystemHandler;
+import matcher.handlers.SpoonHandler;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.CtFieldRead;
 import spoon.reflect.code.CtFieldWrite;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.reference.CtFieldReference;
-import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.TypeFilter;
 
 public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
@@ -85,15 +84,17 @@ public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 		for(CtInvocation<?> invocation: invocations) {
 			if(!invocation.toString().equals("super()")){
 				try {
-					String className = getInvocationClassSimpleName(invocation);
+					String className = SpoonHandler.getInvocationClassSimpleName(invocation);
 					String invocationSrcName = className + ".java";
 					if(className.equals("Object") || 
 							FileSystemHandler.getInstance().fromTheSystem(invocationSrcName)) {
-						String invocationFullName = getInvocationClassQualifiedName(invocation)
-								+ "." + getInvocationQualifiedName(invocation);
+						String invocationFullName = 
+								SpoonHandler.getInvocationClassQualifiedName(invocation)
+								+ "." + SpoonHandler.getInvocationQualifiedName(invocation);
 						if(!invocationsVisited.contains(invocationFullName)) {
 							invocationsVisited.add(invocationFullName);
-							CtMethod<?> invokedMethod = getMethodFromInvocation(invocation);
+							CtMethod<?> invokedMethod = 
+									SpoonHandler.getMethodFromInvocation(invocation);
 							methodInstance.addDirectDependency(
 									invocationsProcessor.process(invokedMethod, 
 											invocationsVisited));
@@ -103,33 +104,4 @@ public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 			}
 		}
 	}
-	
-	private CtMethod<?> getMethodFromInvocation(CtInvocation<?> invocation){
-		String invokedName = invocation.getExecutable().getSimpleName();
-		CtTypeReference<?>[] types = invocation.getExecutable().getParameters()
-				.toArray(new CtTypeReference<?>[0]);
-		return invocation.getExecutable()
-			.getDeclaringType()
-			.getTypeDeclaration()
-			.getMethod(invokedName, types);
-	}
-
-	public String getInvocationQualifiedName(CtInvocation<?> invocation) {
-		return invocation.getExecutable().getSignature().replace(",", ", ");
-	}
-
-	private String getInvocationClassSimpleName(CtInvocation<?> invocation) {
-		return invocation.getExecutable().getDeclaringType().getSimpleName();
-	}
-	
-	private String getInvocationClassQualifiedName(CtInvocation<?> invocation) {
-		return invocation.getExecutable().getDeclaringType().getQualifiedName();
-	}
-
-	public String getFieldQualifiedName(CtFieldReference<?> field) {
-		String fieldName = field.getSimpleName();
-		String classQualifiedName =  field.getFieldDeclaration().getTopLevelType().getQualifiedName();
-		return classQualifiedName + "." + fieldName;
-	}
-
 }

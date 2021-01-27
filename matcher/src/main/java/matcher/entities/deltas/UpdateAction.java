@@ -1,36 +1,12 @@
 package matcher.entities.deltas;
 
-import matcher.entities.ConstructorInstance;
-import matcher.entities.MethodInstance;
 
-public class UpdateAction extends ActionInstance {
+public abstract class UpdateAction extends ActionInstance {
 
-	private Updatable entity;
-
-	public UpdateAction(Updatable entity) {
+	public UpdateAction() {
 		super(Action.UPDATE);
-		this.entity = entity;
 	}
 	
-	public String getEntityQualifiedName() {
-		return entity.getQualifiedName();
-	}
-	
-	public boolean isMethodUpdate() {
-		return entity instanceof MethodInstance;
-	}
-	
-	public boolean isConstructorUpdate() {
-		return entity instanceof ConstructorInstance;
-	}
-	
-	public String toString() {
-		StringBuilder result = new StringBuilder("update ");
-		if(isMethodUpdate())
-			result.append("method ");
-		if(isConstructorUpdate())
-			result.append("constructor ");
-		result.append(entity.getQualifiedName());
-		return result.toString();
-	}
+	public abstract String getUpdatedEntityQualifiedName();
+
 }

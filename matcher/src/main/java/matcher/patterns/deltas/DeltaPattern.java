@@ -348,29 +348,46 @@ public class DeltaPattern {
 	}
 
 	public List<Integer> getUpdatesVariableIds() {
+		List<Integer> result = new ArrayList<>();
+		result.addAll(getUpdatedMethodsVariableIds());
+		result.addAll(getUpdatedConstructosVariableIds());
+		return result;
+	}
+	
+	private List<Integer> getUpdatedMethodsVariableIds(){
 		return actions.stream()
-				  .filter(a -> isUpdateAction(a))
-				  .map(a -> ((UpdatePatternAction)a).getEntityId())
-				  .collect(Collectors.toList());
+					.filter(a -> isUpdateMethodAction(a))
+					.map(a -> ((UpdateMethodPatternAction) a).getUpdatedMethodVariableId())
+					.collect(Collectors.toList());
+	}
+	
+	private List<Integer> getUpdatedConstructosVariableIds(){
+		return actions.stream()
+				.filter(a -> isUpdateConstructorAction(a))
+				.map(a -> ((UpdateConstructorPatternAction) a).getUpdatedConstructorVariableId())
+				.collect(Collectors.toList());
 	}
 	
 	public List<Integer> getUpdatedFieldsVariableIds() {
 		return actions.stream()
 				  .filter(a -> isUpdateFieldTypeAction(a))
-				  .map(a -> ((UpdateFieldTypePatternAction)a).getEntityId())
+				  .map(a -> ((UpdateFieldTypePatternAction)a).getUpdatedFieldVariableId())
 				  .collect(Collectors.toList());
 	}
 	
 	public List<Integer> getUpdatedInvocationsVariableIds() {
 		return actions.stream()
 				  .filter(a -> isUpdateInvocationAction(a))
-				  .map(a -> ((UpdateInvocationPatternAction)a).getEntityId())
+				  .map(a -> ((UpdateInvocationPatternAction)a).getNewInvocationVariableId())
 				  .collect(Collectors.toList());
 	}
 	
-	private boolean isUpdateAction(ActionPattern a) {
-		return a instanceof UpdatePatternAction && !isUpdateFieldTypeAction(a) &&
-				!isUpdateInvocationAction(a);
+	private boolean isUpdateConstructorAction(ActionPattern a) {
+		return a instanceof UpdateConstructorPatternAction;
+	}
+	
+	private boolean isUpdateMethodAction(ActionPattern a) {
+		return a instanceof UpdateMethodPatternAction;
 	}
 	
 	private boolean isUpdateFieldTypeAction(ActionPattern a) {
