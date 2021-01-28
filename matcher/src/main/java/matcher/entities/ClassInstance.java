@@ -248,6 +248,7 @@ public class ClassInstance implements Insertable, Holder{
 			result.append(getQualifiedName() + " extends " + superClassOp.get().getQualifiedName());
 			result.append("\n");
 		}
+		result.append("Class " + getQualifiedName() + "\n");
 		for(InterfaceImplementationInstance i: getInterfaces()) {
 			result.append(getQualifiedName() + " implements " + i.getName());
 			result.append("\n");
