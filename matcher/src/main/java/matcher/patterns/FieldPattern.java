@@ -9,13 +9,13 @@ public class FieldPattern {
 	
 	private Visibility visibility;
 	
-	private FreeVariable typeVar;
+	private TypePattern typePattern;
 
 	public FieldPattern(FreeVariable freeVar, Visibility visibility) {
 		super();
 		this.freeVariable = freeVar;
 		this.visibility = visibility;
-		this.typeVar = null;
+		this.typePattern = null;
 	}
 	
 	public FreeVariable getFreeVariable() {
@@ -26,49 +26,51 @@ public class FieldPattern {
 		return freeVariable.getId();
 	}
 	
-	public void setType(FreeVariable type) {
-		this.typeVar = type;
+	public void setType(TypePattern type) {
+		this.typePattern = type;
 	}
 	
 	public boolean hasType() {
-		return typeVar != null;
+		return typePattern != null;
 	}
 	
 	/**
 	 * @requires hasType()
 	 */
 	public int getTypeVariableId() {
-		return typeVar.getId();
+		return typePattern.getVariableId();
 	}
 	
 	public void setVariableValue(int id, String value) {
 		if(freeVariable.isId(id))
 			freeVariable.setValue(value);
-		if(typeVar != null && typeVar.isId(id))
-			typeVar.setValue(value);
+		if(typePattern != null)
+			typePattern.setVariableValue(id, value);
 	}
 	
 	public void clean() {
 		freeVariable.clean();
+		if(typePattern != null)
+			typePattern.clean();
 	}
 	
 	public boolean filled() {
-		return freeVariable.hasValue() && (typeVar == null || typeVar.hasValue());
+		return freeVariable.hasValue() && (typePattern == null || typePattern.filled());
 	}
 	
 	public boolean hasVariableId(int id) {
-		return freeVariable.isId(id) || (typeVar == null || typeVar.isId(id));
+		return freeVariable.isId(id) || (typePattern == null || typePattern.hasVariableId(id));
 	}
 	
 	public boolean matches(FieldInstance instance) {
 		return filled() && 
 			   (visibility == null || sameVisibility(instance)) && 
 			   sameName(instance) &&
-			   (typeVar == null || sameType(instance));
+			   (typePattern == null || sameType(instance));
 	}
 	
 	private boolean sameType(FieldInstance instance) {
-		return instance.getType().toString().equals(typeVar.getValue());
+		return typePattern.matches(instance.getType());
 	}
 
 	private boolean sameVisibility(FieldInstance instance) {

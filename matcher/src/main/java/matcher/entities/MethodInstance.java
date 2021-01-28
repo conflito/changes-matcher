@@ -90,7 +90,10 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder, U
 	}
 
 	private String parametersToString() {
-		return getParameters().toString().replace("[", "(").replace("]", ")");
+		StringBuilder result = new StringBuilder(getParameters().toString());
+		result.replace(0, 1, "(");
+		result.replace(result.length()-1, result.length(), ")");
+		return result.toString();//getParameters().toString().replace("[", "(").replace("]", ")");
 	}
 	
 	public Visibility getVisibility() {

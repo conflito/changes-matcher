@@ -33,6 +33,8 @@ public class FieldInstance implements Insertable, Deletable, Visible, Updatable{
 	}
 	
 	public String getTypeName() {
+		if(type.isArray())
+			return type.getArrayType().toString();
 		return type.toString();
 	}
 	

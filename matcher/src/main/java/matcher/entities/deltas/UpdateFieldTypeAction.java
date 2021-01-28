@@ -24,6 +24,8 @@ public class UpdateFieldTypeAction extends UpdateAction {
 	}
 	
 	public String getNewTypeName() {
+		if(newType.isArray())
+			return newType.getArrayType().toString();
 		return newType.toString();
 	}
 	

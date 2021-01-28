@@ -1,6 +1,7 @@
 package matcher.entities;
 
 import spoon.reflect.factory.TypeFactory;
+import spoon.reflect.reference.CtArrayTypeReference;
 import spoon.reflect.reference.CtTypeReference;
 
 public class Type {
@@ -22,6 +23,19 @@ public class Type {
 	
 	public boolean isPrimitive() {
 		return typeRef.isPrimitive();
+	}
+	
+	public boolean isArray() {
+		return typeRef.isArray();
+	}
+	
+	public Type getArrayType() {
+		CtArrayTypeReference<?> arrayTypeRef = (CtArrayTypeReference<?>) typeRef;
+		Type result = new Type(arrayTypeRef.getComponentType());
+		if(result.isArray())
+			return result.getArrayType();
+		else
+			return result;
 	}
 	
 	public boolean equals(Object o) {

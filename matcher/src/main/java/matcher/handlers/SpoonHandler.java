@@ -18,6 +18,7 @@ import spoon.reflect.code.CtSuperAccess;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtType;
+import spoon.reflect.reference.CtArrayTypeReference;
 import spoon.reflect.reference.CtFieldReference;
 import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.TypeFilter;
@@ -180,9 +181,18 @@ public class SpoonHandler {
 											 .getSrcFile(fieldType.getAccessType()
 													 			  .getSimpleName() + ".java");
 				}
-				else {
+				else if(fieldType.isArray()){
+					do {
+						CtArrayTypeReference<?> arrayTypeRef = (CtArrayTypeReference<?>) fieldType;
+						fieldType = arrayTypeRef.getComponentType();
+					}while(fieldType.isArray());
+					
 					srcFile = FileSystemHandler.getInstance()
 											   .getSrcFile(fieldType.getSimpleName() + ".java");
+				}
+				else {
+					srcFile = FileSystemHandler.getInstance()
+							   .getSrcFile(fieldType.getSimpleName() + ".java");
 				}
 				
 				if(srcFile.isPresent()) {
