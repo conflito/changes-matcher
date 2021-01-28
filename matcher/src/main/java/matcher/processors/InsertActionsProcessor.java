@@ -48,10 +48,17 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 			ClassInstance holderInstance = getClassInstance(method);
 			MethodInstance insertedInstance = getMethodInstance(method);
 			InsertMethodAction result = new InsertMethodAction(insertedInstance, holderInstance);
-			for(MethodInstance m: holderInstance.getMethods()) {
-				if(!insertedInstance.equals(m) && insertedInstance.isCompatibleWith(m))
-					result.addCompatible(m);
-			}
+			boolean stop = false;
+			do {
+				for(MethodInstance m: holderInstance.getMethods()) {
+					if(!insertedInstance.equals(m) && insertedInstance.isCompatibleWith(m))
+						result.addCompatible(m);
+				}
+				if(holderInstance.getSuperClass().isPresent())
+					holderInstance = holderInstance.getSuperClass().get();
+				else
+					stop = true;
+			}while(!stop);
 			setResult(result);
 		}
 	}
