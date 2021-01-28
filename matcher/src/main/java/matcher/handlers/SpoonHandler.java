@@ -158,13 +158,13 @@ public class SpoonHandler {
 			if(!loaded.contains(changedType.getSimpleName())) {
 				launcher.addInputResource(resource);
 				loaded.add(changedType.getSimpleName());
-			}
-			if(changedType.isClass()) {
-				CtClass<?> changedClass = getCtClass(resource);
-				loadFields(changedClass, launcher, loaded, currentStep);
-				loadInterfaces(changedClass, launcher, loaded);
-				loadClassTree(changedClass, launcher, loaded, currentStep);
-				loadInvokedClasses(changedClass, launcher, loaded, currentStep);
+				if(changedType.isClass()) {
+					CtClass<?> changedClass = getCtClass(resource);
+					loadFields(changedClass, launcher, loaded, currentStep);
+					loadInterfaces(changedClass, launcher, loaded);
+					loadClassTree(changedClass, launcher, loaded, currentStep);
+					loadInvokedClasses(changedClass, launcher, loaded, currentStep);
+				}
 			}
 		}
 	}
