@@ -14,6 +14,7 @@ import spoon.Launcher;
 import spoon.compiler.SpoonResource;
 import spoon.compiler.SpoonResourceHelper;
 import spoon.reflect.code.CtInvocation;
+import spoon.reflect.code.CtSuperAccess;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtType;
@@ -239,13 +240,12 @@ public class SpoonHandler {
 	private List<CtInvocation<?>> filterInvocations(String classQualifiedName, 
 				List<CtInvocation<?>> invocations){
 		return invocations.stream()
-						  .filter(i -> isNotSuperInvocation(i) &&
+						  .filter(i -> !isSuperInvocation(i) &&
 								  !fromTheSameClass(i, classQualifiedName))
 						  .collect(Collectors.toList());
 	}
 	
-	private boolean fromTheSameClass(CtInvocation<?> invocation
-			, String classQualifiedName) {
+	private boolean fromTheSameClass(CtInvocation<?> invocation, String classQualifiedName) {
 		try {
 			return getInvocationClassQualifiedName(invocation).equals(classQualifiedName);
 		}
@@ -254,9 +254,10 @@ public class SpoonHandler {
 		}
 	}
 	
-	private boolean isNotSuperInvocation(CtInvocation<?> invocation) {
-		String invocationName = invocation.toString();
-		return !invocationName.equals("super()") && !invocationName.startsWith("super.");
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private boolean isSuperInvocation(CtInvocation<?> invocation) {
+		return invocation.getExecutable().isConstructor() ||
+				!invocation.getElements(new TypeFilter(CtSuperAccess.class)).isEmpty();
 	}
 
 	private void loadClassTree(CtClass<?> changedClass, Launcher launcher, 
