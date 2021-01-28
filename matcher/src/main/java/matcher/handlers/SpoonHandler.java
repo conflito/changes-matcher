@@ -152,7 +152,7 @@ public class SpoonHandler {
 	
 	private void loadClass(SpoonResource resource, Launcher launcher, Set<String> loaded
 			, int currentStep) throws ApplicationException {
-		if(currentStep <= trackLimit) {
+		if(currentStep < trackLimit) {
 			CtType<?> changedType = getCtType(resource);
 			if(!loaded.contains(changedType.getSimpleName())) {
 				launcher.addInputResource(resource);
