@@ -18,6 +18,7 @@ import matcher.patterns.InterfaceImplementationPattern;
 import matcher.patterns.InterfacePattern;
 import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
+import matcher.patterns.TypePattern;
 import matcher.patterns.deltas.DeleteMethodPatternAction;
 import matcher.patterns.deltas.DeltaPattern;
 import matcher.patterns.deltas.InsertClassPatternAction;
@@ -381,7 +382,7 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-
+		
 		assertTrue(result.size() == 1, "More than one result for change method 2?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 9, "Not 9 assignments with only 9 variables?");
@@ -397,20 +398,20 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(3).getSecond().equals("B2"), 
 				"Class that does not implement hashCode is not B2?");
 		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("n(B)"), 
-				"Method that has its invocation updated is not n(B)?");
+				assignments.get(4).getSecond().equals("n()"), 
+				"Method that has its invocation updated is not n()?");
 		assertTrue(assignments.get(5).getFirst() == 5 && 
-				assignments.get(5).getSecond().equals("m1(B)"), 
-				"The new invocation is not of method m1(B)?");
+				assignments.get(5).getSecond().equals("m1(B[])"), 
+				"The new invocation is not of method m1(B[])?");
 		assertTrue(assignments.get(6).getFirst() == 6 && 
-				assignments.get(6).getSecond().equals("m2(B)"), 
-				"The old invocation is not of method m2(B)?");
+				assignments.get(6).getSecond().equals("m2(B[])"), 
+				"The old invocation is not of method m2(B[])?");
 		assertTrue(assignments.get(7).getFirst() == 7 && 
 				assignments.get(7).getSecond().equals("hashCode()"), 
 				"The method that B1 has that B2 doesn't isn't hashCode()?");
 		assertTrue(assignments.get(8).getFirst() == 8 && 
-				assignments.get(8).getSecond().equals("b"), 
-				"The updated field is not b");
+				assignments.get(8).getSecond().equals("v"), 
+				"The updated field is not v");
 	}
 
 	@Test
@@ -1070,7 +1071,8 @@ public class TestMatcherSemanticConflicts {
 		
 		ClassPattern classAPattern = new ClassPattern(classVar);
 		FieldPattern fieldPattern = new FieldPattern(fieldVar, null);
-		fieldPattern.setType(b1ClassVar);
+		TypePattern typePattern = new TypePattern(b1ClassVar);
+		fieldPattern.setType(typePattern);
 		classAPattern.addFieldPattern(fieldPattern);
 		MethodPattern methodNPattern = new MethodPattern(methodNVar, null);
 		methodNPattern.addDependency(methodM2Var);
@@ -1100,7 +1102,9 @@ public class TestMatcherSemanticConflicts {
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
 		
-		dp1.addActionPattern(new UpdateFieldTypePatternAction(fieldPattern, b2ClassVar));
+		TypePattern newTypePattern = new TypePattern(b2ClassVar);
+		
+		dp1.addActionPattern(new UpdateFieldTypePatternAction(fieldPattern, newTypePattern));
 
 		dp2.addActionPattern(
 				new UpdateDependencyPatternAction(methodNPattern, methodM2Var, methodM1Var));
@@ -1268,7 +1272,8 @@ public class TestMatcherSemanticConflicts {
 		ClassPattern classPattern1 = new ClassPattern(classVar1);
 		ClassPattern classPattern2 = new ClassPattern(classVar2);
 		FieldPattern fieldPattern = new FieldPattern(fieldVar1, null);
-		fieldPattern.setType(iVar);
+		TypePattern typePattern = new TypePattern(iVar);
+		fieldPattern.setType(typePattern);
 		classPattern1.addFieldPattern(fieldPattern);
 		
 		classPattern2.addInterface(new InterfaceImplementationPattern(iVar));
@@ -1316,7 +1321,8 @@ public class TestMatcherSemanticConflicts {
 		ClassPattern classPattern3 = new ClassPattern(classVar3);
 		MethodPattern methodPattern = new MethodPattern(methodVar1, null);
 		FieldPattern fieldPattern = new FieldPattern(fieldVar1, null);
-		fieldPattern.setType(iVar);
+		TypePattern typePattern = new TypePattern(iVar);
+		fieldPattern.setType(typePattern);
 		classPattern1.addFieldPattern(fieldPattern);
 		classPattern2.addInterface(new InterfaceImplementationPattern(iVar));
 		classPattern2.addMethodPattern(methodPattern);
