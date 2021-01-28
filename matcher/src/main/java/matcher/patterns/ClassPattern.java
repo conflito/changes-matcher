@@ -534,8 +534,14 @@ public class ClassPattern {
 
 	private boolean superClassMatch(ClassInstance instance) {
 		Optional<ClassInstance> superClassOp = instance.getSuperClass();
-		if(hasSuperClass() && superClassOp.isPresent())
-			return superClass.matches(superClassOp.get());
+		if(hasSuperClass() && superClassOp.isPresent()) {
+			ClassInstance superClassInstance = superClassOp.get();
+			boolean result = superClass.matches(superClassInstance);
+			if(!result && superClassInstance.getSuperClass().isPresent()) {
+				result = superClassMatch(superClassInstance);
+			}
+			return result;//superClass.matches(superClassOp.get()) || superClassMatch(superClassOp.get());
+		}
 		return true;
 	}
 
