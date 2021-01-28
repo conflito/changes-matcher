@@ -59,15 +59,20 @@ public class TestMatcherSemanticConflicts {
 	private static final String CHANGE_METHOD1_FOLDER ="ChangeMethod01" + File.separator;
 	private static final String CHANGE_METHOD2_FOLDER ="ChangeMethod02" + File.separator;
 	private static final String DEPENDENCY_BASED1_FOLDER = "DependencyBased01" + File.separator;
+	private static final String DEPENDENCY_BASED101_FOLDER = "DependencyBased01_01" + File.separator;
 	private static final String DEPENDENCY_BASED2_FOLDER = "DependencyBased02" + File.separator;
 	private static final String DEPENDENCY_BASED201_FOLDER = "DependencyBased02_01" + File.separator;
 	private static final String DEPENDENCY_BASED3_FOLDER = "DependencyBased03" + File.separator;
 	private static final String DEPENDENCY_BASED4_FOLDER = "DependencyBased04" + File.separator;
 	private static final String DEPENDENCY_BASED5_FOLDER = "DependencyBased05" + File.separator;
+	private static final String DEPENDENCY_BASED6_FOLDER = "DependencyBased06" + File.separator;
+	private static final String DEPENDENCY_BASED601_FOLDER = "DependencyBased06_01" + File.separator;
 	private static final String UNEXPECTED_OVERIDE_FOLDER = 
 			"UnexpectedOverriding01" + File.separator;
 	private static final String UNEXPECTED_OVERIDE2_FOLDER = 
 			"UnexpectedOverriding02" + File.separator;
+	private static final String UNEXPECTED_OVERIDE3_FOLDER = 
+			"UnexpectedOverriding03" + File.separator;
 	private static final String PARALLEL_CHANGED_FOLDER = "ParallelChanges" + File.separator;
 
 
@@ -438,14 +443,48 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("A"), "Class is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m()"), 
-				"Method with invocation is not m()?");
+				assignments.get(1).getSecond().equals("m1()"), 
+				"Updated method is not m1()?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m1()"), 
-				"Method updated is not m1()?");
+				assignments.get(2).getSecond().equals("A"), 
+				"Class that holds the new method is not A?");
 		assertTrue(assignments.get(3).getFirst() == 3 && 
 				assignments.get(3).getSecond().equals("k()"), 
-				"Method inserted with invocation is not k()?");
+				"Method inserted with t is not k()?");
+	}
+	
+	@Test
+	public void dependencyBased1_01Test() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ DEPENDENCY_BASED101_FOLDER + CONFIG_FILE_NAME);
+		
+		String base1Path = SRC_FOLDER + DEPENDENCY_BASED101_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + DEPENDENCY_BASED101_FOLDER + "A01.java";
+		String base2Path = SRC_FOLDER + DEPENDENCY_BASED101_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + DEPENDENCY_BASED101_FOLDER + "B01.java";
+		
+		String[] bases = {base1Path, base2Path};
+		String[] variants1 = {var1Path, null};
+		String[] variants2 = {null, var2Path};
+		
+		ConflictPattern cp = getDependencyBased1Pattern();
+
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
+		assertTrue(result.size() == 1, "More than one result for dependency based?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("A"), "Class is not A");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("m1()"), 
+				"Updated method is not m1()?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("B"), 
+				"Class that holds the new method is not B?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("k()"), 
+				"Method inserted with t is not k()?");
 	}
 
 	@Test
@@ -467,21 +506,18 @@ public class TestMatcherSemanticConflicts {
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		assertTrue(result.size() == 1, "More than one result for dependency based 2?");
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
+		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("A"), "Class is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m()"), 
-				"Method with invocation is not m()?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m1()"), 
+				assignments.get(1).getSecond().equals("m1()"), 
 				"Method updated is not m1()?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("B"), 
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("B"), 
 				"New class is not B?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("k()"), 
-				"Method inserted with invocation is not k()?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("k()"), 
+				"New method that depends on m1() is not k()?");
 	}
 
 	@Test
@@ -505,37 +541,31 @@ public class TestMatcherSemanticConflicts {
 
 		assertTrue(result.size() == 2, "Not 2 results for dependency based 2_01?");
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
+		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("A"), "Class is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m()"), 
-				"Method with invocation is not m()?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m1()"), 
+				assignments.get(1).getSecond().equals("m1()"), 
 				"Method updated is not m1()?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("B"), 
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("B"), 
 				"New class is not B?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("k()"), 
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("k()"), 
 				"Method inserted with invocation is not k()?");
 		
 		assignments = result.get(1);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
+		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("A"), "Class is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m()"), 
-				"Method with invocation is not m()?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m1()"), 
+				assignments.get(1).getSecond().equals("m1()"), 
 				"Method updated is not m1()?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("C"), 
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("C"), 
 				"New class is not C?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("method()"), 
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("method()"), 
 				"Method inserted with invocation is not method()?");
 	}
 
@@ -552,7 +582,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, newClassPath};
 
-		ConflictPattern cp = getDependencyBased3Pattern();
+		ConflictPattern cp = getDependencyBased2Pattern();
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -590,23 +620,20 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);				
-
+		
 		assertTrue(result.size() == 1, "More than one result for dependency based 4?");
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
+		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("A"), "Class is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m()"), 
-				"Method with invocation is not m()?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m1(double, int)"), 
+				assignments.get(1).getSecond().equals("m1(double, int)"), 
 				"Method updated is not m1(doublt, int)?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("B"), 
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("B"), 
 				"New class is not B?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("k()"), 
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("k()"), 
 				"Method inserted with invocation is not k()?");
 	}
 
@@ -646,6 +673,80 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(4).getFirst() == 4 && 
 				assignments.get(4).getSecond().equals("k()"), 
 				"Method inserted with invocation is not k()?");
+	}
+	
+	@Test
+	public void dependencyBased6Test() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ DEPENDENCY_BASED6_FOLDER + CONFIG_FILE_NAME);
+
+		String base1Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + "A01.java";
+		String base2Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + "B01.java";
+
+		String[] bases = {base1Path, base2Path};
+		String[] variants1 = {var1Path, null};
+		String[] variants2 = {null, var2Path};
+		
+		ConflictPattern cp = getDependencyBased6Pattern();
+
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
+		assertTrue(result.size() == 1, "More than one result for dependency based 5?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("A"), "Class is not A");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("x"), 
+				"Updated field is not x?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("m1()"), 
+				"Method that reads x is not m1()?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("B"), 
+				"Class is not B?");
+		assertTrue(assignments.get(4).getFirst() == 4 && 
+				assignments.get(4).getSecond().equals("k()"), 
+				"Method that depends on m1() is not k()?");
+	}
+	
+	@Test
+	public void dependencyBased6_01Test() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ DEPENDENCY_BASED601_FOLDER + CONFIG_FILE_NAME);
+
+
+		String basePath = SRC_FOLDER + DEPENDENCY_BASED601_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + DEPENDENCY_BASED601_FOLDER + "A01.java";
+		String var2Path = SRC_FOLDER + DEPENDENCY_BASED601_FOLDER + "A02.java";
+
+		String[] bases = {basePath};
+		String[] variants1 = {var1Path};
+		String[] variants2 = {var2Path};
+		
+		ConflictPattern cp = getDependencyBased6Pattern();
+
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
+		assertTrue(result.size() == 1, "More than one result for dependency based 5?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("A"), "Class is not A");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("x"), 
+				"Updated field is not x?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("m1()"), 
+				"Method that reads x is not m1()?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("A"), 
+				"Class is not B?");
+		assertTrue(assignments.get(4).getFirst() == 4 && 
+				assignments.get(4).getSecond().equals("m2()"), 
+				"Method that depends on m1() is not m2()?");
 	}
 
 	@Test
@@ -732,6 +833,46 @@ public class TestMatcherSemanticConflicts {
 	}
 	
 	@Test
+	public void unexpectedOverriding3Test() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ UNEXPECTED_OVERIDE3_FOLDER + CONFIG_FILE_NAME);
+		
+		String base1Path = SRC_FOLDER + UNEXPECTED_OVERIDE3_FOLDER + "B.java";
+		String var1Path = SRC_FOLDER + UNEXPECTED_OVERIDE3_FOLDER + "B01.java";
+		String base2Path = SRC_FOLDER + UNEXPECTED_OVERIDE3_FOLDER + "C.java";
+		String var2Path = SRC_FOLDER + UNEXPECTED_OVERIDE3_FOLDER + "C01.java";
+		
+		String[] bases = {base1Path, base2Path};
+		String[] variants1 = {var1Path, null};
+		String[] variants2 = {null, var2Path};
+		
+		ConflictPattern cp = getUnexpectedOverriding3Pattern();
+
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
+		assertTrue(result.size() == 1, "More than one result for unexpected overriding 2?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 6, "Not 6 assignments with only 6 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("A"), "Class is not A");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("B"), 
+				"Class that extends A is not B?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("C"), 
+				"Third class is not C?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("m(java.lang.Number)"), 
+				"Method in A is not m(java.lang.Number)");
+		assertTrue(assignments.get(4).getFirst() == 4 && 
+				assignments.get(4).getSecond().equals("m(int)"), 
+				"Compatible method inserted in B is not m(int)");
+		assertTrue(assignments.get(5).getFirst() == 5 && 
+				assignments.get(5).getSecond().equals("k()"), 
+				"Method added that depends on m(java.lang.Number) is not k()");
+	}
+	
+	@Test
 	public void parallelChangesTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ PARALLEL_CHANGED_FOLDER + CONFIG_FILE_NAME);
@@ -780,7 +921,8 @@ public class TestMatcherSemanticConflicts {
 				new MethodPattern(insertedMethodVar2, Visibility.PUBLIC);
 		insertedMethodPattern1.addDependency(methodVar);
 		
-		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern1, classPattern));
+		dp1.addActionPattern(
+				new InsertMethodPatternAction(insertedMethodPattern1, classPattern));
 		
 		InsertMethodPatternAction impa = 
 				new InsertMethodPatternAction(insertedMethodPattern2, classPattern);
@@ -813,7 +955,8 @@ public class TestMatcherSemanticConflicts {
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
 		
-		MethodPattern insertedMethodPattern = new MethodPattern(insertedMethodVar, null);
+		MethodPattern insertedMethodPattern = 
+				new MethodPattern(insertedMethodVar, null);
 		FieldAccessPattern insertedAccessPattern = 
 				new FieldAccessPattern(fieldVar, FieldAccessType.WRITE);
 		insertedMethodPattern.addFieldAccessPattern(insertedAccessPattern);
@@ -821,9 +964,11 @@ public class TestMatcherSemanticConflicts {
 		FieldPattern insertedFieldPattern = new FieldPattern(fieldVar, null);
 		
 		
-		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
+		dp1.addActionPattern(
+				new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
-		dp2.addActionPattern(new InsertFieldPatternAction(insertedFieldPattern, classPattern));
+		dp2.addActionPattern(
+				new InsertFieldPatternAction(insertedFieldPattern, classPattern));
 
 
 		ConflictPattern conflict = new ConflictPattern();
@@ -858,14 +1003,16 @@ public class TestMatcherSemanticConflicts {
 		
 		MethodInvocationPattern insertedInvocationPattern = 
 				new MethodInvocationPattern(methodVar);
-		MethodPattern insertedMethodPattern = new MethodPattern(methodVar, Visibility.PACKAGE);
+		MethodPattern insertedMethodPattern = 
+				new MethodPattern(methodVar, Visibility.PACKAGE);
 		FieldAccessPattern insertedAccessPattern = 
 				new FieldAccessPattern(fieldVar, FieldAccessType.WRITE);
 		insertedMethodPattern.addFieldAccessPattern(insertedAccessPattern);
 		
 		dp1.addActionPattern(
 				new InsertInvocationPatternAction(insertedInvocationPattern, cPattern));
-		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
+		dp2.addActionPattern(
+				new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
 
 		ConflictPattern conflict = new ConflictPattern();
@@ -886,8 +1033,10 @@ public class TestMatcherSemanticConflicts {
 		BasePattern basePattern = new BasePattern();
 		ClassPattern superClassPattern = new ClassPattern(superClassVar);
 		ClassPattern classPattern = new ClassPattern(classVar);
-		MethodPattern topMethodPattern = new MethodPattern(topMethodVar, Visibility.PUBLIC);
-		MethodPattern subMethodPattern = new MethodPattern(subMethodVar, Visibility.PRIVATE);
+		MethodPattern topMethodPattern = 
+				new MethodPattern(topMethodVar, Visibility.PUBLIC);
+		MethodPattern subMethodPattern = 
+				new MethodPattern(subMethodVar, Visibility.PRIVATE);
 		superClassPattern.addMethodPattern(topMethodPattern);
 		superClassPattern.addMethodPattern(subMethodPattern);
 		superClassPattern.addCompatible(subMethodVar, topMethodVar);
@@ -901,9 +1050,11 @@ public class TestMatcherSemanticConflicts {
 				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
 		insertedMethodPattern.addDependency(topMethodVar);
 		
-		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
+		dp1.addActionPattern(
+				new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
-		dp2.addActionPattern(new VisibilityActionPattern(Action.UPDATE, Visibility.PUBLIC, 
+		dp2.addActionPattern(
+				new VisibilityActionPattern(Action.UPDATE, Visibility.PUBLIC, 
 				Visibility.PRIVATE, subMethodVar));
 
 		ConflictPattern conflict = new ConflictPattern();
@@ -924,8 +1075,10 @@ public class TestMatcherSemanticConflicts {
 		BasePattern basePattern = new BasePattern();
 		ClassPattern superClassPattern = new ClassPattern(superClassVar);
 		ClassPattern classPattern = new ClassPattern(classVar);
-		MethodPattern topMethodPattern = new MethodPattern(topMethodVar, Visibility.PUBLIC);
-		MethodPattern subMethodPattern = new MethodPattern(subMethodVar, Visibility.PUBLIC);
+		MethodPattern topMethodPattern = 
+				new MethodPattern(topMethodVar, Visibility.PUBLIC);
+		MethodPattern subMethodPattern = 
+				new MethodPattern(subMethodVar, Visibility.PUBLIC);
 		superClassPattern.addMethodPattern(topMethodPattern);
 		superClassPattern.addMethodPattern(subMethodPattern);
 		superClassPattern.addCompatible(subMethodVar, topMethodVar);
@@ -939,9 +1092,11 @@ public class TestMatcherSemanticConflicts {
 				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
 		insertedMethodPattern.addDependency(subMethodVar);
 		
-		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
+		dp1.addActionPattern(
+				new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
-		dp2.addActionPattern(new VisibilityActionPattern(Action.UPDATE, Visibility.PRIVATE, 
+		dp2.addActionPattern(
+				new VisibilityActionPattern(Action.UPDATE, Visibility.PRIVATE, 
 				Visibility.PUBLIC, subMethodVar));
 
 		ConflictPattern conflict = new ConflictPattern();
@@ -971,12 +1126,15 @@ public class TestMatcherSemanticConflicts {
 		
 		MethodPattern insertedMethodPattern1 = 
 				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
-		MethodPattern insertedMethodPattern2 = new MethodPattern(methodVar, Visibility.PUBLIC);
+		MethodPattern insertedMethodPattern2 = 
+				new MethodPattern(methodVar, Visibility.PUBLIC);
 		insertedMethodPattern1.addDependency(methodVar);
 		
-		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern1, classPattern));
+		dp1.addActionPattern(
+				new InsertMethodPatternAction(insertedMethodPattern1, classPattern));
 
-		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern2, classPattern));
+		dp2.addActionPattern(
+				new InsertMethodPatternAction(insertedMethodPattern2, classPattern));
 
 
 		ConflictPattern conflict = new ConflictPattern();
@@ -1009,9 +1167,11 @@ public class TestMatcherSemanticConflicts {
 				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
 		insertedMethodPattern.addDependency(methodVar);
 		
-		dp1.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
+		dp1.addActionPattern(
+				new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
-		dp2.addActionPattern(new DeleteMethodPatternAction(methodPattern, classPattern));
+		dp2.addActionPattern(
+				new DeleteMethodPatternAction(methodPattern, classPattern));
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
@@ -1087,7 +1247,8 @@ public class TestMatcherSemanticConflicts {
 		
 		ClassPattern classB1Pattern = new ClassPattern(b1ClassVar);
 		ClassPattern classB2Pattern = new ClassPattern(b2ClassVar);
-		InterfaceImplementationPattern iPattern = new InterfaceImplementationPattern(iVar);
+		InterfaceImplementationPattern iPattern = 
+				new InterfaceImplementationPattern(iVar);
 		classB1Pattern.addInterface(iPattern);
 		classB2Pattern.addInterface(iPattern);
 		MethodPattern methodHashPattern = new MethodPattern(methodHashVar, null);
@@ -1104,7 +1265,8 @@ public class TestMatcherSemanticConflicts {
 		
 		TypePattern newTypePattern = new TypePattern(b2ClassVar);
 		
-		dp1.addActionPattern(new UpdateFieldTypePatternAction(fieldPattern, newTypePattern));
+		dp1.addActionPattern(
+				new UpdateFieldTypePatternAction(fieldPattern, newTypePattern));
 
 		dp2.addActionPattern(
 				new UpdateDependencyPatternAction(methodNPattern, methodM2Var, methodM1Var));
@@ -1119,28 +1281,28 @@ public class TestMatcherSemanticConflicts {
 	private ConflictPattern getDependencyBased1Pattern() {
 		FreeVariable classVar = new FreeVariable(0);
 		FreeVariable methodVar1 = new FreeVariable(1);
-		FreeVariable methodVar2 = new FreeVariable(2);
+		FreeVariable holderClassVar = new FreeVariable(2);
 		FreeVariable insertedMethodVar = new FreeVariable(3);
 
 		BasePattern basePattern = new BasePattern();
 		ClassPattern classPattern = new ClassPattern(classVar);
+		ClassPattern holderClassPattern = new ClassPattern(holderClassVar);
 		MethodPattern methodPattern1 = new MethodPattern(methodVar1, null);
-		MethodPattern methodPattern2 = new MethodPattern(methodVar2, null);
-		methodPattern1.addDependency(methodVar2);
 		classPattern.addMethodPattern(methodPattern1);
-		classPattern.addMethodPattern(methodPattern2);
 		basePattern.addClassPattern(classPattern);
+		basePattern.addClassPattern(holderClassPattern);
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
 		MethodPattern insertedMethodPattern = 
-				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
+				new MethodPattern(insertedMethodVar, null);
 		insertedMethodPattern.addDependency(methodVar1);
 		
-		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern2));
-
-		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
+		dp1.addActionPattern(
+				new UpdateMethodPatternAction(methodPattern1));
+		dp2.addActionPattern(
+				new InsertMethodPatternAction(insertedMethodPattern, 
+						holderClassPattern));
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
@@ -1151,44 +1313,6 @@ public class TestMatcherSemanticConflicts {
 	}
 
 	private ConflictPattern getDependencyBased2Pattern() {
-		FreeVariable classVar = new FreeVariable(0);
-		FreeVariable methodVar1 = new FreeVariable(1);
-		FreeVariable methodVar2 = new FreeVariable(2);
-		FreeVariable insertedClassVar = new FreeVariable(3);
-		FreeVariable insertedMethodVar = new FreeVariable(4);
-
-		BasePattern basePattern = new BasePattern();
-		ClassPattern classPattern = new ClassPattern(classVar);
-		MethodPattern methodPattern1 = new MethodPattern(methodVar1, null);
-		MethodPattern methodPattern2 = new MethodPattern(methodVar2, null);
-		methodPattern1.addDependency(methodVar2);
-		classPattern.addMethodPattern(methodPattern1);
-		classPattern.addMethodPattern(methodPattern2);
-		basePattern.addClassPattern(classPattern);
-
-		DeltaPattern dp1 = new DeltaPattern();
-		DeltaPattern dp2 = new DeltaPattern();
-		
-		ClassPattern insertedClassPattern = new ClassPattern(insertedClassVar);
-		MethodPattern insertedMethodPattern = 
-				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
-
-		insertedMethodPattern.addDependency(methodVar1);
-		insertedClassPattern.addMethodPattern(insertedMethodPattern);
-		
-		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern2));
-
-		dp2.addActionPattern(new InsertClassPatternAction(insertedClassPattern));
-		
-		ConflictPattern conflict = new ConflictPattern();
-		conflict.setBasePattern(basePattern);
-		conflict.setFirstDeltaPattern(dp1);
-		conflict.setSecondDeltaPattern(dp2);
-
-		return conflict;
-	}
-
-	private ConflictPattern getDependencyBased3Pattern() {
 		FreeVariable classVar = new FreeVariable(0);
 		FreeVariable methodVar1 = new FreeVariable(1);
 		FreeVariable insertedClassVar = new FreeVariable(2);
@@ -1206,11 +1330,11 @@ public class TestMatcherSemanticConflicts {
 		ClassPattern insertedClassPattern = new ClassPattern(insertedClassVar);
 		MethodPattern insertedMethodPattern = 
 				new MethodPattern(insertedMethodVar, null);
+
 		insertedMethodPattern.addDependency(methodVar1);
 		insertedClassPattern.addMethodPattern(insertedMethodPattern);
 		
 		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern1));
-
 		dp2.addActionPattern(new InsertClassPatternAction(insertedClassPattern));
 		
 		ConflictPattern conflict = new ConflictPattern();
@@ -1233,8 +1357,8 @@ public class TestMatcherSemanticConflicts {
 		FieldPattern fieldPattern = new FieldPattern(fieldVar, null);
 		classPattern.addFieldPattern(fieldPattern);
 		MethodPattern methodPattern = new MethodPattern(methodVar, null);
-		methodPattern.addFieldAccessPattern(new FieldAccessPattern(fieldVar, 
-				FieldAccessType.READ));
+		methodPattern.addFieldAccessPattern(
+				new FieldAccessPattern(fieldVar, FieldAccessType.READ));
 		classPattern.addMethodPattern(methodPattern);
 		basePattern.addClassPattern(classPattern);
 
@@ -1248,8 +1372,46 @@ public class TestMatcherSemanticConflicts {
 		insertedClassPattern.addMethodPattern(insertedMethodPattern);
 		
 		dp1.addActionPattern(new UpdateFieldTypePatternAction(fieldPattern));
-
 		dp2.addActionPattern(new InsertClassPatternAction(insertedClassPattern));
+		
+		ConflictPattern conflict = new ConflictPattern();
+		conflict.setBasePattern(basePattern);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
+
+		return conflict;
+	}
+	
+	private ConflictPattern getDependencyBased6Pattern() {
+		FreeVariable classVar = new FreeVariable(0);
+		FreeVariable fieldVar = new FreeVariable(1);
+		FreeVariable methodVar = new FreeVariable(2);
+		FreeVariable holderClassVar = new FreeVariable(3);
+		FreeVariable insertedMethodVar = new FreeVariable(4);
+		
+		BasePattern basePattern = new BasePattern();
+		ClassPattern classPattern = new ClassPattern(classVar);
+		ClassPattern holderClassPattern = new ClassPattern(holderClassVar);
+		FieldPattern fieldPattern = new FieldPattern(fieldVar, null);
+		classPattern.addFieldPattern(fieldPattern);
+		MethodPattern methodPattern = new MethodPattern(methodVar, null);
+		methodPattern.addFieldAccessPattern(
+				new FieldAccessPattern(fieldVar, FieldAccessType.READ));
+		classPattern.addMethodPattern(methodPattern);
+		basePattern.addClassPattern(classPattern);
+		basePattern.addClassPattern(holderClassPattern);
+		
+		DeltaPattern dp1 = new DeltaPattern();
+		DeltaPattern dp2 = new DeltaPattern();
+		
+		MethodPattern insertedMethodPattern = 
+				new MethodPattern(insertedMethodVar, null);
+		insertedMethodPattern.addDependency(methodVar);
+		
+		dp1.addActionPattern(new UpdateFieldTypePatternAction(fieldPattern));
+		dp2.addActionPattern(
+				new InsertMethodPatternAction(insertedMethodPattern, 
+						holderClassPattern));
 		
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
@@ -1357,6 +1519,46 @@ public class TestMatcherSemanticConflicts {
 		conflict.setSecondDeltaPattern(dp2);
 		conflict.addDifferentVariablesRule(classVar1, classVar3);
 
+		return conflict;
+	}
+	
+	private ConflictPattern getUnexpectedOverriding3Pattern() {
+		FreeVariable classVar1 = new FreeVariable(0);
+		FreeVariable classVar2 = new FreeVariable(1);
+		FreeVariable classVar3 = new FreeVariable(2);
+		FreeVariable methodVar = new FreeVariable(3);
+		FreeVariable insertedMethod1 = new FreeVariable(4);
+		FreeVariable insertedMethod2 = new FreeVariable(5);
+		
+		BasePattern basePattern = new BasePattern();
+		ClassPattern classPattern1 = new ClassPattern(classVar1);
+		ClassPattern classPattern2 = new ClassPattern(classVar2);
+		ClassPattern classPattern3 = new ClassPattern(classVar3);
+		MethodPattern methodPattern = new MethodPattern(methodVar, null);
+		classPattern1.addMethodPattern(methodPattern);
+		classPattern2.setSuperClass(classPattern1);
+		basePattern.addClassPattern(classPattern2);
+		basePattern.addClassPattern(classPattern3);
+		
+		DeltaPattern dp1 = new DeltaPattern();
+		DeltaPattern dp2 = new DeltaPattern();
+		
+		MethodPattern insertedMethodPattern1 = new MethodPattern(insertedMethod1, null);
+		InsertMethodPatternAction impa = 
+				new InsertMethodPatternAction(insertedMethodPattern1, classPattern2);
+		impa.addCompatible(methodPattern);
+		dp1.addActionPattern(impa);
+		
+		MethodPattern insertedMethodPattern2 = new MethodPattern(insertedMethod2, null);
+		insertedMethodPattern2.addDependency(methodVar);
+		dp2.addActionPattern(
+				new InsertMethodPatternAction(insertedMethodPattern2, classPattern3));
+		
+		ConflictPattern conflict = new ConflictPattern();
+		conflict.setBasePattern(basePattern);
+		conflict.setFirstDeltaPattern(dp1);
+		conflict.setSecondDeltaPattern(dp2);
+		
 		return conflict;
 	}
 	
