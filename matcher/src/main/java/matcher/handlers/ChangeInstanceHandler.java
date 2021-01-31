@@ -18,8 +18,8 @@ public class ChangeInstanceHandler {
 
 	private SpoonHandler spoonHandler;
 	
-	public ChangeInstanceHandler(int trackLimit){
-		this.spoonHandler = new SpoonHandler(trackLimit);
+	public ChangeInstanceHandler(){
+		this.spoonHandler = new SpoonHandler();
 		this.bih = new BaseInstanceHandler();
 		this.dih = new DeltaInstanceHandler();
 	}
@@ -33,7 +33,6 @@ public class ChangeInstanceHandler {
 		
 		ChangeInstance result = new ChangeInstance();
 		spoonHandler.loadLaunchers(bases, variants1, variants2);
-		spoonHandler.buildLaunchers();
 		BaseInstance baseInstance = processBases(cp);
 		List<DeltaInstance> deltas = processDeltas(bases, variants1, variants2, cp);
 		
@@ -65,21 +64,24 @@ public class ChangeInstanceHandler {
 			CtType<?> var2Type = null;
 			if(base != null) {
 				CtType<?> basicType = spoonHandler.getCtType(spoonHandler.getSpoonResource(base));
-				baseType = spoonHandler.getFullChangedCtType(
-								spoonHandler.getBaseLauncher(), basicType.getQualifiedName());
+
+				baseType = spoonHandler.getFullCtType(spoonHandler.baseTypes(), 
+						basicType.getQualifiedName());
 			}
 			if(variant1 != null) {
 				CtType<?> basicType = spoonHandler.getCtType(
 						spoonHandler.getSpoonResource(variant1));
-				var1Type = spoonHandler.getFullChangedCtType(
-						spoonHandler.getVariantLauncher1(), basicType.getQualifiedName());
+
+				var1Type = spoonHandler.getFullCtType(spoonHandler.firstVariantTypes(), 
+						basicType.getQualifiedName());
 				result.add(dih.getDeltaInstance(baseType, var1Type, cp));
 			}
 			if(variant2 != null) {
 				CtType<?> basicType = spoonHandler.getCtType(
 						spoonHandler.getSpoonResource(variant2));
-				var2Type = spoonHandler.getFullChangedCtType(
-						spoonHandler.getVariantLauncher2(), basicType.getQualifiedName());
+
+				var2Type = spoonHandler.getFullCtType(spoonHandler.secondVariantTypes(), 
+						basicType.getQualifiedName());
 				result.add(dih.getDeltaInstance(baseType, var2Type, cp));
 			}
 		}

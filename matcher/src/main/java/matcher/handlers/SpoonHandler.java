@@ -2,11 +2,13 @@ package matcher.handlers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Queue;
 
 import gumtree.spoon.AstComparator;
 import matcher.exceptions.ApplicationException;
@@ -24,27 +26,19 @@ import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.TypeFilter;
 
 public class SpoonHandler {
-		
-	private int trackLimit;
 	
 	private Launcher baseLauncher;
 	private Launcher variantLauncher1;
 	private Launcher variantLauncher2;
 	
-	private Set<String> baseLoaded;
-	private Set<String> variant1Loaded;
-	private Set<String> variant2Loaded;
+	private Set<CtType<?>> baseTypes;
+	private Set<CtType<?>> variant1Types;
+	private Set<CtType<?>> variant2Types;
 	
-	public SpoonHandler(int trackLimit) {
-		this.trackLimit = trackLimit;
-		
+	public SpoonHandler() {
 		this.baseLauncher = new Launcher();
 		this.variantLauncher1 = new Launcher();
 		this.variantLauncher2 = new Launcher();
-		
-		this.baseLoaded = new HashSet<>();
-		this.variant1Loaded = new HashSet<>();
-		this.variant2Loaded = new HashSet<>();
 	}
 	
 	public Launcher getBaseLauncher() {
@@ -77,16 +71,6 @@ public class SpoonHandler {
 		return (CtClass<?>) getCtType(resource);
 	}
 	
-	public Launcher loadLauncher(SpoonResource resource) 
-			throws ApplicationException {
-		Launcher launcher = new Launcher();
-		Set<String> loaded = new HashSet<>();
-		
-		loadClass(resource, launcher, loaded, 0);
-
-		return launcher;
-	}
-	
 	public void buildLaunchers() {
 		baseLauncher.buildModel();
 		variantLauncher1.buildModel();
@@ -94,113 +78,65 @@ public class SpoonHandler {
 	}
 	
 	public Iterable<CtType<?>> baseTypes(){
-		return baseLauncher.getModel().getAllTypes();
+		return baseTypes;
+	}
+	
+	public Iterable<CtType<?>> firstVariantTypes(){
+		return variant1Types;
+	}
+	
+	public Iterable<CtType<?>> secondVariantTypes(){
+		return variant2Types;
 	}
 	
 	public void loadLaunchers(File[] bases, File[] variants1, File[] variants2) 
 					throws ApplicationException {
-		for(int i = 0; i < bases.length; i++) {
-			loadLaunchers(bases[i], variants1[i], variants2[i]);
-		}
+		baseLauncher.addInputResource(PropertiesHandler.getInstance().getBaseSourceDirPath());
+		
+		variantLauncher1.addInputResource(PropertiesHandler.getInstance()
+				.getFirstVariantSourceDirPath());
+		
+		variantLauncher2.addInputResource(PropertiesHandler.getInstance()
+				.getSecondVariantSourceDirPath());
+		
+		buildLaunchers();
+		
+		baseTypes = getElements(baseLauncher, bases);
+		variant1Types = getElements(variantLauncher1, variants1);
+		variant2Types = getElements(variantLauncher2, variants2);
+
+		addDeltaTypesToBase(variants1, variants2);
 	}
 	
-	public void loadLaunchers(File base, File variant1, File variant2) 
-					throws ApplicationException {		
-		if(base != null) {
-			SpoonResource baseResource = getSpoonResource(base);
-			loadClass(baseResource, baseLauncher, baseLoaded, 0);
+	private void addDeltaTypesToBase(File[] variants1, File[] variants2) throws ApplicationException {
+		Set<String> baseNames = baseTypes.stream()
+				.map(t -> t.getQualifiedName())
+				.collect(Collectors.toSet());
+		for(CtType<?> type: variant1Types) {
+			if(!baseNames.contains(type.getQualifiedName()) && 
+					!isNewClass(type.getQualifiedName(), variants1)) {
+				baseTypes.add(type);
+			}
 		}
-		
-		if(base != null && variant1 != null) {
-			SpoonResource variantResource1 = getSpoonResource(variant1);
-			CtType<?> var1 = getCtType(variantResource1);
-			loadClass(variantResource1, variantLauncher1, variant1Loaded, 0);
-			loadTypesInDelta(baseLauncher, baseLoaded, variant1Loaded, var1);
-		}
-		else if(variant1 != null) {
-			SpoonResource variantResource1 = getSpoonResource(variant1);
-			loadClass(variantResource1, variantLauncher1, variant1Loaded, 0);
-		}
-		
-		if(base != null && variant2 != null) {
-			SpoonResource variantResource2 = getSpoonResource(variant2);
-			CtType<?> var2 = getCtType(variantResource2);
-			loadClass(variantResource2, variantLauncher2, variant2Loaded, 0);
-			loadTypesInDelta(baseLauncher, baseLoaded, variant2Loaded, var2);
-		}
-		else if(variant2 != null) {
-			SpoonResource variantResource2 = getSpoonResource(variant2);
-			loadClass(variantResource2, variantLauncher2, variant2Loaded, 0);
-		}
-		
-		
-	}
-	
-	private void loadTypesInDelta(Launcher baseLauncher, Set<String> baseLoaded, 
-			Set<String> variantLoaded, CtType<?> varType) throws ApplicationException {
-		for(String s: variantLoaded) {
-			if(!varType.getSimpleName().equals(s) && !baseLoaded.contains(s)) {
-				Optional<File> srcFile = FileSystemHandler.getInstance().getSrcFile(s + ".java");
-				if(srcFile.isPresent()) {
-					baseLauncher.addInputResource(getSpoonResource(srcFile.get()));
-					baseLoaded.add(varType.getSimpleName());
-				}
-					
+		for(CtType<?> type: variant2Types) {
+			if(!baseNames.contains(type.getQualifiedName()) && 
+					!isNewClass(type.getQualifiedName(), variants2)) {
+				baseTypes.add(type);
 			}
 		}
 	}
 	
-	
-	private void loadClass(SpoonResource resource, Launcher launcher, Set<String> loaded
-			, int currentStep) throws ApplicationException {
-		if(currentStep < trackLimit) {
-			CtType<?> changedType = getCtType(resource);
-			if(!loaded.contains(changedType.getSimpleName())) {
-				launcher.addInputResource(resource);
-				loaded.add(changedType.getSimpleName());
-				if(changedType.isClass()) {
-					CtClass<?> changedClass = getCtClass(resource);
-					loadFields(changedClass, launcher, loaded, currentStep);
-					loadInterfaces(changedClass, launcher, loaded);
-					loadClassTree(changedClass, launcher, loaded, currentStep);
-					loadInvokedClasses(changedClass, launcher, loaded, currentStep);
-				}
+	private boolean isNewClass(String className, File[] variants) throws ApplicationException {
+		for(File f: variants) {
+			if(f != null) {
+				SpoonResource resource = getSpoonResource(f);
+				CtType<?> type = getCtType(resource);
+				if(className.equals(type.getQualifiedName()))
+					return true;
 			}
+			
 		}
-	}
-	
-	private void loadFields(CtClass<?> changedClass, Launcher launcher, Set<String> loaded
-			, int currentStep) throws ApplicationException {
-		for(CtFieldReference<?> f: changedClass.getDeclaredFields()) {
-			CtTypeReference<?> fieldType = f.getDeclaration().getType();
-			if(!fieldType.isPrimitive()) {
-				Optional<File> srcFile;
-				if(isComposedField(fieldType)) {
-					srcFile = 
-							FileSystemHandler.getInstance()
-											 .getSrcFile(fieldType.getAccessType()
-													 			  .getSimpleName() + ".java");
-				}
-				else if(fieldType.isArray()){
-					do {
-						CtArrayTypeReference<?> arrayTypeRef = (CtArrayTypeReference<?>) fieldType;
-						fieldType = arrayTypeRef.getComponentType();
-					}while(fieldType.isArray());
-					
-					srcFile = FileSystemHandler.getInstance()
-											   .getSrcFile(fieldType.getSimpleName() + ".java");
-				}
-				else {
-					srcFile = FileSystemHandler.getInstance()
-							   .getSrcFile(fieldType.getSimpleName() + ".java");
-				}
-				
-				if(srcFile.isPresent()) {
-					SpoonResource resource = getSpoonResource(srcFile.get());
-					loadClass(resource, launcher, loaded, currentStep + 1);
-				}
-			}
-		}
+		return false;
 	}
 	
 	private boolean isComposedField(CtTypeReference<?> fieldType)  {
@@ -211,51 +147,8 @@ public class SpoonHandler {
 		catch(Exception e) {}
 		return false;
 	}
-	private void loadInterfaces(CtClass<?> changedClass, Launcher launcher, 
-			Set<String> loaded) throws ApplicationException {
-		for(CtTypeReference<?> i: changedClass.getSuperInterfaces()) {
-			Optional<File> srcFile = 
-					FileSystemHandler.getInstance().getSrcFile(i.getSimpleName() + ".java");
-			if(srcFile.isPresent()) {
-				SpoonResource resource = getSpoonResource(srcFile.get());
-				CtType<?> type = getCtType(resource);
-				if(!loaded.contains(type.getSimpleName())) {
-					launcher.addInputResource(resource);
-					loaded.add(type.getSimpleName());
-				}
-			}
-		}
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void loadInvokedClasses(CtClass<?> changedClass, Launcher launcher, 
-			Set<String> loaded, int currentStep) throws ApplicationException {
-		List<CtInvocation<?>> invocations = 
-				changedClass.getElements(new TypeFilter(CtInvocation.class));
-		invocations = filterInvocations(changedClass.getQualifiedName(), invocations);
-		for(CtInvocation<?> invocation: invocations) {
-			if(invocation.getExecutable() != null 
-					&& invocation.getExecutable().getDeclaringType() != null) {
-				String simpleName = invocation.getExecutable().getDeclaringType().getSimpleName();
-				Optional<File> srcFile = FileSystemHandler.getInstance().getSrcFile(simpleName + ".java");
-				if(srcFile.isPresent()) {
-					SpoonResource resource = getSpoonResource(srcFile.get());
-					loadClass(resource, launcher, loaded, currentStep + 1);
-				}
-			}
-			
-		}
-	}
 	
-	private List<CtInvocation<?>> filterInvocations(String classQualifiedName, 
-				List<CtInvocation<?>> invocations){
-		return invocations.stream()
-						  .filter(i -> !isSuperInvocation(i) &&
-								  !fromTheSameClass(i, classQualifiedName))
-						  .collect(Collectors.toList());
-	}
-	
-	private boolean fromTheSameClass(CtInvocation<?> invocation, String classQualifiedName) {
+	private static boolean fromTheSameClass(CtInvocation<?> invocation, String classQualifiedName) {
 		try {
 			return getInvocationClassQualifiedName(invocation).equals(classQualifiedName);
 		}
@@ -269,28 +162,187 @@ public class SpoonHandler {
 		return invocation.getExecutable().isConstructor() ||
 				!invocation.getElements(new TypeFilter(CtSuperAccess.class)).isEmpty();
 	}
+	
+	public CtType<?> getFullCtType(Iterable<CtType<?>> types, String typeName){
+		for(CtType<?> type: types) {
+			if(type.getQualifiedName().equals(typeName)) {
+				return type;
+			}
+		}
+		return null;
+	}
+	
+	private Set<CtType<?>> getElements(Launcher launcher, File[] files) throws ApplicationException {
+		Set<CtType<?>> result = new HashSet<>();
+		for(File f: files) {
+			if(f != null) {
+				SpoonResource resource = getSpoonResource(f);
+				CtType<?> changedType = getCtType(resource);
+				getElements(result, launcher, changedType.getQualifiedName());
+			}
+		}
+		return result;
+	}
+	
+	private void getElements(Set<CtType<?>> result, 
+			Launcher launcher, String changedClassName) {
 
-	private void loadClassTree(CtClass<?> changedClass, Launcher launcher, 
-			Set<String> loaded, int currentStep) throws ApplicationException {
-		CtTypeReference<?> superClass = changedClass.getSuperclass();
-		if(superClass != null) {
-			Optional<File> superFile = 
-					FileSystemHandler.getInstance().getSrcFile(superClass.getSimpleName() + ".java");
-			if(superFile.isPresent()) {
-				File sf = superFile.get();
-				SpoonResource resource = getSpoonResource(sf);
-				loadClass(resource, launcher, loaded, currentStep);
+		Collection<CtType<?>> types = launcher.getModel().getAllTypes();
+		Queue<CtMethod<?>> methodsToVisit = new ArrayDeque<>();
+		
+		CtType<?> changedType = addChangedClass(types, changedClassName, result);
+		addDirectDependants(types, changedClassName, result, methodsToVisit);
+		addDependants(types, result, methodsToVisit);
+		addDirectDependencies(changedType, result, methodsToVisit);
+		addDependencies(types, result, methodsToVisit);
+
+	}
+	
+	private void addType(CtType<?> type, Set<CtType<?>> result) {
+		result.add(type);
+		type.getSuperInterfaces().forEach(i -> result.add(i.getTypeDeclaration()));
+		addSuperClasses(type, result);
+		addFields(type, result);
+	}
+	
+	private void addFields(CtType<?> type, Set<CtType<?>> result) {
+		for(CtFieldReference<?> f: type.getDeclaredFields()) {
+			CtTypeReference<?> fieldType = f.getDeclaration().getType();
+			if(!fieldType.isPrimitive()) {
+				if(isComposedField(fieldType)) {
+					fieldType = fieldType.getAccessType();
+				}
+				else if(fieldType.isArray()){
+					fieldType = getArrayType(fieldType);
+				}
+				result.add(fieldType.getTypeDeclaration());
 			}
 		}
 	}
 	
-	public CtType<?> getFullChangedCtType(Launcher launcher, String changedType){
-		List<CtType<?>> l = launcher.getModel()
-									.getAllTypes()
-									.stream()
-									.filter(c -> c.getQualifiedName().equals(changedType))
-									.collect(Collectors.toList());
-		return l.get(0);
+	private void addSuperClasses(CtType<?> type, Set<CtType<?>> result) {
+		CtTypeReference<?> superClass = type.getSuperclass();
+		if(superClass != null) {
+			result.add(superClass.getTypeDeclaration());
+			addSuperClasses(superClass.getTypeDeclaration(), result);
+		}
+	}
+	
+	private CtTypeReference<?> getArrayType(CtTypeReference<?> type){
+		CtTypeReference<?> result = type;
+		do {
+			CtArrayTypeReference<?> arrayTypeRef = (CtArrayTypeReference<?>) result;
+			result = arrayTypeRef.getComponentType();
+		}while(result.isArray());
+		return result;
+	}
+	
+	private CtType<?> addChangedClass(Collection<CtType<?>> types, String changedClassName,
+			Set<CtType<?>> result) {
+		CtType<?> typeResult = null;
+		for(CtType<?> type: types) {
+			if(type.getQualifiedName().equals(changedClassName)) {
+				typeResult = type;
+				addType(type, result);
+				break;
+			}
+		}
+		return typeResult;
+	}
+	
+	private void addDirectDependants(Collection<CtType<?>> types, String changedClassName,
+			Set<CtType<?>> result, Queue<CtMethod<?>> methodsToVisit) {
+		types.forEach(type -> {
+			if(!type.getQualifiedName().equals(changedClassName)) {
+				List<CtInvocation<?>> invocations = getInvocationsInType(type);
+				for(CtInvocation<?> i: invocations) {
+					if(invocationFromTheSystem(i) && !isSuperInvocation(i) &&
+							isInvocationToClass(i, changedClassName)) {
+						addType(type, result);
+						System.out.println(i);
+						CtMethod<?> invokingMethod = i.getParent(CtMethod.class);
+						System.out.println(invokingMethod);
+						if(!methodsToVisit.contains(invokingMethod)) {
+							methodsToVisit.add(invokingMethod);
+						}
+					}
+				}
+			}
+			
+		});
+	}
+	
+	private void addDependants(Collection<CtType<?>> types, Set<CtType<?>> result, 
+			Queue<CtMethod<?>> methodsToVisit) {
+		while(!methodsToVisit.isEmpty()) {
+			CtMethod<?> method = methodsToVisit.poll();
+			types.forEach(type -> {
+				if(!result.contains(type)) {
+					List<CtInvocation<?>> invocations = getInvocationsInType(type);
+					for(CtInvocation<?> i: invocations) {
+						if(invocationFromTheSystem(i)) {
+							CtMethod<?> invokedMethod = getMethodFromInvocation(i);
+							if(method.equals(invokedMethod)) {
+								CtMethod<?> invokingMethod = i.getParent(CtMethod.class);
+								addType(type, result);
+								if(!methodsToVisit.contains(invokingMethod)) {
+									methodsToVisit.add(invokingMethod);
+								}
+							}
+						}
+					}
+				}
+			});
+		}
+	}
+	
+	private void addDirectDependencies(CtType<?> changedType, Set<CtType<?>> result, 
+			Queue<CtMethod<?>> methodsToVisit) {
+		List<CtInvocation<?>> invocations = getInvocationsInType(changedType);
+		for(CtInvocation<?> i: invocations) {
+			if(invocationFromTheSystem(i) && !isSuperInvocation(i) &&
+					!fromTheSameClass(i, changedType.getQualifiedName())) {
+				addType(getParentTypeFromInvocation(i), result);
+				CtMethod<?> invokedMethod = SpoonHandler.getMethodFromInvocation(i);
+				if(!methodsToVisit.contains(invokedMethod)) {
+					methodsToVisit.add(invokedMethod);
+				}
+			}
+		}
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void addDependencies(Collection<CtType<?>> types, Set<CtType<?>> result, 
+			Queue<CtMethod<?>> methodsToVisit) {
+		while(!methodsToVisit.isEmpty()) {
+			CtMethod<?> method = methodsToVisit.poll();
+			types.forEach(type -> {
+				Set<CtMethod<?>> methods = type.getMethods();
+				for(CtMethod<?> m: methods) {
+					if(method.equals(m)) {
+						addType(type, result);
+						List<CtInvocation<?>> invocations = 
+								m.getElements(new TypeFilter(CtInvocation.class));
+						for(CtInvocation<?> i: invocations) {
+							CtMethod<?> invokedMethod = getMethodFromInvocation(i);
+							if(!methodsToVisit.contains(invokedMethod)) {
+								methodsToVisit.add(invokedMethod);
+							}
+						}
+					}
+				}
+			});
+		}
+	}
+	
+	public static boolean invocationFromTheSystem(CtInvocation<?> invocation) {
+		return invocation.getExecutable() != null && 
+				invocation.getExecutable().getDeclaringType() != null;
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private List<CtInvocation<?>> getInvocationsInType(CtType<?> type){
+		return type.getElements(new TypeFilter(CtInvocation.class));
 	}
 	
 	public static CtMethod<?> getMethodFromInvocation(CtInvocation<?> invocation){
@@ -301,6 +353,15 @@ public class SpoonHandler {
 			.getDeclaringType()
 			.getTypeDeclaration()
 			.getMethod(invokedName, types);
+	}
+	
+	public CtType<?> getParentTypeFromInvocation(CtInvocation<?> invocation){
+		return getMethodFromInvocation(invocation).getTopLevelType();
+	}
+	
+	public static String getInvocationFullName(CtInvocation<?> invocation) {
+		return getInvocationClassQualifiedName(invocation) + "." + 
+				getInvocationQualifiedName(invocation);
 	}
 
 	public static String getInvocationQualifiedName(CtInvocation<?> invocation) {
@@ -313,6 +374,15 @@ public class SpoonHandler {
 	
 	public static String getInvocationClassQualifiedName(CtInvocation<?> invocation) {
 		return invocation.getExecutable().getDeclaringType().getQualifiedName();
+	}
+	
+	public boolean isInvocationToClass(CtInvocation<?> invocation, String className) {
+		return getInvocationClassQualifiedName(invocation).equals(className);
+	}
+	
+	public boolean isInvocationToMethod(CtInvocation<?> invocation, 
+			String invocationQualifiedName) {
+		return getInvocationFullName(invocation).equals(invocationQualifiedName);
 	}
 
 	public static String getFieldQualifiedName(CtFieldReference<?> field) {

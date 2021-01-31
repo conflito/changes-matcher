@@ -7,7 +7,7 @@ import matcher.entities.ConstructorInstance;
 import matcher.entities.MethodInstance;
 import matcher.entities.Type;
 import matcher.entities.Visibility;
-import matcher.handlers.FileSystemHandler;
+import matcher.handlers.SpoonHandler;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtConstructor;
@@ -44,8 +44,7 @@ public class ConstructorProcessor extends Processor<ConstructorInstance, CtConst
 		for(CtInvocation<?> invocation: invocations) {
 			if(!invocation.toString().equals("super()")) {
 				try {
-					String invocationClassName = getInvocationClassSimpleName(invocation) + ".java";
-					if(FileSystemHandler.getInstance().fromTheSystem(invocationClassName)) {
+					if(SpoonHandler.invocationFromTheSystem(invocation)) {
 						MethodInstance invoked = 
 								new MethodProcessor(conflictPattern).process(getMethodFromInvocation(invocation));
 						constructorInstance.addDirectDependency(invoked);
@@ -64,10 +63,6 @@ public class ConstructorProcessor extends Processor<ConstructorInstance, CtConst
 			.getDeclaringType()
 			.getTypeDeclaration()
 			.getMethod(invokedName, types);
-	}
-	
-	private String getInvocationClassSimpleName(CtInvocation<?> invocation) {
-		return invocation.getExecutable().getDeclaringType().getSimpleName();
 	}
 
 }

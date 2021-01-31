@@ -10,7 +10,6 @@ import matcher.entities.FieldAccessType;
 import matcher.entities.MethodInstance;
 import matcher.entities.Type;
 import matcher.entities.Visibility;
-import matcher.handlers.FileSystemHandler;
 import matcher.handlers.SpoonHandler;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.CtFieldRead;
@@ -85,9 +84,8 @@ public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 			if(!invocation.toString().equals("super()")){
 				try {
 					String className = SpoonHandler.getInvocationClassSimpleName(invocation);
-					String invocationSrcName = className + ".java";
 					if(className.equals("Object") || 
-							FileSystemHandler.getInstance().fromTheSystem(invocationSrcName)) {
+							SpoonHandler.invocationFromTheSystem(invocation)) {
 						String invocationFullName = 
 								SpoonHandler.getInvocationClassQualifiedName(invocation)
 								+ "." + SpoonHandler.getInvocationQualifiedName(invocation);
