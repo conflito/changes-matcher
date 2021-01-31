@@ -33,6 +33,9 @@ public class TestMatcherDeletes {
 								File.separator + "resources" + File.separator + 
 								"OperationsInstances" + File.separator;
 	private static final String CONFIG_FILE_NAME = "config.properties";
+	private static final String BASE_BRANCH_FOLDER = "base" + File.separator;
+	private static final String VAR1_BRANCH_FOLDER = "branch01" + File.separator;
+	private static final String VAR2_BRANCH_FOLDER = "branch02" + File.separator;
 	
 	private static final String DEL_FIELD_METHOD_FOLDER = 
 			"FieldAndMethodDeleteInstance" + File.separator;
@@ -50,9 +53,12 @@ public class TestMatcherDeletes {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEL_FIELD_METHOD_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + DEL_FIELD_METHOD_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + DEL_FIELD_METHOD_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + DEL_FIELD_METHOD_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + DEL_FIELD_METHOD_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + DEL_FIELD_METHOD_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + DEL_FIELD_METHOD_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -80,9 +86,12 @@ public class TestMatcherDeletes {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEL_FIELD_CONSTR_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + DEL_FIELD_CONSTR_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + DEL_FIELD_CONSTR_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + DEL_FIELD_CONSTR_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + DEL_FIELD_CONSTR_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + DEL_FIELD_CONSTR_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + DEL_FIELD_CONSTR_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -111,9 +120,12 @@ public class TestMatcherDeletes {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEL_FIELD_COMPA_METHOD_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + DEL_FIELD_COMPA_METHOD_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + DEL_FIELD_COMPA_METHOD_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + DEL_FIELD_COMPA_METHOD_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + DEL_FIELD_COMPA_METHOD_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + DEL_FIELD_COMPA_METHOD_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + DEL_FIELD_COMPA_METHOD_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -145,9 +157,12 @@ public class TestMatcherDeletes {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEL_FIELD_AND_INVO_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + "Shape.java";
-		String firstVarPath = SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + "Shape01.java";
-		String secondVarPath = SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + "Shape02.java";
+		String basePath = SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + 
+				BASE_BRANCH_FOLDER + "Shape.java";
+		String firstVarPath = SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Shape.java";
+		String secondVarPath = SRC_FOLDER + DEL_FIELD_AND_INVO_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Shape.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -175,9 +190,12 @@ public class TestMatcherDeletes {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEL_FIELD_ACCESS_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + DEL_FIELD_ACCESS_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};

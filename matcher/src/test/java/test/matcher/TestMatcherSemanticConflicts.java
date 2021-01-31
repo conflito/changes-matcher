@@ -36,11 +36,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.util.List;
 
+
 public class TestMatcherSemanticConflicts {
 
 	private static final String SRC_FOLDER = "src"+ File.separator + "test"+ File.separator +
 			"resources" + File.separator + "SemanticConflictsInstances" + File.separator;
 	private static final String CONFIG_FILE_NAME = "config.properties";
+	private static final String BASE_BRANCH_FOLDER = "base" + File.separator;
+	private static final String VAR1_BRANCH_FOLDER = "branch01" + File.separator;
+	private static final String VAR2_BRANCH_FOLDER = "branch02" + File.separator;
 
 	private static final String OVERLOAD_ADDITION_FOLDER = 
 			"AddOverloadingMByAdditionAddCall2M" + File.separator;
@@ -90,9 +94,12 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ OVERLOAD_ADDITION_FOLDER + CONFIG_FILE_NAME);
 
-		String basePath = SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + "A.java";
-		String firstVarPath = SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + "A01.java";
-		String secondVarPath = SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + "A02.java";
+		String basePath = SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String firstVarPath = SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String secondVarPath = SRC_FOLDER + OVERLOAD_ADDITION_FOLDER + 
+				VAR2_BRANCH_FOLDER + "A.java";
 
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -120,22 +127,25 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(4).getFirst() == 4 && 
 				assignments.get(4).getSecond().equals("base.A"), "Class is not A");
 	}
-	
+
 	@Test
 	public void overloadByAddition2Test() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ OVERLOAD_ADDITION1_FOLDER + CONFIG_FILE_NAME);
-		
-		String base1Path = SRC_FOLDER + OVERLOAD_ADDITION1_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + OVERLOAD_ADDITION1_FOLDER + "A01.java";
-		String newPath = SRC_FOLDER + OVERLOAD_ADDITION1_FOLDER + "B.java";
-		
+
+		String base1Path = SRC_FOLDER + OVERLOAD_ADDITION1_FOLDER +
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + OVERLOAD_ADDITION1_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String newPath = SRC_FOLDER + OVERLOAD_ADDITION1_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
+
 		String[] bases = {base1Path, null};
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, newPath};
-		
+
 		ConflictPattern cp = getOverloadByAdditionPattern_01();
-		
+
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		assertTrue(result.size() == 1, "More than one result for overloading method?");
@@ -162,9 +172,12 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ FIELD_HIDING_FOLDER + CONFIG_FILE_NAME);
 
-		String basePath = SRC_FOLDER + FIELD_HIDING_FOLDER + "B.java";
-		String firstVarPath = SRC_FOLDER + FIELD_HIDING_FOLDER + "B01.java";
-		String secondVarPath = SRC_FOLDER + FIELD_HIDING_FOLDER + "B02.java";
+		String basePath = SRC_FOLDER + FIELD_HIDING_FOLDER + 
+				BASE_BRANCH_FOLDER + "B.java";
+		String firstVarPath = SRC_FOLDER + FIELD_HIDING_FOLDER + 
+				VAR1_BRANCH_FOLDER + "B.java";
+		String secondVarPath = SRC_FOLDER + FIELD_HIDING_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
 
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -195,10 +208,14 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ METHOD_OVERIDING_FOLDER + CONFIG_FILE_NAME);
 
-		String base1Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + "A01.java";
-		String base2Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + "B.java";
-		String var2Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + "B01.java";
+		String base1Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String base2Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + 
+				BASE_BRANCH_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
 
 		String[] bases = {base1Path, base2Path};
 		String[] variants1 = {var1Path, null};
@@ -232,10 +249,14 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ OVERLOAD_ACCESS_CHANGE_FOLDER + CONFIG_FILE_NAME);
 
-		String base1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "A01.java";
-		String base2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "B.java";
-		String var2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + "B01.java";
+		String base1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String base2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + 
+				BASE_BRANCH_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
 
 		String[] bases = {base1Path, base2Path};
 		String[] variants1 = {var1Path, null};
@@ -263,22 +284,25 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(4).getSecond().equals("reset()"), 
 				"Inserted method with invocation is not reset()?");
 	}
-	
+
 	@Test
 	public void overloadingAccessChange_1Test() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ OVERLOAD_ACCESS_CHANGE1_FOLDER + CONFIG_FILE_NAME);
 
-		String base1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE1_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE1_FOLDER + "A01.java";
-		String newClassPath = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE1_FOLDER + "B.java";
+		String base1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE1_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE1_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String newClassPath = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE1_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
 
 		String[] bases = {base1Path, null};
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, newClassPath};
 
 		ConflictPattern cp = getOverloadAccessChangePattern_1();
-		
+
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		assertTrue(result.size() == 1, "More than one result for overloading method?");
@@ -304,10 +328,14 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ OVERLOAD_ACCESS_CHANGE2_FOLDER + CONFIG_FILE_NAME);
 
-		String base1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + "A01.java";
-		String base2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + "B.java";
-		String var2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + "B01.java";
+		String base1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String base2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + 
+				BASE_BRANCH_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
 
 		String[] bases = {base1Path, base2Path};
 		String[] variants1 = {var1Path, null};
@@ -335,22 +363,25 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(4).getSecond().equals("reset()"), 
 				"Inserted method with invocation is not reset()?");
 	}
-	
+
 	@Test
 	public void overloadingAccessChange2_1Test() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ OVERLOAD_ACCESS_CHANGE201_FOLDER + CONFIG_FILE_NAME);
 
-		String base1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE201_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE201_FOLDER + "A01.java";
-		String newClassPath = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE201_FOLDER + "B.java";
+		String base1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE201_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE201_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String newClassPath = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE201_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
 
 		String[] bases = {base1Path, null};
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, newClassPath};
 
 		ConflictPattern cp = getOverloadAccessChange2Pattern_1();
-		
+
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		assertTrue(result.size() == 1, "More than one result for overloading method?");
@@ -376,9 +407,12 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ OVERRIDING_FOLDER + CONFIG_FILE_NAME);
 
-		String basePath = SRC_FOLDER + OVERRIDING_FOLDER + "B.java";
-		String var1Path = SRC_FOLDER + OVERRIDING_FOLDER + "B01.java";
-		String var2Path = SRC_FOLDER + OVERRIDING_FOLDER + "B02.java";
+		String basePath = SRC_FOLDER + OVERRIDING_FOLDER + 
+				BASE_BRANCH_FOLDER + "B.java";
+		String var1Path = SRC_FOLDER + OVERRIDING_FOLDER + 
+				VAR1_BRANCH_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + OVERRIDING_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
 
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
@@ -409,9 +443,12 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ REMOVE_OVERRIDER_FOLDER + CONFIG_FILE_NAME);
 
-		String basePath = SRC_FOLDER + REMOVE_OVERRIDER_FOLDER + "B.java";
-		String var1Path = SRC_FOLDER + REMOVE_OVERRIDER_FOLDER + "B01.java";
-		String var2Path = SRC_FOLDER + REMOVE_OVERRIDER_FOLDER + "B02.java";
+		String basePath = SRC_FOLDER + REMOVE_OVERRIDER_FOLDER + 
+				BASE_BRANCH_FOLDER + "B.java";
+		String var1Path = SRC_FOLDER + REMOVE_OVERRIDER_FOLDER + 
+				VAR1_BRANCH_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + REMOVE_OVERRIDER_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
 
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
@@ -442,9 +479,12 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ CHANGE_METHOD1_FOLDER + CONFIG_FILE_NAME);
 
-		String basePath = SRC_FOLDER + CHANGE_METHOD1_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + CHANGE_METHOD1_FOLDER + "A01.java";
-		String var2Path = SRC_FOLDER + CHANGE_METHOD1_FOLDER + "A02.java";
+		String basePath = SRC_FOLDER + CHANGE_METHOD1_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + CHANGE_METHOD1_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String var2Path = SRC_FOLDER + CHANGE_METHOD1_FOLDER + 
+				VAR2_BRANCH_FOLDER + "A.java";
 
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
@@ -454,7 +494,7 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result =
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		
+
 		assertTrue(result.size() == 2, "Not two results for method change?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 6, "Not 6 assignments with only 6 variables?");
@@ -503,20 +543,23 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ CHANGE_METHOD2_FOLDER + CONFIG_FILE_NAME);
 
-		String basePath = SRC_FOLDER + CHANGE_METHOD2_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + CHANGE_METHOD2_FOLDER + "A01.java";
-		String var2Path = SRC_FOLDER + CHANGE_METHOD2_FOLDER + "A02.java";
+		String basePath = SRC_FOLDER + CHANGE_METHOD2_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + CHANGE_METHOD2_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String var2Path = SRC_FOLDER + CHANGE_METHOD2_FOLDER + 
+				VAR2_BRANCH_FOLDER + "A.java";
 
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
 		String[] variants2 = {var2Path};
-		
+
 		ConflictPattern cp = getChangeMethod2Pattern();
-		
+
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		
+
 		assertTrue(result.size() == 1, "More than one result for change method 2?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 9, "Not 9 assignments with only 9 variables?");
@@ -553,9 +596,12 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEPENDENCY_BASED1_FOLDER + CONFIG_FILE_NAME);
 
-		String basePath = SRC_FOLDER + DEPENDENCY_BASED1_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + DEPENDENCY_BASED1_FOLDER + "A01.java";
-		String var2Path = SRC_FOLDER + DEPENDENCY_BASED1_FOLDER + "A02.java";
+		String basePath = SRC_FOLDER + DEPENDENCY_BASED1_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + DEPENDENCY_BASED1_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String var2Path = SRC_FOLDER + DEPENDENCY_BASED1_FOLDER + 
+				VAR2_BRANCH_FOLDER + "A.java";
 
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
@@ -581,21 +627,25 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(3).getSecond().equals("k()"), 
 				"Method inserted with t is not k()?");
 	}
-	
+
 	@Test
 	public void dependencyBased1_01Test() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEPENDENCY_BASED101_FOLDER + CONFIG_FILE_NAME);
-		
-		String base1Path = SRC_FOLDER + DEPENDENCY_BASED101_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + DEPENDENCY_BASED101_FOLDER + "A01.java";
-		String base2Path = SRC_FOLDER + DEPENDENCY_BASED101_FOLDER + "B.java";
-		String var2Path = SRC_FOLDER + DEPENDENCY_BASED101_FOLDER + "B01.java";
-		
+
+		String base1Path = SRC_FOLDER + DEPENDENCY_BASED101_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + DEPENDENCY_BASED101_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String base2Path = SRC_FOLDER + DEPENDENCY_BASED101_FOLDER + 
+				BASE_BRANCH_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + DEPENDENCY_BASED101_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
+
 		String[] bases = {base1Path, base2Path};
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, var2Path};
-		
+
 		ConflictPattern cp = getDependencyBased1Pattern();
 
 		List<List<Pair<Integer, String>>> result = 
@@ -621,9 +671,12 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEPENDENCY_BASED2_FOLDER + CONFIG_FILE_NAME);
 
-		String basePath = SRC_FOLDER + DEPENDENCY_BASED2_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + DEPENDENCY_BASED2_FOLDER + "A01.java";
-		String newClassPath = SRC_FOLDER + DEPENDENCY_BASED2_FOLDER + "B.java";
+		String basePath = SRC_FOLDER + DEPENDENCY_BASED2_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + DEPENDENCY_BASED2_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String newClassPath = SRC_FOLDER + DEPENDENCY_BASED2_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
 
 		String[] bases = {basePath, null};
 		String[] variants1 = {var1Path, null};
@@ -654,10 +707,14 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEPENDENCY_BASED201_FOLDER + CONFIG_FILE_NAME);
 
-		String basePath = SRC_FOLDER + DEPENDENCY_BASED201_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + DEPENDENCY_BASED201_FOLDER + "A01.java";
-		String newClassPath = SRC_FOLDER + DEPENDENCY_BASED201_FOLDER + "B.java";
-		String newClass2Path = SRC_FOLDER + DEPENDENCY_BASED201_FOLDER + "C.java";
+		String basePath = SRC_FOLDER + DEPENDENCY_BASED201_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + DEPENDENCY_BASED201_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String newClassPath = SRC_FOLDER + DEPENDENCY_BASED201_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
+		String newClass2Path = SRC_FOLDER + DEPENDENCY_BASED201_FOLDER + 
+				VAR2_BRANCH_FOLDER + "C.java";
 
 		String[] bases = {basePath, null, null};
 		String[] variants1 = {var1Path, null, null};
@@ -682,7 +739,7 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(3).getFirst() == 3 && 
 				assignments.get(3).getSecond().equals("k()"), 
 				"Method inserted with invocation is not k()?");
-		
+
 		assignments = result.get(1);
 		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
@@ -703,9 +760,12 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEPENDENCY_BASED3_FOLDER + CONFIG_FILE_NAME);
 
-		String basePath = SRC_FOLDER + DEPENDENCY_BASED3_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + DEPENDENCY_BASED3_FOLDER + "A01.java";
-		String newClassPath = SRC_FOLDER + DEPENDENCY_BASED3_FOLDER + "B.java";
+		String basePath = SRC_FOLDER + DEPENDENCY_BASED3_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + DEPENDENCY_BASED3_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String newClassPath = SRC_FOLDER + DEPENDENCY_BASED3_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
 
 		String[] bases = {basePath, null};
 		String[] variants1 = {var1Path, null};
@@ -737,9 +797,12 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEPENDENCY_BASED4_FOLDER + CONFIG_FILE_NAME);
 
-		String basePath = SRC_FOLDER + DEPENDENCY_BASED4_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + DEPENDENCY_BASED4_FOLDER + "A01.java";
-		String newClassPath = SRC_FOLDER + DEPENDENCY_BASED4_FOLDER + "B.java";
+		String basePath = SRC_FOLDER + DEPENDENCY_BASED4_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + DEPENDENCY_BASED4_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String newClassPath = SRC_FOLDER + DEPENDENCY_BASED4_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
 
 		String[] bases = {basePath, null};
 		String[] variants1 = {var1Path, null};
@@ -749,7 +812,7 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);				
-		
+
 		assertTrue(result.size() == 1, "More than one result for dependency based 4?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
@@ -772,9 +835,12 @@ public class TestMatcherSemanticConflicts {
 				+ DEPENDENCY_BASED5_FOLDER + CONFIG_FILE_NAME);
 
 
-		String basePath = SRC_FOLDER + DEPENDENCY_BASED5_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + DEPENDENCY_BASED5_FOLDER + "A01.java";
-		String newClassPath = SRC_FOLDER + DEPENDENCY_BASED5_FOLDER + "B.java";
+		String basePath = SRC_FOLDER + DEPENDENCY_BASED5_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + DEPENDENCY_BASED5_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String newClassPath = SRC_FOLDER + DEPENDENCY_BASED5_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
 
 		String[] bases = {basePath, null};
 		String[] variants1 = {var1Path, null};
@@ -803,21 +869,25 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(4).getSecond().equals("k()"), 
 				"Method inserted with invocation is not k()?");
 	}
-	
+
 	@Test
 	public void dependencyBased6Test() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEPENDENCY_BASED6_FOLDER + CONFIG_FILE_NAME);
 
-		String base1Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + "A01.java";
-		String base2Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + "B.java";
-		String var2Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + "B01.java";
+		String base1Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String base2Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + 
+				BASE_BRANCH_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
 
 		String[] bases = {base1Path, base2Path};
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, var2Path};
-		
+
 		ConflictPattern cp = getDependencyBased6Pattern();
 
 		List<List<Pair<Integer, String>>> result = 
@@ -840,21 +910,24 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(4).getSecond().equals("k()"), 
 				"Method that depends on m1() is not k()?");
 	}
-	
+
 	@Test
 	public void dependencyBased6_01Test() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEPENDENCY_BASED601_FOLDER + CONFIG_FILE_NAME);
 
 
-		String basePath = SRC_FOLDER + DEPENDENCY_BASED601_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + DEPENDENCY_BASED601_FOLDER + "A01.java";
-		String var2Path = SRC_FOLDER + DEPENDENCY_BASED601_FOLDER + "A02.java";
+		String basePath = SRC_FOLDER + DEPENDENCY_BASED601_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + DEPENDENCY_BASED601_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String var2Path = SRC_FOLDER + DEPENDENCY_BASED601_FOLDER + 
+				VAR2_BRANCH_FOLDER + "A.java";
 
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
 		String[] variants2 = {var2Path};
-		
+
 		ConflictPattern cp = getDependencyBased6Pattern();
 
 		List<List<Pair<Integer, String>>> result = 
@@ -877,21 +950,24 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(4).getSecond().equals("m2()"), 
 				"Method that depends on m1() is not m2()?");
 	}
-	
+
 	@Test
 	public void dependencyBased7Test() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEPENDENCY_BASED7_FOLDER + CONFIG_FILE_NAME);
 
 
-		String basePath = SRC_FOLDER + DEPENDENCY_BASED7_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + DEPENDENCY_BASED7_FOLDER + "A01.java";
-		String var2Path = SRC_FOLDER + DEPENDENCY_BASED7_FOLDER + "A02.java";
+		String basePath = SRC_FOLDER + DEPENDENCY_BASED7_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + DEPENDENCY_BASED7_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String var2Path = SRC_FOLDER + DEPENDENCY_BASED7_FOLDER + 
+				VAR2_BRANCH_FOLDER + "A.java";
 
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
 		String[] variants2 = {var2Path};
-		
+
 		ConflictPattern cp = getDependencyBased7Pattern();
 
 		List<List<Pair<Integer, String>>> result = 
@@ -924,10 +1000,14 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ UNEXPECTED_OVERIDE_FOLDER + CONFIG_FILE_NAME);
 
-		String base1Path = SRC_FOLDER + UNEXPECTED_OVERIDE_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + UNEXPECTED_OVERIDE_FOLDER + "A01.java";
-		String base2Path = SRC_FOLDER + UNEXPECTED_OVERIDE_FOLDER + "B0.java";
-		String var2Path = SRC_FOLDER + UNEXPECTED_OVERIDE_FOLDER + "B0_1.java";
+		String base1Path = SRC_FOLDER + UNEXPECTED_OVERIDE_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + UNEXPECTED_OVERIDE_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String base2Path = SRC_FOLDER + UNEXPECTED_OVERIDE_FOLDER + 
+				BASE_BRANCH_FOLDER + "B0.java";
+		String var2Path = SRC_FOLDER + UNEXPECTED_OVERIDE_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B0.java";
 
 		String[] bases = {base1Path, base2Path};
 		String[] variants1 = {var1Path, null};
@@ -964,10 +1044,14 @@ public class TestMatcherSemanticConflicts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ UNEXPECTED_OVERIDE2_FOLDER + CONFIG_FILE_NAME);
 
-		String base1Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + "A01.java";
-		String base2Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + "B2.java";
-		String var2Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + "B2_01.java";
+		String base1Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String base2Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + 
+				BASE_BRANCH_FOLDER + "B2.java";
+		String var2Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B2.java";
 
 		String[] bases = {base1Path, base2Path};
 		String[] variants1 = {var1Path, null};
@@ -1001,21 +1085,25 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(6).getSecond().equals("B"), 
 				"Interface is not B?");
 	}
-	
+
 	@Test
 	public void unexpectedOverriding3Test() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ UNEXPECTED_OVERIDE3_FOLDER + CONFIG_FILE_NAME);
-		
-		String base1Path = SRC_FOLDER + UNEXPECTED_OVERIDE3_FOLDER + "B.java";
-		String var1Path = SRC_FOLDER + UNEXPECTED_OVERIDE3_FOLDER + "B01.java";
-		String base2Path = SRC_FOLDER + UNEXPECTED_OVERIDE3_FOLDER + "C.java";
-		String var2Path = SRC_FOLDER + UNEXPECTED_OVERIDE3_FOLDER + "C01.java";
-		
+
+		String base1Path = SRC_FOLDER + UNEXPECTED_OVERIDE3_FOLDER + 
+				BASE_BRANCH_FOLDER + "B.java";
+		String var1Path = SRC_FOLDER + UNEXPECTED_OVERIDE3_FOLDER + 
+				VAR1_BRANCH_FOLDER + "B.java";
+		String base2Path = SRC_FOLDER + UNEXPECTED_OVERIDE3_FOLDER + 
+				BASE_BRANCH_FOLDER + "C.java";
+		String var2Path = SRC_FOLDER + UNEXPECTED_OVERIDE3_FOLDER + 
+				VAR2_BRANCH_FOLDER + "C.java";
+
 		String[] bases = {base1Path, base2Path};
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, var2Path};
-		
+
 		ConflictPattern cp = getUnexpectedOverriding3Pattern();
 
 		List<List<Pair<Integer, String>>> result = 
@@ -1041,25 +1129,29 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(5).getSecond().equals("k()"), 
 				"Method added that depends on m(java.lang.Number) is not k()");
 	}
-	
+
 	@Test
 	public void unexpectedOverriding3_1Test() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ UNEXPECTED_OVERIDE301_FOLDER + CONFIG_FILE_NAME);
 
 
-		String basePath = SRC_FOLDER + UNEXPECTED_OVERIDE301_FOLDER + "B.java";
-		String var1Path = SRC_FOLDER + UNEXPECTED_OVERIDE301_FOLDER + "B01.java";
-		String var2Path = SRC_FOLDER + UNEXPECTED_OVERIDE301_FOLDER + "B02.java";
+		String basePath = SRC_FOLDER + UNEXPECTED_OVERIDE301_FOLDER + 
+				BASE_BRANCH_FOLDER + "B.java";
+		String var1Path = SRC_FOLDER + UNEXPECTED_OVERIDE301_FOLDER + 
+				VAR1_BRANCH_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + UNEXPECTED_OVERIDE301_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
 
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
 		String[] variants2 = {var2Path};
-		
+
 		ConflictPattern cp = getUnexpectedOverriding3_1Pattern();
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for unexpected overriding 3_1?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 6, "Not 6 assignments with only 6 variables?");
@@ -1081,15 +1173,18 @@ public class TestMatcherSemanticConflicts {
 				assignments.get(5).getSecond().equals("m(int)"), 
 				"Method added compatible with m(java.lang.Number) is not m(int)");
 	}
-	
+
 	@Test
 	public void parallelChangesTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ PARALLEL_CHANGED_FOLDER + CONFIG_FILE_NAME);
 
-		String basePath = SRC_FOLDER + PARALLEL_CHANGED_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + PARALLEL_CHANGED_FOLDER + "A01.java";
-		String var2Path = SRC_FOLDER + PARALLEL_CHANGED_FOLDER + "A02.java";
+		String basePath = SRC_FOLDER + PARALLEL_CHANGED_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + PARALLEL_CHANGED_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String var2Path = SRC_FOLDER + PARALLEL_CHANGED_FOLDER + 
+				VAR2_BRANCH_FOLDER + "A.java";
 
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
@@ -1127,20 +1222,20 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		MethodPattern insertedMethodPattern1 = 
 				new MethodPattern(insertedMethodVar1, Visibility.PUBLIC);
 		MethodPattern insertedMethodPattern2 =
 				new MethodPattern(insertedMethodVar2, Visibility.PUBLIC);
 		insertedMethodPattern1.addDependency(methodVar);
-		
+
 		dp1.addActionPattern(
 				new InsertMethodPatternAction(insertedMethodPattern1, holderClassPattern));
-		
+
 		InsertMethodPatternAction impa = 
 				new InsertMethodPatternAction(insertedMethodPattern2, classPattern);
 		impa.addCompatible(methodPattern);
-		
+
 		dp2.addActionPattern(impa);
 
 		ConflictPattern conflict = new ConflictPattern();
@@ -1150,36 +1245,36 @@ public class TestMatcherSemanticConflicts {
 
 		return conflict;
 	}
-	
+
 	private ConflictPattern getOverloadByAdditionPattern_01() {
 		FreeVariable classVar = new FreeVariable(0);
 		FreeVariable methodVar = new FreeVariable(1);
 		FreeVariable insertedMethodVar1 = new FreeVariable(2);
 		FreeVariable insertedMethodVar2 = new FreeVariable(3);
 		FreeVariable holderClassVar = new FreeVariable(4);
-		
+
 		BasePattern basePattern = new BasePattern();
 		ClassPattern classPattern = new ClassPattern(classVar);
 		MethodPattern methodPattern = new MethodPattern(methodVar, Visibility.PUBLIC);
 		classPattern.addMethodPattern(methodPattern);
 		basePattern.addClassPattern(classPattern);
-		
+
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		MethodPattern insertedCompatiblePattern =
 				new MethodPattern(insertedMethodVar1, null);
 		InsertMethodPatternAction impa = 
 				new InsertMethodPatternAction(insertedCompatiblePattern, classPattern);
 		impa.addCompatible(methodPattern);
-		
+
 		ClassPattern insertedClassPattern = new ClassPattern(holderClassVar);
 		MethodPattern insertedMethodPattern = new MethodPattern(insertedMethodVar2, null);
 		insertedClassPattern.addMethodPattern(insertedMethodPattern);
-		
+
 		dp1.addActionPattern(impa);
 		dp2.addActionPattern(new InsertClassPatternAction(insertedClassPattern));
-		
+
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
@@ -1204,16 +1299,16 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		MethodPattern insertedMethodPattern = 
 				new MethodPattern(insertedMethodVar, null);
 		FieldAccessPattern insertedAccessPattern = 
 				new FieldAccessPattern(fieldVar, FieldAccessType.WRITE);
 		insertedMethodPattern.addFieldAccessPattern(insertedAccessPattern);
-		
+
 		FieldPattern insertedFieldPattern = new FieldPattern(fieldVar, null);
-		
-		
+
+
 		dp1.addActionPattern(
 				new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
@@ -1250,7 +1345,7 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		MethodInvocationPattern insertedInvocationPattern = 
 				new MethodInvocationPattern(methodVar);
 		MethodPattern insertedMethodPattern = 
@@ -1258,7 +1353,7 @@ public class TestMatcherSemanticConflicts {
 		FieldAccessPattern insertedAccessPattern = 
 				new FieldAccessPattern(fieldVar, FieldAccessType.WRITE);
 		insertedMethodPattern.addFieldAccessPattern(insertedAccessPattern);
-		
+
 		dp1.addActionPattern(
 				new InsertInvocationPatternAction(insertedInvocationPattern, cPattern));
 		dp2.addActionPattern(
@@ -1295,17 +1390,17 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		MethodPattern insertedMethodPattern = 
 				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
 		insertedMethodPattern.addDependency(topMethodVar);
-		
+
 		dp1.addActionPattern(
 				new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
 		dp2.addActionPattern(
 				new VisibilityActionPattern(Action.UPDATE, Visibility.PUBLIC, 
-				Visibility.PRIVATE, subMethodVar));
+						Visibility.PRIVATE, subMethodVar));
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
@@ -1314,7 +1409,7 @@ public class TestMatcherSemanticConflicts {
 
 		return conflict;
 	}
-	
+
 	private ConflictPattern getOverloadAccessChangePattern_1() {
 		FreeVariable superClassVar = new FreeVariable(0);
 		FreeVariable classVar = new FreeVariable(1);
@@ -1335,19 +1430,19 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		ClassPattern insertedClassPattern = new ClassPattern(classVar);
 		MethodPattern insertedMethodPattern = 
 				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
 		insertedMethodPattern.addDependency(topMethodVar);
 		insertedClassPattern.addMethodPattern(insertedMethodPattern);
-		
+
 		dp1.addActionPattern(
 				new InsertClassPatternAction(insertedClassPattern));
 
 		dp2.addActionPattern(
 				new VisibilityActionPattern(Action.UPDATE, Visibility.PUBLIC, 
-				Visibility.PRIVATE, subMethodVar));
+						Visibility.PRIVATE, subMethodVar));
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
@@ -1379,17 +1474,17 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		MethodPattern insertedMethodPattern = 
 				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
 		insertedMethodPattern.addDependency(subMethodVar);
-		
+
 		dp1.addActionPattern(
 				new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
 		dp2.addActionPattern(
 				new VisibilityActionPattern(Action.UPDATE, Visibility.PRIVATE, 
-				Visibility.PUBLIC, subMethodVar));
+						Visibility.PUBLIC, subMethodVar));
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
@@ -1398,7 +1493,7 @@ public class TestMatcherSemanticConflicts {
 
 		return conflict;
 	}
-	
+
 	private ConflictPattern getOverloadAccessChange2Pattern_1() {
 		FreeVariable superClassVar = new FreeVariable(0);
 		FreeVariable classVar = new FreeVariable(1);
@@ -1419,19 +1514,19 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		ClassPattern insertedClassPattern = new ClassPattern(classVar);
 		MethodPattern insertedMethodPattern = 
 				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
 		insertedMethodPattern.addDependency(subMethodVar);
 		insertedClassPattern.addMethodPattern(insertedMethodPattern);
-		
+
 		dp1.addActionPattern(
 				new InsertClassPatternAction(insertedClassPattern));
 
 		dp2.addActionPattern(
 				new VisibilityActionPattern(Action.UPDATE, Visibility.PRIVATE, 
-				Visibility.PUBLIC, subMethodVar));
+						Visibility.PUBLIC, subMethodVar));
 
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
@@ -1457,13 +1552,13 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		MethodPattern insertedMethodPattern1 = 
 				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
 		MethodPattern insertedMethodPattern2 = 
 				new MethodPattern(methodVar, Visibility.PUBLIC);
 		insertedMethodPattern1.addDependency(methodVar);
-		
+
 		dp1.addActionPattern(
 				new InsertMethodPatternAction(insertedMethodPattern1, classPattern));
 
@@ -1496,11 +1591,11 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		MethodPattern insertedMethodPattern = 
 				new MethodPattern(insertedMethodVar, Visibility.PUBLIC);
 		insertedMethodPattern.addDependency(methodVar);
-		
+
 		dp1.addActionPattern(
 				new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
@@ -1542,7 +1637,7 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern2));
 		dp2.addActionPattern(new UpdateMethodPatternAction(methodPattern3));
 
@@ -1568,7 +1663,7 @@ public class TestMatcherSemanticConflicts {
 		FreeVariable fieldVar = new FreeVariable(8);
 
 		BasePattern basePattern = new BasePattern();
-		
+
 		ClassPattern classAPattern = new ClassPattern(classVar);
 		FieldPattern fieldPattern = new FieldPattern(fieldVar, null);
 		TypePattern typePattern = new TypePattern(b1ClassVar);
@@ -1584,7 +1679,7 @@ public class TestMatcherSemanticConflicts {
 		classAPattern.addMethodPattern(methodM2Pattern);
 
 		InterfacePattern interfacePattern = new InterfacePattern(iVar);
-		
+
 		ClassPattern classB1Pattern = new ClassPattern(b1ClassVar);
 		ClassPattern classB2Pattern = new ClassPattern(b2ClassVar);
 		InterfaceImplementationPattern iPattern = 
@@ -1602,15 +1697,15 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		TypePattern newTypePattern = new TypePattern(b2ClassVar);
-		
+
 		dp1.addActionPattern(
 				new UpdateFieldTypePatternAction(fieldPattern, newTypePattern));
 
 		dp2.addActionPattern(
 				new UpdateDependencyPatternAction(methodNPattern, methodM2Var, methodM1Var));
-		
+
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
@@ -1637,7 +1732,7 @@ public class TestMatcherSemanticConflicts {
 		MethodPattern insertedMethodPattern = 
 				new MethodPattern(insertedMethodVar, null);
 		insertedMethodPattern.addDependency(methodVar1);
-		
+
 		dp1.addActionPattern(
 				new UpdateMethodPatternAction(methodPattern1));
 		dp2.addActionPattern(
@@ -1666,17 +1761,17 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		ClassPattern insertedClassPattern = new ClassPattern(insertedClassVar);
 		MethodPattern insertedMethodPattern = 
 				new MethodPattern(insertedMethodVar, null);
 
 		insertedMethodPattern.addDependency(methodVar1);
 		insertedClassPattern.addMethodPattern(insertedMethodPattern);
-		
+
 		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern1));
 		dp2.addActionPattern(new InsertClassPatternAction(insertedClassPattern));
-		
+
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
@@ -1704,16 +1799,16 @@ public class TestMatcherSemanticConflicts {
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		ClassPattern insertedClassPattern = new ClassPattern(insertedClassVar);
 		MethodPattern insertedMethodPattern = 
 				new MethodPattern(insertedMethodVar, null);
 		insertedMethodPattern.addDependency(methodVar);
 		insertedClassPattern.addMethodPattern(insertedMethodPattern);
-		
+
 		dp1.addActionPattern(new UpdateFieldTypePatternAction(fieldPattern));
 		dp2.addActionPattern(new InsertClassPatternAction(insertedClassPattern));
-		
+
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
@@ -1721,14 +1816,14 @@ public class TestMatcherSemanticConflicts {
 
 		return conflict;
 	}
-	
+
 	private ConflictPattern getDependencyBased6Pattern() {
 		FreeVariable classVar = new FreeVariable(0);
 		FreeVariable fieldVar = new FreeVariable(1);
 		FreeVariable methodVar = new FreeVariable(2);
 		FreeVariable holderClassVar = new FreeVariable(3);
 		FreeVariable insertedMethodVar = new FreeVariable(4);
-		
+
 		BasePattern basePattern = new BasePattern();
 		ClassPattern classPattern = new ClassPattern(classVar);
 		ClassPattern holderClassPattern = new ClassPattern(holderClassVar);
@@ -1740,19 +1835,19 @@ public class TestMatcherSemanticConflicts {
 		classPattern.addMethodPattern(methodPattern);
 		basePattern.addClassPattern(classPattern);
 		basePattern.addClassPattern(holderClassPattern);
-		
+
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		MethodPattern insertedMethodPattern = 
 				new MethodPattern(insertedMethodVar, null);
 		insertedMethodPattern.addDependency(methodVar);
-		
+
 		dp1.addActionPattern(new UpdateFieldTypePatternAction(fieldPattern));
 		dp2.addActionPattern(
 				new InsertMethodPatternAction(insertedMethodPattern, 
 						holderClassPattern));
-		
+
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
@@ -1760,7 +1855,7 @@ public class TestMatcherSemanticConflicts {
 
 		return conflict;
 	}
-	
+
 	private ConflictPattern getDependencyBased7Pattern() {
 		FreeVariable classVar = new FreeVariable(0);
 		FreeVariable classVar2 = new FreeVariable(1);
@@ -1788,7 +1883,7 @@ public class TestMatcherSemanticConflicts {
 		DeltaPattern dp2 = new DeltaPattern();
 		MethodInvocationPattern insertedInvocationPattern =
 				new MethodInvocationPattern(methodVar2);
-		
+
 		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern1));
 		dp2.addActionPattern(
 				new InsertInvocationPatternAction(insertedInvocationPattern, methodPattern3));
@@ -1830,7 +1925,7 @@ public class TestMatcherSemanticConflicts {
 		MethodPattern insertedMethodPattern2 = 
 				new MethodPattern(overideMethodVar, Visibility.PUBLIC);
 		insertedMethodPattern1.addDependency(overideMethodVar);
-		
+
 		dp1.addActionPattern(
 				new InsertMethodPatternAction(insertedMethodPattern1, classPattern1));
 		dp2.addActionPattern(
@@ -1876,12 +1971,12 @@ public class TestMatcherSemanticConflicts {
 		MethodPattern insertedMethodPattern1 =
 				new MethodPattern(insertedMethod, null);
 		insertedMethodPattern1.addDependency(methodVar1);
-		
+
 		ClassPattern holder = new ClassPattern(classVar3);
 		holder.setSuperClass(classPattern2);
 		MethodPattern insertedMethodPattern2 =
 				new MethodPattern(methodVar1, null);
-		
+
 		dp1.addActionPattern(
 				new InsertMethodPatternAction(insertedMethodPattern1, classPattern1));
 		dp2.addActionPattern(
@@ -1895,7 +1990,7 @@ public class TestMatcherSemanticConflicts {
 
 		return conflict;
 	}
-	
+
 	private ConflictPattern getUnexpectedOverriding3Pattern() {
 		FreeVariable classVar1 = new FreeVariable(0);
 		FreeVariable classVar2 = new FreeVariable(1);
@@ -1903,7 +1998,7 @@ public class TestMatcherSemanticConflicts {
 		FreeVariable methodVar = new FreeVariable(3);
 		FreeVariable insertedMethod1 = new FreeVariable(4);
 		FreeVariable insertedMethod2 = new FreeVariable(5);
-		
+
 		BasePattern basePattern = new BasePattern();
 		ClassPattern classPattern1 = new ClassPattern(classVar1);
 		ClassPattern classPattern2 = new ClassPattern(classVar2);
@@ -1913,29 +2008,29 @@ public class TestMatcherSemanticConflicts {
 		classPattern2.setSuperClass(classPattern1);
 		basePattern.addClassPattern(classPattern2);
 		basePattern.addClassPattern(classPattern3);
-		
+
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		MethodPattern insertedMethodPattern1 = new MethodPattern(insertedMethod1, null);
 		InsertMethodPatternAction impa = 
 				new InsertMethodPatternAction(insertedMethodPattern1, classPattern2);
 		impa.addCompatible(methodPattern);
 		dp1.addActionPattern(impa);
-		
+
 		MethodPattern insertedMethodPattern2 = new MethodPattern(insertedMethod2, null);
 		insertedMethodPattern2.addDependency(methodVar);
 		dp2.addActionPattern(
 				new InsertMethodPatternAction(insertedMethodPattern2, classPattern3));
-		
+
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
-		
+
 		return conflict;
 	}
-	
+
 	private ConflictPattern getUnexpectedOverriding3_1Pattern() {
 		FreeVariable classVar1 = new FreeVariable(0);
 		FreeVariable classVar2 = new FreeVariable(1);
@@ -1943,7 +2038,7 @@ public class TestMatcherSemanticConflicts {
 		FreeVariable methodVar = new FreeVariable(3);
 		FreeVariable methodVar2 = new FreeVariable(4);
 		FreeVariable insertedMethod1 = new FreeVariable(5);
-		
+
 		BasePattern basePattern = new BasePattern();
 		ClassPattern classPattern1 = new ClassPattern(classVar1);
 		ClassPattern classPattern2 = new ClassPattern(classVar2);
@@ -1953,54 +2048,54 @@ public class TestMatcherSemanticConflicts {
 		classPattern1.addMethodPattern(methodPattern);
 		classPattern2.setSuperClass(classPattern1);
 		classPattern3.addMethodPattern(methodPattern2);
-		
-		
+
+
 		basePattern.addClassPattern(classPattern1);
 		basePattern.addClassPattern(classPattern2);
 		basePattern.addClassPattern(classPattern3);
-		
+
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		
+
 		MethodPattern insertedMethodPattern1 = new MethodPattern(insertedMethod1, null);
 		InsertMethodPatternAction impa = 
 				new InsertMethodPatternAction(insertedMethodPattern1, classPattern2);
 		impa.addCompatible(methodPattern);
 		dp1.addActionPattern(impa);
-		
+
 		MethodInvocationPattern insertedInvocationPattern = 
 				new MethodInvocationPattern(methodVar);
 		dp2.addActionPattern(
 				new InsertInvocationPatternAction(insertedInvocationPattern, methodPattern2));
-		
+
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
-		
+
 		return conflict;
 	}
-	
+
 	private ConflictPattern getParallelChangedPattern() {
 		FreeVariable classVar = new FreeVariable(0);
 		FreeVariable methodVar = new FreeVariable(1);
-		
+
 		BasePattern basePattern = new BasePattern();
 		ClassPattern classPattern = new ClassPattern(classVar);
 		MethodPattern methodPattern = new MethodPattern(methodVar, null);
 		classPattern.addMethodPattern(methodPattern);
 		basePattern.addClassPattern(classPattern);
-		
+
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
 		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern));
 		dp2.addActionPattern(new UpdateMethodPatternAction(methodPattern));
-		
+
 		ConflictPattern conflict = new ConflictPattern();
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
-		
+
 		return conflict;
 	}
 }

@@ -26,6 +26,9 @@ public class TestMatcherVisibilities {
 			File.separator + "resources" + File.separator + 
 			"OperationsInstances" + File.separator;
 	private static final String CONFIG_FILE_NAME = "config.properties";
+	private static final String BASE_BRANCH_FOLDER = "base" + File.separator;
+	private static final String VAR1_BRANCH_FOLDER = "branch01" + File.separator;
+	private static final String VAR2_BRANCH_FOLDER = "branch02" + File.separator;
 	
 	private static final String INS_VIS_FIELD_FOLDER = 
 			"VisibilityFieldInsertInstance"+ File.separator;
@@ -39,9 +42,12 @@ public class TestMatcherVisibilities {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ INS_VIS_FIELD_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + INS_VIS_FIELD_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + INS_VIS_FIELD_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + INS_VIS_FIELD_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + INS_VIS_FIELD_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + INS_VIS_FIELD_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + INS_VIS_FIELD_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -67,9 +73,12 @@ public class TestMatcherVisibilities {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEL_VIS_FIELD_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + DEL_VIS_FIELD_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + DEL_VIS_FIELD_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + DEL_VIS_FIELD_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + DEL_VIS_FIELD_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + DEL_VIS_FIELD_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + DEL_VIS_FIELD_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -95,9 +104,12 @@ public class TestMatcherVisibilities {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ UPD_VIS_FIELD_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + UPD_VIS_FIELD_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + UPD_VIS_FIELD_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + UPD_VIS_FIELD_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + UPD_VIS_FIELD_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + UPD_VIS_FIELD_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + UPD_VIS_FIELD_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};

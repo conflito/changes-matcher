@@ -30,6 +30,9 @@ public class TestMatcherInserts {
 			File.separator + "resources" + File.separator + 
 			"OperationsInstances" + File.separator;
 	private static final String CONFIG_FILE_NAME = "config.properties";
+	private static final String BASE_BRANCH_FOLDER = "base" + File.separator;
+	private static final String VAR1_BRANCH_FOLDER = "branch01" + File.separator;
+	private static final String VAR2_BRANCH_FOLDER = "branch02" + File.separator;
 	
 	private static final String INS_FIELD_METHOD_FOLDER = 
 			"FieldAndMethodInsertInstance" + File.separator;
@@ -47,9 +50,12 @@ public class TestMatcherInserts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ INS_FIELD_METHOD_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + INS_FIELD_METHOD_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + INS_FIELD_METHOD_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + INS_FIELD_METHOD_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + INS_FIELD_METHOD_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + INS_FIELD_METHOD_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + INS_FIELD_METHOD_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -77,9 +83,12 @@ public class TestMatcherInserts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ INS_FIELD_METHOD_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + INS_FIELD_METHOD_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + INS_FIELD_METHOD_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + INS_FIELD_METHOD_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + INS_FIELD_METHOD_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + INS_FIELD_METHOD_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + INS_FIELD_METHOD_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -98,9 +107,12 @@ public class TestMatcherInserts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ INS_FIELD_CONSTR_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + INS_FIELD_CONSTR_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + INS_FIELD_CONSTR_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + INS_FIELD_CONSTR_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + INS_FIELD_CONSTR_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + INS_FIELD_CONSTR_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + INS_FIELD_CONSTR_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -127,11 +139,14 @@ public class TestMatcherInserts {
 	@Test
 	public void insertConstructorAndCompatibleMethodTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
-				+ INS_FIELD_CONSTR_FOLDER + CONFIG_FILE_NAME);
+				+ INS_CONSTR_COMPAT_METHOD_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + INS_CONSTR_COMPAT_METHOD_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + INS_CONSTR_COMPAT_METHOD_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + INS_CONSTR_COMPAT_METHOD_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + INS_CONSTR_COMPAT_METHOD_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + INS_CONSTR_COMPAT_METHOD_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + INS_CONSTR_COMPAT_METHOD_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -141,7 +156,7 @@ public class TestMatcherInserts {
 		
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-				
+		
 		assertTrue(result.size() == 1, "More than one result for inserting private "
 				+ "field and public constructor?");
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -164,9 +179,12 @@ public class TestMatcherInserts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ INS_METHOD_WITH_INV_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + INS_METHOD_WITH_INV_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + INS_METHOD_WITH_INV_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + INS_METHOD_WITH_INV_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + INS_METHOD_WITH_INV_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + INS_METHOD_WITH_INV_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + INS_METHOD_WITH_INV_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -195,9 +213,12 @@ public class TestMatcherInserts {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ INS_METHOD_WITH_ACCESS_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + INS_METHOD_WITH_ACCESS_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + INS_METHOD_WITH_ACCESS_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + INS_METHOD_WITH_ACCESS_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + INS_METHOD_WITH_ACCESS_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + INS_METHOD_WITH_ACCESS_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + INS_METHOD_WITH_ACCESS_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};

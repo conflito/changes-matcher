@@ -26,6 +26,9 @@ public class TestMatcherUpdates {
 			File.separator + "resources" + File.separator + 
 			"OperationsInstances" + File.separator;
 	private static final String CONFIG_FILE_NAME = "config.properties";
+	private static final String BASE_BRANCH_FOLDER = "base" + File.separator;
+	private static final String VAR1_BRANCH_FOLDER = "branch01" + File.separator;
+	private static final String VAR2_BRANCH_FOLDER = "branch02" + File.separator;
 	
 	private static final String UPD_INS_METHOD_FOLDER = 
 			"MethodUpdateWithInsertOperationInstance" + File.separator;
@@ -41,9 +44,12 @@ public class TestMatcherUpdates {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ UPD_INS_METHOD_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + UPD_INS_METHOD_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + UPD_INS_METHOD_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + UPD_INS_METHOD_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + UPD_INS_METHOD_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + UPD_INS_METHOD_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + UPD_INS_METHOD_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -69,9 +75,12 @@ public class TestMatcherUpdates {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ UPD_DEL_METHOD_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + UPD_DEL_METHOD_FOLDER + "Shape.java";
-		String firstVarPath = SRC_FOLDER + UPD_DEL_METHOD_FOLDER + "Shape01.java";
-		String secondVarPath = SRC_FOLDER + UPD_DEL_METHOD_FOLDER + "Shape02.java";
+		String basePath = SRC_FOLDER + UPD_DEL_METHOD_FOLDER + 
+				BASE_BRANCH_FOLDER + "Shape.java";
+		String firstVarPath = SRC_FOLDER + UPD_DEL_METHOD_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Shape.java";
+		String secondVarPath = SRC_FOLDER + UPD_DEL_METHOD_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Shape.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -97,9 +106,12 @@ public class TestMatcherUpdates {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ UPD_INS_CONST_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + UPD_INS_CONST_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + UPD_INS_CONST_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + UPD_INS_CONST_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + UPD_INS_CONST_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + UPD_INS_CONST_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + UPD_INS_CONST_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
@@ -125,9 +137,12 @@ public class TestMatcherUpdates {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ UPD_DEL_CONST_FOLDER + CONFIG_FILE_NAME);
 		
-		String basePath = SRC_FOLDER + UPD_DEL_CONST_FOLDER + "Square.java";
-		String firstVarPath = SRC_FOLDER + UPD_DEL_CONST_FOLDER + "Square01.java";
-		String secondVarPath = SRC_FOLDER + UPD_DEL_CONST_FOLDER + "Square02.java";
+		String basePath = SRC_FOLDER + UPD_DEL_CONST_FOLDER + 
+				BASE_BRANCH_FOLDER + "Square.java";
+		String firstVarPath = SRC_FOLDER + UPD_DEL_CONST_FOLDER + 
+				VAR1_BRANCH_FOLDER + "Square.java";
+		String secondVarPath = SRC_FOLDER + UPD_DEL_CONST_FOLDER + 
+				VAR2_BRANCH_FOLDER + "Square.java";
 		
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
