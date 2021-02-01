@@ -30,13 +30,23 @@ public class DeltaInstanceHandler {
 		
 	}
 	
-	public DeltaInstance getDeltaInstance(CtType<?> base, CtType<?> variant, ConflictPattern cp) 
+	public Diff diff(CtType<?> first, CtType<?> second) throws ApplicationException {
+		if(first == null || second == null)
+			return null;
+		Diff diff = null;
+		try {
+			diff = new AstComparator().compare(first, second);
+		} catch (Exception e) {
+			throw new ApplicationException("Error calculating the delta", e);
+		}
+		return diff;
+	}
+	
+	public DeltaInstance getDeltaInstance(Diff diff, CtType<?> variant, ConflictPattern cp) 
 			throws ApplicationException {
-		if(base != null) {
-			Diff diff = diff(base, variant);
+		if(diff != null) {
 			DeltaInstance deltaInstance = new DeltaInstance();
-			if(diff != null)
-				processOperations(diff.getAllOperations(), deltaInstance, cp);
+			processOperations(diff.getAllOperations(), deltaInstance, cp);
 			return deltaInstance;
 		}
 		else {
@@ -104,16 +114,6 @@ public class DeltaInstanceHandler {
 		else {
 			processUpdateAction(o, deltaInstance, cp);
 		}
-	}
-	
-	private Diff diff(CtType<?> first, CtType<?> second) throws ApplicationException {
-		Diff diff = null;
-		try {
-			diff = new AstComparator().compare(first, second);
-		} catch (Exception e) {
-			throw new ApplicationException("Error calculating the delta", e);
-		}
-		return diff;
 	}
 	
 	private void processMoveOperation(Operation<?> o, DeltaInstance deltaInstance, ConflictPattern cp) {

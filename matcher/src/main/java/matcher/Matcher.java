@@ -25,31 +25,54 @@ public class Matcher {
 	}
 	
 	public List<List<Pair<Integer, String>>> matchingAssignments(String[] bases,
+			String[] variants1, String[] variants2)
+			throws ApplicationException{
+		if(bases == null || variants1 == null || variants2 == null)
+			return new ArrayList<>();
+		if(!sameLenght(bases, variants1, variants2))
+			return new ArrayList<>();
+		File[] basesFile = fromStringArray(bases);
+		File[] variants1File = fromStringArray(variants1);
+		File[] variants2File = fromStringArray(variants2);
+
+		List<List<Pair<Integer, String>>> result = new ArrayList<>();
+		
+		List<Pair<ChangeInstance, ConflictPattern>> pairs =
+				cih.getChangeInstances(basesFile, variants1File, variants2File);
+		for(Pair<ChangeInstance, ConflictPattern> p: pairs) {
+			result.addAll(mh.matchingAssignments(p.getFirst(), p.getSecond()));
+		}
+		
+		return result;
+	}
+	
+	public List<List<Pair<Integer, String>>> matchingAssignments(String[] bases,
 			String[] variants1, String[] variants2, ConflictPattern cp)
 			throws ApplicationException{
 		if(bases == null || variants1 == null || variants2 == null)
 			return new ArrayList<>();
 		if(!sameLenght(bases, variants1, variants2))
 			return new ArrayList<>();
-		File[] basesFile = new File[bases.length];
-		File[] variants1File = new File[variants1.length];
-		File[] variants2File = new File[variants2.length];
-		for(int i = 0; i < bases.length; i++) {
-			String base = bases[i];
-			String variant1 = variants1[i];
-			String variant2 = variants2[i];
-			if(base != null)
-				basesFile[i] = new File(base);
-			if(variant1 != null)
-				variants1File[i] = new File(variant1);
-			if(variant2 != null)
-				variants2File[i] = new File(variant2);
-		}
+		
+		File[] basesFile = fromStringArray(bases);
+		File[] variants1File = fromStringArray(variants1);
+		File[] variants2File = fromStringArray(variants2);
+
 		ChangeInstance ci = cih.getChangeInstance(basesFile, variants1File, variants2File, cp);
 		return mh.matchingAssignments(ci, cp);
 	}
 
 	private boolean sameLenght(String[] bases, String[] variants1, String[] variants2) {
 		return bases.length == variants1.length && bases.length == variants2.length;
+	}
+	
+	private File[] fromStringArray(String[] filePaths) {
+		File[] result = new File[filePaths.length];
+		for(int i = 0; i < filePaths.length; i++) {
+			String path = filePaths[i];
+			if(path != null)
+				result[i] = new File(path);
+		}
+		return result;
 	}
 }
