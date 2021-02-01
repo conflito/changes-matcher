@@ -59,7 +59,12 @@ public class Matcher {
 		File[] variants2File = fromStringArray(variants2);
 
 		ChangeInstance ci = cih.getChangeInstance(basesFile, variants1File, variants2File, cp);
-		return mh.matchingAssignments(ci, cp);
+		long start=System.currentTimeMillis();
+		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		long end = System.currentTimeMillis();
+		System.out.println("Matching: " + (end-start));
+
+		return result;//mh.matchingAssignments(ci, cp);
 	}
 
 	private boolean sameLenght(String[] bases, String[] variants1, String[] variants2) {

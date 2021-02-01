@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.List;
+import java.util.Optional;
 import java.util.Queue;
 
 import gumtree.spoon.AstComparator;
@@ -72,9 +73,19 @@ public class SpoonHandler {
 	}
 	
 	public void buildLaunchers() {
+		long start = System.currentTimeMillis();
 		baseLauncher.buildModel();
+		long end = System.currentTimeMillis();
+		System.out.println("Base launcher: " + (end-start));
+		start = System.currentTimeMillis();
 		variantLauncher1.buildModel();
+		end = System.currentTimeMillis();
+		System.out.println("Var 1 launcher: " + (end-start));
+		start = System.currentTimeMillis();
 		variantLauncher2.buildModel();
+		end = System.currentTimeMillis();
+		System.out.println("Var 2 launcher: " + (end-start));
+		System.out.println(baseLauncher.getModel().getAllTypes().size());
 	}
 	
 	public Iterable<CtType<?>> baseTypes(){
@@ -91,6 +102,7 @@ public class SpoonHandler {
 	
 	public void loadLaunchers(File[] bases, File[] variants1, File[] variants2) 
 					throws ApplicationException {
+		long start = System.currentTimeMillis();
 		baseLauncher.addInputResource(PropertiesHandler.getInstance().getBaseSourceDirPath());
 		
 		variantLauncher1.addInputResource(PropertiesHandler.getInstance()
@@ -98,14 +110,22 @@ public class SpoonHandler {
 		
 		variantLauncher2.addInputResource(PropertiesHandler.getInstance()
 				.getSecondVariantSourceDirPath());
-		
+		long end = System.currentTimeMillis();
+		System.out.println("Loading spoon: " + (end-start));
+		start=System.currentTimeMillis();
 		buildLaunchers();
-		
+		end=System.currentTimeMillis();
+		System.out.println("Building launchers: " + (end-start));
+		start = System.currentTimeMillis();
 		baseTypes = getElements(baseLauncher, bases);
 		variant1Types = getElements(variantLauncher1, variants1);
 		variant2Types = getElements(variantLauncher2, variants2);
-
+		end = System.currentTimeMillis();
+		System.out.println("Getting relevant elements: " + (end-start));
+		start = System.currentTimeMillis();
 		addDeltaTypesToBase(variants1, variants2);
+		end = System.currentTimeMillis();
+		System.out.println("Adding from deltas: " + (end-start));
 	}
 	
 	private void addDeltaTypesToBase(File[] variants1, File[] variants2) throws ApplicationException {
@@ -240,12 +260,13 @@ public class SpoonHandler {
 	private CtType<?> addChangedClass(Collection<CtType<?>> types, String changedClassName,
 			Set<CtType<?>> result) {
 		CtType<?> typeResult = null;
-		for(CtType<?> type: types) {
-			if(type.getQualifiedName().equals(changedClassName)) {
-				typeResult = type;
-				addType(type, result);
-				break;
-			}
+		Optional<CtType<?>> op = 
+				types.stream()
+					 .filter(type -> type.getQualifiedName().equals(changedClassName))
+					 .findFirst();
+		if(op.isPresent()) {
+			typeResult = op.get();
+			addType(typeResult, result);
 		}
 		return typeResult;
 	}
