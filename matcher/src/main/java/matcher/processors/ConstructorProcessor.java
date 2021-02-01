@@ -7,6 +7,7 @@ import matcher.entities.ConstructorInstance;
 import matcher.entities.MethodInstance;
 import matcher.entities.Type;
 import matcher.entities.Visibility;
+import matcher.handlers.InstancesCache;
 import matcher.handlers.SpoonHandler;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.CtInvocation;
@@ -25,6 +26,8 @@ public class ConstructorProcessor extends Processor<ConstructorInstance, CtConst
 
 	@Override
 	public ConstructorInstance process(CtConstructor<?> element) {
+		if(InstancesCache.getInstance().hasConstructor(element))
+			return InstancesCache.getInstance().getConstructor(element);
 		Visibility visibility = Visibility.PACKAGE;
 		if(element.getVisibility() != null)
 			visibility = Visibility.valueOf(element.getVisibility().toString().toUpperCase());
@@ -34,6 +37,9 @@ public class ConstructorProcessor extends Processor<ConstructorInstance, CtConst
 		ConstructorInstance constructorInstance = new ConstructorInstance(visibility, parameters);
 		if(conflictPattern.hasInvocations())
 			processMethodInvocations(element, constructorInstance);
+		
+		InstancesCache.getInstance().putConstructor(element, constructorInstance);
+		
 		return constructorInstance;
 	}
 

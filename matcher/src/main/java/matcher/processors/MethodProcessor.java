@@ -10,6 +10,7 @@ import matcher.entities.FieldAccessType;
 import matcher.entities.MethodInstance;
 import matcher.entities.Type;
 import matcher.entities.Visibility;
+import matcher.handlers.InstancesCache;
 import matcher.handlers.SpoonHandler;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.CtFieldRead;
@@ -28,6 +29,8 @@ public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 
 	@Override
 	public MethodInstance process(CtMethod<?> element) {
+		if(InstancesCache.getInstance().hasMethod(element))
+			return InstancesCache.getInstance().getMethod(element);
 		Set<String> invocationsVisited = new HashSet<>();
 		return process(element, invocationsVisited);
 	}
@@ -46,6 +49,7 @@ public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 			processInvocations(element, methodInstance, invocationsVisited);
 		if(conflictPattern.hasFieldAccesses())
 			processFieldAccesses(element, methodInstance);
+		InstancesCache.getInstance().putMethod(element, methodInstance);
 		return methodInstance;
 	}
 
@@ -87,15 +91,22 @@ public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 					if(className.equals("Object") || 
 							SpoonHandler.invocationFromTheSystem(invocation)) {
 						String invocationFullName = 
-								SpoonHandler.getInvocationClassQualifiedName(invocation)
-								+ "." + SpoonHandler.getInvocationQualifiedName(invocation);
+								SpoonHandler.getInvocationFullName(invocation);
 						if(!invocationsVisited.contains(invocationFullName)) {
 							invocationsVisited.add(invocationFullName);
 							CtMethod<?> invokedMethod = 
 									SpoonHandler.getMethodFromInvocation(invocation);
-							methodInstance.addDirectDependency(
-									invocationsProcessor.process(invokedMethod, 
-											invocationsVisited));
+							if(InstancesCache.getInstance().hasMethod(invokedMethod)) {
+								methodInstance.addDirectDependency(
+										InstancesCache.getInstance().getMethod(invokedMethod));
+							}
+							else {
+								methodInstance.addDirectDependency(
+										invocationsProcessor.process(invokedMethod, invocationsVisited));
+							}
+//							methodInstance.addDirectDependency(
+//									invocationsProcessor.process(invokedMethod, 
+//											invocationsVisited));
 						}
 					}
 				} catch (Exception e) {}

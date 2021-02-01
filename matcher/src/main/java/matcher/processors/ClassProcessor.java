@@ -9,6 +9,7 @@ import matcher.entities.ConstructorInstance;
 import matcher.entities.FieldInstance;
 import matcher.entities.InterfaceImplementationInstance;
 import matcher.entities.MethodInstance;
+import matcher.handlers.InstancesCache;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtConstructor;
@@ -29,6 +30,8 @@ public class ClassProcessor extends Processor<ClassInstance, CtClass<?>>{
 	@Override
 	public ClassInstance process(CtClass<?> element) {
 		if(element!= null) {
+			if(InstancesCache.getInstance().hasClass(element))
+				return InstancesCache.getInstance().getClass(element);
 			ClassInstance classInstance = 
 					new ClassInstance(element.getSimpleName(), element.getQualifiedName());
 			if(conflictPattern.hasSuperClasses())
@@ -44,6 +47,9 @@ public class ClassProcessor extends Processor<ClassInstance, CtClass<?>>{
 				processConstructors(element, classInstance);
 			if(conflictPattern.hasInterfaces())
 				processInterfaces(element, classInstance);
+			
+			InstancesCache.getInstance().putClass(element, classInstance);
+			
 			return classInstance;
 		}
 		return null;
