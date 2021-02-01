@@ -335,7 +335,8 @@ public class SpoonHandler {
 	
 	public static boolean invocationFromTheSystem(CtInvocation<?> invocation) {
 		return invocation.getExecutable() != null && 
-				invocation.getExecutable().getDeclaringType() != null;
+				invocation.getExecutable().getDeclaringType() != null &&
+				invocation.getExecutable().getDeclaringType().getTypeDeclaration() != null;
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
