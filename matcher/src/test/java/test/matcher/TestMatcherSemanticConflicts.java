@@ -67,6 +67,7 @@ public class TestMatcherSemanticConflicts {
 	private static final String REMOVE_OVERRIDER_FOLDER = 
 			"RemoveOverridingMAddCall2M" + File.separator;
 	private static final String CHANGE_METHOD1_FOLDER ="ChangeMethod01" + File.separator;
+	private static final String CHANGE_METHOD101_FOLDER ="ChangeMethod01_01" + File.separator;
 	private static final String CHANGE_METHOD2_FOLDER ="ChangeMethod02" + File.separator;
 	private static final String DEPENDENCY_BASED1_FOLDER = "DependencyBased01" + File.separator;
 	private static final String DEPENDENCY_BASED101_FOLDER = "DependencyBased01_01" + File.separator;
@@ -521,6 +522,71 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.size() == 6, "Not 6 assignments with only 6 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("A"), "Class is not A");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("m()"), 
+				"Method with invocations is not m()?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("m2()"), 
+				"Method updated is not m2()?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("m1()"), 
+				"Other method updated is not m1()?");
+		assertTrue(assignments.get(4).getFirst() == 4 && 
+				assignments.get(4).getSecond().equals("A"), 
+				"Class that holds m1() isn't A?");
+		assertTrue(assignments.get(5).getFirst() == 5 && 
+				assignments.get(5).getSecond().equals("A"), 
+				"Class that holds m2() isn't A?");
+	}
+	
+	@Test
+	public void changeMethod1_1Test() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ CHANGE_METHOD101_FOLDER + CONFIG_FILE_NAME);
+
+		String basePath = SRC_FOLDER + CHANGE_METHOD101_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + CHANGE_METHOD101_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String var2Path = SRC_FOLDER + CHANGE_METHOD101_FOLDER + 
+				VAR2_BRANCH_FOLDER + "A.java";
+		
+		String[] bases = {basePath};
+		String[] variants1 = {var1Path};
+		String[] variants2 = {var2Path};
+
+		ConflictPattern cp = getChangeMethodPattern();
+
+		List<List<Pair<Integer, String>>> result =
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
+		assertTrue(result.size() == 2, "Not two results for method change 1_01?");
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertTrue(assignments.size() == 6, "Not 6 assignments with only 6 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("B"), 
+				"Dependant class is not B");
+		assertTrue(assignments.get(1).getFirst() == 1 && 
+				assignments.get(1).getSecond().equals("m()"), 
+				"Method with invocations is not m()?");
+		assertTrue(assignments.get(2).getFirst() == 2 && 
+				assignments.get(2).getSecond().equals("m1()"), 
+				"Method updated is not m1()?");
+		assertTrue(assignments.get(3).getFirst() == 3 && 
+				assignments.get(3).getSecond().equals("m2()"), 
+				"Other method updated is not m2()?");
+		assertTrue(assignments.get(4).getFirst() == 4 && 
+				assignments.get(4).getSecond().equals("A"), 
+				"Class that holds m1() isn't A?");
+		assertTrue(assignments.get(5).getFirst() == 5 && 
+				assignments.get(5).getSecond().equals("A"), 
+				"Class that holds m2() isn't A?");
+
+		assignments = result.get(1);
+
+		assertTrue(assignments.size() == 6, "Not 6 assignments with only 6 variables?");
+		assertTrue(assignments.get(0).getFirst() == 0 && 
+				assignments.get(0).getSecond().equals("B"), 
+				"Dependant class is not B");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
 				assignments.get(1).getSecond().equals("m()"), 
 				"Method with invocations is not m()?");
