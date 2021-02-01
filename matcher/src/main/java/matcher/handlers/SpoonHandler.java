@@ -259,9 +259,7 @@ public class SpoonHandler {
 					if(invocationFromTheSystem(i) && !isSuperInvocation(i) &&
 							isInvocationToClass(i, changedClassName)) {
 						addType(type, result);
-						System.out.println(i);
 						CtMethod<?> invokingMethod = i.getParent(CtMethod.class);
-						System.out.println(invokingMethod);
 						if(!methodsToVisit.contains(invokingMethod)) {
 							methodsToVisit.add(invokingMethod);
 						}
