@@ -4,3 +4,4 @@
 /.classpath
 /src/test/java/test/matcher/TestRealInstances.java
 /src/test/resources/RealMergeScenarios/
+/src/test/resources/SemanticConflictsInstances/Testing/
