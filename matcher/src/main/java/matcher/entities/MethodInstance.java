@@ -55,6 +55,14 @@ public class MethodInstance implements Insertable, Deletable, Visible, Holder, U
 		directDependencies.add(m);
 	}
 	
+	public boolean hasFieldAccesses() {
+		return !fieldAccesses.isEmpty();
+	}
+	
+	public boolean hasDependencies() {
+		return !directDependencies.isEmpty();
+	}
+	
 	public boolean dependsOn(String methodName) {
 		return dependsOn(methodName, new HashSet<>());
 	}

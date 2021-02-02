@@ -30,8 +30,9 @@ public class ClassProcessor extends Processor<ClassInstance, CtClass<?>>{
 	@Override
 	public ClassInstance process(CtClass<?> element) {
 		if(element!= null) {
-			if(InstancesCache.getInstance().hasClass(element))
-				return InstancesCache.getInstance().getClass(element);
+			if(InstancesCache.getInstance().hasClass(element)) {
+				return useCache(element);
+			}
 			ClassInstance classInstance = 
 					new ClassInstance(element.getSimpleName(), element.getQualifiedName());
 			if(conflictPattern.hasSuperClasses())
@@ -53,6 +54,31 @@ public class ClassProcessor extends Processor<ClassInstance, CtClass<?>>{
 			return classInstance;
 		}
 		return null;
+	}
+	
+	private ClassInstance useCache(CtClass<?> element) {
+		ClassInstance result = InstancesCache.getInstance().getClass(element);
+		if(conflictPattern.hasSuperClasses() && !result.hasSuperClass())
+			processSuperClass(element, result);
+		if(conflictPattern.hasFields() && !result.hasFields())
+			processFields(element, result);
+		if(conflictPattern.hasMethods()) {
+			List<MethodInstance> methods;
+			if(!result.hasMethods()) {
+				methods = processMethods(element, result);
+			}
+			else {
+				methods = result.getMethods();
+			}
+			if(conflictPattern.hasCompatibleMethods() && !result.hasCompatibles())
+				processCompatibleMethods(methods, result);
+		}
+		if(conflictPattern.hasConstructors() && !result.hasConstructors())
+			processConstructors(element, result);
+		if(conflictPattern.hasInterfaces() && !result.hasInterfaces())
+			processInterfaces(element, result);
+		InstancesCache.getInstance().putClass(element, result);
+		return result;
 	}
 
 	private void processInterfaces(CtClass<?> element, ClassInstance classInstance) {

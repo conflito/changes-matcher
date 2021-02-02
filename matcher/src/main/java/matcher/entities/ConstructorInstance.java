@@ -41,6 +41,10 @@ public class ConstructorInstance implements Insertable, Deletable, Visible, Hold
 	public void addDirectDependency(MethodInstance m) {
 		directDependencies.add(m);
 	}
+	
+	public boolean hasDependencies() {
+		return !directDependencies.isEmpty();
+	}
 
 	public boolean dependsOn(String methodName) {
 		boolean result = 

@@ -45,9 +45,12 @@ public class ChangeInstanceHandler {
 		Diff[] firstDiffs = calculateDiffs(bases, variants1, spoonHandler.firstVariantTypes());
 		Diff[] secondDiffs = calculateDiffs(bases, variants2, spoonHandler.secondVariantTypes());
 		System.out.println("##### Building Objects #####");
+		
+		InstancesCache.createInstance();
+		
 		for(ConflictPattern cp: conflictsCatalog.getPatterns()) {
 			
-			InstancesCache.createInstance();
+			
 			long start = System.currentTimeMillis();
 			ChangeInstance ci = new ChangeInstance();
 			BaseInstance baseInstance = processBases(cp);

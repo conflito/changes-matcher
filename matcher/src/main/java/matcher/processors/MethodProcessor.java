@@ -29,9 +29,20 @@ public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 
 	@Override
 	public MethodInstance process(CtMethod<?> element) {
-		if(InstancesCache.getInstance().hasMethod(element))
-			return InstancesCache.getInstance().getMethod(element);
 		Set<String> invocationsVisited = new HashSet<>();
+		
+		if(InstancesCache.getInstance().hasMethod(element)) {
+			MethodInstance result = InstancesCache.getInstance().getMethod(element);
+			if(conflictPattern.hasInvocations() && !result.hasDependencies()) {
+				processInvocations(element, result, invocationsVisited);
+				InstancesCache.getInstance().putMethod(element, result);
+			}
+			if(conflictPattern.hasFieldAccesses() && !result.hasFieldAccesses()) {
+				processFieldAccesses(element, result);
+				InstancesCache.getInstance().putMethod(element, result);
+			}		
+			return result;
+		}
 		return process(element, invocationsVisited);
 	}
 	

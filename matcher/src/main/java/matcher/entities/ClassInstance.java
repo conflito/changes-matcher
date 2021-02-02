@@ -61,6 +61,10 @@ public class ClassInstance implements Insertable, Holder{
 	public Optional<ClassInstance> getSuperClass() {
 		return Optional.ofNullable(superClass);
 	}
+	
+	public boolean hasSuperClass() {
+		return superClass != null;
+	}
 
 	public void setSuperClass(ClassInstance superClass) {
 		this.superClass = superClass;
@@ -69,17 +73,33 @@ public class ClassInstance implements Insertable, Holder{
 	public List<FieldInstance> getFields() {
 		return fields;
 	}
+	
+	public boolean hasFields() {
+		return !fields.isEmpty();
+	}
 
 	public List<MethodInstance> getMethods() {
 		return methods;
+	}
+	
+	public boolean hasMethods() {
+		return !methods.isEmpty();
 	}
 
 	public List<ConstructorInstance> getConstructors() {
 		return constructors;
 	}
+	
+	public boolean hasConstructors() {
+		return !constructors.isEmpty();
+	}
 
 	public List<InterfaceImplementationInstance> getInterfaces() {
 		return interfaces;
+	}
+	
+	public boolean hasInterfaces() {
+		return !interfaces.isEmpty();
 	}
 
 	public List<MethodInstance> getCompatibles(MethodInstance m){
@@ -87,6 +107,10 @@ public class ClassInstance implements Insertable, Holder{
 		if(compatibleMethods.containsKey(m))
 			result = compatibleMethods.get(m);
 		return result;
+	}
+	
+	public boolean hasCompatibles() {
+		return !compatibleMethods.isEmpty();
 	}
 	
 	public Iterable<MethodInstance> getMethodsWithCompatibles(){

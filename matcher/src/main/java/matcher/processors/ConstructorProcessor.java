@@ -12,8 +12,6 @@ import matcher.handlers.SpoonHandler;
 import matcher.patterns.ConflictPattern;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtConstructor;
-import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.TypeFilter;
 
 public class ConstructorProcessor extends Processor<ConstructorInstance, CtConstructor<?>>{
@@ -26,8 +24,14 @@ public class ConstructorProcessor extends Processor<ConstructorInstance, CtConst
 
 	@Override
 	public ConstructorInstance process(CtConstructor<?> element) {
-		if(InstancesCache.getInstance().hasConstructor(element))
-			return InstancesCache.getInstance().getConstructor(element);
+		if(InstancesCache.getInstance().hasConstructor(element)) {
+			ConstructorInstance result = InstancesCache.getInstance().getConstructor(element);
+			if(conflictPattern.hasInvocations() && !result.hasDependencies()) {
+				processMethodInvocations(element, result);
+				InstancesCache.getInstance().putConstructor(element, result);
+			}
+			return result;
+		}
 		Visibility visibility = Visibility.PACKAGE;
 		if(element.getVisibility() != null)
 			visibility = Visibility.valueOf(element.getVisibility().toString().toUpperCase());
@@ -52,7 +56,8 @@ public class ConstructorProcessor extends Processor<ConstructorInstance, CtConst
 				try {
 					if(SpoonHandler.invocationFromTheSystem(invocation)) {
 						MethodInstance invoked = 
-								new MethodProcessor(conflictPattern).process(getMethodFromInvocation(invocation));
+								new MethodProcessor(conflictPattern).process(
+										SpoonHandler.getMethodFromInvocation(invocation));
 						constructorInstance.addDirectDependency(invoked);
 					}
 				} catch (Exception e) {}
@@ -60,15 +65,4 @@ public class ConstructorProcessor extends Processor<ConstructorInstance, CtConst
 			}
 		}
 	}
-	
-	private CtMethod<?> getMethodFromInvocation(CtInvocation<?> invocation){
-		String invokedName = invocation.getExecutable().getSimpleName();
-		CtTypeReference<?>[] types = invocation.getExecutable().getParameters()
-				.toArray(new CtTypeReference<?>[0]);
-		return invocation.getExecutable()
-			.getDeclaringType()
-			.getTypeDeclaration()
-			.getMethod(invokedName, types);
-	}
-
 }
