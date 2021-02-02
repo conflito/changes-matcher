@@ -87,6 +87,8 @@ public class SpoonHandler {
 		end = System.currentTimeMillis();
 		System.out.println("Var 2 launcher: " + (end-start));
 		System.out.println("Files loaded in base: " + baseLauncher.getModel().getAllTypes().size());
+		System.out.println("Files loaded in var 1: " + variantLauncher1.getModel().getAllTypes().size());
+		System.out.println("Files loaded in var 2: " + variantLauncher2.getModel().getAllTypes().size());
 	}
 	
 	public Iterable<CtType<?>> baseTypes(){
@@ -181,27 +183,33 @@ public class SpoonHandler {
 	
 	private Set<CtType<?>> getElements(Launcher launcher, File[] files) throws ApplicationException {
 		Set<CtType<?>> result = new HashSet<>();
+		
+		Set<CtType<?>> modelTypes = Collections.newSetFromMap(new IdentityHashMap<>());
+		Map<CtMethod<?>, Set<CtMethod<?>>> directDependents = new IdentityHashMap<>();
+		Map<CtMethod<?>, Set<CtMethod<?>>> directDependencies = new IdentityHashMap<>();
+		modelTypes.addAll(launcher.getModel().getAllTypes());
+		
+		calculateDependantsAndDependencies(directDependents, directDependencies, modelTypes);
+		
 		for(File f: files) {
 			if(f != null) {
 				SpoonResource resource = getSpoonResource(f);
 				CtType<?> changedType = getCtType(resource);
-				getElements(result, launcher, changedType.getQualifiedName());
+				addElements(result, modelTypes, changedType.getQualifiedName(), 
+						directDependents, directDependencies);
 			}
 		}
 		return result;
 	}
 	
-	private void getElements(Set<CtType<?>> result, 
-			Launcher launcher, String changedClassName) {
+	private void addElements(Set<CtType<?>> result, 
+			Set<CtType<?>> modelTypes, String changedClassName,
+			Map<CtMethod<?>, Set<CtMethod<?>>> directDependents, 
+			Map<CtMethod<?>, Set<CtMethod<?>>> directDependencies) {
 
-		Set<CtType<?>> modelTypes = Collections.newSetFromMap(new IdentityHashMap<>());
-		Map<CtMethod<?>, Set<CtMethod<?>>> directDependents = new IdentityHashMap<>();
-		Map<CtMethod<?>, Set<CtMethod<?>>> directDependencies = new IdentityHashMap<>();
-		modelTypes.addAll(launcher.getModel().getAllTypes());
 		Queue<CtMethod<?>> methodsToVisit = new ArrayDeque<>();
 		
 		CtType<?> changedType = addChangedClass(modelTypes, changedClassName, result, methodsToVisit);
-		calculateDependantsAndDependencies(directDependents, directDependencies, modelTypes);
 		
 		methodsToVisit.addAll(changedType.getMethods());
 		addElements(directDependents, result, methodsToVisit);
