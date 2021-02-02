@@ -149,6 +149,68 @@ public class ConflictPattern {
 				secondDelta.hasVisibilityActions();
 	}
 	
+	public boolean fitForMatch(ChangeInstance instance) {
+		return baseFitForMatch(instance) && deltasFitForMatch(instance);
+	}
+	
+	private boolean baseFitForMatch(ChangeInstance instance) {
+		boolean result = true;
+		if(hasFields())
+			result &= instance.hasFields();
+		if(result && basePattern.hasFieldAccesses())
+			result &= instance.hasFieldAccesses();
+		if(result && hasMethods())
+			result &= instance.hasMethods();
+		if(result && basePattern.hasInvocations())
+			result &= instance.hasInvocations();
+		if(result && hasInterfaces())
+			result &= instance.hasInterfaces();
+		if(result && hasConstructors())
+			result &= instance.hasConstructors();
+		if(result && hasCompatibleMethods())
+			result &= instance.hasCompatible();
+		return result;
+	}
+	
+	private boolean deltasFitForMatch(ChangeInstance instance) {
+		boolean result = true;
+		if(hasInsertInvocationActions())
+			result &= instance.hasInsertInvocationActions();
+		if(result && hasInsertMethodActions())
+			result &= instance.hasInsertMethodActions();
+		if(result && hasInsertConstructorActions())
+			result &= instance.hasInsertConstructorActions();
+		if(result && hasInsertFieldActions())
+			result &= instance.hasInsertFieldActions();
+		if(result && hasInsertFieldAccessActions())
+			result &= instance.hasInsertFieldAccessActions();
+		if(result && hasInsertClassActions())
+			result &= instance.hasInsertClassActions();
+		
+		if(result && hasDeleteInvocationActions())
+			result &= instance.hasDeleteInvocationActions();
+		if(result &&hasDeleteFieldActions())
+			result &= instance.hasDeleteFieldActions();
+		if(result && instance.hasDeleteMethodActions())
+			result &= instance.hasDeleteMethodActions();
+		if(result && instance.hasDeleteConstructorsActions())
+			result &= instance.hasDeleteConstructorsActions();
+		if(result && hasDeleteFieldAccessActions())
+			result &= instance.hasDeleteFieldAccessActions();
+		
+		if(result && hasUpdateActions())
+			result &= instance.hasUpdateActions();
+		if(result && hasUpdateFieldTypeActions())
+			result &= instance.hasUpdateFieldTypeActions();
+		if(result && hasUpdateInvocationActions())
+			result &= instance.hasUpdateInvocationActions();
+		
+		if(result && hasVisibilityActions())
+			result &= instance.hasVisibilityActions();
+		return result;
+	}
+	
+	
 	public boolean matches(ChangeInstance instance) {
 		return basePattern.filled() && deltasFilled() &&
 			   basePattern.matches(instance.getBaseInstance()) &&

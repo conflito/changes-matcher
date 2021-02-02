@@ -142,4 +142,97 @@ public class ChangeInstance {
 		return result.stream().distinct().collect(Collectors.toList());
 	}
 	
+	public boolean hasInsertInvocationActions() {
+		return deltas.stream().anyMatch(d -> d.hasInsertInvocationActions());
+	}
+	
+	public boolean hasInsertMethodActions() {
+		return deltas.stream().anyMatch(d -> d.hasInsertMethodActions());
+	}
+	
+	public boolean hasInsertConstructorActions() {
+		return deltas.stream().anyMatch(d -> d.hasInsertConstructorActions());
+	}
+	
+	public boolean hasInsertFieldActions() {
+		return deltas.stream().anyMatch(d -> d.hasInsertFieldActions());
+	}
+	
+	public boolean hasInsertFieldAccessActions() {
+		return deltas.stream().anyMatch(d -> d.hasInsertFieldAccessActions());
+	}
+	
+	public boolean hasInsertClassActions() {
+		return deltas.stream().anyMatch(d -> d.hasInsertClassActions());
+	}
+	
+	public boolean hasDeleteInvocationActions() {
+		return deltas.stream().anyMatch(d -> d.hasDeleteInvocationActions());
+	}
+	
+	public boolean hasDeleteFieldActions() {
+		return deltas.stream().anyMatch(d -> d.hasDeleteFieldActions());
+	}
+	
+	public boolean hasDeleteMethodActions() {
+		return deltas.stream().anyMatch(d -> d.hasDeleteMethodActions());
+	}
+	
+	public boolean hasDeleteConstructorsActions() {
+		return deltas.stream().anyMatch(d -> d.hasDeleteConstructorsActions());
+	}
+	
+	public boolean hasDeleteFieldAccessActions() {
+		return deltas.stream().anyMatch(d -> d.hasDeleteFieldAccessActions());
+	}
+	
+	public boolean hasUpdateActions() {
+		return deltas.stream().anyMatch(d -> d.hasUpdateActions());
+	}
+	
+	public boolean hasUpdateFieldTypeActions() {
+		return deltas.stream().anyMatch(d -> d.hasUpdateFieldTypeActions());
+	}
+	
+	public boolean hasUpdateInvocationActions() {
+		return deltas.stream().anyMatch(d -> d.hasUpdateInvocationActions());
+	}
+	
+	public boolean hasVisibilityActions() {
+		return deltas.stream().anyMatch(d -> d.hasVisibilityActions());
+	}
+
+	public boolean hasFields() {
+		return baseInstance.hasFields();
+	}
+
+	public boolean hasMethods() {
+		return baseInstance.hasMethods();
+	}
+
+	public boolean hasInterfaces() {
+		return baseInstance.hasInterfaces();
+	}
+
+	public boolean hasConstructors() {
+		return baseInstance.hasConstructors();
+	}
+
+	public boolean hasSuperClass() {
+		return baseInstance.hasSuperClass();
+	}
+
+	public boolean hasCompatible() {
+		return baseInstance.hasCompatible();
+	}
+
+	public boolean hasFieldAccesses() {
+		return baseInstance.hasFieldAccesses();
+	}
+
+	public boolean hasInvocations() {
+		return baseInstance.hasInvocations();
+	}
+	
+	
 }

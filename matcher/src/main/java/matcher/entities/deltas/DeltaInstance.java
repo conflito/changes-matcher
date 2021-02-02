@@ -243,4 +243,64 @@ public class DeltaInstance {
 	private boolean isVisibilityAction(ActionInstance a) {
 		return a instanceof VisibilityAction;
 	}
+	
+	public boolean hasInsertInvocationActions() {
+		return actions.stream().anyMatch(a -> isInsertInvocationAction(a));
+	}
+	
+	public boolean hasInsertMethodActions() {
+		return actions.stream().anyMatch(a -> isInsertMethodAction(a));
+	}
+	
+	public boolean hasInsertConstructorActions() {
+		return actions.stream().anyMatch(a -> isInsertConstructorAction(a));
+	}
+	
+	public boolean hasInsertFieldActions() {
+		return actions.stream().anyMatch(a -> isInsertFieldAction(a));
+	}
+	
+	public boolean hasInsertFieldAccessActions() {
+		return actions.stream().anyMatch(a -> isInsertFieldAccessAction(a));
+	}
+	
+	public boolean hasInsertClassActions() {
+		return actions.stream().anyMatch(a -> isInsertClassAction(a));
+	}
+	
+	public boolean hasDeleteInvocationActions() {
+		return actions.stream().anyMatch(a -> isDeleteInvocationAction(a));
+	}
+	
+	public boolean hasDeleteFieldActions() {
+		return actions.stream().anyMatch(a -> isDeleteFieldAction(a));
+	}
+	
+	public boolean hasDeleteMethodActions() {
+		return actions.stream().anyMatch(a -> isDeleteMethodAction(a));
+	}
+	
+	public boolean hasDeleteConstructorsActions() {
+		return actions.stream().anyMatch(a -> isDeleteConstructorAction(a));
+	}
+	
+	public boolean hasDeleteFieldAccessActions() {
+		return actions.stream().anyMatch(a -> isDeleteFieldAccessAction(a));
+	}
+	
+	public boolean hasUpdateActions() {
+		return actions.stream().anyMatch(a -> isUpdateAction(a));
+	}
+	
+	public boolean hasUpdateFieldTypeActions() {
+		return actions.stream().anyMatch(a -> isUpdateFieldTypeAction(a));
+	}
+	
+	public boolean hasUpdateInvocationActions() {
+		return actions.stream().anyMatch(a -> isUpdateInvocationAction(a));
+	}
+	
+	public boolean hasVisibilityActions() {
+		return actions.stream().anyMatch(a -> isVisibilityAction(a));
+	}
 }

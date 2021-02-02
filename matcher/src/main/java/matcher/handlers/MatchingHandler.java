@@ -43,6 +43,9 @@ public class MatchingHandler {
 	
 	public List<List<Pair<Integer, String>>> matchingAssignments(ChangeInstance ci, ConflictPattern cp){
 		List<List<Pair<Integer, String>>> result = new ArrayList<>();
+		if(!cp.fitForMatch(ci))
+			return result;
+			
 		List<Pair<Integer, List<String>>> variablePossibleValues = variableValues(ci, cp);
 		List<List<Pair<Integer, String>>> combinations = calculateResults(variablePossibleValues);
 		for(List<Pair<Integer, String>> l: combinations) {

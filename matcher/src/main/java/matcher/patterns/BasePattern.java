@@ -47,7 +47,7 @@ public class BasePattern {
 	}
 	
 	public boolean hasCompatible() {
-		return classPatterns.stream().anyMatch(ClassPattern::hasMethods);
+		return classPatterns.stream().anyMatch(ClassPattern::hasCompatibles);
 	}
 	
 	public boolean hasFieldAccesses() {

@@ -85,6 +85,15 @@ public class ClassInstance implements Insertable, Holder{
 	public boolean hasMethods() {
 		return !methods.isEmpty();
 	}
+	
+	public boolean hasFieldAccesses() {
+		return methods.stream().anyMatch(m -> m.hasFieldAccesses());
+	}
+	
+	public boolean hasInvocations() {
+		return methods.stream().anyMatch(m -> m.hasDependencies()) ||
+				constructors.stream().anyMatch(c -> c.hasDependencies());
+	}
 
 	public List<ConstructorInstance> getConstructors() {
 		return constructors;

@@ -128,4 +128,36 @@ public class BaseInstance {
 		return result;
 	}
 	
+	public boolean hasFields() {
+		return classInstances.stream().anyMatch(c -> c.hasFields());
+	}
+	
+	public boolean hasMethods() {
+		return classInstances.stream().anyMatch(c -> c.hasMethods());
+	}
+	
+	public boolean hasInterfaces() {
+		return classInstances.stream().anyMatch(c -> c.hasInterfaces());
+	}
+	
+	public boolean hasConstructors() {
+		return classInstances.stream().anyMatch(c -> c.hasConstructors());
+	}
+	
+	public boolean hasSuperClass() {
+		return classInstances.stream().anyMatch(c -> c.hasSuperClass());
+	}
+	
+	public boolean hasCompatible() {
+		return classInstances.stream().anyMatch(c -> c.hasCompatibles());
+	}
+	
+	public boolean hasFieldAccesses() {
+		return classInstances.stream().anyMatch(c -> c.hasFieldAccesses());
+	}
+	
+	public boolean hasInvocations() {
+		return classInstances.stream().anyMatch(c -> c.hasInvocations());
+	}
+	
 }
