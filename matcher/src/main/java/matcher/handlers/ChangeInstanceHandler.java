@@ -44,17 +44,18 @@ public class ChangeInstanceHandler {
 		
 		Diff[] firstDiffs = calculateDiffs(bases, variants1, spoonHandler.firstVariantTypes());
 		Diff[] secondDiffs = calculateDiffs(bases, variants2, spoonHandler.secondVariantTypes());
-		
+		System.out.println("##### Building Objects #####");
 		for(ConflictPattern cp: conflictsCatalog.getPatterns()) {
 			
 			InstancesCache.createInstance();
-			
+			long start = System.currentTimeMillis();
 			ChangeInstance ci = new ChangeInstance();
 			BaseInstance baseInstance = processBases(cp);
 			List<DeltaInstance> deltas = new ArrayList<>();
 			deltas.addAll(processDeltas(variants1, firstDiffs, cp));
 			deltas.addAll(processDeltas(variants2, secondDiffs, cp));
-			
+			long end = System.currentTimeMillis();
+			System.out.println("Building objects " + (end-start));
 			ci.setBaseInstance(baseInstance);
 			ci.addDeltaInstances(deltas);
 
@@ -76,7 +77,7 @@ public class ChangeInstanceHandler {
 		ChangeInstance result = new ChangeInstance();
 
 		spoonHandler.loadLaunchers(bases, variants1, variants2);
-		
+		System.out.println("##### Building Objects #####");
 		long start = System.currentTimeMillis();
 		BaseInstance baseInstance = processBases(cp);
 		List<DeltaInstance> deltas = processDeltas(bases, variants1, variants2, cp);

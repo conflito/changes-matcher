@@ -39,8 +39,12 @@ public class Matcher {
 		
 		List<Pair<ChangeInstance, ConflictPattern>> pairs =
 				cih.getChangeInstances(basesFile, variants1File, variants2File);
+		System.out.println("##### Matching #####");
 		for(Pair<ChangeInstance, ConflictPattern> p: pairs) {
+			long start=System.currentTimeMillis();
 			result.addAll(mh.matchingAssignments(p.getFirst(), p.getSecond()));
+			long end = System.currentTimeMillis();
+			System.out.println("Matching: " + (end-start));
 		}
 		
 		return result;
@@ -59,6 +63,7 @@ public class Matcher {
 		File[] variants2File = fromStringArray(variants2);
 
 		ChangeInstance ci = cih.getChangeInstance(basesFile, variants1File, variants2File, cp);
+		System.out.println("##### Matching #####");
 		long start=System.currentTimeMillis();
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		long end = System.currentTimeMillis();
