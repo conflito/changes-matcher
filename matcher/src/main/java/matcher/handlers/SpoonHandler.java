@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
 
@@ -17,14 +20,12 @@ import spoon.Launcher;
 import spoon.compiler.SpoonResource;
 import spoon.compiler.SpoonResourceHelper;
 import spoon.reflect.code.CtInvocation;
-import spoon.reflect.code.CtSuperAccess;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtType;
 import spoon.reflect.reference.CtArrayTypeReference;
 import spoon.reflect.reference.CtFieldReference;
 import spoon.reflect.reference.CtTypeReference;
-import spoon.reflect.visitor.filter.TypeFilter;
 
 public class SpoonHandler {
 	
@@ -85,7 +86,7 @@ public class SpoonHandler {
 		variantLauncher2.buildModel();
 		end = System.currentTimeMillis();
 		System.out.println("Var 2 launcher: " + (end-start));
-		System.out.println(baseLauncher.getModel().getAllTypes().size());
+		System.out.println("Files loaded in base: " + baseLauncher.getModel().getAllTypes().size());
 	}
 	
 	public Iterable<CtType<?>> baseTypes(){
@@ -102,6 +103,7 @@ public class SpoonHandler {
 	
 	public void loadLaunchers(File[] bases, File[] variants1, File[] variants2) 
 					throws ApplicationException {
+		System.out.println("##### Spoon Loading #####");
 		long start = System.currentTimeMillis();
 		baseLauncher.addInputResource(PropertiesHandler.getInstance().getBaseSourceDirPath());
 		
@@ -168,21 +170,6 @@ public class SpoonHandler {
 		return false;
 	}
 	
-	private static boolean fromTheSameClass(CtInvocation<?> invocation, String classQualifiedName) {
-		try {
-			return getInvocationClassQualifiedName(invocation).equals(classQualifiedName);
-		}
-		catch(Exception e) {
-			return false;
-		}
-	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private boolean isSuperInvocation(CtInvocation<?> invocation) {
-		return invocation.getExecutable().isConstructor() ||
-				!invocation.getElements(new TypeFilter(CtSuperAccess.class)).isEmpty();
-	}
-	
 	public CtType<?> getFullCtType(Iterable<CtType<?>> types, String typeName){
 		for(CtType<?> type: types) {
 			if(type.getQualifiedName().equals(typeName)) {
@@ -207,15 +194,20 @@ public class SpoonHandler {
 	private void getElements(Set<CtType<?>> result, 
 			Launcher launcher, String changedClassName) {
 
-		Collection<CtType<?>> types = launcher.getModel().getAllTypes();
+		Set<CtType<?>> modelTypes = Collections.newSetFromMap(new IdentityHashMap<>());
+		Map<CtMethod<?>, Set<CtMethod<?>>> directDependents = new IdentityHashMap<>();
+		Map<CtMethod<?>, Set<CtMethod<?>>> directDependencies = new IdentityHashMap<>();
+		modelTypes.addAll(launcher.getModel().getAllTypes());
 		Queue<CtMethod<?>> methodsToVisit = new ArrayDeque<>();
 		
-		CtType<?> changedType = addChangedClass(types, changedClassName, result);
-		addDirectDependants(types, changedClassName, result, methodsToVisit);
-		addDependants(types, result, methodsToVisit);
-		addDirectDependencies(changedType, result, methodsToVisit);
-		addDependencies(types, result, methodsToVisit);
-
+		CtType<?> changedType = addChangedClass(modelTypes, changedClassName, result, methodsToVisit);
+		calculateDependantsAndDependencies(directDependents, directDependencies, modelTypes);
+		
+		methodsToVisit.addAll(changedType.getMethods());
+		addElements(directDependents, result, methodsToVisit);
+		
+		methodsToVisit.addAll(changedType.getMethods());
+		addElements(directDependencies, result, methodsToVisit);
 	}
 	
 	private void addType(CtType<?> type, Set<CtType<?>> result) {
@@ -227,15 +219,17 @@ public class SpoonHandler {
 	
 	private void addFields(CtType<?> type, Set<CtType<?>> result) {
 		for(CtFieldReference<?> f: type.getDeclaredFields()) {
-			CtTypeReference<?> fieldType = f.getDeclaration().getType();
-			if(!fieldType.isPrimitive()) {
-				if(isComposedField(fieldType)) {
-					fieldType = fieldType.getAccessType();
+			if(f.getDeclaration() != null) {
+				CtTypeReference<?> fieldType = f.getDeclaration().getType();
+				if(!fieldType.isPrimitive()) {
+					if(isComposedField(fieldType)) {
+						fieldType = fieldType.getAccessType();
+					}
+					else if(fieldType.isArray()){
+						fieldType = getArrayType(fieldType);
+					}
+					result.add(fieldType.getTypeDeclaration());
 				}
-				else if(fieldType.isArray()){
-					fieldType = getArrayType(fieldType);
-				}
-				result.add(fieldType.getTypeDeclaration());
 			}
 		}
 	}
@@ -258,7 +252,7 @@ public class SpoonHandler {
 	}
 	
 	private CtType<?> addChangedClass(Collection<CtType<?>> types, String changedClassName,
-			Set<CtType<?>> result) {
+			Set<CtType<?>> result, Queue<CtMethod<?>> methodsToVisit) {
 		CtType<?> typeResult = null;
 		Optional<CtType<?>> op = 
 				types.stream()
@@ -271,86 +265,60 @@ public class SpoonHandler {
 		return typeResult;
 	}
 	
-	private void addDirectDependants(Collection<CtType<?>> types, String changedClassName,
-			Set<CtType<?>> result, Queue<CtMethod<?>> methodsToVisit) {
-		types.forEach(type -> {
-			if(!type.getQualifiedName().equals(changedClassName)) {
-				List<CtInvocation<?>> invocations = getInvocationsInType(type);
-				for(CtInvocation<?> i: invocations) {
-					if(invocationFromTheSystem(i) && !isSuperInvocation(i) &&
-							isInvocationToClass(i, changedClassName)) {
-						addType(type, result);
-						CtMethod<?> invokingMethod = i.getParent(CtMethod.class);
-						if(!methodsToVisit.contains(invokingMethod)) {
-							methodsToVisit.add(invokingMethod);
-						}
+	private void calculateDependantsAndDependencies(Map<CtMethod<?>, Set<CtMethod<?>>> directDependents,
+			Map<CtMethod<?>, Set<CtMethod<?>>> directDependencies, Set<CtType<?>> modelTypes) {
+		prepareMap(directDependents, modelTypes);
+		prepareMap(directDependencies, modelTypes);
+		
+		for (CtType<?> modelType : modelTypes) {
+			List<CtTypeReference<?>> modelRefs = modelType.filterChildren(
+					(CtTypeReference<?> ref) -> modelTypes.contains(ref.getTypeDeclaration()))
+					.list();
+			
+			for (CtTypeReference<?> modelRef : modelRefs) {
+				CtMethod<?> invokingMethod = modelRef.getParent(CtMethod.class);
+				CtInvocation<?> invocation = modelRef.getParent(CtInvocation.class);
+				
+				if(invokingMethod != null && invocation != null && invocationFromTheSystem(invocation)) {
+					CtMethod<?> invokedMethod = SpoonHandler.getMethodFromInvocation(invocation);
+					if(invokedMethod != null) {
+						Set<CtMethod<?>> dependents = directDependents.get(invokedMethod);
+						if(dependents != null)
+							dependents.add(invokingMethod);
+						
+						Set<CtMethod<?>> dependencies = directDependencies.get(invokingMethod);
+						if(dependencies != null)
+							dependencies.add(invokedMethod);
 					}
 				}
-			}
-			
+		    }
+		}
+	}
+	
+	private void prepareMap(Map<CtMethod<?>, Set<CtMethod<?>>> map, Set<CtType<?>> modelTypes) {
+		modelTypes.stream()
+		.forEach(type -> {
+			type.getMethods().stream().forEach(m -> {
+				map.put(m, Collections.newSetFromMap(new IdentityHashMap<>()));
+			});
 		});
 	}
 	
-	private void addDependants(Collection<CtType<?>> types, Set<CtType<?>> result, 
+	private void addElements(Map<CtMethod<?>, Set<CtMethod<?>>> map, Set<CtType<?>> result, 
 			Queue<CtMethod<?>> methodsToVisit) {
+		Set<CtMethod<?>> seenMethods = new HashSet<>();
 		while(!methodsToVisit.isEmpty()) {
 			CtMethod<?> method = methodsToVisit.poll();
-			types.forEach(type -> {
-				if(!result.contains(type)) {
-					List<CtInvocation<?>> invocations = getInvocationsInType(type);
-					for(CtInvocation<?> i: invocations) {
-						if(invocationFromTheSystem(i)) {
-							CtMethod<?> invokedMethod = getMethodFromInvocation(i);
-							if(method.equals(invokedMethod)) {
-								CtMethod<?> invokingMethod = i.getParent(CtMethod.class);
-								addType(type, result);
-								if(!methodsToVisit.contains(invokingMethod)) {
-									methodsToVisit.add(invokingMethod);
-								}
-							}
-						}
+			if(!seenMethods.contains(method)) {
+				seenMethods.add(method);
+				if(map.containsKey(method)) {
+					for(CtMethod<?> m: map.get(method)) {
+						methodsToVisit.add(m);
+						addType(m.getTopLevelType(), result);
 					}
 				}
-			});
-		}
-	}
-	
-	private void addDirectDependencies(CtType<?> changedType, Set<CtType<?>> result, 
-			Queue<CtMethod<?>> methodsToVisit) {
-		List<CtInvocation<?>> invocations = getInvocationsInType(changedType);
-		for(CtInvocation<?> i: invocations) {
-			if(invocationFromTheSystem(i) && !isSuperInvocation(i) &&
-					!fromTheSameClass(i, changedType.getQualifiedName())) {
-				addType(getParentTypeFromInvocation(i), result);
-				CtMethod<?> invokedMethod = SpoonHandler.getMethodFromInvocation(i);
-				if(!methodsToVisit.contains(invokedMethod)) {
-					methodsToVisit.add(invokedMethod);
-				}
+				
 			}
-		}
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addDependencies(Collection<CtType<?>> types, Set<CtType<?>> result, 
-			Queue<CtMethod<?>> methodsToVisit) {
-		while(!methodsToVisit.isEmpty()) {
-			CtMethod<?> method = methodsToVisit.poll();
-			types.forEach(type -> {
-				Set<CtMethod<?>> methods = type.getMethods();
-				for(CtMethod<?> m: methods) {
-					if(method.equals(m)) {
-						addType(type, result);
-						List<CtInvocation<?>> invocations = 
-								m.getElements(new TypeFilter(CtInvocation.class));
-						for(CtInvocation<?> i: invocations) {
-							CtMethod<?> invokedMethod = getMethodFromInvocation(i);
-							if(!methodsToVisit.contains(invokedMethod)) {
-								methodsToVisit.add(invokedMethod);
-							}
-						}
-					}
-				}
-			});
 		}
 	}
 	
@@ -358,11 +326,6 @@ public class SpoonHandler {
 		return invocation.getExecutable() != null && 
 				invocation.getExecutable().getDeclaringType() != null &&
 				invocation.getExecutable().getDeclaringType().getTypeDeclaration() != null;
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private List<CtInvocation<?>> getInvocationsInType(CtType<?> type){
-		return type.getElements(new TypeFilter(CtInvocation.class));
 	}
 	
 	public static CtMethod<?> getMethodFromInvocation(CtInvocation<?> invocation){
