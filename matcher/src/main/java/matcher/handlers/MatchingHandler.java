@@ -51,9 +51,6 @@ public class MatchingHandler {
 		List<List<Pair<Integer, String>>> combinations = calculateResults(variablePossibleValues, cp);
 		long end = System.currentTimeMillis();
 		System.out.println("Calculate " + combinations.size() + " pairings: " + (end-start));
-//		for(int i = 0; i < 30; i++) {
-//			System.out.println(combinations.get(i));
-//		}
 		for(List<Pair<Integer, String>> l: combinations) {
 			assignValues(cp, l);
 			if(cp.matches(ci))
