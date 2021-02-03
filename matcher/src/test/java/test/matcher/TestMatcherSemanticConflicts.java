@@ -188,10 +188,10 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-
+		
 		assertTrue(result.size() == 1, "More than one result for overloading method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
+		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("A"), "Superclass is not A");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
@@ -202,6 +202,9 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(3).getFirst() == 3 && 
 				assignments.get(3).getSecond().equals("m()"), 
 				"Inserted method that writes to field is not m()?");
+		assertTrue(assignments.get(4).getFirst() == 4 && 
+				assignments.get(4).getSecond().equals("size"), 
+				"Inserted field not size?");
 	}
 
 	@Test
@@ -716,6 +719,7 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
+		
 		assertTrue(result.size() == 1, "More than one result for dependency based?");
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
@@ -1308,7 +1312,8 @@ public class TestMatcherSemanticConflicts {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
-
+		conflict.addEqualVariableRule(classVar, holderClassVar);
+		
 		return conflict;
 	}
 
@@ -1354,6 +1359,7 @@ public class TestMatcherSemanticConflicts {
 		FreeVariable classVar = new FreeVariable(1);
 		FreeVariable fieldVar = new FreeVariable(2);
 		FreeVariable insertedMethodVar = new FreeVariable(3);
+		FreeVariable insertedFieldVar = new FreeVariable(4);
 
 		BasePattern basePattern = new BasePattern();
 		ClassPattern superClassPattern = new ClassPattern(superClassVar);
@@ -1372,7 +1378,7 @@ public class TestMatcherSemanticConflicts {
 				new FieldAccessPattern(fieldVar, FieldAccessType.WRITE);
 		insertedMethodPattern.addFieldAccessPattern(insertedAccessPattern);
 
-		FieldPattern insertedFieldPattern = new FieldPattern(fieldVar, null);
+		FieldPattern insertedFieldPattern = new FieldPattern(insertedFieldVar, null);
 
 
 		dp1.addActionPattern(
@@ -1386,6 +1392,7 @@ public class TestMatcherSemanticConflicts {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		conflict.addEqualVariableRule(fieldVar, insertedFieldVar);
 
 		return conflict;
 	}
@@ -1712,6 +1719,9 @@ public class TestMatcherSemanticConflicts {
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		conflict.addDifferentVariablesRule(methodVar2, methodVar3);
+		conflict.addEqualVariableRule(classVar, classVar2);
+		conflict.addEqualVariableRule(classVar, classVar3);
+		conflict.addEqualVariableRule(classVar2, classVar3);
 
 		return conflict;
 	}
@@ -1809,6 +1819,7 @@ public class TestMatcherSemanticConflicts {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		conflict.addEqualVariableRule(classVar, holderClassVar);
 
 		return conflict;
 	}
@@ -1918,6 +1929,7 @@ public class TestMatcherSemanticConflicts {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		conflict.addEqualVariableRule(classVar, holderClassVar);
 
 		return conflict;
 	}
@@ -1958,6 +1970,9 @@ public class TestMatcherSemanticConflicts {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		conflict.addEqualVariableRule(classVar, classVar2);
+		conflict.addEqualVariableRule(classVar, classVar3);
+		conflict.addEqualVariableRule(classVar2, classVar3);
 
 		return conflict;
 	}
@@ -2138,6 +2153,7 @@ public class TestMatcherSemanticConflicts {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		conflict.addEqualVariableRule(classVar2, classVar3);
 
 		return conflict;
 	}

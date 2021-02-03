@@ -121,6 +121,9 @@ public class ConflictPatternCatalog {
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		conflict.addDifferentVariablesRule(methodVar2, methodVar3);
+		conflict.addEqualVariableRule(classVar, classVar2);
+		conflict.addEqualVariableRule(classVar, classVar3);
+		conflict.addEqualVariableRule(classVar2, classVar3);
 
 		return conflict;
 	}
@@ -155,6 +158,7 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		conflict.addEqualVariableRule(classVar, holderClassVar);
 
 		return conflict;
 	}
@@ -228,6 +232,9 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		conflict.addEqualVariableRule(classVar, classVar2);
+		conflict.addEqualVariableRule(classVar, classVar3);
+		conflict.addEqualVariableRule(classVar2, classVar3);
 
 		return conflict;
 	}
@@ -267,6 +274,7 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		conflict.addEqualVariableRule(classVar, holderClassVar);
 
 		return conflict;
 	}
@@ -484,6 +492,7 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		conflict.addEqualVariableRule(classVar2, classVar3);
 
 		return conflict;
 	}
@@ -493,6 +502,7 @@ public class ConflictPatternCatalog {
 		FreeVariable classVar = new FreeVariable(1);
 		FreeVariable fieldVar = new FreeVariable(2);
 		FreeVariable insertedMethodVar = new FreeVariable(3);
+		FreeVariable insertedFieldVar = new FreeVariable(4);
 
 		BasePattern basePattern = new BasePattern();
 		ClassPattern superClassPattern = new ClassPattern(superClassVar);
@@ -511,7 +521,7 @@ public class ConflictPatternCatalog {
 				new FieldAccessPattern(fieldVar, FieldAccessType.WRITE);
 		insertedMethodPattern.addFieldAccessPattern(insertedAccessPattern);
 
-		FieldPattern insertedFieldPattern = new FieldPattern(fieldVar, null);
+		FieldPattern insertedFieldPattern = new FieldPattern(insertedFieldVar, null);
 
 
 		dp1.addActionPattern(
@@ -525,6 +535,7 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		conflict.addEqualVariableRule(fieldVar, insertedFieldVar);
 
 		return conflict;
 	}
@@ -648,6 +659,7 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		conflict.addEqualVariableRule(classVar, holderClassVar);
 
 		return conflict;
 	}
