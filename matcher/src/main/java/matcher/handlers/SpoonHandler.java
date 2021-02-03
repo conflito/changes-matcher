@@ -89,6 +89,7 @@ public class SpoonHandler {
 		System.out.println("Files loaded in base: " + baseLauncher.getModel().getAllTypes().size());
 		System.out.println("Files loaded in var 1: " + variantLauncher1.getModel().getAllTypes().size());
 		System.out.println("Files loaded in var 2: " + variantLauncher2.getModel().getAllTypes().size());
+		
 	}
 	
 	public Iterable<CtType<?>> baseTypes(){
@@ -138,13 +139,15 @@ public class SpoonHandler {
 				.collect(Collectors.toSet());
 		for(CtType<?> type: variant1Types) {
 			if(!baseNames.contains(type.getQualifiedName()) && 
-					!isNewClass(type.getQualifiedName(), variants1)) {
+					!isNewClass(type.getQualifiedName(), variants1) &&
+					!type.getSimpleName().equals("Object")) {
 				baseTypes.add(type);
 			}
 		}
 		for(CtType<?> type: variant2Types) {
 			if(!baseNames.contains(type.getQualifiedName()) && 
-					!isNewClass(type.getQualifiedName(), variants2)) {
+					!isNewClass(type.getQualifiedName(), variants2) &&
+					!type.getSimpleName().equals("Object")) {
 				baseTypes.add(type);
 			}
 		}
@@ -219,10 +222,12 @@ public class SpoonHandler {
 	}
 	
 	private void addType(CtType<?> type, Set<CtType<?>> result) {
-		result.add(type);
-		type.getSuperInterfaces().forEach(i -> result.add(i.getTypeDeclaration()));
-		addSuperClasses(type, result);
-		addFields(type, result);
+		if(!type.getSimpleName().equals("Object")) {
+			result.add(type);
+			type.getSuperInterfaces().forEach(i -> result.add(i.getTypeDeclaration()));
+			addSuperClasses(type, result);
+			addFields(type, result);
+		}
 	}
 	
 	private void addFields(CtType<?> type, Set<CtType<?>> result) {
@@ -287,7 +292,8 @@ public class SpoonHandler {
 				CtMethod<?> invokingMethod = modelRef.getParent(CtMethod.class);
 				CtInvocation<?> invocation = modelRef.getParent(CtInvocation.class);
 				
-				if(invokingMethod != null && invocation != null && invocationFromTheSystem(invocation)) {
+				if(invokingMethod != null && invocation != null 
+						&& invocationFromTheSystem(invocation)) {
 					CtMethod<?> invokedMethod = SpoonHandler.getMethodFromInvocation(invocation);
 					if(invokedMethod != null) {
 						Set<CtMethod<?>> dependents = directDependents.get(invokedMethod);
@@ -331,9 +337,11 @@ public class SpoonHandler {
 	}
 	
 	public static boolean invocationFromTheSystem(CtInvocation<?> invocation) {
-		return invocation.getExecutable() != null && 
+		return  invocation.getExecutable() != null && 
 				invocation.getExecutable().getDeclaringType() != null &&
-				invocation.getExecutable().getDeclaringType().getTypeDeclaration() != null;
+				FileSystemHandler.getInstance().fromTheSystem(
+						invocation.getExecutable()
+								  .getDeclaringType().getSimpleName() + ".java");
 	}
 	
 	public static CtMethod<?> getMethodFromInvocation(CtInvocation<?> invocation){

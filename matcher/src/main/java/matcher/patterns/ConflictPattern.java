@@ -1,7 +1,12 @@
 package matcher.patterns;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import matcher.entities.ChangeInstance;
@@ -19,9 +24,11 @@ public class ConflictPattern {
 	
 	private List<Pair<FreeVariable, FreeVariable>> differentVariables;
 
+	private Map<FreeVariable, Set<FreeVariable>> equalVariables;
 	
 	public ConflictPattern() {
 		this.differentVariables = new ArrayList<>();
+		this.equalVariables = new HashMap<>();
 	}
 	
 	public void setBasePattern(BasePattern basePattern) {
@@ -38,6 +45,21 @@ public class ConflictPattern {
 	
 	public void addDifferentVariablesRule(FreeVariable v1, FreeVariable v2) {
 		this.differentVariables.add(new Pair<>(v1, v2));
+	}
+	
+	public void addEqualVariableRule(FreeVariable v1, FreeVariable v2) {
+		if(!equalVariables.containsKey(v1))
+			equalVariables.put(v1, new HashSet<>());
+		if(!equalVariables.containsKey(v2))
+			equalVariables.put(v2, new HashSet<>());
+		equalVariables.get(v1).add(v2);
+		equalVariables.get(v2).add(v1);
+	}
+	
+	public boolean canBeEqual(int i, int j) {
+		FreeVariable v1 = new FreeVariable(i);
+		FreeVariable v2 = new FreeVariable(j);
+		return equalVariables.containsKey(v1) && equalVariables.get(v1).contains(v2);
 	}
 
 	public boolean hasInvocations() {
@@ -255,6 +277,15 @@ public class ConflictPattern {
 				p.getFirst().setValue(value);
 			if(p.getSecond().isId(id))
 				p.getSecond().setValue(value);
+		}
+		for(Entry<FreeVariable, Set<FreeVariable>> e: equalVariables.entrySet()) {
+			FreeVariable v1 = e.getKey();
+			if(v1.isId(id))
+				v1.setValue(value);
+			for(FreeVariable v: e.getValue()) {
+				if(v.isId(id))
+					v.setValue(value);
+			}
 		}
 	}
 	

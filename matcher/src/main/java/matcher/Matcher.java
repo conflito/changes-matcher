@@ -7,6 +7,7 @@ import java.util.List;
 import matcher.entities.ChangeInstance;
 import matcher.exceptions.ApplicationException;
 import matcher.handlers.ChangeInstanceHandler;
+import matcher.handlers.FileSystemHandler;
 import matcher.handlers.MatchingHandler;
 import matcher.handlers.PropertiesHandler;
 import matcher.patterns.ConflictPattern;
@@ -19,6 +20,7 @@ public class Matcher {
 	
 	public Matcher(String configFilePath) throws ApplicationException {
 		PropertiesHandler.createInstance(configFilePath);
+		FileSystemHandler.createInstance();
 		
 		cih = new ChangeInstanceHandler();
 		mh = new MatchingHandler();
