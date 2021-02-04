@@ -5,6 +5,12 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>Matcher</name>
   
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+  
   <build>
     <plugins>
         <plugin>
@@ -15,6 +21,30 @@
             <artifactId>maven-failsafe-plugin</artifactId>
             <version>2.22.2</version>
         </plugin>
+        <plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-assembly-plugin</artifactId>
+		    <executions>
+		        <execution>
+		            <phase>package</phase>
+		            <goals>
+		                <goal>single</goal>
+		            </goals>
+		            <configuration>
+		                <archive>
+		                <manifest>
+		                    <mainClass>
+		                        matcher.main.ExecuteMatcher
+		                    </mainClass>
+		                </manifest>
+		                </archive>
+		                <descriptorRefs>
+		                    <descriptorRef>jar-with-dependencies</descriptorRef>
+		                </descriptorRefs>
+		            </configuration>
+		        </execution>
+		    </executions>
+		</plugin>
     </plugins>
   </build>
   
@@ -46,5 +76,16 @@
         <version>5.7.0</version>
         <scope>test</scope>
     </dependency>
+    <dependency>
+	    <groupId>org.junit.jupiter</groupId>
+	    <artifactId>junit-jupiter-params</artifactId>
+	    <version>5.7.0</version>
+	    <scope>test</scope>
+	</dependency>
+    <dependency>
+  		<groupId>org.mockito</groupId>
+		<artifactId>mockito-core</artifactId>
+		<version>3.7.7</version>
+	</dependency>
   </dependencies>
 </project>
