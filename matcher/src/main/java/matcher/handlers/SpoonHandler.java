@@ -208,7 +208,7 @@ public class SpoonHandler {
 	private void addElements(Set<CtType<?>> result, 
 			Set<CtType<?>> modelTypes, String changedClassName,
 			Map<CtMethod<?>, Set<CtMethod<?>>> directDependents, 
-			Map<CtMethod<?>, Set<CtMethod<?>>> directDependencies) {
+			Map<CtMethod<?>, Set<CtMethod<?>>> directDependencies) throws ApplicationException {
 
 		Queue<CtMethod<?>> methodsToVisit = new ArrayDeque<>();
 		
@@ -222,9 +222,12 @@ public class SpoonHandler {
 	}
 	
 	private void addType(CtType<?> type, Set<CtType<?>> result) {
-		if(!type.getSimpleName().equals("Object")) {
+		if(type != null && fromTheSystem(type.getReference())) {
 			result.add(type);
-			type.getSuperInterfaces().forEach(i -> result.add(i.getTypeDeclaration()));
+			type.getSuperInterfaces().forEach(i -> {
+				if(fromTheSystem(i))
+					result.add(i.getTypeDeclaration());
+			});
 			addSuperClasses(type, result);
 			addFields(type, result);
 		}
@@ -241,7 +244,8 @@ public class SpoonHandler {
 					else if(fieldType.isArray()){
 						fieldType = getArrayType(fieldType);
 					}
-					result.add(fieldType.getTypeDeclaration());
+					if(fromTheSystem(fieldType))
+						result.add(fieldType.getTypeDeclaration());
 				}
 			}
 		}
@@ -249,7 +253,7 @@ public class SpoonHandler {
 	
 	private void addSuperClasses(CtType<?> type, Set<CtType<?>> result) {
 		CtTypeReference<?> superClass = type.getSuperclass();
-		if(superClass != null) {
+		if(fromTheSystem(superClass)) {
 			result.add(superClass.getTypeDeclaration());
 			addSuperClasses(superClass.getTypeDeclaration(), result);
 		}
@@ -265,7 +269,8 @@ public class SpoonHandler {
 	}
 	
 	private CtType<?> addChangedClass(Collection<CtType<?>> types, String changedClassName,
-			Set<CtType<?>> result, Queue<CtMethod<?>> methodsToVisit) {
+			Set<CtType<?>> result, Queue<CtMethod<?>> methodsToVisit) 
+					throws ApplicationException {
 		CtType<?> typeResult = null;
 		Optional<CtType<?>> op = 
 				types.stream()
@@ -274,6 +279,9 @@ public class SpoonHandler {
 		if(op.isPresent()) {
 			typeResult = op.get();
 			addType(typeResult, result);
+		}
+		else {
+			throw new ApplicationException("Type in changed file not found");
 		}
 		return typeResult;
 	}
@@ -285,7 +293,7 @@ public class SpoonHandler {
 		
 		for (CtType<?> modelType : modelTypes) {
 			List<CtTypeReference<?>> modelRefs = modelType.filterChildren(
-					(CtTypeReference<?> ref) -> modelTypes.contains(ref.getTypeDeclaration()))
+					(CtTypeReference<?> ref) -> fromTheSystem(ref))
 					.list();
 			
 			for (CtTypeReference<?> modelRef : modelRefs) {
@@ -306,6 +314,17 @@ public class SpoonHandler {
 					}
 				}
 		    }
+		}
+	}
+	
+	private static boolean fromTheSystem(CtTypeReference<?> ref) {
+		try {
+			return ref != null && ref.getTypeDeclaration() != null &&
+				FileSystemHandler.getInstance()
+					.fromTheSystem(ref.getSimpleName() + ".java");
+		}
+		catch(NoClassDefFoundError e) {
+			return false;
 		}
 	}
 	
@@ -338,10 +357,12 @@ public class SpoonHandler {
 	
 	public static boolean invocationFromTheSystem(CtInvocation<?> invocation) {
 		return  invocation.getExecutable() != null && 
-				invocation.getExecutable().getDeclaringType() != null &&
-				FileSystemHandler.getInstance().fromTheSystem(
-						invocation.getExecutable()
-								  .getDeclaringType().getSimpleName() + ".java");
+//				invocation.getExecutable().getDeclaringType() != null &&
+//				invocation.getExecutable().getDeclaringType().getTypeDeclaration() != null &&
+//				FileSystemHandler.getInstance().fromTheSystem(
+//						invocation.getExecutable()
+//								  .getDeclaringType().getSimpleName() + ".java");
+				fromTheSystem(invocation.getExecutable().getDeclaringType());
 	}
 	
 	public static CtMethod<?> getMethodFromInvocation(CtInvocation<?> invocation){
