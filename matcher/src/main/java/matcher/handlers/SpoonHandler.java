@@ -17,6 +17,7 @@ import java.util.Queue;
 import gumtree.spoon.AstComparator;
 import matcher.exceptions.ApplicationException;
 import spoon.Launcher;
+import spoon.compiler.ModelBuildingException;
 import spoon.compiler.SpoonResource;
 import spoon.compiler.SpoonResourceHelper;
 import spoon.reflect.code.CtInvocation;
@@ -73,22 +74,44 @@ public class SpoonHandler {
 		return (CtClass<?>) getCtType(resource);
 	}
 	
-	public void buildLaunchers() {
-		long start = System.currentTimeMillis();
-		baseLauncher.buildModel();
-		long end = System.currentTimeMillis();
-		System.out.println("Base launcher: " + (end-start));
-		start = System.currentTimeMillis();
-		variantLauncher1.buildModel();
-		end = System.currentTimeMillis();
-		System.out.println("Var 1 launcher: " + (end-start));
-		start = System.currentTimeMillis();
-		variantLauncher2.buildModel();
-		end = System.currentTimeMillis();
-		System.out.println("Var 2 launcher: " + (end-start));
+	public void buildLaunchers() throws ApplicationException {
+		long start = 0;
+		long end = 0;
+		
+		try {
+			start = System.currentTimeMillis();
+			baseLauncher.buildModel();
+			end = System.currentTimeMillis();
+			System.out.println("Base launcher: " + (end-start));
+		}
+		catch(ModelBuildingException e) {
+			throw new ApplicationException("Difference instances of the same class exist in the "
+					+ "specified base source folder");
+		}
+		try {
+			start = System.currentTimeMillis();
+			variantLauncher1.buildModel();
+			end = System.currentTimeMillis();
+			System.out.println("Var 1 launcher: " + (end-start));
+		}
+		catch(ModelBuildingException e) {
+			throw new ApplicationException("Difference instances of the same class exist in the "
+					+ "specified first variant source folder");
+		}
+		try {
+			start = System.currentTimeMillis();
+			variantLauncher2.buildModel();
+			end = System.currentTimeMillis();
+			System.out.println("Var 2 launcher: " + (end-start));
+		}
+		catch(ModelBuildingException e) {
+			throw new ApplicationException("Difference instances of the same class exist in the "
+					+ "specified second variant source folder");
+		}
 		System.out.println("Files loaded in base: " + baseLauncher.getModel().getAllTypes().size());
 		System.out.println("Files loaded in var 1: " + variantLauncher1.getModel().getAllTypes().size());
 		System.out.println("Files loaded in var 2: " + variantLauncher2.getModel().getAllTypes().size());
+		
 		
 	}
 	
