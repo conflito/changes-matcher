@@ -75,6 +75,9 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 				}
 			}
 		}
+		else {
+			visit(invocation);
+		}
 	}
 
 	@Override

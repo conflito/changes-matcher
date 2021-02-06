@@ -184,8 +184,7 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T, A extends T> void visitCtAssignment(CtAssignment<T, A> assignement) {
-		// TODO Auto-generated method stub
-		
+		visit(assignement);
 	}
 
 	@Override
@@ -286,8 +285,7 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtFieldReference(CtFieldReference<T> reference) {
-		// TODO Auto-generated method stub
-		
+		visit(reference);
 	}
 
 	@Override
@@ -298,20 +296,17 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public void visitCtFor(CtFor forLoop) {
-		// TODO Auto-generated method stub
-		
+		visit(forLoop);
 	}
 
 	@Override
 	public void visitCtForEach(CtForEach foreach) {
-		// TODO Auto-generated method stub
-		
+		visit(foreach);
 	}
 
 	@Override
 	public void visitCtIf(CtIf ifElement) {
-		// TODO Auto-generated method stub
-		
+		visit(ifElement);
 	}
 
 	@Override
@@ -322,8 +317,7 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
-		// TODO Auto-generated method stub
-		
+		visit(invocation);
 	}
 
 	@Override
@@ -334,14 +328,12 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtLocalVariable(CtLocalVariable<T> localVariable) {
-		// TODO Auto-generated method stub
-		
+		visit(localVariable);
 	}
 
 	@Override
 	public <T> void visitCtLocalVariableReference(CtLocalVariableReference<T> reference) {
-		// TODO Auto-generated method stub
-		
+		visit(reference);
 	}
 
 	@Override
@@ -370,14 +362,12 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtNewArray(CtNewArray<T> newArray) {
-		// TODO Auto-generated method stub
-		
+		visit(newArray);
 	}
 
 	@Override
 	public <T> void visitCtConstructorCall(CtConstructorCall<T> ctConstructorCall) {
-		// TODO Auto-generated method stub
-		
+		visit(ctConstructorCall);
 	}
 
 	@Override
@@ -401,8 +391,7 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T, A extends T> void visitCtOperatorAssignment(CtOperatorAssignment<T, A> assignment) {
-		// TODO Auto-generated method stub
-		
+		visit(assignment);
 	}
 
 	@Override
@@ -430,8 +419,7 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <R> void visitCtReturn(CtReturn<R> returnStatement) {
-		// TODO Auto-generated method stub
-		
+		visit(returnStatement);
 	}
 
 	@Override
@@ -442,8 +430,7 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <S> void visitCtSwitch(CtSwitch<S> switchStatement) {
-		// TODO Auto-generated method stub
-		
+		visit(switchStatement);
 	}
 
 	@Override
@@ -460,20 +447,17 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public void visitCtThrow(CtThrow throwStatement) {
-		// TODO Auto-generated method stub
-		
+		visit(throwStatement);
 	}
 
 	@Override
 	public void visitCtTry(CtTry tryBlock) {
-		// TODO Auto-generated method stub
-		
+		visit(tryBlock);
 	}
 
 	@Override
 	public void visitCtTryWithResource(CtTryWithResource tryWithResource) {
-		// TODO Auto-generated method stub
-		
+		visit(tryWithResource);
 	}
 
 	@Override
@@ -508,26 +492,22 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtUnaryOperator(CtUnaryOperator<T> operator) {
-		// TODO Auto-generated method stub
-		
+		visit(operator);
 	}
 
 	@Override
 	public <T> void visitCtVariableRead(CtVariableRead<T> variableRead) {
-		// TODO Auto-generated method stub
-		
+		visit(variableRead);
 	}
 
 	@Override
 	public <T> void visitCtVariableWrite(CtVariableWrite<T> variableWrite) {
-		// TODO Auto-generated method stub
-		
+		visit(variableWrite);
 	}
 
 	@Override
 	public void visitCtWhile(CtWhile whileLoop) {
-		// TODO Auto-generated method stub
-		
+		visit(whileLoop);
 	}
 
 	@Override
@@ -538,20 +518,17 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtFieldRead(CtFieldRead<T> fieldRead) {
-		// TODO Auto-generated method stub
-		
+		visit(fieldRead);
 	}
 
 	@Override
 	public <T> void visitCtFieldWrite(CtFieldWrite<T> fieldWrite) {
-		// TODO Auto-generated method stub
-		
+		visit(fieldWrite);
 	}
 
 	@Override
 	public <T> void visitCtSuperAccess(CtSuperAccess<T> f) {
-		// TODO Auto-generated method stub
-		
+		visit(f);
 	}
 
 	@Override
