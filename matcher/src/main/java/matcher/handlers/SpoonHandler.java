@@ -88,6 +88,11 @@ public class SpoonHandler {
 			throw new ApplicationException("Difference instances of the same class exist in the "
 					+ "specified base source folder");
 		}
+		catch(Exception e) {
+			throw new ApplicationException("Something went wrong building the class model "
+					+ "for the specified base source folder");
+		}
+		
 		try {
 			start = System.currentTimeMillis();
 			variantLauncher1.buildModel();
@@ -98,6 +103,11 @@ public class SpoonHandler {
 			throw new ApplicationException("Difference instances of the same class exist in the "
 					+ "specified first variant source folder");
 		}
+		catch(Exception e) {
+			throw new ApplicationException("Something went wrong building the class model "
+					+ "for the specified first variant source folder");
+		}
+		
 		try {
 			start = System.currentTimeMillis();
 			variantLauncher2.buildModel();
@@ -108,6 +118,11 @@ public class SpoonHandler {
 			throw new ApplicationException("Difference instances of the same class exist in the "
 					+ "specified second variant source folder");
 		}
+		catch(Exception e) {
+			throw new ApplicationException("Something went wrong building the class model "
+					+ "for the specified second variant source folder");
+		}
+		
 		System.out.println("Files loaded in base: " + baseLauncher.getModel().getAllTypes().size());
 		System.out.println("Files loaded in var 1: " + variantLauncher1.getModel().getAllTypes().size());
 		System.out.println("Files loaded in var 2: " + variantLauncher2.getModel().getAllTypes().size());
