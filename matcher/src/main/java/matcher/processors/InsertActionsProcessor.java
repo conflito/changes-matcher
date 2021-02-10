@@ -135,6 +135,9 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 				setResult(result);
 			}
 		}
+		else {
+			visit(fieldRead);
+		}
 	}
 
 	@Override
@@ -150,6 +153,9 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 				ActionInstance result = new InsertFieldAccessAction(fai, methodInstance);
 				setResult(result);
 			}
+		}
+		else {
+			visit(fieldWrite);
 		}
 	}
 	

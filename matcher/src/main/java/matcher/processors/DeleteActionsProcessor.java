@@ -104,6 +104,9 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 				setResult(result);
 			}
 		}
+		else {
+			visit(fieldRead);
+		}
 	}
 
 	@Override
@@ -119,6 +122,9 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 				ActionInstance result = new DeleteFieldAccessAction(fai, methodInstance);
 				setResult(result);
 			}
+		}
+		else {
+			visit(fieldWrite);
 		}
 	}
 
