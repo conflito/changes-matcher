@@ -35,4 +35,35 @@ public class DeleteMethodAction extends DeleteAction {
 		result.append(deletedMethod.getQualifiedName());
 		return result.toString();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((deletedMethod == null) ? 0 : deletedMethod.hashCode());
+		result = prime * result + ((holderClass == null) ? 0 : holderClass.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof DeleteMethodAction))
+			return false;
+		DeleteMethodAction other = (DeleteMethodAction) obj;
+		if (deletedMethod == null) {
+			if (other.deletedMethod != null)
+				return false;
+		} else if (!deletedMethod.equals(other.deletedMethod))
+			return false;
+		if (holderClass == null) {
+			if (other.holderClass != null)
+				return false;
+		} else if (!holderClass.equals(other.holderClass))
+			return false;
+		return true;
+	}
 }

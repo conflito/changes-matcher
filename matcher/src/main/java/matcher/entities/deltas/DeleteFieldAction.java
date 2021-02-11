@@ -34,5 +34,36 @@ public class DeleteFieldAction extends DeleteAction {
 		result.append(holderClass.getQualifiedName());
 		return result.toString();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((deletedField == null) ? 0 : deletedField.hashCode());
+		result = prime * result + ((holderClass == null) ? 0 : holderClass.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof DeleteFieldAction))
+			return false;
+		DeleteFieldAction other = (DeleteFieldAction) obj;
+		if (deletedField == null) {
+			if (other.deletedField != null)
+				return false;
+		} else if (!deletedField.equals(other.deletedField))
+			return false;
+		if (holderClass == null) {
+			if (other.holderClass != null)
+				return false;
+		} else if (!holderClass.equals(other.holderClass))
+			return false;
+		return true;
+	}
 	
 }

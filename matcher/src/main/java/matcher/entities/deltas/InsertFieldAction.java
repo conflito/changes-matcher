@@ -35,4 +35,35 @@ public class InsertFieldAction extends InsertAction {
 		return result.toString();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((holderClass == null) ? 0 : holderClass.hashCode());
+		result = prime * result + ((insertedField == null) ? 0 : insertedField.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof InsertFieldAction))
+			return false;
+		InsertFieldAction other = (InsertFieldAction) obj;
+		if (holderClass == null) {
+			if (other.holderClass != null)
+				return false;
+		} else if (!holderClass.equals(other.holderClass))
+			return false;
+		if (insertedField == null) {
+			if (other.insertedField != null)
+				return false;
+		} else if (!insertedField.equals(other.insertedField))
+			return false;
+		return true;
+	}
+
 }

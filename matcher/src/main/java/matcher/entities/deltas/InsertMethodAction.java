@@ -57,4 +57,35 @@ public class InsertMethodAction extends InsertAction {
 		return result.toString();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((holderClass == null) ? 0 : holderClass.hashCode());
+		result = prime * result + ((insertedMethod == null) ? 0 : insertedMethod.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof InsertMethodAction))
+			return false;
+		InsertMethodAction other = (InsertMethodAction) obj;
+		if (holderClass == null) {
+			if (other.holderClass != null)
+				return false;
+		} else if (!holderClass.equals(other.holderClass))
+			return false;
+		if (insertedMethod == null) {
+			if (other.insertedMethod != null)
+				return false;
+		} else if (!insertedMethod.equals(other.insertedMethod))
+			return false;
+		return true;
+	}
+
 }

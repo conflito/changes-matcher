@@ -59,4 +59,35 @@ public class VisibilityAction extends ActionInstance {
 		}
 		return result.toString();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((entity == null) ? 0 : entity.hashCode());
+		result = prime * result + ((newVisibility == null) ? 0 : newVisibility.hashCode());
+		result = prime * result + ((oldVisibility == null) ? 0 : oldVisibility.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof VisibilityAction))
+			return false;
+		VisibilityAction other = (VisibilityAction) obj;
+		if (entity == null) {
+			if (other.entity != null)
+				return false;
+		} else if (!entity.equals(other.entity))
+			return false;
+		if (newVisibility != other.newVisibility)
+			return false;
+		if (oldVisibility != other.oldVisibility)
+			return false;
+		return true;
+	}
 }

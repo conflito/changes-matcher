@@ -35,4 +35,35 @@ public class DeleteFieldAccessAction extends DeleteAction{
 		result.append(holderMethod.getQualifiedName());
 		return result.toString();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((deletedFieldAccess == null) ? 0 : deletedFieldAccess.hashCode());
+		result = prime * result + ((holderMethod == null) ? 0 : holderMethod.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof DeleteFieldAccessAction))
+			return false;
+		DeleteFieldAccessAction other = (DeleteFieldAccessAction) obj;
+		if (deletedFieldAccess == null) {
+			if (other.deletedFieldAccess != null)
+				return false;
+		} else if (!deletedFieldAccess.equals(other.deletedFieldAccess))
+			return false;
+		if (holderMethod == null) {
+			if (other.holderMethod != null)
+				return false;
+		} else if (!holderMethod.equals(other.holderMethod))
+			return false;
+		return true;
+	}
 }

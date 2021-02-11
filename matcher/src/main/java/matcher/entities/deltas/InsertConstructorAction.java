@@ -35,4 +35,35 @@ public class InsertConstructorAction extends InsertAction {
 		return result.toString();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((holderClass == null) ? 0 : holderClass.hashCode());
+		result = prime * result + ((insertedConstructor == null) ? 0 : insertedConstructor.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof InsertConstructorAction))
+			return false;
+		InsertConstructorAction other = (InsertConstructorAction) obj;
+		if (holderClass == null) {
+			if (other.holderClass != null)
+				return false;
+		} else if (!holderClass.equals(other.holderClass))
+			return false;
+		if (insertedConstructor == null) {
+			if (other.insertedConstructor != null)
+				return false;
+		} else if (!insertedConstructor.equals(other.insertedConstructor))
+			return false;
+		return true;
+	}
+
 }

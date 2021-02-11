@@ -91,5 +91,60 @@ public class UpdateDependencyAction extends UpdateAction {
 		result.append(newDependency.getQualifiedName());
 		return result.toString();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((newDependency == null) ? 0 : newDependency.hashCode());
+		result = prime * result + ((newHolderConstructor == null) ? 0 : newHolderConstructor.hashCode());
+		result = prime * result + ((newHolderMethod == null) ? 0 : newHolderMethod.hashCode());
+		result = prime * result + ((oldDependency == null) ? 0 : oldDependency.hashCode());
+		result = prime * result + ((previousHolderConstructor == null) ? 0 : previousHolderConstructor.hashCode());
+		result = prime * result + ((previousHolderMethod == null) ? 0 : previousHolderMethod.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof UpdateDependencyAction))
+			return false;
+		UpdateDependencyAction other = (UpdateDependencyAction) obj;
+		if (newDependency == null) {
+			if (other.newDependency != null)
+				return false;
+		} else if (!newDependency.equals(other.newDependency))
+			return false;
+		if (newHolderConstructor == null) {
+			if (other.newHolderConstructor != null)
+				return false;
+		} else if (!newHolderConstructor.equals(other.newHolderConstructor))
+			return false;
+		if (newHolderMethod == null) {
+			if (other.newHolderMethod != null)
+				return false;
+		} else if (!newHolderMethod.equals(other.newHolderMethod))
+			return false;
+		if (oldDependency == null) {
+			if (other.oldDependency != null)
+				return false;
+		} else if (!oldDependency.equals(other.oldDependency))
+			return false;
+		if (previousHolderConstructor == null) {
+			if (other.previousHolderConstructor != null)
+				return false;
+		} else if (!previousHolderConstructor.equals(other.previousHolderConstructor))
+			return false;
+		if (previousHolderMethod == null) {
+			if (other.previousHolderMethod != null)
+				return false;
+		} else if (!previousHolderMethod.equals(other.previousHolderMethod))
+			return false;
+		return true;
+	}
 	
 }

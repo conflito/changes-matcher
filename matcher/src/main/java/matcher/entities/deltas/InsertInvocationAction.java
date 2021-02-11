@@ -60,4 +60,41 @@ public class InsertInvocationAction extends InsertAction {
 		return result.toString();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((holderConstructor == null) ? 0 : holderConstructor.hashCode());
+		result = prime * result + ((holderMethod == null) ? 0 : holderMethod.hashCode());
+		result = prime * result + ((insertedInvocation == null) ? 0 : insertedInvocation.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof InsertInvocationAction))
+			return false;
+		InsertInvocationAction other = (InsertInvocationAction) obj;
+		if (holderConstructor == null) {
+			if (other.holderConstructor != null)
+				return false;
+		} else if (!holderConstructor.equals(other.holderConstructor))
+			return false;
+		if (holderMethod == null) {
+			if (other.holderMethod != null)
+				return false;
+		} else if (!holderMethod.equals(other.holderMethod))
+			return false;
+		if (insertedInvocation == null) {
+			if (other.insertedInvocation != null)
+				return false;
+		} else if (!insertedInvocation.equals(other.insertedInvocation))
+			return false;
+		return true;
+	}
+
 }

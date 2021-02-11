@@ -62,4 +62,41 @@ public class DeleteInvocationAction extends DeleteAction{
 		return result.toString();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((deletedInvocation == null) ? 0 : deletedInvocation.hashCode());
+		result = prime * result + ((holderConstructor == null) ? 0 : holderConstructor.hashCode());
+		result = prime * result + ((holderMethod == null) ? 0 : holderMethod.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof DeleteInvocationAction))
+			return false;
+		DeleteInvocationAction other = (DeleteInvocationAction) obj;
+		if (deletedInvocation == null) {
+			if (other.deletedInvocation != null)
+				return false;
+		} else if (!deletedInvocation.equals(other.deletedInvocation))
+			return false;
+		if (holderConstructor == null) {
+			if (other.holderConstructor != null)
+				return false;
+		} else if (!holderConstructor.equals(other.holderConstructor))
+			return false;
+		if (holderMethod == null) {
+			if (other.holderMethod != null)
+				return false;
+		} else if (!holderMethod.equals(other.holderMethod))
+			return false;
+		return true;
+	}
+
 }

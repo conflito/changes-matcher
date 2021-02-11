@@ -34,4 +34,37 @@ public class DeleteConstructorAction extends DeleteAction {
 		result.append(holderClass.getQualifiedName());
 		return result.toString();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((deletedConstructor == null) ? 0 : deletedConstructor.hashCode());
+		result = prime * result + ((holderClass == null) ? 0 : holderClass.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof DeleteConstructorAction))
+			return false;
+		DeleteConstructorAction other = (DeleteConstructorAction) obj;
+		if (deletedConstructor == null) {
+			if (other.deletedConstructor != null)
+				return false;
+		} else if (!deletedConstructor.equals(other.deletedConstructor))
+			return false;
+		if (holderClass == null) {
+			if (other.holderClass != null)
+				return false;
+		} else if (!holderClass.equals(other.holderClass))
+			return false;
+		return true;
+	}
+	
+	
 }

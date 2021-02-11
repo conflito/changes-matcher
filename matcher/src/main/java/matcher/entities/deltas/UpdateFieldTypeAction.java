@@ -42,5 +42,36 @@ public class UpdateFieldTypeAction extends UpdateAction {
 		return result.toString();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((newType == null) ? 0 : newType.hashCode());
+		result = prime * result + ((updatedField == null) ? 0 : updatedField.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof UpdateFieldTypeAction))
+			return false;
+		UpdateFieldTypeAction other = (UpdateFieldTypeAction) obj;
+		if (newType == null) {
+			if (other.newType != null)
+				return false;
+		} else if (!newType.equals(other.newType))
+			return false;
+		if (updatedField == null) {
+			if (other.updatedField != null)
+				return false;
+		} else if (!updatedField.equals(other.updatedField))
+			return false;
+		return true;
+	}
+
 	
 }
