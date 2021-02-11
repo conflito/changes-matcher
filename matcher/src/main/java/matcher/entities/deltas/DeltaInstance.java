@@ -1,16 +1,18 @@
 package matcher.entities.deltas;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class DeltaInstance {
 
-	private List<ActionInstance> actions;
+	private Set<ActionInstance> actions;
 
 	public DeltaInstance() {
 		super();
-		actions = new ArrayList<>();
+		actions = new HashSet<>();
 	}
 	
 	public void addActionInstance(ActionInstance action) {
@@ -18,7 +20,7 @@ public class DeltaInstance {
 	}
 	
 	public List<ActionInstance> getActionInstances(){
-		return actions;
+		return new ArrayList<>(actions);
 	}
 	
 	public String toString() {
