@@ -6,13 +6,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import matcher.entities.deltas.Deletable;
-import matcher.entities.deltas.Holder;
-import matcher.entities.deltas.Insertable;
-import matcher.entities.deltas.Updatable;
 import matcher.entities.deltas.Visible;
 
-public class MethodInstance implements Insertable, Deletable, Visible, Holder, Updatable{
+public class MethodInstance implements Visible {
 
 	private String name;
 	

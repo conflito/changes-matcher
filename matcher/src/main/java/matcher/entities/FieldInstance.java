@@ -1,11 +1,8 @@
 package matcher.entities;
 
-import matcher.entities.deltas.Deletable;
-import matcher.entities.deltas.Insertable;
-import matcher.entities.deltas.Updatable;
 import matcher.entities.deltas.Visible;
 
-public class FieldInstance implements Insertable, Deletable, Visible, Updatable{
+public class FieldInstance implements Visible {
 
 	private String name;
 	

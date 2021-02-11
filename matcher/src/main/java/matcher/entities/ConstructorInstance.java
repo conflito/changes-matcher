@@ -4,13 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import matcher.entities.deltas.Deletable;
-import matcher.entities.deltas.Holder;
-import matcher.entities.deltas.Insertable;
-import matcher.entities.deltas.Updatable;
 import matcher.entities.deltas.Visible;
 
-public class ConstructorInstance implements Insertable, Deletable, Visible, Holder, Updatable{
+public class ConstructorInstance implements Visible {
 
 	private Visibility visibility;
 

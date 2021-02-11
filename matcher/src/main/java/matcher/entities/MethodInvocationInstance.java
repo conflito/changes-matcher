@@ -1,10 +1,6 @@
 package matcher.entities;
 
-import matcher.entities.deltas.Deletable;
-import matcher.entities.deltas.Insertable;
-import matcher.entities.deltas.Updatable;
-
-public class MethodInvocationInstance implements Insertable, Deletable, Updatable{
+public class MethodInvocationInstance {
 
 	private String qualifiedName;
 
