@@ -15,16 +15,18 @@ public class ExecuteMatcher {
 			String var2FilePath = args[2];
 			String configFilePath = args[3];
 			
-			Matcher matcher = new Matcher(configFilePath);
-			
 			String[] bases = {baseFilePath};
 			String[] variants1 = {var1FilePath};
 			String[] variants2 = {var2FilePath};
 			
+			long start = System.currentTimeMillis();
+			Matcher matcher = new Matcher(configFilePath);
+			
 			List<List<Pair<Integer, String>>> result = 
 					matcher.matchingAssignments(bases, variants1, variants2);
-			
+			long end = System.currentTimeMillis();
 			System.out.println(result);
+			System.out.println("TIME: " + (end-start));
 		}
 	}
 }
