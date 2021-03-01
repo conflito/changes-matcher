@@ -11,6 +11,11 @@ public class MethodInvocationPattern {
 		this.freeVariable = freeVariable;
 	}
 	
+	public MethodInvocationPattern(MethodInvocationPattern methodInvocationPattern) {
+		super();
+		this.freeVariable = new FreeVariable(methodInvocationPattern.freeVariable);
+	}
+	
 	public FreeVariable getFreeVariable() {
 		return freeVariable;
 	}

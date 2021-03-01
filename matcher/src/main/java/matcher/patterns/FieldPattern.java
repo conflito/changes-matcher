@@ -18,6 +18,14 @@ public class FieldPattern {
 		this.typePattern = null;
 	}
 	
+	public FieldPattern(FieldPattern fieldPattern) {
+		super();
+		this.freeVariable = new FreeVariable(fieldPattern.freeVariable);
+		this.visibility = fieldPattern.visibility;
+		if(fieldPattern.hasType())
+			this.typePattern = new TypePattern(fieldPattern.typePattern);
+	}
+	
 	public FreeVariable getFreeVariable() {
 		return freeVariable;
 	}

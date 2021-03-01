@@ -22,6 +22,14 @@ public class UpdateFieldTypePatternAction extends UpdatePatternAction {
 		this.newType = newType;
 	}
 	
+	public ActionPattern makeCopy() {
+		FieldPattern fieldCopy = new FieldPattern(updatedFieldPattern);
+		if(hasNewType())
+			return new UpdateFieldTypePatternAction(fieldCopy, new TypePattern(newType));
+		else
+			return new UpdateFieldTypePatternAction(fieldCopy);
+	}
+	
 	public int getUpdatedFieldVariableId() {
 		return updatedFieldPattern.getVariableId();
 	}

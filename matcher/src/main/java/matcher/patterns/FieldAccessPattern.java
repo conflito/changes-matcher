@@ -14,6 +14,12 @@ public class FieldAccessPattern {
 		this.freeVariable = freeVariable;
 		this.accessType = accessType;
 	}
+	
+	public FieldAccessPattern(FieldAccessPattern fieldAccessPattern) {
+		super();
+		this.freeVariable = new FreeVariable(fieldAccessPattern.freeVariable);
+		this.accessType = fieldAccessPattern.accessType;
+	}
 
 	public FreeVariable getFreeVariable() {
 		return freeVariable;

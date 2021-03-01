@@ -22,6 +22,11 @@ public class VisibilityActionPattern extends ActionPattern{
 		this.entity = entity;
 	}
 	
+	public ActionPattern makeCopy() {
+		return new VisibilityActionPattern(getAction(), newVisibility, 
+				oldVisibility, new FreeVariable(entity));
+	}
+	
 	public int getEntityId() {
 		return entity.getId();
 	}

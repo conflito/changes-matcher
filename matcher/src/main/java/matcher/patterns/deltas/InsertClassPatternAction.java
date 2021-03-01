@@ -15,6 +15,10 @@ public class InsertClassPatternAction extends InsertPatternAction {
 		this.insertedClassPattern = insertedClassPattern;
 	}
 	
+	public ActionPattern makeCopy() {
+		return new InsertClassPatternAction(new ClassPattern(insertedClassPattern));
+	}
+	
 	public int getInsertedClassVariableId() {
 		return insertedClassPattern.getVariableId();
 	}

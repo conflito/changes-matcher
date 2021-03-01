@@ -13,7 +13,6 @@ public class ConstructorPattern {
 	
 	private Visibility visibility;
 	
-	
 	private List<FreeVariable> dependencies;
 
 	public ConstructorPattern(FreeVariable freeVariable, Visibility visibility) {
@@ -21,6 +20,16 @@ public class ConstructorPattern {
 		this.freeVariable = freeVariable;
 		this.visibility = visibility;
 		dependencies = new ArrayList<>();
+	}
+	
+	public ConstructorPattern(ConstructorPattern constructorPattern) {
+		super();
+		this.freeVariable = new FreeVariable(constructorPattern.freeVariable);
+		this.visibility = constructorPattern.visibility;
+		this.dependencies = new ArrayList<>();
+		for(FreeVariable dependency: constructorPattern.dependencies) {
+			this.dependencies.add(new FreeVariable(dependency));
+		}
 	}
 	
 	public void addDependency(FreeVariable v) {

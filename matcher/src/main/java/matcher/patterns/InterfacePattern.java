@@ -12,6 +12,11 @@ public class InterfacePattern {
 		super();
 		this.freeVariable = freeVariable;
 	}
+	
+	public InterfacePattern(InterfacePattern interfacePattern) {
+		super();
+		this.freeVariable = new FreeVariable(interfacePattern.freeVariable);
+	}
 
 	public FreeVariable getFreeVariable() {
 		return freeVariable;

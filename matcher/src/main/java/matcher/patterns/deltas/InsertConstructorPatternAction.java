@@ -18,6 +18,12 @@ public class InsertConstructorPatternAction extends InsertPatternAction {
 		this.holderClassPattern = holderClassPattern;
 	}
 	
+	public ActionPattern makeCopy() {
+		ConstructorPattern constructorCopy = new ConstructorPattern(insertedConstructorPattern);
+		ClassPattern classCopy = new ClassPattern(holderClassPattern);
+		return new InsertConstructorPatternAction(constructorCopy, classCopy);
+	}
+	
 	public int getInsertedConstructorVariableId() {
 		return insertedConstructorPattern.getVariableId();
 	}

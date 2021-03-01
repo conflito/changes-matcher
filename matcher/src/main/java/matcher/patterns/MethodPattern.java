@@ -26,6 +26,20 @@ public class MethodPattern {
 		dependencies = new ArrayList<>();
 	}
 	
+	public MethodPattern(MethodPattern methodPattern) {
+		super();
+		this.freeVariable = new FreeVariable(methodPattern.freeVariable);
+		this.visibility = methodPattern.visibility;
+		this.fieldAccesses = new ArrayList<>();
+		this.dependencies = new ArrayList<>();
+		for(FieldAccessPattern fieldAccessPattern: methodPattern.fieldAccesses) {
+			this.fieldAccesses.add(new FieldAccessPattern(fieldAccessPattern));
+		}
+		for(FreeVariable dependency: methodPattern.dependencies) {
+			this.dependencies.add(new FreeVariable(dependency));
+		}
+	}
+	
 	public void addDependency(FreeVariable v) {
 		dependencies.add(v);
 	}

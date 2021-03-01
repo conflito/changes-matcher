@@ -33,4 +33,6 @@ public abstract class ActionPattern {
 	}
 
 	public abstract String toStringFilled();
+	
+	public abstract ActionPattern makeCopy();
 }

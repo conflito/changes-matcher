@@ -31,6 +31,19 @@ public class UpdateDependencyPatternAction extends UpdatePatternAction {
 		this.oldDependency = oldDependency;
 		this.newDependency = newDependency;
 	}
+	
+	public ActionPattern makeCopy() {
+		FreeVariable oldCopy = new FreeVariable(oldDependency);
+		FreeVariable newCopy = new FreeVariable(newDependency);
+		if(updatedInMethod()) {
+			MethodPattern methodCopy = new MethodPattern(holderMethodPattern);
+			return new UpdateDependencyPatternAction(methodCopy, oldCopy, newCopy);
+		}
+		else {
+			ConstructorPattern constructorCopy = new ConstructorPattern(holderConstructorPattern);
+			return new UpdateDependencyPatternAction(constructorCopy, oldCopy, newCopy);
+		}
+	}
 
 	public int getNewInvocationVariableId() {
 		return newDependency.getId();

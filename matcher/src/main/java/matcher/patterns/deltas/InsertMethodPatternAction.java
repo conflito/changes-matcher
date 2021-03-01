@@ -24,6 +24,16 @@ public class InsertMethodPatternAction extends InsertPatternAction {
 		this.compatibles = new ArrayList<>();
 	}
 
+	public ActionPattern makeCopy() {
+		MethodPattern methodCopy = new MethodPattern(insertedMethodPattern);
+		ClassPattern classCopy = new ClassPattern(holderClassPattern);
+		InsertMethodPatternAction result = new InsertMethodPatternAction(methodCopy, classCopy);
+		for(MethodPattern m: compatibles) {
+			result.addCompatible(new MethodPattern(m));
+		}
+		return result;
+	}
+
 	public void addCompatible(MethodPattern methodPattern) {
 		compatibles.add(methodPattern);
 	}

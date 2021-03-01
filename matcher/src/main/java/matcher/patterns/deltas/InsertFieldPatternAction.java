@@ -18,6 +18,12 @@ public class InsertFieldPatternAction extends InsertPatternAction {
 		this.holderClassPattern = holderClassPattern;
 	}
 	
+	public ActionPattern makeCopy() {
+		FieldPattern fieldCopy = new FieldPattern(insertedFieldPattern);
+		ClassPattern classCopy = new ClassPattern(holderClassPattern);
+		return new InsertFieldPatternAction(fieldCopy, classCopy);
+	}
+	
 	public int getInsertedFieldVariableId() {
 		return insertedFieldPattern.getVariableId();
 	}

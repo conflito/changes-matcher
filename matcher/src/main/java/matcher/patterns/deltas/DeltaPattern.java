@@ -15,6 +15,14 @@ public class DeltaPattern {
 		actions = new ArrayList<>();
 	}
 	
+	public DeltaPattern(DeltaPattern deltaPattern) {
+		super();
+		this.actions = new ArrayList<>();
+		for(ActionPattern a: deltaPattern.actions) {
+			this.actions.add(a.makeCopy());
+		}
+	}
+	
 	public void addActionPattern(ActionPattern a) {
 		actions.add(a);
 	}

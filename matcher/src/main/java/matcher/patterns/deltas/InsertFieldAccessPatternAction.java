@@ -18,6 +18,12 @@ public class InsertFieldAccessPatternAction extends InsertPatternAction {
 		this.holderMethodPattern = holderMethodPattern;
 	}
 	
+	public ActionPattern makeCopy() {
+		FieldAccessPattern fieldAccessCopy = new FieldAccessPattern(insertedFieldAccessPattern);
+		MethodPattern methodCopy = new MethodPattern(holderMethodPattern);
+		return new InsertFieldAccessPatternAction(fieldAccessCopy, methodCopy);
+	}
+	
 	public int getInsertedFieldAccessVariableId() {
 		return insertedFieldAccessPattern.getVariableId();
 	}

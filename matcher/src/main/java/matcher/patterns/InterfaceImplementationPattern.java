@@ -10,6 +10,12 @@ public class InterfaceImplementationPattern {
 		super();
 		this.freeVariable = freeVariable;
 	}
+	
+	public InterfaceImplementationPattern(InterfaceImplementationPattern 
+			interfaceImplementationPattern) {
+		super();
+		this.freeVariable = new FreeVariable(interfaceImplementationPattern.freeVariable);
+	}
 
 	public FreeVariable getFreeVariable() {
 		return freeVariable;

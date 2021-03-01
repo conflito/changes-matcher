@@ -17,6 +17,12 @@ public class DeleteMethodPatternAction extends DeletePatternAction {
 		this.holderClassPattern = holderClassPattern;
 	}
 	
+	public ActionPattern makeCopy() {
+		MethodPattern copyMethod = new MethodPattern(deletedMethodPattern);
+		ClassPattern copyClass = new ClassPattern(holderClassPattern);
+		return new DeleteMethodPatternAction(copyMethod, copyClass);
+	}
+	
 	public int getDeletedMethodVariableId() {
 		return deletedMethodPattern.getVariableId();
 	}

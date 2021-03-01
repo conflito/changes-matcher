@@ -28,6 +28,18 @@ public class InsertInvocationPatternAction extends InsertPatternAction {
 		this.holderMethodPattern = holderMethodPattern;
 	}
 	
+	public ActionPattern makeCopy() {
+		MethodInvocationPattern invocationCopy = new MethodInvocationPattern(insertedInvocationPattern);
+		if(insertedInMethod()) {
+			MethodPattern methodCopy = new MethodPattern(holderMethodPattern);
+			return new InsertInvocationPatternAction(invocationCopy, methodCopy);
+		}
+		else {
+			ConstructorPattern constructorCopy = new ConstructorPattern(holderConstructorPattern);
+			return new InsertInvocationPatternAction(invocationCopy, constructorCopy);
+		}
+	}
+	
 	public int getInsertedInvocationVariableId() {
 		return insertedInvocationPattern.getVariableId();
 	}

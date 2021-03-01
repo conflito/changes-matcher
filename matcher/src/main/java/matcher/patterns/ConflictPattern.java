@@ -18,7 +18,6 @@ public class ConflictPattern {
 	
 	private BasePattern basePattern;
 	
-	
 	private DeltaPattern firstDelta;
 	private DeltaPattern secondDelta;
 	
@@ -29,6 +28,32 @@ public class ConflictPattern {
 	public ConflictPattern() {
 		this.differentVariables = new ArrayList<>();
 		this.equalVariables = new HashMap<>();
+	}
+	
+	public ConflictPattern(ConflictPattern cp) {
+		super();
+		this.basePattern = new BasePattern(cp.basePattern);
+		this.firstDelta = new DeltaPattern(cp.firstDelta);
+		this.secondDelta = new DeltaPattern(cp.secondDelta);
+		
+		this.differentVariables = new ArrayList<>();
+		this.equalVariables = new HashMap<>();
+		
+		for(Pair<FreeVariable, FreeVariable> p: cp.differentVariables) {
+			FreeVariable firstCopy = new FreeVariable(p.getFirst());
+			FreeVariable secondCopy = new FreeVariable(p.getSecond());
+			Pair<FreeVariable, FreeVariable> copy = new Pair<>(firstCopy, secondCopy);
+			this.differentVariables.add(copy);
+		}
+		
+		for(Entry<FreeVariable, Set<FreeVariable>> e: cp.equalVariables.entrySet()) {
+			FreeVariable keyCopy = new FreeVariable(e.getKey());
+			Set<FreeVariable> valuesCopy = new HashSet<>();
+			for(FreeVariable v: e.getValue()) {
+				valuesCopy.add(new FreeVariable(v));
+			}
+			this.equalVariables.put(keyCopy, valuesCopy);
+		}
 	}
 	
 	public void setBasePattern(BasePattern basePattern) {

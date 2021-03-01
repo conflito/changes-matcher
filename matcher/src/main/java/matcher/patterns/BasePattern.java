@@ -17,6 +17,20 @@ public class BasePattern {
 		interfacePatterns = new ArrayList<>();
 	}
 	
+	public BasePattern(BasePattern basePattern) {
+		super();
+		this.classPatterns = new ArrayList<>();
+		this.interfacePatterns = new ArrayList<>();
+		
+		for(ClassPattern classPattern: basePattern.classPatterns) {
+			this.classPatterns.add(new ClassPattern(classPattern));
+		}
+		
+		for(InterfacePattern interfacePattern: basePattern.interfacePatterns) {
+			this.interfacePatterns.add(new InterfacePattern(interfacePattern));
+		}
+	}
+	
 	public void addClassPattern(ClassPattern pattern) {
 		classPatterns.add(pattern);
 	}

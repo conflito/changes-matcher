@@ -18,6 +18,12 @@ public class DeleteConstructorPatternAction extends DeletePatternAction {
 		this.holderClassPattern = holderClassPattern;
 	}
 	
+	public ActionPattern makeCopy() {
+		ConstructorPattern constructorCopy = new ConstructorPattern(deletedConstructorPattern);
+		ClassPattern classCopy = new ClassPattern(holderClassPattern);
+		return new DeleteConstructorPatternAction(constructorCopy, classCopy);
+	}
+	
 	public int getDeletedConstructorVariableId() {
 		return deletedConstructorPattern.getVariableId();
 	}

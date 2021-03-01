@@ -16,6 +16,12 @@ public class DeleteFieldPatternAction extends DeletePatternAction {
 		this.deletedFieldPattern = deletedFieldPattern;
 		this.holderClassPattern = holderClassPattern;
 	}
+	
+	public ActionPattern makeCopy() {
+		FieldPattern fieldCopy = new FieldPattern(deletedFieldPattern);
+		ClassPattern classCopy = new ClassPattern(holderClassPattern);
+		return new DeleteFieldPatternAction(fieldCopy, classCopy);
+	}
 
 	public int getDeletedFieldVariableId() {
 		return deletedFieldPattern.getVariableId();

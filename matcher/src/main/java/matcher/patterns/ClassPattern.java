@@ -44,6 +44,51 @@ public class ClassPattern {
 		excludedMethods = new ArrayList<>();
 	}
 	
+	public ClassPattern(ClassPattern classPattern) {
+		super();
+		this.freeVariable = new FreeVariable(classPattern.freeVariable);
+		
+		if(classPattern.hasSuperClass())
+			this.superClass = new ClassPattern(classPattern.superClass);
+		
+		this.compatible = new HashMap<>();
+		for(Entry<FreeVariable, List<FreeVariable>> e: classPattern.compatible.entrySet()) {
+			FreeVariable key = new FreeVariable(e.getKey());
+			List<FreeVariable> values = new ArrayList<>();
+			for(FreeVariable value: e.getValue()) {
+				values.add(new FreeVariable(value));
+			}
+			this.compatible.put(key, values);
+		}
+		
+		this.fields = new ArrayList<>();
+		for(FieldPattern fieldPattern: classPattern.fields) {
+			this.fields.add(new FieldPattern(fieldPattern));
+		}
+		
+		this.methods = new ArrayList<>();
+		for(MethodPattern methodPattern: classPattern.methods) {
+			this.methods.add(new MethodPattern(methodPattern));
+		}
+		
+		this.constructors = new ArrayList<>();
+		for(ConstructorPattern constructorPattern: classPattern.constructors) {
+			this.constructors.add(new ConstructorPattern(constructorPattern));
+		}
+		
+		this.interfaces = new ArrayList<>();
+		for(InterfaceImplementationPattern 
+				interfaceImplementationPattern: classPattern.interfaces) {
+			this.interfaces.add(
+					new InterfaceImplementationPattern(interfaceImplementationPattern));
+		}
+		
+		this.excludedMethods = new ArrayList<>();
+		for(FreeVariable freeVariable: classPattern.excludedMethods) {
+			this.excludedMethods.add(new FreeVariable(freeVariable));
+		}
+	}
+	
 	public void setSuperClass(ClassPattern superClass) {
 		this.superClass = superClass;
 	}

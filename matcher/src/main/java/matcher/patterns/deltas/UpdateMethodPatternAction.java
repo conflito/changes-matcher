@@ -13,6 +13,10 @@ public class UpdateMethodPatternAction extends UpdatePatternAction {
 		this.updatedMethodPattern = updatedMethodPattern;
 	}
 	
+	public ActionPattern makeCopy() {
+		return new UpdateMethodPatternAction(new MethodPattern(updatedMethodPattern));
+	}
+	
 	public int getUpdatedMethodVariableId() {
 		return updatedMethodPattern.getVariableId();
 	}

@@ -27,16 +27,28 @@ public class DeleteInvocationPatternAction extends DeletePatternAction {
 		this.deletedInvocationPattern = deletedInvocationPattern;
 		this.holderMethodPattern = holderMethodPattern;
 	}
+	
+	public ActionPattern makeCopy() {
+		MethodInvocationPattern invocationCopy = new MethodInvocationPattern(deletedInvocationPattern);
+		if(deletedFromMethod()) {
+			MethodPattern methodCopy = new MethodPattern(holderMethodPattern);
+			return new DeleteInvocationPatternAction(invocationCopy, methodCopy);
+		}
+		else {
+			ConstructorPattern constructorCopy = new ConstructorPattern(holderConstructorPattern);
+			return new DeleteInvocationPatternAction(invocationCopy, constructorCopy);
+		}
+	}
 
 	public int getDeletedInvocationVariableId() {
 		return deletedInvocationPattern.getVariableId();
 	}
 	
-	public boolean insertedInMethod() {
+	public boolean deletedFromMethod() {
 		return holderMethodPattern != null;
 	}
 
-	public boolean insertedInConstructor() {
+	public boolean deletedFromConstructor() {
 		return holderConstructorPattern != null;
 	}
 
@@ -54,9 +66,9 @@ public class DeleteInvocationPatternAction extends DeletePatternAction {
 	}
 
 	private boolean matchesHolder(DeleteInvocationAction action) {
-		if(insertedInMethod() && action.insertedInMethod())
+		if(deletedFromMethod() && action.insertedInMethod())
 			return holderMethodPattern.matches(action.getHolderMethod());
-		else if(insertedInConstructor() && action.insertedInConstructor())
+		else if(deletedFromConstructor() && action.insertedInConstructor())
 			return holderConstructorPattern.matches(action.getHolderConstructor());
 		return false;
 	}
@@ -64,7 +76,7 @@ public class DeleteInvocationPatternAction extends DeletePatternAction {
 	@Override
 	public void setVariableValue(int id, String value) {
 		deletedInvocationPattern.setVariableValue(id, value);
-		if(insertedInMethod())
+		if(deletedFromMethod())
 			holderMethodPattern.setVariableValue(id, value);
 		else
 			holderConstructorPattern.setVariableValue(id, value);
@@ -76,7 +88,7 @@ public class DeleteInvocationPatternAction extends DeletePatternAction {
 	}
 	
 	private boolean holderFilled() {
-		if(insertedInMethod())
+		if(deletedFromMethod())
 			return holderMethodPattern.filled();
 		else
 			return holderConstructorPattern.filled();
@@ -85,7 +97,7 @@ public class DeleteInvocationPatternAction extends DeletePatternAction {
 	@Override
 	public void clean() {
 		deletedInvocationPattern.clean();
-		if(insertedInMethod())
+		if(deletedFromMethod())
 			holderMethodPattern.clean();
 		else
 			holderConstructorPattern.clean();

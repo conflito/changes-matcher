@@ -10,6 +10,11 @@ public class TypePattern {
 		super();
 		this.typeVar = typeVar;
 	}
+	
+	public TypePattern(TypePattern typePattern) {
+		super();
+		this.typeVar = new FreeVariable(typePattern.typeVar);
+	}
 
 	public int getVariableId() {
 		return typeVar.getId();

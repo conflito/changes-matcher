@@ -10,6 +10,12 @@ public class FreeVariable {
 		super();
 		this.id = id;
 	}
+	
+	public FreeVariable(FreeVariable freeVariable) {
+		super();
+		this.id = freeVariable.id;
+		this.value = freeVariable.value;
+	}
 
 	public String getValue() {
 		return value;

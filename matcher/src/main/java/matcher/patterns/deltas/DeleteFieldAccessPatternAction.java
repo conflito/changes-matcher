@@ -18,6 +18,12 @@ public class DeleteFieldAccessPatternAction extends DeletePatternAction {
 		this.holderMethodPattern = holderMethodPattern;
 	}
 	
+	public ActionPattern makeCopy() {
+		FieldAccessPattern fieldAccessCopy = new FieldAccessPattern(deletedFieldAccessPattern);
+		MethodPattern methodCopy = new MethodPattern(holderMethodPattern);
+		return new DeleteFieldAccessPatternAction(fieldAccessCopy, methodCopy);
+	}
+	
 	public int getDeletedFieldAccessVariableId() {
 		return deletedFieldAccessPattern.getVariableId();
 	}
