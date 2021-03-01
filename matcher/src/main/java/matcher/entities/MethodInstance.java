@@ -89,6 +89,17 @@ public class MethodInstance implements Visible {
 		return getSimpleSignature();
 	}
 	
+	public String getDescriptor() {
+		StringBuilder result = new StringBuilder("(");
+		
+		parameters.stream()
+			.map(Type::getDescriptor)
+			.forEach(s -> result.append(s));
+		
+		result.append(")" + returnType.getDescriptor());
+		return result.toString();
+	}
+	
 	private String getSimpleSignature() {
 		return getName() + parametersToString();
 	}
@@ -97,7 +108,7 @@ public class MethodInstance implements Visible {
 		StringBuilder result = new StringBuilder(getParameters().toString());
 		result.replace(0, 1, "(");
 		result.replace(result.length()-1, result.length(), ")");
-		return result.toString();//getParameters().toString().replace("[", "(").replace("]", ")");
+		return result.toString();
 	}
 	
 	public Visibility getVisibility() {

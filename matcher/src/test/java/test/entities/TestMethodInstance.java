@@ -112,4 +112,73 @@ public class TestMethodInstance {
 		assertFalse(m.dependsOn(m2.getQualifiedName()));
 	}
 	
+	@Test
+	public void simpleMethodDescriptorTest() {
+		Type intType = new Type(factory.get(int.class).getReference());
+		MethodInstance m = new MethodInstance("m", Visibility.PUBLIC, intType);
+		String expected = "()I";
+		String result = m.getDescriptor();
+		assertEquals(expected, result, "Descriptor is not ()I?");
+	}
+	
+	@Test
+	public void simpleVoidMethodDescriptorTest() {
+		Type voidType = new Type(factory.VOID_PRIMITIVE);
+		MethodInstance m = new MethodInstance("m", Visibility.PUBLIC, voidType);
+		String expected = "()V";
+		String result = m.getDescriptor();
+		assertEquals(expected, result, "Descriptor is not ()V?");
+	}
+	
+	@Test
+	public void methodWithIntParametersDescriptorTest() {
+		Type intType = new Type(factory.get(int.class).getReference());
+		MethodInstance m = new MethodInstance("m", Visibility.PUBLIC, intType);
+		m.addParameter(intType);
+		m.addParameter(intType);
+		String expected = "(II)I";
+		String result = m.getDescriptor();
+		assertEquals(expected, result, "Descriptor is not (II)I?");
+	}
+	
+	@Test
+	public void methodWithNumberParametersAndReturnDescriptorTest() {
+		Type intType = new Type(factory.get(int.class).getReference());
+		Type numberType = new Type(factory.get(Number.class).getReference());
+		MethodInstance m = new MethodInstance("m", Visibility.PUBLIC, numberType);
+		m.addParameter(intType);
+		m.addParameter(numberType);
+		String expected = "(ILjava/lang/Number)Ljava/lang/Number";
+		String result = m.getDescriptor();
+		assertEquals(expected, result, "Descriptor is not (ILjava/lang/Number)Ljava/lang/Number?");
+	}
+	
+	@Test
+	public void methodWithArrayParametersDescriptorTest() {
+		Type doubleArrayType = new Type(
+				factory.createArrayReference(factory.get(double.class).getReference()));
+		Type intType = new Type(factory.get(int.class).getReference());
+		MethodInstance m = new MethodInstance("m", Visibility.PUBLIC, intType);
+		m.addParameter(doubleArrayType);
+		m.addParameter(intType);
+		String expected = "([DI)I";
+		String result = m.getDescriptor();
+		assertEquals(expected, result, "Descriptor is not ([DI)I?");
+	}
+	
+	@Test
+	public void methodWithArrayParametersAndReturnDescriptorTest() {
+		Type doubleArrayType = new Type(
+				factory.createArrayReference(factory.get(double.class).getReference()));
+		Type numberArrayType = new Type(
+				factory.createArrayReference(factory.get(Number.class).getReference(), 2));
+		MethodInstance m = new MethodInstance("m", Visibility.PUBLIC, numberArrayType);
+		m.addParameter(numberArrayType);
+		m.addParameter(doubleArrayType);
+		String expected = "([[Ljava/lang/Number[D)[[Ljava/lang/Number";
+		String result = m.getDescriptor();
+		assertEquals(expected, result, "Descriptor is not "
+				+ "([[Ljava/lang/Number[D)[[Ljava/lang/Number?");
+	}
+	
 }
