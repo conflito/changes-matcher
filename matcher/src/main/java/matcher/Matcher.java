@@ -73,6 +73,10 @@ public class Matcher {
 
 		return result;//mh.matchingAssignments(ci, cp);
 	}
+	
+	public List<String> getTestBDDs(){
+		return mh.getTestBDDs();
+	}
 
 	private boolean sameLenght(String[] bases, String[] variants1, String[] variants2) {
 		return bases.length == variants1.length && bases.length == variants2.length;
