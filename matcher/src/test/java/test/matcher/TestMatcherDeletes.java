@@ -241,7 +241,7 @@ public class TestMatcherDeletes {
 		dp1.addActionPattern(new DeleteFieldPatternAction(fieldPattern, classPattern));
 		dp2.addActionPattern(new DeleteMethodPatternAction(methodPattern, classPattern));
 		
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Delete Pattern");
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -268,7 +268,7 @@ public class TestMatcherDeletes {
 		dp1.addActionPattern(new DeleteFieldPatternAction(fieldPattern, classPattern));
 		dp2.addActionPattern(new DeleteConstructorPatternAction(cPattern, classPattern));
 
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Delete Pattern 2");
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -299,7 +299,7 @@ public class TestMatcherDeletes {
 		dp1.addActionPattern(new DeleteFieldPatternAction(fieldPattern, classPattern));
 		dp2.addActionPattern(new DeleteMethodPatternAction(subMethodPattern, classPattern));
 		
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Delete Pattern 3");
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -329,7 +329,7 @@ public class TestMatcherDeletes {
 		dp1.addActionPattern(new DeleteFieldPatternAction(fieldPattern, classPattern));
 		dp2.addActionPattern(new DeleteInvocationPatternAction(deletedInvocation, methodPattern));
 		
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Delete Pattern 4");
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -361,7 +361,7 @@ public class TestMatcherDeletes {
 		dp1.addActionPattern(new DeleteFieldAccessPatternAction(accessPattern, methodPattern1));
 		dp2.addActionPattern(new DeleteMethodPatternAction(methodPattern2, classPattern));
 		
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Delete Pattern 4");
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);

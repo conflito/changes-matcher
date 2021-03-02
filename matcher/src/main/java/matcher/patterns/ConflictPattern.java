@@ -28,13 +28,17 @@ public class ConflictPattern {
 	
 	private TestingGoal testingGoal;
 	
-	public ConflictPattern() {
+	private String conflictName;
+	
+	public ConflictPattern(String conflictName) {
+		this.conflictName = conflictName;
 		this.differentVariables = new ArrayList<>();
 		this.equalVariables = new HashMap<>();
 	}
 	
 	public ConflictPattern(ConflictPattern cp) {
 		super();
+		this.conflictName = cp.conflictName;
 		this.basePattern = new BasePattern(cp.basePattern);
 		this.firstDelta = new DeltaPattern(cp.firstDelta);
 		this.secondDelta = new DeltaPattern(cp.secondDelta);
@@ -61,6 +65,10 @@ public class ConflictPattern {
 			this.testingGoal = new TestingGoal(cp.testingGoal);
 	}
 	
+	public String getConflictName() {
+		return conflictName;
+	}
+
 	public void setTestingGoal(TestingGoal goal) {
 		this.testingGoal = goal;
 	}

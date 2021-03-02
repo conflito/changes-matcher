@@ -259,7 +259,7 @@ public class TestMatcherInserts {
 		dp1.addActionPattern(new InsertFieldPatternAction(insertedFieldPattern, classPattern));
 		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Insert Pattern");
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -284,7 +284,7 @@ public class TestMatcherInserts {
 		dp1.addActionPattern(new InsertFieldPatternAction(insertedFieldPattern, classPattern));
 		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Insert Pattern 2");
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -310,7 +310,7 @@ public class TestMatcherInserts {
 		dp2.addActionPattern(
 				new InsertConstructorPatternAction(insertedConstructorPattern, classPattern));
 		
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Insert Pattern 3");
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -344,7 +344,7 @@ public class TestMatcherInserts {
 		mInsert.addCompatible(methodPattern);
 		dp2.addActionPattern(mInsert);
 		
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Insert Pattern 4");
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -371,7 +371,7 @@ public class TestMatcherInserts {
 		
 		dp2.addActionPattern(new InsertMethodPatternAction(insertedMethodPattern, classPattern));
 
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Insert Pattern 5");
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -401,7 +401,7 @@ public class TestMatcherInserts {
 //		dp2.addActionPattern(
 //				new InsertFieldAccessPatternAction(fieldAccessPattern, insertedMethodPattern));
 
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Insert Pattern 6");
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);

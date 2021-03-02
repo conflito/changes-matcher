@@ -177,7 +177,7 @@ public class TestMatcherUpdates {
 		DeltaPattern dp2 = new DeltaPattern();
 		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern));
 		
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Update Pattern");
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -199,7 +199,7 @@ public class TestMatcherUpdates {
 		DeltaPattern dp2 = new DeltaPattern();
 		dp1.addActionPattern(new UpdateConstructorPatternAction(cPattern));
 		
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Update Pattern 2");
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);

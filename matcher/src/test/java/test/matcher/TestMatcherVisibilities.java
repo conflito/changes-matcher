@@ -145,7 +145,7 @@ public class TestMatcherVisibilities {
 		dp1.addActionPattern(new VisibilityActionPattern(Action.INSERT, Visibility.PRIVATE, 
 				null, fieldvar));
 		
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Visibility Pattern");
 		conflict.setBasePattern(basePattern);
 //		conflict.addDeltaPattern(dp1);
 //		conflict.addDeltaPattern(dp2);
@@ -170,7 +170,7 @@ public class TestMatcherVisibilities {
 		dp1.addActionPattern(new VisibilityActionPattern(Action.DELETE, null, 
 				Visibility.PRIVATE, fieldvar));
 		
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Visibility Pattern 2");
 		conflict.setBasePattern(basePattern);
 //		conflict.addDeltaPattern(dp1);
 //		conflict.addDeltaPattern(dp2);
@@ -195,7 +195,7 @@ public class TestMatcherVisibilities {
 		dp1.addActionPattern(new VisibilityActionPattern(Action.UPDATE, Visibility.PROTECTED, 
 				Visibility.PRIVATE, fieldvar));
 		
-		ConflictPattern conflict = new ConflictPattern();
+		ConflictPattern conflict = new ConflictPattern("Dummy Visibility Pattern 2");
 		conflict.setBasePattern(basePattern);
 //		conflict.addDeltaPattern(dp1);
 //		conflict.addDeltaPattern(dp2);
