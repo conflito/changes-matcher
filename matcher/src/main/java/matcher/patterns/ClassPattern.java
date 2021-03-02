@@ -111,6 +111,16 @@ public class ClassPattern {
 		compatible.get(subMethod).add(topMethod);
 	}
 	
+	public List<Integer> getCompatibles(int id){
+		for(Entry<FreeVariable, List<FreeVariable>> e: compatible.entrySet()) {
+			if(e.getKey().getId() == id)
+				return e.getValue().stream()
+						.map(FreeVariable::getId)
+						.collect(Collectors.toList());
+		}
+		return null;
+	}
+	
 	public void addExcludedMethod(FreeVariable method) {
 		excludedMethods.add(method);
 	}
@@ -686,6 +696,19 @@ public class ClassPattern {
 		}
 		
 		return result.toString();
+	}
+	
+	public int hashCode() {
+		return freeVariable.hashCode();
+	}
+	
+	public boolean equals(Object o) {
+		return (this == o) || (o instanceof ClassPattern && 
+				equalsClassPattern((ClassPattern)o));
+	}
+
+	private boolean equalsClassPattern(ClassPattern o) {
+		return freeVariable.getId() == o.freeVariable.getId();
 	}
 
 }
