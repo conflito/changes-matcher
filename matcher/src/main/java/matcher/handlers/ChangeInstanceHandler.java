@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import gumtree.spoon.diff.Diff;
 import matcher.catalogs.ConflictPatternCatalog;
 import matcher.entities.BaseInstance;
@@ -16,6 +18,8 @@ import spoon.reflect.declaration.CtType;
 
 public class ChangeInstanceHandler {
 
+	private final static Logger logger = Logger.getLogger(ChangeInstanceHandler.class);
+	
 	private BaseInstanceHandler bih;
 	private DeltaInstanceHandler dih;
 
@@ -44,21 +48,18 @@ public class ChangeInstanceHandler {
 		
 		Diff[] firstDiffs = calculateDiffs(bases, variants1, spoonHandler.firstVariantTypes());
 		Diff[] secondDiffs = calculateDiffs(bases, variants2, spoonHandler.secondVariantTypes());
-		System.out.println("##### Building Objects #####");
+		
+		logger.info("Building system objects...");
 		
 		InstancesCache.createInstance();
 		
 		for(ConflictPattern cp: conflictsCatalog.getPatterns()) {
-			
-			
-			long start = System.currentTimeMillis();
 			ChangeInstance ci = new ChangeInstance();
 			BaseInstance baseInstance = processBases(cp);
 			List<DeltaInstance> deltas = new ArrayList<>();
 			deltas.addAll(processDeltas(variants1, firstDiffs, cp));
 			deltas.addAll(processDeltas(variants2, secondDiffs, cp));
-			long end = System.currentTimeMillis();
-			System.out.println("Building objects " + (end-start));
+
 			ci.setBaseInstance(baseInstance);
 			ci.addDeltaInstances(deltas);
 
@@ -80,12 +81,12 @@ public class ChangeInstanceHandler {
 		ChangeInstance result = new ChangeInstance();
 
 		spoonHandler.loadLaunchers(bases, variants1, variants2);
-		System.out.println("##### Building Objects #####");
-		long start = System.currentTimeMillis();
+		
+		logger.info("Building system objects...");
+
 		BaseInstance baseInstance = processBases(cp);
 		List<DeltaInstance> deltas = processDeltas(bases, variants1, variants2, cp);
-		long end = System.currentTimeMillis();
-		System.out.println("Building objects " + (end-start));
+
 		result.setBaseInstance(baseInstance);
 		result.addDeltaInstances(deltas);
 

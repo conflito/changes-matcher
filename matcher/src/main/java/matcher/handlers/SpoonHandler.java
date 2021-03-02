@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.apache.log4j.Logger;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,6 +32,8 @@ import spoon.reflect.reference.CtFieldReference;
 import spoon.reflect.reference.CtTypeReference;
 
 public class SpoonHandler {
+	
+	private final static Logger logger = Logger.getLogger(SpoonHandler.class);
 	
 	private Launcher baseLauncher;
 	private Launcher variantLauncher1;
@@ -75,14 +80,9 @@ public class SpoonHandler {
 	}
 	
 	public void buildLaunchers() throws ApplicationException {
-		long start = 0;
-		long end = 0;
-		
+		logger.info("Building launchers...");
 		try {
-			start = System.currentTimeMillis();
 			baseLauncher.buildModel();
-			end = System.currentTimeMillis();
-			System.out.println("Base launcher: " + (end-start));
 		}
 		catch(ModelBuildingException e) {
 			throw new ApplicationException("Difference instances of the same class exist in the "
@@ -94,10 +94,7 @@ public class SpoonHandler {
 		}
 		
 		try {
-			start = System.currentTimeMillis();
 			variantLauncher1.buildModel();
-			end = System.currentTimeMillis();
-			System.out.println("Var 1 launcher: " + (end-start));
 		}
 		catch(ModelBuildingException e) {
 			throw new ApplicationException("Difference instances of the same class exist in the "
@@ -109,10 +106,7 @@ public class SpoonHandler {
 		}
 		
 		try {
-			start = System.currentTimeMillis();
 			variantLauncher2.buildModel();
-			end = System.currentTimeMillis();
-			System.out.println("Var 2 launcher: " + (end-start));
 		}
 		catch(ModelBuildingException e) {
 			throw new ApplicationException("Difference instances of the same class exist in the "
@@ -122,11 +116,6 @@ public class SpoonHandler {
 			throw new ApplicationException("Something went wrong building the class model "
 					+ "for the specified second variant source folder");
 		}
-		
-		System.out.println("Files loaded in base: " + baseLauncher.getModel().getAllTypes().size());
-		System.out.println("Files loaded in var 1: " + variantLauncher1.getModel().getAllTypes().size());
-		System.out.println("Files loaded in var 2: " + variantLauncher2.getModel().getAllTypes().size());
-		
 		
 	}
 	
@@ -144,8 +133,7 @@ public class SpoonHandler {
 	
 	public void loadLaunchers(File[] bases, File[] variants1, File[] variants2) 
 					throws ApplicationException {
-		System.out.println("##### Spoon Loading #####");
-		long start = System.currentTimeMillis();
+		logger.info("Loading launchers...");
 		baseLauncher.addInputResource(PropertiesHandler.getInstance().getBaseSourceDirPath());
 		
 		variantLauncher1.addInputResource(PropertiesHandler.getInstance()
@@ -153,22 +141,18 @@ public class SpoonHandler {
 		
 		variantLauncher2.addInputResource(PropertiesHandler.getInstance()
 				.getSecondVariantSourceDirPath());
-		long end = System.currentTimeMillis();
-		System.out.println("Loading spoon: " + (end-start));
-		start=System.currentTimeMillis();
+
 		buildLaunchers();
-		end=System.currentTimeMillis();
-		System.out.println("Building launchers: " + (end-start));
-		start = System.currentTimeMillis();
+
+		logger.info("Calculating dependencies...");
+		
 		baseTypes = getElements(baseLauncher, bases);
 		variant1Types = getElements(variantLauncher1, variants1);
 		variant2Types = getElements(variantLauncher2, variants2);
-		end = System.currentTimeMillis();
-		System.out.println("Getting relevant elements: " + (end-start));
-		start = System.currentTimeMillis();
-		addDeltaTypesToBase(variants1, variants2);
-		end = System.currentTimeMillis();
-		System.out.println("Adding from deltas: " + (end-start));
+		
+		logger.info("Adding information from deltas to base...");
+		
+		addDeltaTypesToBase(variants1, variants2);		
 	}
 	
 	private void addDeltaTypesToBase(File[] variants1, File[] variants2) throws ApplicationException {

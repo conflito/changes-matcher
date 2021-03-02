@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import matcher.entities.ChangeInstance;
 import matcher.exceptions.ApplicationException;
 import matcher.handlers.ChangeInstanceHandler;
@@ -15,6 +17,8 @@ import matcher.utils.Pair;
 
 public class Matcher {
 
+	private final static Logger logger = Logger.getLogger(Matcher.class);
+	
 	private ChangeInstanceHandler cih;
 	private MatchingHandler mh;
 	
@@ -24,6 +28,7 @@ public class Matcher {
 		
 		cih = new ChangeInstanceHandler();
 		mh = new MatchingHandler();
+		
 	}
 	
 	public List<List<Pair<Integer, String>>> matchingAssignments(String[] bases,
@@ -41,13 +46,12 @@ public class Matcher {
 		
 		List<Pair<ChangeInstance, ConflictPattern>> pairs =
 				cih.getChangeInstances(basesFile, variants1File, variants2File);
-		System.out.println("##### Matching #####");
+		
+		logger.info("Starting matching...");
 		for(Pair<ChangeInstance, ConflictPattern> p: pairs) {
-			long start=System.currentTimeMillis();
 			result.addAll(mh.matchingAssignments(p.getFirst(), p.getSecond()));
-			long end = System.currentTimeMillis();
-			System.out.println("Matching: " + (end-start));
 		}
+		logger.info("Matching finished!");
 		
 		return result;
 	}
@@ -65,13 +69,14 @@ public class Matcher {
 		File[] variants2File = fromStringArray(variants2);
 
 		ChangeInstance ci = cih.getChangeInstance(basesFile, variants1File, variants2File, cp);
-		System.out.println("##### Matching #####");
-		long start=System.currentTimeMillis();
+		
+		logger.info("Starting matching...");
+		
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
-		long end = System.currentTimeMillis();
-		System.out.println("Matching: " + (end-start));
+		
+		logger.info("Matching finished!");
 
-		return result;//mh.matchingAssignments(ci, cp);
+		return result;
 	}
 	
 	public List<String> getTestBDDs(){

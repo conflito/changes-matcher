@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
+
 import matcher.entities.ChangeInstance;
 import matcher.handlers.identifiers.ClassVariableIdentifier;
 import matcher.handlers.identifiers.ConstructorVariableIdentifier;
@@ -20,6 +22,8 @@ import matcher.utils.MapUtilities;
 import matcher.utils.Pair;
 
 public class MatchingHandler {
+	
+	private final static Logger logger = Logger.getLogger(MatchingHandler.class);
 
 	private FieldVariableIdentifier fvi;
 	private MethodVariableIdentifier mvi;
@@ -52,10 +56,11 @@ public class MatchingHandler {
 			return result;
 			
 		List<Pair<Integer, List<String>>> variablePossibleValues = variableValues(ci, cp);
-		long start = System.currentTimeMillis();
+
 		List<List<Pair<Integer, String>>> combinations = calculateResults(variablePossibleValues, cp);
-		long end = System.currentTimeMillis();
-		System.out.println("Calculate " + combinations.size() + " pairings: " + (end-start));
+
+		logger.info("Calculating pattern instances...");
+
 		for(List<Pair<Integer, String>> l: combinations) {
 			assignValues(cp, l);
 			if(cp.matches(ci)) {
