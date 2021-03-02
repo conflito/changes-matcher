@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import matcher.entities.ChangeInstance;
 import matcher.handlers.identifiers.ClassVariableIdentifier;
@@ -28,6 +29,8 @@ public class MatchingHandler {
 	private VisibilityActionsIdentifier vai;
 	private InterfaceVariableIdentifier ivi;
 	private FieldTypeVariableIdentifier ftvi;
+	
+	private List<ConflictPattern> matchedPatterns;
 
 	public MatchingHandler() {
 		super();
@@ -39,6 +42,8 @@ public class MatchingHandler {
 		vai = new VisibilityActionsIdentifier();
 		ivi = new InterfaceVariableIdentifier();
 		ftvi = new FieldTypeVariableIdentifier();
+		
+		this.matchedPatterns = new ArrayList<>();
 	}
 	
 	public List<List<Pair<Integer, String>>> matchingAssignments(ChangeInstance ci, ConflictPattern cp){
@@ -53,11 +58,19 @@ public class MatchingHandler {
 		System.out.println("Calculate " + combinations.size() + " pairings: " + (end-start));
 		for(List<Pair<Integer, String>> l: combinations) {
 			assignValues(cp, l);
-			if(cp.matches(ci))
+			if(cp.matches(ci)) {
 				result.add(l);
+				matchedPatterns.add(new ConflictPattern(cp));
+			}
 			cp.clean();
 		}
 		return result;
+	}
+	
+	public List<String> getTestBDDs(){
+		return matchedPatterns.stream()
+				.map(ConflictPattern::getTestBDD)
+				.collect(Collectors.toList());
 	}
 	
 	private void assignValues(ConflictPattern cp, List<Pair<Integer, String>> values) {
