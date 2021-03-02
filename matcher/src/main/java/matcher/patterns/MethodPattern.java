@@ -17,6 +17,8 @@ public class MethodPattern {
 	private List<FieldAccessPattern> fieldAccesses;
 	
 	private List<FreeVariable> dependencies;
+	
+	private MethodInstance lastMatchedMethod;
 
 	public MethodPattern(FreeVariable freeVariable, Visibility visibility) {
 		super();
@@ -38,6 +40,19 @@ public class MethodPattern {
 		for(FreeVariable dependency: methodPattern.dependencies) {
 			this.dependencies.add(new FreeVariable(dependency));
 		}
+		lastMatchedMethod = methodPattern.lastMatchedMethod;
+	}
+	
+	public String getLastMatchedMethodIdentifier() {
+		return getLastMatchedMethodName() + getLastMatchedMethodDescriptor();
+	}
+	
+	private String getLastMatchedMethodName() {
+		return lastMatchedMethod.getName();
+	}
+	
+	private String getLastMatchedMethodDescriptor() {
+		return lastMatchedMethod.getDescriptor();
 	}
 	
 	public void addDependency(FreeVariable v) {
@@ -154,6 +169,7 @@ public class MethodPattern {
 	}
 	
 	public boolean matches(MethodInstance instance) {
+		lastMatchedMethod = instance;
 		return filled() &&
 			   (visibility == null || sameVisibility(instance)) &&
 			   sameName(instance) &&
