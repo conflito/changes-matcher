@@ -30,7 +30,7 @@ public class Type {
 	}
 	
 	public boolean isVoid() {
-		return typeRef.toString().equals("void");
+		return typeRef.equals(new TypeFactory().VOID_PRIMITIVE);
 	}
 	
 	public Type getArrayType() {
