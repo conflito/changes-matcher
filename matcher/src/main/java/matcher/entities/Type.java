@@ -78,7 +78,7 @@ public class Type {
 	}
 	
 	private String toComplexDescriptor() {
-		return "L" + typeRef.getQualifiedName().replace('.', '/');
+		return "L" + typeRef.getQualifiedName().replace('.', '/') + ";";
 	}
 
 	private String toPrimitiveDescriptor() {

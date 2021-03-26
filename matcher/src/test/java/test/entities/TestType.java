@@ -65,28 +65,28 @@ public class TestType {
 	@Test
 	public void numberTypeDescriptorTest() {
 		Type type = new Type(factory.get(Number.class).getReference());
-		String expected = "Ljava/lang/Number";
+		String expected = "Ljava/lang/Number;";
 		String result = type.getDescriptor();
 		assertEquals(expected, result, "Descriptor of type Number is not"
-				+ "Ljava/lang/Number?");
+				+ "Ljava/lang/Number;?");
 	}
 	
 	@Test
 	public void objectTypeDescriptorTest() {
 		Type type = new Type(factory.get(Object.class).getReference());
-		String expected = "Ljava/lang/Object";
+		String expected = "Ljava/lang/Object;";
 		String result = type.getDescriptor();
 		assertEquals(expected, result, "Descriptor of type Object is not"
-				+ "Ljava/lang/Object?");
+				+ "Ljava/lang/Object;?");
 	}
 	
 	@Test
 	public void typeTypeDescriptorTest() {
 		Type type = new Type(factory.get(Type.class).getReference());
-		String expected = "Lmatcher/entities/Type";
+		String expected = "Lmatcher/entities/Type;";
 		String result = type.getDescriptor();
 		assertEquals(expected, result, "Descriptor of type Type is not"
-				+ "Lmatcher/entities/Type?");
+				+ "Lmatcher/entities/Type;?");
 	}
 	
 	@Test
@@ -110,9 +110,9 @@ public class TestType {
 	@Test
 	public void numberArrayDescriptorTest() {
 		Type type = new Type(factory.createArrayReference(factory.get(Number.class).getReference()));
-		String expected = "[Ljava/lang/Number";
+		String expected = "[Ljava/lang/Number;";
 		String result = type.getDescriptor();
 		assertEquals(expected, result, "Descriptor of Number[] is not"
-				+ "[Ljava/lang/Number?");
+				+ "[Ljava/lang/Number;?");
 	}
 }
