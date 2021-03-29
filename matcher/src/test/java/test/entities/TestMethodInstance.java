@@ -148,9 +148,9 @@ public class TestMethodInstance {
 		MethodInstance m = new MethodInstance("m", Visibility.PUBLIC, numberType);
 		m.addParameter(intType);
 		m.addParameter(numberType);
-		String expected = "(ILjava/lang/Number)Ljava/lang/Number";
+		String expected = "(ILjava/lang/Number;)Ljava/lang/Number;";
 		String result = m.getDescriptor();
-		assertEquals(expected, result, "Descriptor is not (ILjava/lang/Number)Ljava/lang/Number?");
+		assertEquals(expected, result, "Descriptor is not (ILjava/lang/Number;)Ljava/lang/Number;?");
 	}
 	
 	@Test
@@ -175,10 +175,10 @@ public class TestMethodInstance {
 		MethodInstance m = new MethodInstance("m", Visibility.PUBLIC, numberArrayType);
 		m.addParameter(numberArrayType);
 		m.addParameter(doubleArrayType);
-		String expected = "([[Ljava/lang/Number[D)[[Ljava/lang/Number";
+		String expected = "([[Ljava/lang/Number;[D)[[Ljava/lang/Number;";
 		String result = m.getDescriptor();
 		assertEquals(expected, result, "Descriptor is not "
-				+ "([[Ljava/lang/Number[D)[[Ljava/lang/Number?");
+				+ "([[Ljava/lang/Number;[D)[[Ljava/lang/Number;?");
 	}
 	
 }
