@@ -35,6 +35,8 @@ public class SpoonHandler {
 	
 	private final static Logger logger = Logger.getLogger(SpoonHandler.class);
 	
+	private static SpoonHandler instance;
+	
 	private Launcher baseLauncher;
 	private Launcher variantLauncher1;
 	private Launcher variantLauncher2;
@@ -43,7 +45,15 @@ public class SpoonHandler {
 	private Set<CtType<?>> variant1Types;
 	private Set<CtType<?>> variant2Types;
 	
-	public SpoonHandler() {
+	public static void createInstance() {
+		instance  = new SpoonHandler();
+	}
+	
+	public static SpoonHandler getInstance() {
+		return instance;
+	}
+	
+	private SpoonHandler() {
 		this.baseLauncher = new Launcher();
 		this.variantLauncher1 = new Launcher();
 		this.variantLauncher2 = new Launcher();
