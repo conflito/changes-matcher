@@ -63,5 +63,7 @@ public class MatchingRunnable implements Callable<List<List<Pair<Integer, String
 		return mh.matchingAssignments(ci, cp);
 	}
 
-
+	public List<Pair<String, List<String>>> getTestingGoals(){
+		return mh.getTestingGoals();
+	}
 }

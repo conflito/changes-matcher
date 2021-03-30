@@ -78,6 +78,16 @@ public class MatchingHandler {
 				.collect(Collectors.toList());
 	}
 	
+	public List<Pair<String, List<String>>> getTestingGoals(){
+		List<Pair<String, List<String>>> result = new ArrayList<>();
+		for(ConflictPattern cp: matchedPatterns) {
+			String targetClass = cp.getTestTargetClass();
+			List<String> targetMethods = cp.getTestTargetMethods();
+			result.add(new Pair<>(targetClass, targetMethods));
+		}
+		return result;
+	}
+	
 	private void assignValues(ConflictPattern cp, List<Pair<Integer, String>> values) {
 		for(Pair<Integer, String> p: values) {
 			cp.setVariableValue(p.getFirst(), p.getSecond());

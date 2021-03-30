@@ -28,6 +28,7 @@ import matcher.patterns.deltas.UpdateDependencyPatternAction;
 import matcher.patterns.deltas.UpdateFieldTypePatternAction;
 import matcher.patterns.deltas.UpdateMethodPatternAction;
 import matcher.patterns.deltas.VisibilityActionPattern;
+import matcher.patterns.goals.TestingGoal;
 
 public class ConflictPatternCatalog {
 	
@@ -143,6 +144,10 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		
+		TestingGoal goal = new TestingGoal(classPattern);
+		goal.addMethodToCall(classPattern, methodPattern);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}

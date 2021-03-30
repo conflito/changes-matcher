@@ -13,6 +13,7 @@ import matcher.entities.ChangeInstance;
 import matcher.entities.deltas.DeltaInstance;
 import matcher.patterns.deltas.DeltaPattern;
 import matcher.patterns.goals.BDDTestingGoal;
+import matcher.patterns.goals.TestingGoal;
 import matcher.utils.Pair;
 
 public class ConflictPattern {
@@ -26,7 +27,8 @@ public class ConflictPattern {
 
 	private Map<FreeVariable, Set<FreeVariable>> equalVariables;
 	
-	private BDDTestingGoal testingGoal;
+	private BDDTestingGoal bddTestingGoal;
+	private TestingGoal testingGoal;
 	
 	private String conflictName;
 	
@@ -61,8 +63,10 @@ public class ConflictPattern {
 			}
 			this.equalVariables.put(keyCopy, valuesCopy);
 		}
+		if(cp.bddTestingGoal != null)
+			this.bddTestingGoal = new BDDTestingGoal(cp.bddTestingGoal);
 		if(cp.testingGoal != null)
-			this.testingGoal = new BDDTestingGoal(cp.testingGoal);
+			this.testingGoal = new TestingGoal(cp.testingGoal);
 	}
 	
 	public String getConflictName() {
@@ -70,11 +74,23 @@ public class ConflictPattern {
 	}
 
 	public void setTestingGoal(BDDTestingGoal goal) {
+		this.bddTestingGoal = goal;
+	}
+	
+	public void setTestingGoal(TestingGoal goal) {
 		this.testingGoal = goal;
 	}
 	
 	public String getTestBDD() {
-		return testingGoal.getTestBDD();
+		return bddTestingGoal.getTestBDD();
+	}
+	
+	public String getTestTargetClass() {
+		return testingGoal.getTargetClass();
+	}
+	
+	public List<String> getTestTargetMethods() {
+		return testingGoal.getMethodsToCall();
 	}
 	
 	public void setBasePattern(BasePattern basePattern) {

@@ -25,6 +25,8 @@ public class Matcher {
 	
 	private ConflictPatternCatalog conflictsCatalog;
 	
+	private List<Pair<String, List<String>>> testingGoals;
+	
 	public Matcher(String configFilePath) throws ApplicationException {
 		PropertiesHandler.createInstance(configFilePath);
 		FileSystemHandler.createInstance();
@@ -32,7 +34,7 @@ public class Matcher {
 		InstancesCache.createInstance();
 		
 		conflictsCatalog = new ConflictPatternCatalog();
-		
+		testingGoals = new ArrayList<>();
 	}
 	
 	public List<List<Pair<Integer, String>>> matchingAssignments(String[] bases,
@@ -53,6 +55,7 @@ public class Matcher {
 		
 		ExecutorService es = Executors.newCachedThreadPool();
 		
+		List<MatchingRunnable> runnables = new ArrayList<>();
 		List<Future<List<List<Pair<Integer, String>>>>> futures = new ArrayList<>();
 		
 		Semaphore sem = new Semaphore(1);
@@ -61,6 +64,7 @@ public class Matcher {
 			MatchingRunnable mt = new MatchingRunnable(basesFile, variants1File, variants2File);
 			mt.setConflictPattern(cp);
 			mt.setSem(sem);
+			runnables.add(mt);
 			futures.add(es.submit(mt));
 		}
 		
@@ -69,10 +73,12 @@ public class Matcher {
 		while(completedFutures.size() != futures.size()) {
 			for (int i = 0; i < futures.size(); i++) {
 				Future<List<List<Pair<Integer, String>>>> future = futures.get(i);
+				MatchingRunnable mt = runnables.get(i);
 				if(!completedFutures.contains(i) && future.isDone()) {
 					completedFutures.add(i);
 					try {
 						result.addAll(future.get());
+						testingGoals.addAll(mt.getTestingGoals());
 					} catch (InterruptedException e) {
 						throw new ApplicationException("Interrupted execution");
 					} catch (ExecutionException e) {
@@ -111,12 +117,18 @@ public class Matcher {
 		Future<List<List<Pair<Integer, String>>>> future = es.submit(mt);
 		
 		try {
-			return future.get();
+			List<List<Pair<Integer, String>>> result = future.get();
+			testingGoals.addAll(mt.getTestingGoals());
+			return result;
 		} catch (InterruptedException e) {
 			throw new ApplicationException("Interrupted execution");
 		} catch (ExecutionException e) {
 			throw new ApplicationException(e.getMessage());
 		}
+	}
+	
+	public List<Pair<String, List<String>>> getTestingGoals(){
+		return this.testingGoals;
 	}
 
 	private boolean sameLenght(String[] bases, String[] variants1, String[] variants2) {
