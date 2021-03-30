@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 
 import matcher.entities.ChangeInstance;
 import matcher.entities.deltas.DeltaInstance;
-import matcher.patterns.bdd.TestingGoal;
 import matcher.patterns.deltas.DeltaPattern;
+import matcher.patterns.goals.BDDTestingGoal;
 import matcher.utils.Pair;
 
 public class ConflictPattern {
@@ -26,7 +26,7 @@ public class ConflictPattern {
 
 	private Map<FreeVariable, Set<FreeVariable>> equalVariables;
 	
-	private TestingGoal testingGoal;
+	private BDDTestingGoal testingGoal;
 	
 	private String conflictName;
 	
@@ -62,14 +62,14 @@ public class ConflictPattern {
 			this.equalVariables.put(keyCopy, valuesCopy);
 		}
 		if(cp.testingGoal != null)
-			this.testingGoal = new TestingGoal(cp.testingGoal);
+			this.testingGoal = new BDDTestingGoal(cp.testingGoal);
 	}
 	
 	public String getConflictName() {
 		return conflictName;
 	}
 
-	public void setTestingGoal(TestingGoal goal) {
+	public void setTestingGoal(BDDTestingGoal goal) {
 		this.testingGoal = goal;
 	}
 	

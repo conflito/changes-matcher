@@ -1,4 +1,4 @@
-package matcher.patterns.bdd;
+package matcher.patterns.goals;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,7 +10,7 @@ import java.util.List;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.MethodPattern;
 
-public class TestingGoal {
+public class BDDTestingGoal {
 
 	private Map<ClassPattern, List<MethodPattern>> context;
 	
@@ -18,13 +18,13 @@ public class TestingGoal {
 	
 	private List<MethodPattern> toCall;
 	
-	public TestingGoal() {
+	public BDDTestingGoal() {
 		super();
 		this.context = new HashMap<>();
 		this.toCall = new ArrayList<>();
 	}
 	
-	public TestingGoal(TestingGoal testingGoal) {
+	public BDDTestingGoal(BDDTestingGoal testingGoal) {
 		super();
 		this.context = new HashMap<>();
 		this.toCall = new ArrayList<>();
