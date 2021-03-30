@@ -81,6 +81,10 @@ public class ConflictPattern {
 		this.testingGoal = goal;
 	}
 	
+	public boolean hasTestingGoal() {
+		return this.testingGoal != null;
+	}
+	
 	public String getTestBDD() {
 		return bddTestingGoal.getTestBDD();
 	}

@@ -81,9 +81,11 @@ public class MatchingHandler {
 	public List<Pair<String, List<String>>> getTestingGoals(){
 		List<Pair<String, List<String>>> result = new ArrayList<>();
 		for(ConflictPattern cp: matchedPatterns) {
-			String targetClass = cp.getTestTargetClass();
-			List<String> targetMethods = cp.getTestTargetMethods();
-			result.add(new Pair<>(targetClass, targetMethods));
+			if(cp.hasTestingGoal()) {
+				String targetClass = cp.getTestTargetClass();
+				List<String> targetMethods = cp.getTestTargetMethods();
+				result.add(new Pair<>(targetClass, targetMethods));
+			}
 		}
 		return result;
 	}
