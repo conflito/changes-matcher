@@ -44,6 +44,8 @@ public class MethodPattern {
 	}
 	
 	public String getLastMatchedMethodIdentifier() {
+		if(lastMatchedMethod == null)
+			return null;
 		return getLastMatchedMethodName() + getLastMatchedMethodDescriptor();
 	}
 	
@@ -129,6 +131,7 @@ public class MethodPattern {
 		freeVariable.clean();
 		cleanDependencies();
 		cleanFieldAccesses();
+		lastMatchedMethod = null;
 	}
 
 	private void cleanFieldAccesses() {
