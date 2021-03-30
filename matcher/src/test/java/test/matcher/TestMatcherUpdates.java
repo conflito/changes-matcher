@@ -128,8 +128,8 @@ public class TestMatcherUpdates {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.Square()"), 
-				"Updated constructor is not base.Square.Square()?");
+				assignments.get(1).getSecond().equals("base.Square.<init>()"), 
+				"Updated constructor is not base.Square.<init>()?");
 	}
 	
 	@Test
@@ -159,8 +159,8 @@ public class TestMatcherUpdates {
 		assertTrue(assignments.get(0).getFirst() == 0 && 
 				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
 		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.Square()"), 
-				"Updated constructor is not base.Square.Square()?");
+				assignments.get(1).getSecond().equals("base.Square.<init>()"), 
+				"Updated constructor is not base.Square.<init>()?");
 	}
 	
 	private ConflictPattern getUpdateMethodPattern() {

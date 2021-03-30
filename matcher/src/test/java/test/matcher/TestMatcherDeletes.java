@@ -111,8 +111,8 @@ public class TestMatcherDeletes {
 		assertTrue(assignments.get(1).getFirst() == 1 && 
 				assignments.get(1).getSecond().equals("t"), "Field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("base.Square.Square()"), "Constructor is "
-						+ "not base.Square.m()?");
+				assignments.get(2).getSecond().equals("base.Square.<init>()"), 
+				"Constructor is not base.Square.<init>()?");
 	}
 	
 	@Test

@@ -221,8 +221,8 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(1).getFirst() == 1 && 
 				assignments.get(1).getSecond().equals("B"), "Class is not B?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("A.A()"), 
-				"Constructor is not A.A()?");
+				assignments.get(2).getSecond().equals("A.<init>()"), 
+				"Constructor is not A.<init>()?");
 		assertTrue(assignments.get(3).getFirst() == 3 && 
 				assignments.get(3).getSecond().equals("resize()"), 
 				"Inserted method that writes to field is not resize()?");

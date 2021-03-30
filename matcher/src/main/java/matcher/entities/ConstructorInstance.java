@@ -70,7 +70,7 @@ public class ConstructorInstance implements Visible {
 
 	public String getQualifiedName() {
 		return classInstance.getQualifiedName() + "." 
-				+ classInstance.getName() 
+				+ "<init>"
 				+ parametersToString();
 	}
 

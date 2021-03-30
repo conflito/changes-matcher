@@ -132,8 +132,8 @@ public class TestMatcherInserts {
 		assertTrue(assignments.get(1).getFirst() == 1 && 
 				assignments.get(1).getSecond().equals("t"), "Field is not t?");
 		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("base.Square.Square()"), "Constructor is not "
-						+ "base.Square.Square()?");
+				assignments.get(2).getSecond().equals("base.Square.<init>()"), "Constructor is not "
+						+ "base.Square.<init>()?");
 	}
 	
 	@Test
@@ -170,8 +170,8 @@ public class TestMatcherInserts {
 				assignments.get(2).getSecond().equals("move(int)"), 
 				"Inserted and compatible method is not move(int)?");
 		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("base.Square.Square()"), "Inserted constructor is not "
-						+ "base.Square.Square()?");
+				assignments.get(3).getSecond().equals("base.Square.<init>()"), 
+				"Inserted constructor is not base.Square.<init>()?");
 	}
 	
 	@Test
