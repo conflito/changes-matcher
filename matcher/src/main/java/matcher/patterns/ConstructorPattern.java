@@ -14,6 +14,8 @@ public class ConstructorPattern {
 	private Visibility visibility;
 	
 	private List<FreeVariable> dependencies;
+	
+	private ConstructorInstance lastMatchedConstructor;
 
 	public ConstructorPattern(FreeVariable freeVariable, Visibility visibility) {
 		super();
@@ -30,6 +32,14 @@ public class ConstructorPattern {
 		for(FreeVariable dependency: constructorPattern.dependencies) {
 			this.dependencies.add(new FreeVariable(dependency));
 		}
+		lastMatchedConstructor = constructorPattern.lastMatchedConstructor;
+	}
+	
+	public String getLastMatchedConstructorIdentifier() {
+		if(lastMatchedConstructor == null)
+			return null;
+		return lastMatchedConstructor.getName() + 
+				lastMatchedConstructor.getDescriptor();
 	}
 	
 	public void addDependency(FreeVariable v) {
@@ -73,6 +83,7 @@ public class ConstructorPattern {
 	public void clean() {
 		freeVariable.clean();
 		cleanDependencies();
+		lastMatchedConstructor = null;
 	}
 	
 	private void cleanDependencies() {
@@ -95,6 +106,7 @@ public class ConstructorPattern {
 	}
 	
 	public boolean matches(ConstructorInstance instance) {
+		lastMatchedConstructor = instance;
 		return filled() && 
 				(visibility == null || sameVisibility(instance)) &&  
 				sameName(instance) &&
