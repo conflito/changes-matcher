@@ -66,16 +66,21 @@ public class TestMatcherInserts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
-		assertTrue(result.size() == 1, "More than one result for inserting private "
+		assertEquals(1, result.size(), "Not one result for inserting private "
 				+ "field and public method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 3, "Not 3 assignments with only 3 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-					assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("t"), "Field is not t?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m()"), "Method is not m()?");
+		assertEquals(3, assignments.size(), "Not 3 assignments with only 3 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Square", assignments.get(0).getSecond(), 
+				"Class is not base.Square?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("t", assignments.get(1).getSecond(), "Field is not t?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("m()", assignments.get(2).getSecond(), "Method is not m()?");
 	}
 	
 	@Test
@@ -99,7 +104,8 @@ public class TestMatcherInserts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		assertTrue(result.size() == 0, "Finds match when there's no private field insertion?");
+		assertEquals(0, result.size(), 
+				"Finds match when there's no private field insertion?");
 	}
 	
 	@Test
@@ -123,17 +129,22 @@ public class TestMatcherInserts {
 		List<List<Pair<Integer, String>>> result =
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
-		assertTrue(result.size() == 1, "More than one result for inserting private "
+		assertEquals(1, result.size(), "Not one result for inserting private "
 				+ "field and public constructor?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 3, "Not 3 assignments with only 3 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("t"), "Field is not t?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("base.Square.<init>()"), "Constructor is not "
-						+ "base.Square.<init>()?");
+		assertEquals(3, assignments.size(), "Not 3 assignments with only 3 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Square", assignments.get(0).getSecond(), 
+				"Class is not base.Square?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("t", assignments.get(1).getSecond(), "Field is not t?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2"); 
+		assertEquals("base.Square.<init>()", assignments.get(2).getSecond(), 
+				"Constructor is not base.Square.<init>()?");
 	}
 	
 	@Test
@@ -157,20 +168,26 @@ public class TestMatcherInserts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
-		assertTrue(result.size() == 1, "More than one result for inserting private "
+		assertEquals(1, result.size(), "Not one result for inserting private "
 				+ "field and public constructor?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("move(java.lang.Number)"), 
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Square", assignments.get(0).getSecond(), 
+				"Class is not base.Square?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("move(java.lang.Number)", assignments.get(1).getSecond(), 
 				"Top method is not move(java.lang.Number)?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("move(int)"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("move(int)", assignments.get(2).getSecond(), 
 				"Inserted and compatible method is not move(int)?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("base.Square.<init>()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("base.Square.<init>()", assignments.get(3).getSecond(), 
 				"Inserted constructor is not base.Square.<init>()?");
 	}
 	
@@ -195,16 +212,22 @@ public class TestMatcherInserts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		assertTrue(result.size() == 1, "More than one result for inserting method with invocation?");
+		assertEquals(1, result.size(), 
+				"Not one result for inserting method with invocation?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 3, "Not 3 assignments with only 3 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m()"), 
+		assertEquals(3, assignments.size(), "Not 3 assignments with only 3 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Square", assignments.get(0).getSecond(), 
+				"Class is not base.Square?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("m()", assignments.get(1).getSecond(), 
 				"Method in class (and then invoked) is not m()?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m2()"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("m2()", assignments.get(2).getSecond(), 
 				"Inserted method with invocation is not m2()?");
 	}
 	
@@ -229,16 +252,21 @@ public class TestMatcherInserts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		assertTrue(result.size() == 1, "More than one result for insert method "
+		assertEquals(1, result.size(), "Not one result for insert method "
 				+ "with field access?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 3, "Not 3 assignments with only 3 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("t"), "Field is not t?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m()"), 
+		assertEquals(3, assignments.size(), "Not 3 assignments with only 3 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Square", assignments.get(0).getSecond(), 
+				"Class is not base.Square?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("t", assignments.get(1).getSecond(), "Field is not t?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("m()", assignments.get(2).getSecond(), 
 				"Inserted method with field access is not m()?");
 	}
 

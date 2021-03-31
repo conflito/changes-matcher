@@ -69,16 +69,21 @@ public class TestMatcherDeletes {
 		List<List<Pair<Integer, String>>> result =
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
-		assertTrue(result.size() == 1, "More than one result for deleting private "
+		assertEquals(1, result.size(), "Not one result for deleting private "
 				+ "field and public method?");
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 3, "Not 3 assignments with only 3 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("t"), "Field is not t?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m()"), "Method is not base.Square.m()?");
+		assertEquals(3, assignments.size(), "Not 3 assignments with only 3 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Square", assignments.get(0).getSecond(), 
+				"Class is not base.Square?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("t", assignments.get(1).getSecond(), "Field is not t?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("m()", assignments.get(2).getSecond(), 
+				"Method is not base.Square.m()?");
 	}
 	
 	@Test
@@ -102,16 +107,21 @@ public class TestMatcherDeletes {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
-		assertTrue(result.size() == 1, "More than one result for deleting private "
+		assertEquals(1, result.size(), "Not one result for deleting private "
 				+ "field and constructor method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 3, "Not 3 assignments with only 3 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("t"), "Field is not t?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("base.Square.<init>()"), 
+		assertEquals(3, assignments.size(), "Not 3 assignments with only 3 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Square", assignments.get(0).getSecond(), 
+				"Class is not base.Square?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("t", assignments.get(1).getSecond(), "Field is not t?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("base.Square.<init>()", assignments.get(2).getSecond(), 
 				"Constructor is not base.Square.<init>()?");
 	}
 	
@@ -136,19 +146,25 @@ public class TestMatcherDeletes {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
-		assertTrue(result.size() == 1, "More than one result for deleting field and compatible method?");
+		assertEquals(1, result.size(), 
+				"Not one result for deleting field and compatible method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("t"), 
-				"Deleted field is not t?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m(java.lang.Number)"), 
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Square", assignments.get(0).getSecond(), 
+				"Class is not base.Square?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("t", assignments.get(1).getSecond(), "Deleted field is not t?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("m(java.lang.Number)", assignments.get(2).getSecond(), 
 				"Top method is not m(java.lang.Number)?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("m(int)"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m(int)", assignments.get(3).getSecond(), 
 				"Deleted and compatible method is not m(int)?");
 	}
 	
@@ -172,16 +188,22 @@ public class TestMatcherDeletes {
 		
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		assertTrue(result.size() == 1, "More than one result for deleting field and method invocation?");
+		assertEquals(1, result.size(), 
+				"Not one result for deleting field and method invocation?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 3, "Not 3 assignments with only 3 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Shape"), "Class is not base.Shape?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("t"), 
+		assertEquals(3, assignments.size(), "Not 3 assignments with only 3 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Shape", assignments.get(0).getSecond(), 
+				"Class is not base.Shape?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("t", assignments.get(1).getSecond(), 
 				"Deleted field is not t?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m()"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("m()", assignments.get(2).getSecond(), 
 				"Deleted method invoation is not m()?");
 	}
 	
@@ -206,19 +228,27 @@ public class TestMatcherDeletes {
 		List<List<Pair<Integer, String>>> result =
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 				
-		assertTrue(result.size() == 1, "More than one result for deleting field and compatible method?");
+		assertEquals(1, result.size(), 
+				"Not one result for deleting field and compatible method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("t"), 
+		assertEquals(4, assignments.size(), 
+				"Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Square", assignments.get(0).getSecond(), 
+				"Class is not base.Square?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("t", assignments.get(1).getSecond(), 
 				"Accessed field is not t?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m()"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("m()", assignments.get(2).getSecond(), 
 				"Method with deleted access is not m()?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("m2()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m2()", assignments.get(3).getSecond(), 
 				"Deleted method is not m2()?");
 	}
 

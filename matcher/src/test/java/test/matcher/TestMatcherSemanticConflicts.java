@@ -89,27 +89,34 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		assertTrue(result.size() == 1, "More than one result for overloading method?");
+		
+		assertEquals(1, result.size(), "Not one result for overloading method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("move(java.lang.Number, "
-						+ "java.lang.Number)"), 
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("move(java.lang.Number, java.lang.Number)", 
+				assignments.get(1).getSecond(), 
 				"Method in class is not move(java.lang.Number, java.lang.Number)?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("reset()"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("reset()", assignments.get(2).getSecond(), 
 				"Inserted method with invocation is not reset()?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("move(int, int)"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("move(int, int)", assignments.get(3).getSecond(), 
 				"Inserted compatible method is not move(int, int)?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("base.A"), "Class is not A");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("base.A", assignments.get(4).getSecond(), "Class is not A");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -144,27 +151,34 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		assertTrue(result.size() == 1, "More than one result for overloading method?");
+		
+		assertEquals(1, result.size(), "Not one result for overloading method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("move(java.lang.Number, "
-						+ "java.lang.Number)"), 
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("move(java.lang.Number, java.lang.Number)", 
+				assignments.get(1).getSecond(), 
 				"Method in class is not move(java.lang.Number, java.lang.Number)?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("move(int, int)"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("move(int, int)", assignments.get(2).getSecond(), 
 				"Inserted compatible method is not move(int, int)?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("reset()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("reset()", assignments.get(3).getSecond(), 
 				"Inserted method in new class with invocation is not reset()?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("base.B"), "New class is not B");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("base.B", assignments.get(4).getSecond(), "New class is not B");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -199,26 +213,30 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
-		assertTrue(result.size() == 1, "More than one result for overloading method?");
+		assertEquals(1, result.size(), "Not one result for overloading method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Superclass is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("B"), "Class is not B?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("size"), 
-				"Field is not size?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("m()"), 
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Superclass is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), "Class is not B?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("size", assignments.get(2).getSecond(), "Field is not size?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m()", assignments.get(3).getSecond(), 
 				"Inserted method that writes to field is not m()?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("size"), 
-				"Inserted field not size?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("size", assignments.get(4).getSecond(), "Inserted field not size?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -253,26 +271,31 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		assertTrue(result.size() == 1, "More than one result for overloading method?");
+		assertEquals(1, result.size(), "Not one result for overloading method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Superclass is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("B"), "Class is not B?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("A.<init>()"), 
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Superclass is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), "Class is not B?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("A.<init>()", assignments.get(2).getSecond(), 
 				"Constructor is not A.<init>()?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("resize()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("resize()", assignments.get(3).getSecond(), 
 				"Inserted method that writes to field is not resize()?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("h"), 
-				"Field is not h?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("h", assignments.get(4).getSecond(), "Field is not h?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -309,26 +332,33 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		assertTrue(result.size() == 1, "More than one result for overloading method?");
+		assertEquals(1, result.size(), "Not one result for overloading method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Superclass is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("B"), "Class is not B?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("move(java.lang.Number, java.lang.Number)"), 
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Superclass is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), "Class is not B?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("move(java.lang.Number, java.lang.Number)", 
+				assignments.get(2).getSecond(), 
 				"Top method is not move(java.lang.Number, java.lang.Number)?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("move(int, int)"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("move(int, int)", assignments.get(3).getSecond(), 
 				"Sub method is not move(int, int)?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("reset()"), 
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("reset()", assignments.get(4).getSecond(), 
 				"Inserted method with invocation is not reset()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -362,26 +392,34 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		assertTrue(result.size() == 1, "More than one result for overloading method?");
+		
+		assertEquals(1, result.size(), "Not one result for overloading method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Superclass is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("B"), "New class is not B?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("move(java.lang.Number, java.lang.Number)"), 
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Superclass is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), "New class is not B?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("move(java.lang.Number, java.lang.Number)", 
+				assignments.get(2).getSecond(), 
 				"Top method is not move(java.lang.Number, java.lang.Number)?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("move(int, int)"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("move(int, int)", assignments.get(3).getSecond(), 
 				"Sub method is not move(int, int)?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("reset()"), 
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("reset()", assignments.get(4).getSecond(), 
 				"Inserted method in new class with invocation is not reset()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -418,26 +456,33 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		assertTrue(result.size() == 1, "More than one result for overloading method?");
+		assertEquals(1, result.size(), "Not one result for overloading method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Superclass is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("B"), "Class is not B?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("move(java.lang.Number, java.lang.Number)"), 
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Superclass is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), "Class is not B?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("move(java.lang.Number, java.lang.Number)", 
+				assignments.get(2).getSecond(), 
 				"Top method is not move(java.lang.Number, java.lang.Number)?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("move(int, int)"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("move(int, int)", assignments.get(3).getSecond(), 
 				"Sub method is not move(int, int)?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("reset()"), 
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("reset()", assignments.get(4).getSecond(), 
 				"Inserted method with invocation is not reset()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -471,26 +516,34 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		assertTrue(result.size() == 1, "More than one result for overloading method?");
+		
+		assertEquals(1, result.size(), "Not one result for overloading method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Superclass is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("B"), "New class is not B?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("move(java.lang.Number, java.lang.Number)"), 
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Superclass is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), "New class is not B?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("move(java.lang.Number, java.lang.Number)", 
+				assignments.get(2).getSecond(), 
 				"Top method is not move(java.lang.Number, java.lang.Number)?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("move(int, int)"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("move(int, int)", assignments.get(3).getSecond(), 
 				"Sub method is not move(int, int)?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("reset()"), 
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("reset()", assignments.get(4).getSecond(), 
 				"Inserted method with invocation is not reset()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -526,23 +579,28 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result =
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		assertTrue(result.size() == 1, "More than one result for overriding method?");
+		assertEquals(1, result.size(), "Not one result for overriding method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Superclass is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("B"), "Class is not B?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("move(int, int)"), 
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Superclass is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), "Class is not B?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("move(int, int)", assignments.get(2).getSecond(), 
 				"Method overwritten is not move(int, int)?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("reset()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("reset()", assignments.get(3).getSecond(), 
 				"Method with invocation is not reset()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -577,23 +635,28 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		assertTrue(result.size() == 1, "More than one result for remove overriding method?");
+		assertEquals(1, result.size(), "Not one result for remove overriding method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Superclass is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("B"), "Class is not B?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("move(int, int)"), 
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Superclass is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), "Class is not B?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("move(int, int)", assignments.get(2).getSecond(), 
 				"Method removed is not move(int, int)?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("reset()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("reset()", assignments.get(3).getSecond(), 
 				"Method with invocation is not reset()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -628,51 +691,63 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result =
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		assertTrue(result.size() == 2, "Not two results for method change?");
+		assertEquals(2, result.size(), "Not two results for method change?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 6, "Not 6 assignments with only 6 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m()"), 
+		assertEquals(6, assignments.size(), "Not 6 assignments with only 6 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("m()", assignments.get(1).getSecond(), 
 				"Method with invocations is not m()?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m1()"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("m1()", assignments.get(2).getSecond(),
 				"Method updated is not m1()?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("m2()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m2()", assignments.get(3).getSecond(), 
 				"Other method updated is not m2()?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("A"), 
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("A", assignments.get(4).getSecond(),
 				"Class that holds m1() isn't A?");
-		assertTrue(assignments.get(5).getFirst() == 5 && 
-				assignments.get(5).getSecond().equals("A"), 
+		
+		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
+		assertEquals("A", assignments.get(5).getSecond(), 
 				"Class that holds m2() isn't A?");
 
 		assignments = result.get(1);
-
-		assertTrue(assignments.size() == 6, "Not 6 assignments with only 6 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m()"), 
+		assertEquals(6, assignments.size(), "Not 6 assignments with only 6 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("m()", assignments.get(1).getSecond(), 
 				"Method with invocations is not m()?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m2()"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("m2()", assignments.get(2).getSecond(),
 				"Method updated is not m2()?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("m1()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m1()", assignments.get(3).getSecond(), 
 				"Other method updated is not m1()?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("A"), 
-				"Class that holds m1() isn't A?");
-		assertTrue(assignments.get(5).getFirst() == 5 && 
-				assignments.get(5).getSecond().equals("A"), 
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("A", assignments.get(4).getSecond(),
 				"Class that holds m2() isn't A?");
+		
+		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
+		assertEquals("A", assignments.get(5).getSecond(), 
+				"Class that holds m1() isn't A?");
 				
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 2, "There are not two goals to test?");
+		assertEquals(2, goals.size(), "There are not two goals to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -720,53 +795,64 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result =
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		assertTrue(result.size() == 2, "Not two results for method change 1_01?");
+		
+		assertEquals(2, result.size(), "Not two results for method change 1_01?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 6, "Not 6 assignments with only 6 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("B"), 
-				"Dependant class is not B");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m()"), 
+		assertEquals(6, assignments.size(), "Not 6 assignments with only 6 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("B", assignments.get(0).getSecond(), "Dependant class is not B");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("m()", assignments.get(1).getSecond(), 
 				"Method with invocations is not m()?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m1()"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("m1()", assignments.get(2).getSecond(), 
 				"Method updated is not m1()?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("m2()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m2()", assignments.get(3).getSecond(), 
 				"Other method updated is not m2()?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("A"), 
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("A", assignments.get(4).getSecond(), 
 				"Class that holds m1() isn't A?");
-		assertTrue(assignments.get(5).getFirst() == 5 && 
-				assignments.get(5).getSecond().equals("A"), 
+		
+		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
+		assertEquals("A", assignments.get(5).getSecond(), 
 				"Class that holds m2() isn't A?");
 
 		assignments = result.get(1);
-
-		assertTrue(assignments.size() == 6, "Not 6 assignments with only 6 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("B"), 
-				"Dependant class is not B");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m()"), 
+		assertEquals(6, assignments.size(), "Not 6 assignments with only 6 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("B", assignments.get(0).getSecond(), "Dependant class is not B");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("m()", assignments.get(1).getSecond(), 
 				"Method with invocations is not m()?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m2()"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("m2()", assignments.get(2).getSecond(), 
 				"Method updated is not m2()?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("m1()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m1()", assignments.get(3).getSecond(), 
 				"Other method updated is not m1()?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("A"), 
-				"Class that holds m1() isn't A?");
-		assertTrue(assignments.get(5).getFirst() == 5 && 
-				assignments.get(5).getSecond().equals("A"), 
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("A", assignments.get(4).getSecond(), 
 				"Class that holds m2() isn't A?");
+		
+		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
+		assertEquals("A", assignments.get(5).getSecond(), 
+				"Class that holds m1() isn't A?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 2, "There are not two goals to test?");
+		assertEquals(2, goals.size(), "There are not two goals to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -816,39 +902,47 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		assertTrue(result.size() == 1, "More than one result for change method 2?");
+		assertEquals(1, result.size(), "Not one result for change method 2?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 9, "Not 9 assignments with only 9 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("B"), 
-				"Interface is not B?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("B1"), 
+		assertEquals(9, assignments.size(), "Not 9 assignments with only 9 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), "Interface is not B?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("B1", assignments.get(2).getSecond(), 
 				"Class that implements hashCode is not B1?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("B2"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("B2", assignments.get(3).getSecond(), 
 				"Class that does not implement hashCode is not B2?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("n()"), 
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("n()", assignments.get(4).getSecond(), 
 				"Method that has its invocation updated is not n()?");
-		assertTrue(assignments.get(5).getFirst() == 5 && 
-				assignments.get(5).getSecond().equals("m1(B[])"), 
+		
+		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
+		assertEquals("m1(B[])", assignments.get(5).getSecond(), 
 				"The new invocation is not of method m1(B[])?");
-		assertTrue(assignments.get(6).getFirst() == 6 && 
-				assignments.get(6).getSecond().equals("m2(B[])"), 
+		
+		assertEquals(6, assignments.get(6).getFirst(), "Variable id is not 6?"); 
+		assertEquals("m2(B[])", assignments.get(6).getSecond(), 
 				"The old invocation is not of method m2(B[])?");
-		assertTrue(assignments.get(7).getFirst() == 7 && 
-				assignments.get(7).getSecond().equals("hashCode()"), 
+		
+		assertEquals(7, assignments.get(7).getFirst(), "Variable id is not 7?"); 
+		assertEquals("hashCode()", assignments.get(7).getSecond(), 
 				"The method that B1 has that B2 doesn't isn't hashCode()?");
-		assertTrue(assignments.get(8).getFirst() == 8 && 
-				assignments.get(8).getSecond().equals("v"), 
-				"The updated field is not v");
+		
+		assertEquals(8, assignments.get(8).getFirst(), "Variable id is not 8?"); 
+		assertEquals("v", assignments.get(8).getSecond(), "The updated field is not v");
 				
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -885,24 +979,29 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		assertTrue(result.size() == 1, "More than one result for dependency based?");
+		assertEquals(1, result.size(), "Not one result for dependency based?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m1()"), 
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("m1()", assignments.get(1).getSecond(),
 				"Updated method is not m1()?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("A"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("A", assignments.get(2).getSecond(), 
 				"Class that holds the new method is not A?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("k()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("k()", assignments.get(3).getSecond(), 
 				"Method inserted with t is not k()?");
 				
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -939,24 +1038,29 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
-		assertTrue(result.size() == 1, "More than one result for dependency based?");
+		assertEquals(1, result.size(), "Not one result for dependency based?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m1()"), 
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("m1()", assignments.get(1).getSecond(), 
 				"Updated method is not m1()?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("B"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("B", assignments.get(2).getSecond(), 
 				"Class that holds the new method is not B?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("k()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("k()", assignments.get(3).getSecond(), 
 				"Method inserted with t is not k()?");
 				
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -990,24 +1094,29 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		assertTrue(result.size() == 1, "More than one result for dependency based 2?");
+		
+		assertEquals(1, result.size(), "Not one result for dependency based 2?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m1()"), 
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("m1()", assignments.get(1).getSecond(),
 				"Method updated is not m1()?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("B"), 
-				"New class is not B?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("k()"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("B", assignments.get(2).getSecond(), "New class is not B?");
+		
+		assertEquals(3,assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("k()", assignments.get(3).getSecond(), 
 				"New method that depends on m1() is not k()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -1044,38 +1153,45 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		assertTrue(result.size() == 2, "Not 2 results for dependency based 2_01?");
+		assertEquals(2, result.size(), "Not 2 results for dependency based 2_01?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m1()"), 
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("m1()", assignments.get(1).getSecond(), 
 				"Method updated is not m1()?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("B"), 
-				"New class is not B?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("k()"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("B", assignments.get(2).getSecond(), "New class is not B?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("k()", assignments.get(3).getSecond(), 
 				"Method inserted with invocation is not k()?");
 
 		assignments = result.get(1);
-		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m1()"), 
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("m1()", assignments.get(1).getSecond(), 
 				"Method updated is not m1()?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("C"), 
-				"New class is not C?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("method()"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("C", assignments.get(2).getSecond(), "New class is not C?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("method()", assignments.get(3).getSecond(), 
 				"Method inserted with invocation is not method()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 2, "There are not two goal to test?");
+		assertEquals(2, goals.size(), "There are not two goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -1120,24 +1236,28 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		assertTrue(result.size() == 1, "More than one result for dependency based 3?");
+		assertEquals(1, result.size(), "Not than one result for dependency based 3?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m1(int, int)"), 
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("m1(int, int)", assignments.get(1).getSecond(), 
 				"Method in A is not m1(int, int)?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("B"), 
-				"New class is not B?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("k()"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("B", assignments.get(2).getSecond(), "New class is not B?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("k()", assignments.get(3).getSecond(), 
 				"New method with invocation is not k()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -1172,24 +1292,29 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);				
 
-		assertTrue(result.size() == 1, "More than one result for dependency based 4?");
+		assertEquals(1, result.size(), "Not one result for dependency based 4?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 4, "Not 4 assignments with only 4 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m1(double, int)"), 
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("m1(double, int)", assignments.get(1).getSecond(), 
 				"Method updated is not m1(doublt, int)?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("B"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("B", assignments.get(2).getSecond(), 
 				"New class is not B?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("k()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("k()", assignments.get(3).getSecond(), 
 				"Method inserted with invocation is not k()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -1225,27 +1350,31 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		assertTrue(result.size() == 1, "More than one result for dependency based 5?");
+		assertEquals(1, result.size(), "Not one result for dependency based 5?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("x"), 
-				"Updated field is not x?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m1()"), 
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("x", assignments.get(1).getSecond(), "Updated field is not x?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("m1()", assignments.get(2).getSecond(), 
 				"Method that reads x is not m1()?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("B"), 
-				"New class is not B?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("k()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("B", assignments.get(3).getSecond(), "New class is not B?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("k()", assignments.get(4).getSecond(), 
 				"Method inserted with invocation is not k()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -1281,27 +1410,33 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		assertTrue(result.size() == 1, "More than one result for dependency based 5?");
+		
+		assertEquals(1, result.size(), "Not one result for dependency based 5?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("x"), 
-				"Updated field is not x?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m1()"), 
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("x", assignments.get(1).getSecond(), "Updated field is not x?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("m1()", assignments.get(2).getSecond(), 
 				"Method that reads x is not m1()?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("B"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("B", assignments.get(3).getSecond(), 
 				"Class is not B?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("k()"), 
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("k()", assignments.get(4).getSecond(), 
 				"Method that depends on m1() is not k()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -1336,27 +1471,32 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		assertTrue(result.size() == 1, "More than one result for dependency based 5?");
+		
+		assertEquals(1, result.size(), "Not one result for dependency based 5?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 5, "Not 5 assignments with only 5 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("x"), 
-				"Updated field is not x?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("m1()"), 
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("x", assignments.get(1).getSecond(), "Updated field is not x?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("m1()", assignments.get(2).getSecond(), 
 				"Method that reads x is not m1()?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("A"), 
-				"Class is not B?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("m2()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("A", assignments.get(3).getSecond(), "Class is not A?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("m2()", assignments.get(4).getSecond(), 
 				"Method that depends on m1() is not m2()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -1391,31 +1531,38 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		assertTrue(result.size() == 1, "More than one result for dependency based 7?");
+		assertEquals(1, result.size(), "Not one result for dependency based 7?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 6, "Not 6 assignments with only 6 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), 
+		assertEquals(6, assignments.size(), "Not 6 assignments with only 6 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), 
 				"Class that holds m() is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("A"), 
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("A", assignments.get(1).getSecond(), 
 				"Class that holds n() is not A?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("A"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("A", assignments.get(2).getSecond(), 
 				"Class that holds m1() is not A?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("m()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m()", assignments.get(3).getSecond(), 
 				"Updated method is not m()?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("n()"), 
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("n()", assignments.get(4).getSecond(), 
 				"Method that depends on m() is not n()?");
-		assertTrue(assignments.get(5).getFirst() == 5 && 
-				assignments.get(5).getSecond().equals("m1()"), 
+		
+		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
+		assertEquals("m1()", assignments.get(5).getSecond(), 
 				"Method that receives a call to n() is not m1()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -1451,30 +1598,34 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		assertTrue(result.size() == 1, "More than one result for unexpected overriding 1?");
+		assertEquals(1, result.size(), "Not one result for unexpected overriding 1?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 6, "Not 6 assignments with only 5 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("B0"), 
-				"Other class is not B0?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("b"), 
-				"Field is not b?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("n(A)"), 
+		assertEquals(6, assignments.size(), "Not 6 assignments with only 6 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B0", assignments.get(1).getSecond(), "Other class is not B0?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("b", assignments.get(2).getSecond(), "Field is not b?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("n(A)", assignments.get(3).getSecond(), 
 				"Inserted method is not n(A)?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("equals(java.lang.Object)"), 
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4? "); 
+		assertEquals("equals(java.lang.Object)", assignments.get(4).getSecond(), 
 				"Method overriden is not equals(java.lang.Object)");
-		assertTrue(assignments.get(5).getFirst() == 5 && 
-				assignments.get(5).getSecond().equals("B"), 
-				"Interface is not B?");
+		
+		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
+		assertEquals("B", assignments.get(5).getSecond(), "Interface is not B?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -1510,33 +1661,38 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		assertTrue(result.size() == 1, "More than one result for unexpected overriding 2?");
+		assertEquals(1, result.size(), "Not one result for unexpected overriding 2?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 7, "Not 7 assignments with only 7 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("B1"), 
-				"Other class is not B1?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("B2"), 
+		assertEquals(7, assignments.size(), "Not 7 assignments with only 7 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B1", assignments.get(1).getSecond(), "Other class is not B1?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("B2", assignments.get(2).getSecond(), 
 				"Third class that extends second is not B2?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("b"), 
-				"Field is not b?");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("m()"), 
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("b", assignments.get(3).getSecond(), "Field is not b?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("m()", assignments.get(4).getSecond(), 
 				"Method overriden is not m()");
-		assertTrue(assignments.get(5).getFirst() == 5 && 
-				assignments.get(5).getSecond().equals("n()"), 
+		
+		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
+		assertEquals("n()", assignments.get(5).getSecond(), 
 				"Method that invokes overriden method is not n()");
-		assertTrue(assignments.get(6).getFirst() == 6 && 
-				assignments.get(6).getSecond().equals("B"), 
-				"Interface is not B?");
+		
+		assertEquals(6, assignments.get(6).getFirst(), "Variable id is not 6?"); 
+		assertEquals("B", assignments.get(6).getSecond(), "Interface is not B?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -1572,30 +1728,36 @@ public class TestMatcherSemanticConflicts {
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		assertTrue(result.size() == 1, "More than one result for unexpected overriding 2?");
+		assertEquals(1, result.size(), "Not one result for unexpected overriding 2?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 6, "Not 6 assignments with only 6 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("B"), 
+		assertEquals(6, assignments.size(), "Not 6 assignments with only 6 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), 
 				"Class that extends A is not B?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("C"), 
-				"Third class is not C?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("m(java.lang.Number)"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("C", assignments.get(2).getSecond(), "Third class is not C?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m(java.lang.Number)", assignments.get(3).getSecond(), 
 				"Method in A is not m(java.lang.Number)");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("m(int)"), 
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("m(int)", assignments.get(4).getSecond(), 
 				"Compatible method inserted in B is not m(int)");
-		assertTrue(assignments.get(5).getFirst() == 5 && 
-				assignments.get(5).getSecond().equals("k()"), 
+		
+		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
+		assertEquals("k()", assignments.get(5).getSecond(), 
 				"Method added that depends on m(java.lang.Number) is not k()");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -1631,30 +1793,37 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
-		assertTrue(result.size() == 1, "More than one result for unexpected overriding 3_1?");
+		assertEquals(1, result.size(), "Not than one result for unexpected overriding 3_1?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 6, "Not 6 assignments with only 6 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("B"), 
+		assertEquals(6, assignments.size(), "Not 6 assignments with only 6 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), 
 				"Class that extends A is not B?");
-		assertTrue(assignments.get(2).getFirst() == 2 && 
-				assignments.get(2).getSecond().equals("B"), 
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("B", assignments.get(2).getSecond(), 
 				"Class that has m1() class is not B?");
-		assertTrue(assignments.get(3).getFirst() == 3 && 
-				assignments.get(3).getSecond().equals("m(java.lang.Number)"), 
+		
+		assertEquals(3,assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m(java.lang.Number)", assignments.get(3).getSecond(), 
 				"Method in A is not m(java.lang.Number)");
-		assertTrue(assignments.get(4).getFirst() == 4 && 
-				assignments.get(4).getSecond().equals("m1()"), 
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("m1()", assignments.get(4).getSecond(), 
 				"Method in B is not m1()");
-		assertTrue(assignments.get(5).getFirst() == 5 && 
-				assignments.get(5).getSecond().equals("m(int)"), 
+		
+		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
+		assertEquals("m(int)", assignments.get(5).getSecond(), 
 				"Method added compatible with m(java.lang.Number) is not m(int)");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();
@@ -1689,18 +1858,21 @@ public class TestMatcherSemanticConflicts {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
-		assertTrue(result.size() == 1, "More than one result for parallel changes?");
+		assertEquals(1, result.size(), "Not one result for parallel changes?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("A"), "Class is not A");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m()"), 
+		assertEquals(2, assignments.size(), "Not 2 assignments with only 2 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("m()", assignments.get(1).getSecond(),
 				"Updated method is not m()?");
 				
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
-		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		assertEquals(1, goals.size(), "There is not one goal to test?");
 		
 		Pair<String, List<String>> goal = goals.get(0);
 		String targetClass = goal.getFirst();

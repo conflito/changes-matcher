@@ -58,14 +58,17 @@ public class TestMatcherVisibilities {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
-		assertTrue(result.size() == 1, "More than one result for updating method?");
+		assertEquals(1, result.size(), "More than one result for updating method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("t"), 
-				"Updated field is not t?");
+		assertEquals(2, assignments.size(), "Not 2 assignments with only 2 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Square", assignments.get(0).getSecond(), 
+				"Class is not base.Square?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("t", assignments.get(1).getSecond(), "Updated field is not t?");
 	}
 	
 	@Test
@@ -89,14 +92,17 @@ public class TestMatcherVisibilities {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
-		assertTrue(result.size() == 1, "More than one result for updating method?");
+		assertEquals(1, result.size(), "More than one result for updating method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("t"), 
-				"Updated field is not t?");
+		assertEquals(2, assignments.size(), "Not 2 assignments with only 2 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Square", assignments.get(0).getSecond(), 
+				"Class is not base.Square?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("t", assignments.get(1).getSecond(), "Updated field is not t?");
 	}
 	
 	@Test
@@ -120,14 +126,17 @@ public class TestMatcherVisibilities {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 				
-		assertTrue(result.size() == 1, "More than one result for updating method?");
+		assertEquals(1, result.size(), "More than one result for updating method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("t"), 
-				"Updated field is not t?");
+		assertEquals(2, assignments.size(), "Not 2 assignments with only 2 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Square", assignments.get(0).getSecond(), 
+				"Class is not base.Square?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("t", assignments.get(1).getSecond(), "Updated field is not t?");
 	}
 
 	private ConflictPattern getInsertFieldVisibilityPattern() {

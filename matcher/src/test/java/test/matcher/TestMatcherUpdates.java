@@ -60,13 +60,17 @@ public class TestMatcherUpdates {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
-		assertTrue(result.size() == 1, "More than one result for updating method?");
+		assertEquals(1, result.size(), "Not one result for updating method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m()"), 
+		assertEquals(2, assignments.size(), "Not 2 assignments with only 2 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Square", assignments.get(0).getSecond(), 
+				"Class is not base.Square?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("m()", assignments.get(1).getSecond(),
 				"Updated method is not m()?");
 	}
 	
@@ -91,13 +95,17 @@ public class TestMatcherUpdates {
 		List<List<Pair<Integer, String>>> result = 
 			matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
-		assertTrue(result.size() == 1, "More than one result for updating method?");
+		assertEquals(1, result.size(), "Not one result for updating method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Shape"), "Class is not base.Shape?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("m()"), 
+		assertEquals(2, assignments.size(), "Not 2 assignments with only 2 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Shape", assignments.get(0).getSecond(), 
+				"Class is not base.Shape?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("m()", assignments.get(1).getSecond(),
 				"Updated method is not m()?");
 	}
 	
@@ -122,13 +130,17 @@ public class TestMatcherUpdates {
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
-		assertTrue(result.size() == 1, "More than one result for updating method?");
+		assertEquals(1, result.size(), "Not one result for updating method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.<init>()"), 
+		assertEquals(2, assignments.size(), "Not 2 assignments with only 2 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Square", assignments.get(0).getSecond(), 
+				"Class is not base.Square?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("base.Square.<init>()", assignments.get(1).getSecond(), 
 				"Updated constructor is not base.Square.<init>()?");
 	}
 	
@@ -153,13 +165,17 @@ public class TestMatcherUpdates {
 		List<List<Pair<Integer, String>>> result =
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
-		assertTrue(result.size() == 1, "More than one result for updating method?");
+		assertEquals(1, result.size(), "Not one result for updating method?");
+		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertTrue(assignments.size() == 2, "Not 2 assignments with only 2 variables?");
-		assertTrue(assignments.get(0).getFirst() == 0 && 
-				assignments.get(0).getSecond().equals("base.Square"), "Class is not base.Square?");
-		assertTrue(assignments.get(1).getFirst() == 1 && 
-				assignments.get(1).getSecond().equals("base.Square.<init>()"), 
+		assertEquals(2, assignments.size(), "Not 2 assignments with only 2 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.Square", assignments.get(0).getSecond(), 
+				"Class is not base.Square?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("base.Square.<init>()", assignments.get(1).getSecond(), 
 				"Updated constructor is not base.Square.<init>()?");
 	}
 	
