@@ -106,6 +106,20 @@ public class TestMatcherSemanticConflicts {
 				"Inserted compatible method is not move(int, int)?");
 		assertTrue(assignments.get(4).getFirst() == 4 && 
 				assignments.get(4).getSecond().equals("base.A"), "Class is not A");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "base.A", "The target class to test is not base.A?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "base.A.reset()V", 
+				"Method to cover is not base.A.reset()V?");
+		assertEquals(targetMethods.get(1), "base.A.move(II)V", 
+				"Method to cover is not base.A.move(II)V?");
 	}
 
 	@Test
@@ -147,6 +161,20 @@ public class TestMatcherSemanticConflicts {
 				"Inserted method in new class with invocation is not reset()?");
 		assertTrue(assignments.get(4).getFirst() == 4 && 
 				assignments.get(4).getSecond().equals("base.B"), "New class is not B");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "base.B", "The target class to test is not base.B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "base.B.reset()V", 
+				"Method to cover is not base.B.reset()V?");
+		assertEquals(targetMethods.get(1), "base.A.move(II)V", 
+				"Method to cover is not base.A.move(II)V?");
 	}
 
 	@Test
@@ -187,6 +215,18 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(4).getFirst() == 4 && 
 				assignments.get(4).getSecond().equals("size"), 
 				"Inserted field not size?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 1, "There is not one method to cover?");
+		assertEquals(targetMethods.get(0), "B.m()V", 
+				"Method to cover is not B.m()V?");
 	}
 
 	@Test
@@ -229,6 +269,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(4).getFirst() == 4 && 
 				assignments.get(4).getSecond().equals("h"), 
 				"Field is not h?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "A", "The target class to test is not A?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "A.<init>()V", 
+				"Method to cover is not A.<init>()V?");
+		assertEquals(targetMethods.get(1), "B.resize()V", 
+				"Method to cover is not B.resize()V?");
 	}
 
 	@Test
@@ -271,6 +325,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(4).getFirst() == 4 && 
 				assignments.get(4).getSecond().equals("reset()"), 
 				"Inserted method with invocation is not reset()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.reset()V", 
+				"Method to cover is not B.reset()V?");
+		assertEquals(targetMethods.get(1), "A.move(II)V", 
+				"Method to cover is not A.move(II)V?");
 	}
 
 	@Test
@@ -310,6 +378,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(4).getFirst() == 4 && 
 				assignments.get(4).getSecond().equals("reset()"), 
 				"Inserted method in new class with invocation is not reset()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.reset()V", 
+				"Method to cover is not B.reset()V?");
+		assertEquals(targetMethods.get(1), "A.move(II)V", 
+				"Method to cover is not A.move(II)V?");
 	}
 
 	@Test
@@ -352,6 +434,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(4).getFirst() == 4 && 
 				assignments.get(4).getSecond().equals("reset()"), 
 				"Inserted method with invocation is not reset()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.reset()V", 
+				"Method to cover is not B.reset()V?");
+		assertEquals(targetMethods.get(1), "A.move(Ljava/lang/Number;Ljava/lang/Number;)V", 
+				"Method to cover is not A.move(Ljava/lang/Number;Ljava/lang/Number;)V?");
 	}
 
 	@Test
@@ -391,6 +487,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(4).getFirst() == 4 && 
 				assignments.get(4).getSecond().equals("reset()"), 
 				"Inserted method with invocation is not reset()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.reset()V", 
+				"Method to cover is not B.reset()V?");
+		assertEquals(targetMethods.get(1), "A.move(Ljava/lang/Number;Ljava/lang/Number;)V", 
+				"Method to cover is not A.move(Ljava/lang/Number;Ljava/lang/Number;)V?");
 	}
 
 	@Test
@@ -429,6 +539,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(3).getFirst() == 3 && 
 				assignments.get(3).getSecond().equals("reset()"), 
 				"Method with invocation is not reset()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.reset()V", 
+				"Method to cover is not B.reset()V?");
+		assertEquals(targetMethods.get(1), "B.move(II)V", 
+				"Method to cover is not B.move(II)V?");
 	}
 
 	@Test
@@ -466,6 +590,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(3).getFirst() == 3 && 
 				assignments.get(3).getSecond().equals("reset()"), 
 				"Method with invocation is not reset()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.reset()V", 
+				"Method to cover is not B.reset()V?");
+		assertEquals(targetMethods.get(1), "A.move(II)V", 
+				"Method to cover is not A.move(II)V?");
 	}
 
 	@Test
@@ -531,6 +669,34 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(5).getFirst() == 5 && 
 				assignments.get(5).getSecond().equals("A"), 
 				"Class that holds m2() isn't A?");
+				
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 2, "There are not two goals to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "A", "The target class to test is not A?");
+		assertEquals(targetMethods.size(), 3, "There are not three methods to cover?");
+		assertEquals(targetMethods.get(0), "A.m()I", 
+				"Method to cover is not A.m()I?");
+		assertEquals(targetMethods.get(1), "A.m1()I", 
+				"Method to cover is not A.m1()I?");
+		assertEquals(targetMethods.get(2), "A.m2()I", 
+				"Method to cover is not A.m2()I?");
+		
+		goal = goals.get(1);
+		targetClass = goal.getFirst();
+		targetMethods = goal.getSecond();
+		assertEquals(targetClass, "A", "The target class to test is not A?");
+		assertEquals(targetMethods.size(), 3, "There are not three methods to cover?");
+		assertEquals(targetMethods.get(0), "A.m()I", 
+				"Method to cover is not A.m()I?");
+		assertEquals(targetMethods.get(1), "A.m2()I", 
+				"Method to cover is not A.m2()I?");
+		assertEquals(targetMethods.get(2), "A.m1()I", 
+				"Method to cover is not A.m1()I?");
 	}
 	
 	@Test
@@ -597,6 +763,34 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(5).getFirst() == 5 && 
 				assignments.get(5).getSecond().equals("A"), 
 				"Class that holds m2() isn't A?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 2, "There are not two goals to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 3, "There are not three methods to cover?");
+		assertEquals(targetMethods.get(0), "B.m()I", 
+				"Method to cover is not B.m()I?");
+		assertEquals(targetMethods.get(1), "A.m1()I", 
+				"Method to cover is not A.m1()I?");
+		assertEquals(targetMethods.get(2), "A.m2()I", 
+				"Method to cover is not A.m2()I?");
+		
+		goal = goals.get(1);
+		targetClass = goal.getFirst();
+		targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 3, "There are not three methods to cover?");
+		assertEquals(targetMethods.get(0), "B.m()I", 
+				"Method to cover is not B.m()I?");
+		assertEquals(targetMethods.get(1), "A.m2()I", 
+				"Method to cover is not A.m2()I?");
+		assertEquals(targetMethods.get(2), "A.m1()I", 
+				"Method to cover is not A.m1()I?");
 	}
 
 	@Test
@@ -651,6 +845,22 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(8).getFirst() == 8 && 
 				assignments.get(8).getSecond().equals("v"), 
 				"The updated field is not v");
+				
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "A", "The target class to test is not A?");
+		assertEquals(targetMethods.size(), 3, "There are not three methods to cover?");
+		assertEquals(targetMethods.get(0), "A.n()Z", 
+				"Method to cover is not A.n()Z?");
+		assertEquals(targetMethods.get(1), "A.m1([LB;)Z", 
+				"Method to cover is not A.m1([LB;)Z?");
+		assertEquals(targetMethods.get(2), "B2.hashCode()I", 
+				"Method to cover is not B2.hasCode()I?");
 	}
 
 	@Test
@@ -689,6 +899,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(3).getFirst() == 3 && 
 				assignments.get(3).getSecond().equals("k()"), 
 				"Method inserted with t is not k()?");
+				
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "A", "The target class to test is not A?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "A.k()I", 
+				"Method to cover is not A.k()I?");
+		assertEquals(targetMethods.get(1), "A.m1()I", 
+				"Method to cover is not A.m1()I?");
 	}
 
 	@Test
@@ -729,6 +953,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(3).getFirst() == 3 && 
 				assignments.get(3).getSecond().equals("k()"), 
 				"Method inserted with t is not k()?");
+				
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.k()I", 
+				"Method to cover is not B.k()I?");
+		assertEquals(targetMethods.get(1), "A.m1()I", 
+				"Method to cover is not A.m1()I?");
 	}
 
 	@Test
@@ -766,6 +1004,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(3).getFirst() == 3 && 
 				assignments.get(3).getSecond().equals("k()"), 
 				"New method that depends on m1() is not k()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.k()I", 
+				"Method to cover is not B.k()I?");
+		assertEquals(targetMethods.get(1), "A.m1()I", 
+				"Method to cover is not A.m1()I?");
 	}
 
 	@Test
@@ -820,6 +1072,30 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(3).getFirst() == 3 && 
 				assignments.get(3).getSecond().equals("method()"), 
 				"Method inserted with invocation is not method()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 2, "There are not two goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.k()I", 
+				"Method to cover is not B.k()I?");
+		assertEquals(targetMethods.get(1), "A.m1()I", 
+				"Method to cover is not A.m1()I?");
+		
+		goal = goals.get(1);
+		targetClass = goal.getFirst();
+		targetMethods = goal.getSecond();
+		assertEquals(targetClass, "C", "The target class to test is not C?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "C.method()I", 
+				"Method to cover is not C.method()I?");
+		assertEquals(targetMethods.get(1), "A.m1()I", 
+				"Method to cover is not A.m1()I?");
 	}
 
 	@Test
@@ -858,6 +1134,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(3).getFirst() == 3 && 
 				assignments.get(3).getSecond().equals("k()"), 
 				"New method with invocation is not k()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.k()I", 
+				"Method to cover is not B.k()I?");
+		assertEquals(targetMethods.get(1), "A.m1(II)I", 
+				"Method to cover is not A.m1(II)I?");
 	}
 
 	@Test
@@ -896,6 +1186,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(3).getFirst() == 3 && 
 				assignments.get(3).getSecond().equals("k()"), 
 				"Method inserted with invocation is not k()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.k()I", 
+				"Method to cover is not B.k()I?");
+		assertEquals(targetMethods.get(1), "A.m1(DI)I", 
+				"Method to cover is not A.m1(DI)I?");
 	}
 
 	@Test
@@ -938,6 +1242,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(4).getFirst() == 4 && 
 				assignments.get(4).getSecond().equals("k()"), 
 				"Method inserted with invocation is not k()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.k()I", 
+				"Method to cover is not B.k()I?");
+		assertEquals(targetMethods.get(1), "A.m1()I", 
+				"Method to cover is not A.m1()I?");
 	}
 
 	@Test
@@ -980,6 +1298,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(4).getFirst() == 4 && 
 				assignments.get(4).getSecond().equals("k()"), 
 				"Method that depends on m1() is not k()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.k()I", 
+				"Method to cover is not B.k()I?");
+		assertEquals(targetMethods.get(1), "A.m1()I", 
+				"Method to cover is not A.m1()I?");
 	}
 
 	@Test
@@ -1021,6 +1353,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(4).getFirst() == 4 && 
 				assignments.get(4).getSecond().equals("m2()"), 
 				"Method that depends on m1() is not m2()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "A", "The target class to test is not A?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "A.m2()I", 
+				"Method to cover is not A.m2()I?");
+		assertEquals(targetMethods.get(1), "A.m1()I", 
+				"Method to cover is not A.m1()I?");
 	}
 
 	@Test
@@ -1066,6 +1412,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(5).getFirst() == 5 && 
 				assignments.get(5).getSecond().equals("m1()"), 
 				"Method that receives a call to n() is not m1()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "A", "The target class to test is not A?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "A.m1()I", 
+				"Method to cover is not A.m1()I?");
+		assertEquals(targetMethods.get(1), "A.m()I", 
+				"Method to cover is not A.m()I?");
 	}
 
 	@Test
@@ -1111,6 +1471,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(5).getFirst() == 5 && 
 				assignments.get(5).getSecond().equals("B"), 
 				"Interface is not B?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "A", "The target class to test is not A?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "A.n(LA;)Z", 
+				"Method to cover is not A.n(LA;)Z?");
+		assertEquals(targetMethods.get(1), "B0.equals(Ljava/lang/Object;)Z", 
+				"Method to cover is not B0.equals(Ljava/lang/Object;)Z?");
 	}
 
 	@Test
@@ -1159,6 +1533,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(6).getFirst() == 6 && 
 				assignments.get(6).getSecond().equals("B"), 
 				"Interface is not B?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "A", "The target class to test is not A?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "A.n()I", 
+				"Method to cover is not A.n()I?");
+		assertEquals(targetMethods.get(1), "B2.m()I", 
+				"Method to cover is not B2.m()I");
 	}
 
 	@Test
@@ -1204,6 +1592,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(5).getFirst() == 5 && 
 				assignments.get(5).getSecond().equals("k()"), 
 				"Method added that depends on m(java.lang.Number) is not k()");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "C", "The target class to test is not C?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "C.k()V", 
+				"Method to cover is not C.k()V?");
+		assertEquals(targetMethods.get(1), "B.m(I)V", 
+				"Method to cover is not B.m(I)V?");
 	}
 
 	@Test
@@ -1249,6 +1651,20 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(5).getFirst() == 5 && 
 				assignments.get(5).getSecond().equals("m(int)"), 
 				"Method added compatible with m(java.lang.Number) is not m(int)");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.m1()V", 
+				"Method to cover is not B.m1()V?");
+		assertEquals(targetMethods.get(1), "B.m(I)V", 
+				"Method to cover is not B.m(I)V");
 	}
 
 	@Test
@@ -1281,5 +1697,17 @@ public class TestMatcherSemanticConflicts {
 		assertTrue(assignments.get(1).getFirst() == 1 && 
 				assignments.get(1).getSecond().equals("m()"), 
 				"Updated method is not m()?");
+				
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertTrue(goals.size() == 1, "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "A", "The target class to test is not A?");
+		assertEquals(targetMethods.size(), 1, "There is not one method to cover?");
+		assertEquals(targetMethods.get(0), "A.m()I", 
+				"Method to cover is not A.m()I?");
 	}
 }
