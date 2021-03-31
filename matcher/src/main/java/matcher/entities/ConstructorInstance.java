@@ -67,11 +67,24 @@ public class ConstructorInstance implements Visible {
 	public void setClassInstance(ClassInstance classInstance) {
 		this.classInstance = classInstance;
 	}
+	
+	public String getName() {
+		return "<init>";
+	}
 
 	public String getQualifiedName() {
 		return classInstance.getQualifiedName() + "." 
-				+ "<init>"
+				+ getName()
 				+ parametersToString();
+	}
+	
+	public String getDescriptor() {
+		StringBuilder result = new StringBuilder("(");
+		parameters.stream()
+			.map(Type::getDescriptor)
+			.forEach(s -> result.append(s));
+		result.append(")V");
+		return result.toString();
 	}
 
 	public List<String> getInvocationsQualifiedNames() {
