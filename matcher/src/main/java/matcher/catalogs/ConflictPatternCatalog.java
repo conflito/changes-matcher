@@ -190,6 +190,12 @@ public class ConflictPatternCatalog {
 		conflict.addEqualVariableRule(classVar, classVar2);
 		conflict.addEqualVariableRule(classVar, classVar3);
 		conflict.addEqualVariableRule(classVar2, classVar3);
+		
+		TestingGoal goal = new TestingGoal(classPattern);
+		goal.addMethodToCall(classPattern, methodPattern1);
+		goal.addMethodToCall(classPattern2, methodPattern2);
+		goal.addMethodToCall(classPattern3, methodPattern3);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -253,6 +259,13 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		
+		TestingGoal goal = new TestingGoal(classAPattern);
+		goal.addMethodToCall(classAPattern, methodNPattern);
+		goal.addMethodToCall(classAPattern, methodM1Pattern);
+		goal.addMethodToCall(classB2Pattern, methodHashPattern);
+		conflict.setTestingGoal(goal);
+		
 		return conflict;
 	}
 
@@ -287,6 +300,11 @@ public class ConflictPatternCatalog {
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		conflict.addEqualVariableRule(classVar, holderClassVar);
+		
+		TestingGoal goal = new TestingGoal(holderClassPattern);
+		goal.addMethodToCall(holderClassPattern, insertedMethodPattern);
+		goal.addMethodToCall(classPattern, methodPattern1);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -320,6 +338,11 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		
+		TestingGoal goal = new TestingGoal(insertedClassPattern);
+		goal.addMethodToCall(insertedClassPattern, insertedMethodPattern);
+		goal.addMethodToCall(classPattern, methodPattern1);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -363,6 +386,11 @@ public class ConflictPatternCatalog {
 		conflict.addEqualVariableRule(classVar, classVar2);
 		conflict.addEqualVariableRule(classVar, classVar3);
 		conflict.addEqualVariableRule(classVar2, classVar3);
+		
+		TestingGoal goal = new TestingGoal(classPattern3);
+		goal.addMethodToCall(classPattern3, methodPattern3);
+		goal.addMethodToCall(classPattern, methodPattern1);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -404,6 +432,11 @@ public class ConflictPatternCatalog {
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		conflict.addEqualVariableRule(classVar, holderClassVar);
+		
+		TestingGoal goal = new TestingGoal(holderClassPattern);
+		goal.addMethodToCall(holderClassPattern, insertedMethodPattern);
+		goal.addMethodToCall(classPattern, methodPattern);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -442,6 +475,11 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		
+		TestingGoal goal = new TestingGoal(insertedClassPattern);
+		goal.addMethodToCall(insertedClassPattern, insertedMethodPattern);
+		goal.addMethodToCall(classPattern, methodPattern);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -485,6 +523,11 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		
+		TestingGoal goal = new TestingGoal(classPattern1);
+		goal.addMethodToCall(classPattern1, insertedMethodPattern1);
+		goal.addMethodToCall(classPattern2, insertedMethodPattern2);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -537,6 +580,11 @@ public class ConflictPatternCatalog {
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		conflict.addDifferentVariablesRule(classVar1, classVar3);
+		
+		TestingGoal goal = new TestingGoal(classPattern1);
+		goal.addMethodToCall(classPattern1, insertedMethodPattern1);
+		goal.addMethodToCall(holder, insertedMethodPattern2);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -577,6 +625,11 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		
+		TestingGoal goal = new TestingGoal(classPattern3);
+		goal.addMethodToCall(classPattern3, insertedMethodPattern2);
+		goal.addMethodToCall(classPattern2, insertedMethodPattern1);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -623,6 +676,11 @@ public class ConflictPatternCatalog {
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		conflict.addEqualVariableRule(classVar2, classVar3);
+		
+		TestingGoal goal = new TestingGoal(classPattern3);
+		goal.addMethodToCall(classPattern3, methodPattern2);
+		goal.addMethodToCall(classPattern2, insertedMethodPattern1);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -661,11 +719,15 @@ public class ConflictPatternCatalog {
 				new InsertFieldPatternAction(insertedFieldPattern, classPattern));
 
 
-		ConflictPattern conflict = new ConflictPattern("Field Hiding");
+		ConflictPattern conflict = new ConflictPattern(FIELD_HIDING);
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		conflict.addEqualVariableRule(fieldVar, insertedFieldVar);
+		
+		TestingGoal goal = new TestingGoal(classPattern);
+		goal.addMethodToCall(classPattern, insertedMethodPattern);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -710,6 +772,11 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		
+		TestingGoal goal = new TestingGoal(superClassPattern);
+		goal.addConstructorToCall(superClassPattern, cPattern);
+		goal.addMethodToCall(classPattern, insertedMethodPattern);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -748,6 +815,11 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		
+		TestingGoal goal = new TestingGoal(classPattern);
+		goal.addMethodToCall(classPattern, insertedMethodPattern1);
+		goal.addMethodToCall(classPattern, insertedMethodPattern2);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -790,6 +862,11 @@ public class ConflictPatternCatalog {
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
 		conflict.addEqualVariableRule(classVar, holderClassVar);
+		
+		TestingGoal goal = new TestingGoal(holderClassPattern);
+		goal.addMethodToCall(holderClassPattern, insertedMethodPattern1);
+		goal.addMethodToCall(classPattern, insertedMethodPattern2);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -827,6 +904,11 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		
+		TestingGoal goal = new TestingGoal(insertedClassPattern);
+		goal.addMethodToCall(insertedClassPattern, insertedMethodPattern);
+		goal.addMethodToCall(classPattern, insertedCompatiblePattern);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -869,6 +951,11 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		
+		TestingGoal goal = new TestingGoal(classPattern);
+		goal.addMethodToCall(classPattern, insertedMethodPattern);
+		goal.addMethodToCall(superClassPattern, subMethodPattern);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -911,6 +998,11 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		
+		TestingGoal goal = new TestingGoal(insertedClassPattern);
+		goal.addMethodToCall(insertedClassPattern, insertedMethodPattern);
+		goal.addMethodToCall(superClassPattern, subMethodPattern);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -953,6 +1045,11 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		
+		TestingGoal goal = new TestingGoal(classPattern);
+		goal.addMethodToCall(classPattern, insertedMethodPattern);
+		goal.addMethodToCall(superClassPattern, topMethodPattern);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -995,6 +1092,11 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		
+		TestingGoal goal = new TestingGoal(insertedClassPattern);
+		goal.addMethodToCall(insertedClassPattern, insertedMethodPattern);
+		goal.addMethodToCall(superClassPattern, topMethodPattern);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
@@ -1031,6 +1133,11 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		
+		TestingGoal goal = new TestingGoal(classPattern);
+		goal.addMethodToCall(classPattern, insertedMethodPattern);
+		goal.addMethodToCall(superClassPattern, methodPattern);
+		conflict.setTestingGoal(goal);
 
 		return conflict;
 	}
