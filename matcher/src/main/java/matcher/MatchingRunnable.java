@@ -2,6 +2,7 @@ package matcher;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Semaphore;
 
@@ -22,6 +23,8 @@ public class MatchingRunnable implements Callable<List<List<Pair<Integer, String
 	
 	private ChangeInstanceHandler cih;
 	private MatchingHandler mh;
+	
+	private BlockingQueue<Pair<String, List<String>>> outputQueue;
 
 	private File[] basesFile;
 	private File[] variants1File;
@@ -47,6 +50,10 @@ public class MatchingRunnable implements Callable<List<List<Pair<Integer, String
 		this.sem = sem;
 	}
 
+	public void setOutputQueue(BlockingQueue<Pair<String, List<String>>> outputQueue) {
+		this.outputQueue = outputQueue;
+	}
+
 	@Override
 	public List<List<Pair<Integer, String>>> call() throws Exception {
 		if(cp == null) 
@@ -60,7 +67,14 @@ public class MatchingRunnable implements Callable<List<List<Pair<Integer, String
 		sem.release();
 		
 		logger.info("Starting matching for " + cp.getConflictName() + "...");
-		return mh.matchingAssignments(ci, cp);
+		
+		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
+		
+		if(outputQueue != null) {
+			outputQueue.addAll(getTestingGoals());
+		}
+		
+		return result;
 	}
 
 	public List<Pair<String, List<String>>> getTestingGoals(){

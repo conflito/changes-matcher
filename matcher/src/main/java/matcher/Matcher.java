@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 
+import org.apache.log4j.Logger;
 
 import matcher.catalogs.ConflictPatternCatalog;
 import matcher.exceptions.ApplicationException;
@@ -22,6 +25,8 @@ import matcher.patterns.ConflictPattern;
 import matcher.utils.Pair;
 
 public class Matcher {
+	
+	private final static Logger logger = Logger.getLogger(Matcher.class);
 	
 	private ConflictPatternCatalog conflictsCatalog;
 	
@@ -35,6 +40,43 @@ public class Matcher {
 		
 		conflictsCatalog = new ConflictPatternCatalog();
 		testingGoals = new ArrayList<>();
+	}
+	
+	public void match(String[] bases, String[] variants1, String[] variants2)
+			throws ApplicationException{
+		if(bases == null || variants1 == null || variants2 == null)
+			return ;
+		if(!sameLenght(bases, variants1, variants2))
+			return ;
+		
+		File[] basesFile = fromStringArray(bases);
+		File[] variants1File = fromStringArray(variants1);
+		File[] variants2File = fromStringArray(variants2);
+		
+		SpoonHandler.getInstance().loadLaunchers(basesFile, variants1File, 
+				variants2File);
+		
+		ExecutorService es = Executors.newCachedThreadPool();
+		Semaphore sem = new Semaphore(1);
+		BlockingQueue<Pair<String, List<String>>> outputQueue = 
+				new LinkedBlockingQueue<>();
+		
+		for(ConflictPattern cp: conflictsCatalog.getPatterns()) {
+			MatchingRunnable mt = new MatchingRunnable(basesFile, variants1File, variants2File);
+			mt.setConflictPattern(cp);
+			mt.setSem(sem);
+			mt.setOutputQueue(outputQueue);
+			
+			es.submit(mt);
+		}
+		es.shutdown();
+		while(!es.isTerminated() || !outputQueue.isEmpty()) {
+			if(!outputQueue.isEmpty()) {
+				Pair<String, List<String>> testGoal = outputQueue.poll();
+				logger.info("Using EvoSuite to generate test to cover: " + testGoal.toString());
+			}
+		}
+		
 	}
 	
 	public List<List<Pair<Integer, String>>> matchingAssignments(String[] bases,
