@@ -9,7 +9,6 @@ import matcher.entities.deltas.Action;
 import matcher.patterns.BasePattern;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.ConflictPattern;
-import matcher.patterns.ConstructorPattern;
 import matcher.patterns.FieldAccessPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
@@ -44,13 +43,11 @@ public class ConflictPatternCatalog {
 	public static final String DEPENDENCY_BASED_FIELD_TYPE_UPDATE_CLASS_NEW =  
 			"Dependency Based (field type update)(new class)";
 	public static final String UNEXPECTED_OVERRIDING = "Unexpected Overriding";
-	public static final String UNEXPECTED_OVERRIDING_2 = "Unexpected Overriding 2";
 	public static final String UNEXPECTED_OVERRIDING_3_NEW_METHOD = 
 			"Unexpected Overriding 3 (new method)";
 	public static final String UNEXPECTED_OVERRIDING_3_NEW_DEPENDENCY = 
 			"Unexpected Overriding 3 (new dependency)";
 	public static final String FIELD_HIDING = "Field Hiding";
-	public static final String ADD_METHOD_OVERRIDING = "Add Method Overriding";
 	public static final String ADD_METHOD_OVERRIDING_2 = "Add Method Overriding 2";
 	public static final String OVERLOAD_BY_ADDITION_CLASS_EXISTS = 
 			"Overload by Addition (class exists)";
@@ -99,15 +96,11 @@ public class ConflictPatternCatalog {
 				getDependencyBasedFieldTypeUpdateNewClassPattern());
 		patterns.put(UNEXPECTED_OVERRIDING,
 				getUnexpectedOverriding1Pattern());
-		patterns.put(UNEXPECTED_OVERRIDING_2,
-				getUnexpectedOverriding2Pattern());
 		patterns.put(UNEXPECTED_OVERRIDING_3_NEW_METHOD,
 				getUnexpectedOverriding3NewMethodPattern());
 		patterns.put(UNEXPECTED_OVERRIDING_3_NEW_DEPENDENCY,
 				getUnexpectedOverriding3NewCallPattern());
 		patterns.put(FIELD_HIDING, getFieldHidingPattern());
-		patterns.put(ADD_METHOD_OVERRIDING,
-				getAddMethodOveridingPattern());
 		patterns.put(ADD_METHOD_OVERRIDING_2,
 				getAddMethodOverriding2Pattern());
 		patterns.put(OVERLOAD_BY_ADDITION_CLASS_EXISTS,
@@ -487,22 +480,14 @@ public class ConflictPatternCatalog {
 	private ConflictPattern getUnexpectedOverriding1Pattern() {
 		FreeVariable classVar1 = new FreeVariable(0);
 		FreeVariable classVar2 = new FreeVariable(1);
-		FreeVariable fieldVar1 = new FreeVariable(2);
-		FreeVariable insertedMethodVar = new FreeVariable(3);
-		FreeVariable overideMethodVar = new FreeVariable(4);
-		FreeVariable iVar = new FreeVariable(5);
+		FreeVariable insertedMethodVar = new FreeVariable(2);
+		FreeVariable overideMethodVar = new FreeVariable(3);
 
 		BasePattern basePattern = new BasePattern();
-		InterfacePattern iPattern = new InterfacePattern(iVar);
 		ClassPattern classPattern1 = new ClassPattern(classVar1);
 		ClassPattern classPattern2 = new ClassPattern(classVar2);
-		FieldPattern fieldPattern = new FieldPattern(fieldVar1, null);
-		TypePattern typePattern = new TypePattern(iVar);
-		fieldPattern.setType(typePattern);
-		classPattern1.addFieldPattern(fieldPattern);
-		classPattern2.addInterface(new InterfaceImplementationPattern(iVar));
+
 		classPattern2.addExcludedMethod(overideMethodVar);
-		basePattern.addInterfacePattern(iPattern);
 		basePattern.addClassPattern(classPattern1);
 		basePattern.addClassPattern(classPattern2);
 
@@ -527,63 +512,6 @@ public class ConflictPatternCatalog {
 		TestingGoal goal = new TestingGoal(classPattern1);
 		goal.addMethodToCall(classPattern1, insertedMethodPattern1);
 		goal.addMethodToCall(classPattern2, insertedMethodPattern2);
-		conflict.setTestingGoal(goal);
-
-		return conflict;
-	}
-	
-	private ConflictPattern getUnexpectedOverriding2Pattern() {
-		FreeVariable classVar1 = new FreeVariable(0);
-		FreeVariable classVar2 = new FreeVariable(1);
-		FreeVariable classVar3 = new FreeVariable(2);
-		FreeVariable fieldVar1 = new FreeVariable(3);
-		FreeVariable methodVar1 = new FreeVariable(4);
-		FreeVariable insertedMethod = new FreeVariable(5);
-		FreeVariable iVar = new FreeVariable(6);
-
-		BasePattern basePattern = new BasePattern();
-		InterfacePattern iPattern = new InterfacePattern(iVar);
-		ClassPattern classPattern1 = new ClassPattern(classVar1);
-		ClassPattern classPattern2 = new ClassPattern(classVar2);
-		ClassPattern classPattern3 = new ClassPattern(classVar3);
-		MethodPattern methodPattern = new MethodPattern(methodVar1, null);
-		FieldPattern fieldPattern = new FieldPattern(fieldVar1, null);
-		TypePattern typePattern = new TypePattern(iVar);
-		fieldPattern.setType(typePattern);
-		classPattern1.addFieldPattern(fieldPattern);
-		classPattern2.addInterface(new InterfaceImplementationPattern(iVar));
-		classPattern2.addMethodPattern(methodPattern);
-		classPattern3.addExcludedMethod(methodVar1);
-		classPattern3.setSuperClass(classPattern2);
-		basePattern.addInterfacePattern(iPattern);
-		basePattern.addClassPattern(classPattern1);
-		basePattern.addClassPattern(classPattern3);
-
-		DeltaPattern dp1 = new DeltaPattern();
-		DeltaPattern dp2 = new DeltaPattern();
-		MethodPattern insertedMethodPattern1 =
-				new MethodPattern(insertedMethod, null);
-		insertedMethodPattern1.addDependency(methodVar1);
-
-		ClassPattern holder = new ClassPattern(classVar3);
-		holder.setSuperClass(classPattern2);
-		MethodPattern insertedMethodPattern2 =
-				new MethodPattern(methodVar1, null);
-
-		dp1.addActionPattern(
-				new InsertMethodPatternAction(insertedMethodPattern1, classPattern1));
-		dp2.addActionPattern(
-				new InsertMethodPatternAction(insertedMethodPattern2, holder));
-
-		ConflictPattern conflict = new ConflictPattern(UNEXPECTED_OVERRIDING_2);
-		conflict.setBasePattern(basePattern);
-		conflict.setFirstDeltaPattern(dp1);
-		conflict.setSecondDeltaPattern(dp2);
-		conflict.addDifferentVariablesRule(classVar1, classVar3);
-		
-		TestingGoal goal = new TestingGoal(classPattern1);
-		goal.addMethodToCall(classPattern1, insertedMethodPattern1);
-		goal.addMethodToCall(holder, insertedMethodPattern2);
 		conflict.setTestingGoal(goal);
 
 		return conflict;
@@ -732,68 +660,22 @@ public class ConflictPatternCatalog {
 		return conflict;
 	}
 	
-	private ConflictPattern getAddMethodOveridingPattern() {
-		FreeVariable superClassVar = new FreeVariable(0);
-		FreeVariable classVar = new FreeVariable(1);
-		FreeVariable cVar = new FreeVariable(2);
-		FreeVariable methodVar = new FreeVariable(3);
-		FreeVariable fieldVar =  new FreeVariable(4);
-
-		BasePattern basePattern = new BasePattern();
-		ClassPattern superClassPattern = new ClassPattern(superClassVar);
-		ClassPattern classPattern = new ClassPattern(classVar);
-		MethodPattern methodPattern = new MethodPattern(methodVar, Visibility.PACKAGE);
-		ConstructorPattern cPattern = new ConstructorPattern(cVar, Visibility.PACKAGE);
-		FieldPattern fieldPattern = new FieldPattern(fieldVar, Visibility.PACKAGE);
-		superClassPattern.addConstructorPattern(cPattern);
-		superClassPattern.addMethodPattern(methodPattern);
-		classPattern.addFieldPattern(fieldPattern);
-		classPattern.setSuperClass(superClassPattern);
-		basePattern.addClassPattern(classPattern);
-
-		DeltaPattern dp1 = new DeltaPattern();
-		DeltaPattern dp2 = new DeltaPattern();
-
-		MethodInvocationPattern insertedInvocationPattern = 
-				new MethodInvocationPattern(methodVar);
-		MethodPattern insertedMethodPattern = 
-				new MethodPattern(methodVar, Visibility.PACKAGE);
-		FieldAccessPattern insertedAccessPattern = 
-				new FieldAccessPattern(fieldVar, FieldAccessType.WRITE);
-		insertedMethodPattern.addFieldAccessPattern(insertedAccessPattern);
-
-		dp1.addActionPattern(
-				new InsertInvocationPatternAction(insertedInvocationPattern, cPattern));
-		dp2.addActionPattern(
-				new InsertMethodPatternAction(insertedMethodPattern, classPattern));
-
-
-		ConflictPattern conflict = new ConflictPattern(ADD_METHOD_OVERRIDING);
-		conflict.setBasePattern(basePattern);
-		conflict.setFirstDeltaPattern(dp1);
-		conflict.setSecondDeltaPattern(dp2);
-		
-		TestingGoal goal = new TestingGoal(superClassPattern);
-		goal.addConstructorToCall(superClassPattern, cPattern);
-		goal.addMethodToCall(classPattern, insertedMethodPattern);
-		conflict.setTestingGoal(goal);
-
-		return conflict;
-	}
-	
 	private ConflictPattern getAddMethodOverriding2Pattern() {
 		FreeVariable superClassVar = new FreeVariable(0);
 		FreeVariable classVar = new FreeVariable(1);
 		FreeVariable methodVar = new FreeVariable(2);
 		FreeVariable insertedMethodVar = new FreeVariable(3);
+		FreeVariable holderClassVar = new FreeVariable(4);
 
 		BasePattern basePattern = new BasePattern();
 		ClassPattern superClassPattern = new ClassPattern(superClassVar);
 		ClassPattern classPattern = new ClassPattern(classVar);
+		ClassPattern holderClassPattern = new ClassPattern(holderClassVar);
 		MethodPattern methodPattern = new MethodPattern(methodVar, Visibility.PUBLIC);
 		superClassPattern.addMethodPattern(methodPattern);
 		classPattern.setSuperClass(superClassPattern);
 		basePattern.addClassPattern(classPattern);
+		basePattern.addClassPattern(holderClassPattern);
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
@@ -805,7 +687,7 @@ public class ConflictPatternCatalog {
 		insertedMethodPattern1.addDependency(methodVar);
 
 		dp1.addActionPattern(
-				new InsertMethodPatternAction(insertedMethodPattern1, classPattern));
+				new InsertMethodPatternAction(insertedMethodPattern1, holderClassPattern));
 
 		dp2.addActionPattern(
 				new InsertMethodPatternAction(insertedMethodPattern2, classPattern));
@@ -815,9 +697,10 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
+		conflict.addEqualVariableRule(classVar, holderClassVar);
 		
 		TestingGoal goal = new TestingGoal(classPattern);
-		goal.addMethodToCall(classPattern, insertedMethodPattern1);
+		goal.addMethodToCall(holderClassPattern, insertedMethodPattern1);
 		goal.addMethodToCall(classPattern, insertedMethodPattern2);
 		conflict.setTestingGoal(goal);
 
@@ -914,23 +797,23 @@ public class ConflictPatternCatalog {
 	}
 	
 	private ConflictPattern getOverloadByAccessChangeClassExistsPattern() {
-		FreeVariable superClassVar = new FreeVariable(0);
+		FreeVariable holderClassVar = new FreeVariable(0);
 		FreeVariable classVar = new FreeVariable(1);
 		FreeVariable topMethodVar = new FreeVariable(2);
 		FreeVariable subMethodVar = new FreeVariable(3);
 		FreeVariable insertedMethodVar = new FreeVariable(4);
 
 		BasePattern basePattern = new BasePattern();
-		ClassPattern superClassPattern = new ClassPattern(superClassVar);
+		ClassPattern holderClassPattern = new ClassPattern(holderClassVar);
 		ClassPattern classPattern = new ClassPattern(classVar);
 		MethodPattern topMethodPattern = 
 				new MethodPattern(topMethodVar, Visibility.PUBLIC);
 		MethodPattern subMethodPattern = 
 				new MethodPattern(subMethodVar, Visibility.PRIVATE);
-		superClassPattern.addMethodPattern(topMethodPattern);
-		superClassPattern.addMethodPattern(subMethodPattern);
-		superClassPattern.addCompatible(subMethodVar, topMethodVar);
-		classPattern.setSuperClass(superClassPattern);
+		holderClassPattern.addMethodPattern(topMethodPattern);
+		holderClassPattern.addMethodPattern(subMethodPattern);
+		holderClassPattern.addCompatible(subMethodVar, topMethodVar);
+		basePattern.addClassPattern(holderClassPattern);
 		basePattern.addClassPattern(classPattern);
 
 		DeltaPattern dp1 = new DeltaPattern();
@@ -954,7 +837,7 @@ public class ConflictPatternCatalog {
 		
 		TestingGoal goal = new TestingGoal(classPattern);
 		goal.addMethodToCall(classPattern, insertedMethodPattern);
-		goal.addMethodToCall(superClassPattern, subMethodPattern);
+		goal.addMethodToCall(holderClassPattern, subMethodPattern);
 		conflict.setTestingGoal(goal);
 
 		return conflict;

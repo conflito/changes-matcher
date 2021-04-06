@@ -29,8 +29,6 @@ public class TestMatcherSemanticConflicts {
 			"AddOverloadingMByAdditionAddCall2M_01" + File.separator;
 	private static final String FIELD_HIDING_FOLDER = 
 			"AddFieldHidingAddMethodThatUseDefFinChild" + File.separator;
-	private static final String METHOD_OVERIDING_FOLDER = 
-			"AddOveridingMAddCall2MInParent" + File.separator;
 	private static final String OVERLOAD_ACCESS_CHANGE_FOLDER = 
 			"AddOverloadingMByChangeAccessibility1AddCall2M" + File.separator;
 	private static final String OVERLOAD_ACCESS_CHANGE1_FOLDER = 
@@ -245,67 +243,6 @@ public class TestMatcherSemanticConflicts {
 		assertEquals(targetMethods.size(), 1, "There is not one method to cover?");
 		assertEquals(targetMethods.get(0), "B.m()V", 
 				"Method to cover is not B.m()V?");
-	}
-
-	@Test
-	public void methodOveridingTest() throws ApplicationException {
-		Matcher matcher = new Matcher(SRC_FOLDER 
-				+ METHOD_OVERIDING_FOLDER + CONFIG_FILE_NAME);
-
-		String base1Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + 
-				BASE_BRANCH_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + 
-				VAR1_BRANCH_FOLDER + "A.java";
-		String base2Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + 
-				BASE_BRANCH_FOLDER + "B.java";
-		String var2Path = SRC_FOLDER + METHOD_OVERIDING_FOLDER + 
-				VAR2_BRANCH_FOLDER + "B.java";
-
-		String[] bases = {base1Path, base2Path};
-		String[] variants1 = {var1Path, null};
-		String[] variants2 = {null, var2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.ADD_METHOD_OVERRIDING);
-
-		List<List<Pair<Integer, String>>> result = 
-				matcher.matchingAssignments(bases, variants1, variants2, cp);
-
-		assertEquals(1, result.size(), "Not one result for overloading method?");
-		
-		List<Pair<Integer,String>> assignments = result.get(0);
-		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
-		
-		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-		assertEquals("A", assignments.get(0).getSecond(), "Superclass is not A");
-		
-		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("B", assignments.get(1).getSecond(), "Class is not B?");
-		
-		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("A.<init>()", assignments.get(2).getSecond(), 
-				"Constructor is not A.<init>()?");
-		
-		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("resize()", assignments.get(3).getSecond(), 
-				"Inserted method that writes to field is not resize()?");
-		
-		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("h", assignments.get(4).getSecond(), "Field is not h?");
-		
-		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
-		
-		assertEquals(1, goals.size(), "There is not one goal to test?");
-		
-		Pair<String, List<String>> goal = goals.get(0);
-		String targetClass = goal.getFirst();
-		List<String> targetMethods = goal.getSecond();
-		assertEquals(targetClass, "A", "The target class to test is not A?");
-		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
-		assertEquals(targetMethods.get(0), "A.<init>()V", 
-				"Method to cover is not A.<init>()V?");
-		assertEquals(targetMethods.get(1), "B.resize()V", 
-				"Method to cover is not B.resize()V?");
 	}
 
 	@Test
@@ -582,7 +519,7 @@ public class TestMatcherSemanticConflicts {
 		assertEquals(1, result.size(), "Not one result for overriding method?");
 		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
 		
 		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
 		assertEquals("A", assignments.get(0).getSecond(), "Superclass is not A");
@@ -597,6 +534,10 @@ public class TestMatcherSemanticConflicts {
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
 		assertEquals("reset()", assignments.get(3).getSecond(), 
 				"Method with invocation is not reset()?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("B", assignments.get(4).getSecond(), "Class that holds reset()"
+				+ " is not B?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
@@ -1601,7 +1542,7 @@ public class TestMatcherSemanticConflicts {
 		assertEquals(1, result.size(), "Not one result for unexpected overriding 1?");
 		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertEquals(6, assignments.size(), "Not 6 assignments with only 6 variables?");
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 5 variables?");
 		
 		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
 		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
@@ -1610,18 +1551,12 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("B0", assignments.get(1).getSecond(), "Other class is not B0?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("b", assignments.get(2).getSecond(), "Field is not b?");
-		
-		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("n(A)", assignments.get(3).getSecond(), 
+		assertEquals("n(A)", assignments.get(2).getSecond(), 
 				"Inserted method is not n(A)?");
 		
-		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4? "); 
-		assertEquals("equals(java.lang.Object)", assignments.get(4).getSecond(), 
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3? "); 
+		assertEquals("equals(java.lang.Object)", assignments.get(3).getSecond(), 
 				"Method overriden is not equals(java.lang.Object)");
-		
-		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
-		assertEquals("B", assignments.get(5).getSecond(), "Interface is not B?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
@@ -1657,38 +1592,28 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {null, var2Path};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.UNEXPECTED_OVERRIDING_2);
+				ConflictPatternCatalog.UNEXPECTED_OVERRIDING);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		assertEquals(1, result.size(), "Not one result for unexpected overriding 2?");
+		assertEquals(1, result.size(), "Not one result for unexpected overriding?");
 		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertEquals(7, assignments.size(), "Not 7 assignments with only 7 variables?");
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
 		
 		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
 		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("B1", assignments.get(1).getSecond(), "Other class is not B1?");
+		assertEquals("B2", assignments.get(1).getSecond(), "Other class is not B2?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("B2", assignments.get(2).getSecond(), 
-				"Third class that extends second is not B2?");
+		assertEquals("n()", assignments.get(2).getSecond(), 
+				"Method that invokes overriden method is not n()?");
 		
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("b", assignments.get(3).getSecond(), "Field is not b?");
-		
-		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("m()", assignments.get(4).getSecond(), 
+		assertEquals("m()", assignments.get(3).getSecond(), 
 				"Method overriden is not m()");
-		
-		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
-		assertEquals("n()", assignments.get(5).getSecond(), 
-				"Method that invokes overriden method is not n()");
-		
-		assertEquals(6, assignments.get(6).getFirst(), "Variable id is not 6?"); 
-		assertEquals("B", assignments.get(6).getSecond(), "Interface is not B?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
