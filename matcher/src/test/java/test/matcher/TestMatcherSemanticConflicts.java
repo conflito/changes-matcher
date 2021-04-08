@@ -118,7 +118,7 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern cp = 
 				ConflictPatternCatalog.getConflict(
-						ConflictPatternCatalog.OVERLOAD_BY_ADDITION_CLASS_EXISTS);
+						ConflictPatternCatalog.OVERLOAD_BY_ADDITION_NEW_METHOD);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -179,7 +179,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {null, newPath};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.OVERLOAD_BY_ADDITION_CLASS_NEW);
+				ConflictPatternCatalog.OVERLOAD_BY_ADDITION_NEW_CLASS);
 				
 
 		List<List<Pair<Integer, String>>> result = 
@@ -242,7 +242,7 @@ public class TestMatcherSemanticConflicts {
 
 		ConflictPattern cp = 
 				ConflictPatternCatalog.getConflict(
-						ConflictPatternCatalog.OVERLOAD_BY_ADDITION_CALL_NEW);
+						ConflictPatternCatalog.OVERLOAD_BY_ADDITION_NEW_CALL);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -361,7 +361,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {null, var2Path};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_CLASS_EXISTS);
+				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_NEW_METHOD);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -485,7 +485,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {null, newClassPath};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_CLASS_NEW);
+				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_NEW_CLASS);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -548,7 +548,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {null, var2Path};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_2_CLASS_EXISTS);
+				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_2_NEW_METHOD);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -611,7 +611,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {null, var2Path};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_2_CALL_NEW);
+				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_2_NEW_CALL);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -672,7 +672,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {null, newClassPath};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_2_CLASS_NEW);
+				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_2_NEW_CLASS);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -1262,7 +1262,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {var2Path};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_CLASS_EXISTS);
+				ConflictPatternCatalog.DEPENDENCY_BASED_NEW_METHOD);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -1321,7 +1321,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {null, var2Path};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_CLASS_EXISTS);
+				ConflictPatternCatalog.DEPENDENCY_BASED_NEW_METHOD);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -1378,7 +1378,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {null, newClassPath};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_CLASS_NEW);
+				ConflictPatternCatalog.DEPENDENCY_BASED_NEW_CLASS);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -1436,7 +1436,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {null, newClassPath, newClass2Path};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_CLASS_NEW);
+				ConflictPatternCatalog.DEPENDENCY_BASED_NEW_CLASS);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -1519,7 +1519,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {null, newClassPath};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_CLASS_NEW);
+				ConflictPatternCatalog.DEPENDENCY_BASED_NEW_CLASS);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -1575,7 +1575,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {null, newClassPath};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_CLASS_NEW);
+				ConflictPatternCatalog.DEPENDENCY_BASED_NEW_CLASS);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);				
@@ -1633,7 +1633,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {var2Path};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_DEPENDENCY_INSERT);
+				ConflictPatternCatalog.DEPENDENCY_BASED_NEW_CALL);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -2001,7 +2001,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {var2Path};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.UNEXPECTED_OVERRIDING_3_NEW_DEPENDENCY);
+				ConflictPatternCatalog.UNEXPECTED_OVERRIDING_3_NEW_CALL);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);

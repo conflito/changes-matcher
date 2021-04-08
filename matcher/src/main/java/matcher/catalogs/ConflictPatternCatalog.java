@@ -36,12 +36,12 @@ public class ConflictPatternCatalog {
 	public static final String CHANGE_METHOD = "Change Method";
 	public static final String CHANGE_METHOD_2 = "Change Method 2";
 	
-	public static final String DEPENDENCY_BASED_CLASS_EXISTS = 
+	public static final String DEPENDENCY_BASED_NEW_METHOD = 
 			"Dependency Based (class exists)";
-	public static final String DEPENDENCY_BASED_CLASS_NEW = 
+	public static final String DEPENDENCY_BASED_NEW_CLASS = 
 			"Dependency Based (new class)";
-	public static final String DEPENDENCY_BASED_DEPENDENCY_INSERT =
-			"Dependency Base (dependency insertion)";
+	public static final String DEPENDENCY_BASED_NEW_CALL =
+			"Dependency Base (new call)";
 
 	public static final String UNEXPECTED_OVERRIDING_NEW_METHOD = 
 			"Unexpected Overriding (new method)";
@@ -52,8 +52,8 @@ public class ConflictPatternCatalog {
 	
 	public static final String UNEXPECTED_OVERRIDING_3_NEW_METHOD = 
 			"Unexpected Overriding 3 (new method)";
-	public static final String UNEXPECTED_OVERRIDING_3_NEW_DEPENDENCY = 
-			"Unexpected Overriding 3 (new dependency)";
+	public static final String UNEXPECTED_OVERRIDING_3_NEW_CALL = 
+			"Unexpected Overriding 3 (new call)";
 	public static final String UNEXPECTED_OVERRIDING_3_NEW_CLASS = 
 			"Unexpected Overriding 3 (new class)";
 	
@@ -66,25 +66,25 @@ public class ConflictPatternCatalog {
 	public static final String ADD_METHOD_OVERRIDING_NEW_CALL = 
 			"Add Method Overriding (new call)";
 	
-	public static final String OVERLOAD_BY_ADDITION_CLASS_EXISTS = 
-			"Overload by Addition (class exists)";
-	public static final String OVERLOAD_BY_ADDITION_CLASS_NEW = 
+	public static final String OVERLOAD_BY_ADDITION_NEW_METHOD = 
+			"Overload by Addition (new method)";
+	public static final String OVERLOAD_BY_ADDITION_NEW_CLASS = 
 			"Overload by Addition (new class)";
-	public static final String OVERLOAD_BY_ADDITION_CALL_NEW = 
+	public static final String OVERLOAD_BY_ADDITION_NEW_CALL = 
 			"Overload by Addition (new call)";
 	
-	public static final String OVERLOAD_BY_ACCESS_CHANGE_CLASS_EXISTS = 
-			"Overload by Access Change (class exists)";
-	public static final String OVERLOAD_BY_ACCESS_CHANGE_CLASS_NEW = 
+	public static final String OVERLOAD_BY_ACCESS_CHANGE_NEW_METHOD = 
+			"Overload by Access Change (new method)";
+	public static final String OVERLOAD_BY_ACCESS_CHANGE_NEW_CLASS = 
 			"Overload by Access Change (new class)";
 	public static final String OVERLOAD_BY_ACCESS_CHANGE_CALL_NEW = 
 			"Overload by Access Change (new call)";
 	
-	public static final String OVERLOAD_BY_ACCESS_CHANGE_2_CLASS_EXISTS = 
-			"Overload by Access Change 2(class exists)";
-	public static final String OVERLOAD_BY_ACCESS_CHANGE_2_CLASS_NEW = 
+	public static final String OVERLOAD_BY_ACCESS_CHANGE_2_NEW_METHOD = 
+			"Overload by Access Change 2(new method)";
+	public static final String OVERLOAD_BY_ACCESS_CHANGE_2_NEW_CLASS = 
 			"Overload by Access Change 2(new class)";
-	public static final String OVERLOAD_BY_ACCESS_CHANGE_2_CALL_NEW = 
+	public static final String OVERLOAD_BY_ACCESS_CHANGE_2_NEW_CALL = 
 			"Overload by Access Change 2(new call)";
 	
 	public static final String REMOVE_OVERRIDING = "Remove Overriding";
@@ -112,12 +112,12 @@ public class ConflictPatternCatalog {
 				getChangeMethodPattern());
 		patterns.put(CHANGE_METHOD_2, getChangeMethod2Pattern());
 		
-		patterns.put(DEPENDENCY_BASED_CLASS_EXISTS, 
-				getDependencyBasedClassExistsPattern());
-		patterns.put(DEPENDENCY_BASED_CLASS_NEW, 
+		patterns.put(DEPENDENCY_BASED_NEW_METHOD, 
+				getDependencyBasedNewMethodPattern());
+		patterns.put(DEPENDENCY_BASED_NEW_CLASS, 
 				getDependencyBasedNewClassPattern());
-		patterns.put(DEPENDENCY_BASED_DEPENDENCY_INSERT, 
-				getDependencyBasedCallAdditionPattern());
+		patterns.put(DEPENDENCY_BASED_NEW_CALL, 
+				getDependencyBasedNewCallPattern());
 		
 		patterns.put(UNEXPECTED_OVERRIDING_NEW_METHOD,
 				getUnexpectedOverriding1NewMethodPattern());
@@ -128,7 +128,7 @@ public class ConflictPatternCatalog {
 		
 		patterns.put(UNEXPECTED_OVERRIDING_3_NEW_METHOD,
 				getUnexpectedOverriding3NewMethodPattern());
-		patterns.put(UNEXPECTED_OVERRIDING_3_NEW_DEPENDENCY,
+		patterns.put(UNEXPECTED_OVERRIDING_3_NEW_CALL,
 				getUnexpectedOverriding3NewCallPattern());
 		patterns.put(UNEXPECTED_OVERRIDING_3_NEW_CLASS,
 				getUnexpectedOverriding3NewClassPattern());
@@ -142,25 +142,25 @@ public class ConflictPatternCatalog {
 		patterns.put(ADD_METHOD_OVERRIDING_NEW_CALL,
 				getAddMethodOverridingNewCallPattern());
 		
-		patterns.put(OVERLOAD_BY_ADDITION_CLASS_EXISTS,
-				getOverloadByAdditionClassExistsPattern());
-		patterns.put(OVERLOAD_BY_ADDITION_CLASS_NEW,
+		patterns.put(OVERLOAD_BY_ADDITION_NEW_METHOD,
+				getOverloadByAdditionNewMethodPattern());
+		patterns.put(OVERLOAD_BY_ADDITION_NEW_CLASS,
 				getOverloadByAdditionNewClassPattern());
-		patterns.put(OVERLOAD_BY_ADDITION_CALL_NEW,
+		patterns.put(OVERLOAD_BY_ADDITION_NEW_CALL,
 				getOverloadByAdditionNewCallPattern());
 		
-		patterns.put(OVERLOAD_BY_ACCESS_CHANGE_CLASS_EXISTS,
-				getOverloadByAccessChangeClassExistsPattern());
-		patterns.put(OVERLOAD_BY_ACCESS_CHANGE_CLASS_NEW,
+		patterns.put(OVERLOAD_BY_ACCESS_CHANGE_NEW_METHOD,
+				getOverloadByAccessChangeNewMethodPattern());
+		patterns.put(OVERLOAD_BY_ACCESS_CHANGE_NEW_CLASS,
 				getOverloadByAccessChangeNewClassPattern());
 		patterns.put(OVERLOAD_BY_ACCESS_CHANGE_CALL_NEW,
 				getOverloadByAccessChangeNewCallPattern());
 		
-		patterns.put(OVERLOAD_BY_ACCESS_CHANGE_2_CLASS_EXISTS,
-				getOverloadByAccessChange2ClassExistsPattern());
-		patterns.put(OVERLOAD_BY_ACCESS_CHANGE_2_CLASS_NEW,
+		patterns.put(OVERLOAD_BY_ACCESS_CHANGE_2_NEW_METHOD,
+				getOverloadByAccessChange2NewMethodPattern());
+		patterns.put(OVERLOAD_BY_ACCESS_CHANGE_2_NEW_CLASS,
 				getOverloadByAccessChange2NewClassPattern());
-		patterns.put(OVERLOAD_BY_ACCESS_CHANGE_2_CALL_NEW,
+		patterns.put(OVERLOAD_BY_ACCESS_CHANGE_2_NEW_CALL,
 				getOverloadByAccessChange2NewCallPattern());
 		
 		patterns.put(REMOVE_OVERRIDING, getRemoveOverridingPattern());
@@ -311,7 +311,7 @@ public class ConflictPatternCatalog {
 		return conflict;
 	}
 
-	private ConflictPattern getDependencyBasedClassExistsPattern() {
+	private ConflictPattern getDependencyBasedNewMethodPattern() {
 		FreeVariable classVar = new FreeVariable(0);
 		FreeVariable methodVar1 = new FreeVariable(1);
 		FreeVariable holderClassVar = new FreeVariable(2);
@@ -337,7 +337,7 @@ public class ConflictPatternCatalog {
 				new InsertMethodPatternAction(insertedMethodPattern, 
 						holderClassPattern));
 
-		ConflictPattern conflict = new ConflictPattern(DEPENDENCY_BASED_CLASS_EXISTS);
+		ConflictPattern conflict = new ConflictPattern(DEPENDENCY_BASED_NEW_METHOD);
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -376,7 +376,7 @@ public class ConflictPatternCatalog {
 		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern1));
 		dp2.addActionPattern(new InsertClassPatternAction(insertedClassPattern));
 
-		ConflictPattern conflict = new ConflictPattern(DEPENDENCY_BASED_CLASS_NEW);
+		ConflictPattern conflict = new ConflictPattern(DEPENDENCY_BASED_NEW_CLASS);
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -389,7 +389,7 @@ public class ConflictPatternCatalog {
 		return conflict;
 	}
 	
-	private ConflictPattern getDependencyBasedCallAdditionPattern() {
+	private ConflictPattern getDependencyBasedNewCallPattern() {
 		FreeVariable classVar = new FreeVariable(0);
 		FreeVariable classVar2 = new FreeVariable(1);
 		FreeVariable classVar3 = new FreeVariable(2);
@@ -421,7 +421,7 @@ public class ConflictPatternCatalog {
 		dp2.addActionPattern(
 				new InsertInvocationPatternAction(insertedInvocationPattern, methodPattern3));
 
-		ConflictPattern conflict = new ConflictPattern(DEPENDENCY_BASED_DEPENDENCY_INSERT);
+		ConflictPattern conflict = new ConflictPattern(DEPENDENCY_BASED_NEW_CALL);
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -693,7 +693,7 @@ public class ConflictPatternCatalog {
 		dp2.addActionPattern(
 				new InsertInvocationPatternAction(insertedInvocationPattern, methodPattern2));
 
-		ConflictPattern conflict = new ConflictPattern(UNEXPECTED_OVERRIDING_3_NEW_DEPENDENCY);
+		ConflictPattern conflict = new ConflictPattern(UNEXPECTED_OVERRIDING_3_NEW_CALL);
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -899,7 +899,7 @@ public class ConflictPatternCatalog {
 		return conflict;
 	}
 	
-	private ConflictPattern getOverloadByAdditionClassExistsPattern() {
+	private ConflictPattern getOverloadByAdditionNewMethodPattern() {
 		FreeVariable classVar = new FreeVariable(0);
 		FreeVariable methodVar = new FreeVariable(1);
 		FreeVariable insertedMethodVar1 = new FreeVariable(2);
@@ -932,7 +932,7 @@ public class ConflictPatternCatalog {
 
 		dp2.addActionPattern(impa);
 
-		ConflictPattern conflict = new ConflictPattern(OVERLOAD_BY_ADDITION_CLASS_EXISTS);
+		ConflictPattern conflict = new ConflictPattern(OVERLOAD_BY_ADDITION_NEW_METHOD);
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -979,7 +979,7 @@ public class ConflictPatternCatalog {
 		dp1.addActionPattern(iipa);
 		dp2.addActionPattern(impa);
 
-		ConflictPattern conflict = new ConflictPattern(OVERLOAD_BY_ADDITION_CALL_NEW);
+		ConflictPattern conflict = new ConflictPattern(OVERLOAD_BY_ADDITION_NEW_CALL);
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -1022,7 +1022,7 @@ public class ConflictPatternCatalog {
 		dp1.addActionPattern(impa);
 		dp2.addActionPattern(new InsertClassPatternAction(insertedClassPattern));
 
-		ConflictPattern conflict = new ConflictPattern(OVERLOAD_BY_ADDITION_CLASS_NEW);
+		ConflictPattern conflict = new ConflictPattern(OVERLOAD_BY_ADDITION_NEW_CLASS);
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -1035,7 +1035,7 @@ public class ConflictPatternCatalog {
 		return conflict;
 	}
 	
-	private ConflictPattern getOverloadByAccessChangeClassExistsPattern() {
+	private ConflictPattern getOverloadByAccessChangeNewMethodPattern() {
 		FreeVariable holderClassVar = new FreeVariable(0);
 		FreeVariable classVar = new FreeVariable(1);
 		FreeVariable topMethodVar = new FreeVariable(2);
@@ -1069,7 +1069,7 @@ public class ConflictPatternCatalog {
 				new VisibilityActionPattern(Action.UPDATE, Visibility.PUBLIC, 
 						Visibility.PRIVATE, subMethodVar));
 
-		ConflictPattern conflict = new ConflictPattern(OVERLOAD_BY_ACCESS_CHANGE_CLASS_EXISTS);
+		ConflictPattern conflict = new ConflictPattern(OVERLOAD_BY_ACCESS_CHANGE_NEW_METHOD);
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -1116,7 +1116,7 @@ public class ConflictPatternCatalog {
 				new VisibilityActionPattern(Action.UPDATE, Visibility.PUBLIC, 
 						Visibility.PRIVATE, subMethodVar));
 
-		ConflictPattern conflict = new ConflictPattern(OVERLOAD_BY_ACCESS_CHANGE_CLASS_NEW);
+		ConflictPattern conflict = new ConflictPattern(OVERLOAD_BY_ACCESS_CHANGE_NEW_CLASS);
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -1178,7 +1178,7 @@ public class ConflictPatternCatalog {
 		return conflict;
 	}
 	
-	private ConflictPattern getOverloadByAccessChange2ClassExistsPattern() {
+	private ConflictPattern getOverloadByAccessChange2NewMethodPattern() {
 		FreeVariable superClassVar = new FreeVariable(0);
 		FreeVariable classVar = new FreeVariable(1);
 		FreeVariable topMethodVar = new FreeVariable(2);
@@ -1212,7 +1212,7 @@ public class ConflictPatternCatalog {
 				new VisibilityActionPattern(Action.UPDATE, Visibility.PRIVATE, 
 						Visibility.PUBLIC, subMethodVar));
 
-		ConflictPattern conflict = new ConflictPattern(OVERLOAD_BY_ACCESS_CHANGE_2_CLASS_EXISTS);
+		ConflictPattern conflict = new ConflictPattern(OVERLOAD_BY_ACCESS_CHANGE_2_NEW_METHOD);
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -1259,7 +1259,7 @@ public class ConflictPatternCatalog {
 				new VisibilityActionPattern(Action.UPDATE, Visibility.PRIVATE, 
 						Visibility.PUBLIC, subMethodVar));
 
-		ConflictPattern conflict = new ConflictPattern(OVERLOAD_BY_ACCESS_CHANGE_2_CLASS_NEW);
+		ConflictPattern conflict = new ConflictPattern(OVERLOAD_BY_ACCESS_CHANGE_2_NEW_CLASS);
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
@@ -1309,7 +1309,7 @@ public class ConflictPatternCatalog {
 						Visibility.PUBLIC, subMethodVar));
 
 		ConflictPattern conflict = 
-				new ConflictPattern(OVERLOAD_BY_ACCESS_CHANGE_2_CALL_NEW);
+				new ConflictPattern(OVERLOAD_BY_ACCESS_CHANGE_2_NEW_CALL);
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
