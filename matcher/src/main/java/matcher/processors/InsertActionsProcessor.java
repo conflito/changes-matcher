@@ -86,7 +86,7 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	@Override
 	public <T> void visitCtClass(CtClass<T> ctClass) {
 		if(getConflictPattern().hasInsertClassActions()) {
-			ClassInstance insertedInstance = getClassInstance(ctClass);
+			ClassInstance insertedInstance = getClassInstance(ctClass, true);
 			ActionInstance result = new InsertClassAction(insertedInstance);
 			setResult(result);
 		}

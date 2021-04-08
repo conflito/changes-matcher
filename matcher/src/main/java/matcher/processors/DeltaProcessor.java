@@ -61,6 +61,10 @@ public abstract class DeltaProcessor {
 		return classProcessor.process(c);
 	}
 	
+	protected ClassInstance getClassInstance(CtClass<?> c, boolean fullyBuild) {
+		return classProcessor.process(c, fullyBuild);
+	}
+	
 	protected FieldInstance getFieldInstance(CtField<?> field) {
 		return fieldProcessor.process(field);
 	}

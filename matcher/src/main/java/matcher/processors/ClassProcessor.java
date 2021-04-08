@@ -26,27 +26,26 @@ public class ClassProcessor extends Processor<ClassInstance, CtClass<?>>{
 		super();
 		this.conflictPattern = conflictPattern;
 	}
-
-	@Override
-	public ClassInstance process(CtClass<?> element) {
+	
+	public ClassInstance process(CtClass<?> element, boolean fullyBuild) {
 		if(element!= null) {
 			if(InstancesCache.getInstance().hasClass(element)) {
 				return useCache(element);
 			}
 			ClassInstance classInstance = 
 					new ClassInstance(element.getSimpleName(), element.getQualifiedName());
-			if(conflictPattern.hasSuperClasses())
+			if(fullyBuild || conflictPattern.hasSuperClasses())
 				processSuperClass(element, classInstance);
-			if(conflictPattern.hasFields())
+			if(fullyBuild || conflictPattern.hasFields())
 				processFields(element, classInstance);
-			if(conflictPattern.hasMethods()) {
+			if(fullyBuild || conflictPattern.hasMethods()) {
 				List<MethodInstance> methods = processMethods(element, classInstance);
-				if(conflictPattern.hasCompatibleMethods())
+				if(fullyBuild || conflictPattern.hasCompatibleMethods())
 					processCompatibleMethods(methods, classInstance);
 			}
-			if(conflictPattern.hasConstructors())
+			if(fullyBuild || conflictPattern.hasConstructors())
 				processConstructors(element, classInstance);
-			if(conflictPattern.hasInterfaces())
+			if(fullyBuild || conflictPattern.hasInterfaces())
 				processInterfaces(element, classInstance);
 			
 			InstancesCache.getInstance().putClass(element, classInstance);
@@ -54,6 +53,11 @@ public class ClassProcessor extends Processor<ClassInstance, CtClass<?>>{
 			return classInstance;
 		}
 		return null;
+	}
+
+	@Override
+	public ClassInstance process(CtClass<?> element) {
+		return process(element, false);
 	}
 	
 	private ClassInstance useCache(CtClass<?> element) {
