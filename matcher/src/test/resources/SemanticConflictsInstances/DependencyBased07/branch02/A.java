@@ -1,14 +1,18 @@
 public class A{
 
-	public int m() {
+	public int n1() {
 		return 1;
 	}
 	
-	public int n() {
-		return m() + 2;
+	public int n2() {
+		return n1() + 1;
 	}
 	
-	public int m1() {
-		return 10 + n();
+	public int n3() {
+		return n2() + 1;
+	}
+	
+	public int n4() {
+		return n3() + 1;
 	}
 }

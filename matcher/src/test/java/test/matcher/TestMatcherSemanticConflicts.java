@@ -1655,16 +1655,17 @@ public class TestMatcherSemanticConflicts {
 				"Class that holds m1() is not A?");
 		
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("m()", assignments.get(3).getSecond(), 
-				"Updated method is not m()?");
+		assertEquals("n1()", assignments.get(3).getSecond(), 
+				"Updated method is not n1()?");
 		
 		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("n()", assignments.get(4).getSecond(), 
-				"Method that depends on m() is not n()?");
+		assertEquals("n3()", assignments.get(4).getSecond(), 
+				"Method that depends on n1() and is the the new callee "
+				+ "is not 3()?");
 		
 		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
-		assertEquals("m1()", assignments.get(5).getSecond(), 
-				"Method that receives a call to n() is not m1()?");
+		assertEquals("n4()", assignments.get(5).getSecond(), 
+				"Method that receives a call to n3() is not n4()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
@@ -1675,10 +1676,10 @@ public class TestMatcherSemanticConflicts {
 		List<String> targetMethods = goal.getSecond();
 		assertEquals(targetClass, "A", "The target class to test is not A?");
 		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
-		assertEquals(targetMethods.get(0), "A.m1()I", 
-				"Method to cover is not A.m1()I?");
-		assertEquals(targetMethods.get(1), "A.m()I", 
-				"Method to cover is not A.m()I?");
+		assertEquals(targetMethods.get(0), "A.n4()I", 
+				"Method to cover is not A.n4()I?");
+		assertEquals(targetMethods.get(1), "A.n1()I", 
+				"Method to cover is not A.n1()I?");
 	}
 
 	@Test
