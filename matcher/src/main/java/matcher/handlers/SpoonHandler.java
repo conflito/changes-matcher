@@ -415,6 +415,10 @@ public class SpoonHandler {
 		return getInvocationClassQualifiedName(invocation) + "." + 
 				getInvocationQualifiedName(invocation);
 	}
+	
+	public static boolean invocationOfObjectMethod(CtInvocation<?> invocation) {
+		return getInvocationClassSimpleName(invocation).equals("Object");
+	}
 
 	public static String getInvocationQualifiedName(CtInvocation<?> invocation) {
 		return invocation.getExecutable().getSignature().replace(",", ", ");

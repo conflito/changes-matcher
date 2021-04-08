@@ -98,8 +98,7 @@ public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 		for(CtInvocation<?> invocation: invocations) {
 			if(!invocation.toString().equals("super()")){
 				try {
-					String className = SpoonHandler.getInvocationClassSimpleName(invocation);
-					if(className.equals("Object") || 
+					if(SpoonHandler.invocationOfObjectMethod(invocation) || 
 							SpoonHandler.invocationFromTheSystem(invocation)) {
 						String invocationFullName = 
 								SpoonHandler.getInvocationFullName(invocation);
@@ -115,9 +114,6 @@ public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 								methodInstance.addDirectDependency(
 										invocationsProcessor.process(invokedMethod, invocationsVisited));
 							}
-//							methodInstance.addDirectDependency(
-//									invocationsProcessor.process(invokedMethod, 
-//											invocationsVisited));
 						}
 					}
 				} catch (Exception e) {}
