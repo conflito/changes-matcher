@@ -95,29 +95,33 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
-		if(getConflictPattern().hasInsertInvocationActions()) {
-			MethodInvocationInstance mii = new MethodInvocationInstance(
-					SpoonHandler.getInvocationQualifiedName(invocation));
-			Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
-			if(possibleCaller.isPresent()) {
-				CtMethod<?> method = possibleCaller.get();
-				MethodInstance methodInstance = getMethodInstance(method);
-				ActionInstance result = new InsertInvocationAction(mii, methodInstance);
-				setResult(result);
-			}
-			else {
-				Optional<CtConstructor<?>> constructor = getConstructorNode(invocation);
-				if(constructor.isPresent()) {
-					CtConstructor<?> c = constructor.get();
-					ClassInstance classInstance = getClassInstance(c);
-					ConstructorInstance insertedInstance = getConstructorInstance(c, classInstance);
-					ActionInstance result = new InsertInvocationAction(mii, insertedInstance);
+		if(SpoonHandler.invocationOfObjectMethod(invocation) ||
+				SpoonHandler.invocationFromTheSystem(invocation)) {
+			if(getConflictPattern().hasInsertInvocationActions()) {
+				CtMethod<?> ctMethod = SpoonHandler.getMethodFromInvocation(invocation);
+				MethodInstance invoked = getMethodInstance(ctMethod);
+				MethodInvocationInstance mii = new MethodInvocationInstance(invoked);
+				Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
+				if(possibleCaller.isPresent()) {
+					CtMethod<?> method = possibleCaller.get();
+					MethodInstance methodInstance = getMethodInstance(method);
+					ActionInstance result = new InsertInvocationAction(mii, methodInstance);
 					setResult(result);
 				}
+				else {
+					Optional<CtConstructor<?>> constructor = getConstructorNode(invocation);
+					if(constructor.isPresent()) {
+						CtConstructor<?> c = constructor.get();
+						ClassInstance classInstance = getClassInstance(c);
+						ConstructorInstance insertedInstance = getConstructorInstance(c, classInstance);
+						ActionInstance result = new InsertInvocationAction(mii, insertedInstance);
+						setResult(result);
+					}
+				}
 			}
-		}
-		else {
-			visit(invocation);
+			else {
+				visit(invocation);
+			}
 		}
 	}
 	

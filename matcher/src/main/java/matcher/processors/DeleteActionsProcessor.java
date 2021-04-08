@@ -54,30 +54,35 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
-		if(getConflictPattern().hasDeleteInvocationActions()) {
-			MethodInvocationInstance mii = new MethodInvocationInstance(
-					SpoonHandler.getInvocationQualifiedName(invocation));
-			Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
-			if(possibleCaller.isPresent()) {
-				CtMethod<?> method = possibleCaller.get();
-				MethodInstance methodInstance = getMethodInstance(method);
-				ActionInstance result = new DeleteInvocationAction(mii, methodInstance);
-				setResult(result);
-			}
-			else {
-				Optional<CtConstructor<?>> constructor = getConstructorNode(invocation);
-				if(constructor.isPresent()) {
-					CtConstructor<?> c = constructor.get();
-					ClassInstance classInstance = getClassInstance(c);
-					ConstructorInstance constructorInstance = getConstructorInstance(c, classInstance);
-					ActionInstance result = new DeleteInvocationAction(mii, constructorInstance);
+		if(SpoonHandler.invocationOfObjectMethod(invocation) ||
+				SpoonHandler.invocationFromTheSystem(invocation)) {
+			if(getConflictPattern().hasDeleteInvocationActions()) {
+				CtMethod<?> ctMethod = SpoonHandler.getMethodFromInvocation(invocation);
+				MethodInstance invoked = getMethodInstance(ctMethod);
+				MethodInvocationInstance mii = new MethodInvocationInstance(invoked);
+				Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
+				if(possibleCaller.isPresent()) {
+					CtMethod<?> method = possibleCaller.get();
+					MethodInstance methodInstance = getMethodInstance(method);
+					ActionInstance result = new DeleteInvocationAction(mii, methodInstance);
 					setResult(result);
 				}
+				else {
+					Optional<CtConstructor<?>> constructor = getConstructorNode(invocation);
+					if(constructor.isPresent()) {
+						CtConstructor<?> c = constructor.get();
+						ClassInstance classInstance = getClassInstance(c);
+						ConstructorInstance constructorInstance = getConstructorInstance(c, classInstance);
+						ActionInstance result = new DeleteInvocationAction(mii, constructorInstance);
+						setResult(result);
+					}
+				}
+			}
+			else {
+				visit(invocation);
 			}
 		}
-		else {
-			visit(invocation);
-		}
+
 	}
 
 	@Override

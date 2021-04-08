@@ -42,7 +42,8 @@ public class MethodInvocationPattern {
 	}
 	
 	public boolean matches(MethodInvocationInstance instance) {
-		return filled() && sameName(instance);
+		return filled() && (sameName(instance) || 
+				instance.getInvokedMethod().dependsOn(freeVariable.getValue()));
 	}
 
 	private boolean sameName(MethodInvocationInstance instance) {
