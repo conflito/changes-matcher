@@ -27,46 +27,81 @@ public class TestMatcherSemanticConflicts {
 			"AddOverloadingMByAdditionAddCall2M" + File.separator;
 	private static final String OVERLOAD_ADDITION1_FOLDER = 
 			"AddOverloadingMByAdditionAddCall2M_01" + File.separator;
+	private static final String OVERLOAD_ADDITION2_FOLDER = 
+			"AddOverloadingMByAdditionAddCall2M_02" + File.separator;
+	
 	private static final String FIELD_HIDING_FOLDER = 
 			"AddFieldHidingAddMethodThatUseDefFinChild" + File.separator;
+	
 	private static final String OVERLOAD_ACCESS_CHANGE_FOLDER = 
 			"AddOverloadingMByChangeAccessibility1AddCall2M" + File.separator;
 	private static final String OVERLOAD_ACCESS_CHANGE1_FOLDER = 
 			"AddOverloadingMByChangeAccessibility1AddCall2M_01" + File.separator;
+	private static final String OVERLOAD_ACCESS_CHANGE12_FOLDER = 
+			"AddOverloadingMByChangeAccessibility1AddCall2M_02" + File.separator;
+	
 	private static final String OVERLOAD_ACCESS_CHANGE2_FOLDER = 
 			"AddOverloadingMByChangeAccessibility2AddCall2M" + File.separator;
 	private static final String OVERLOAD_ACCESS_CHANGE201_FOLDER = 
 			"AddOverloadingMByChangeAccessibility2AddCall2M_01" + File.separator;
+	private static final String OVERLOAD_ACCESS_CHANGE2012_FOLDER = 
+			"AddOverloadingMByChangeAccessibility2AddCall2M_02" + File.separator;
+	
 	private static final String OVERRIDING_FOLDER = 
 			"AddOverridingMAddCall2MinChild" + File.separator;
+	private static final String OVERRIDING_FOLDER_01 = 
+			"AddOverridingMAddCall2MinChild_01" + File.separator;
+	private static final String OVERRIDING_FOLDER_02 = 
+			"AddOverridingMAddCall2MinChild_02" + File.separator;
+	
+	
 	private static final String REMOVE_OVERRIDER_FOLDER = 
 			"RemoveOverridingMAddCall2M" + File.separator;
-	private static final String CHANGE_METHOD1_FOLDER ="ChangeMethod01" + File.separator;
-	private static final String CHANGE_METHOD101_FOLDER ="ChangeMethod01_01" + File.separator;
-	private static final String CHANGE_METHOD2_FOLDER ="ChangeMethod02" + File.separator;
-	private static final String DEPENDENCY_BASED1_FOLDER = "DependencyBased01" + File.separator;
-	private static final String DEPENDENCY_BASED101_FOLDER = "DependencyBased01_01" + File.separator;
-	private static final String DEPENDENCY_BASED2_FOLDER = "DependencyBased02" + File.separator;
-	private static final String DEPENDENCY_BASED201_FOLDER = "DependencyBased02_01" + File.separator;
-	private static final String DEPENDENCY_BASED3_FOLDER = "DependencyBased03" + File.separator;
-	private static final String DEPENDENCY_BASED4_FOLDER = "DependencyBased04" + File.separator;
-	private static final String DEPENDENCY_BASED5_FOLDER = "DependencyBased05" + File.separator;
-	private static final String DEPENDENCY_BASED6_FOLDER = "DependencyBased06" + File.separator;
-	private static final String DEPENDENCY_BASED601_FOLDER = "DependencyBased06_01" + File.separator;
-	private static final String DEPENDENCY_BASED7_FOLDER = "DependencyBased07" + File.separator;
+	
+	private static final String CHANGE_METHOD1_FOLDER = 
+			"ChangeMethod01" + File.separator;
+	private static final String CHANGE_METHOD101_FOLDER = 
+			"ChangeMethod01_01" + File.separator;
+	
+	private static final String CHANGE_METHOD2_FOLDER = 
+			"ChangeMethod02" + File.separator;
+	
+	private static final String DEPENDENCY_BASED1_FOLDER = 
+			"DependencyBased01" + File.separator;
+	private static final String DEPENDENCY_BASED101_FOLDER = 
+			"DependencyBased01_01" + File.separator;
+	private static final String DEPENDENCY_BASED2_FOLDER = 
+			"DependencyBased02" + File.separator;
+	private static final String DEPENDENCY_BASED201_FOLDER = 
+			"DependencyBased02_01" + File.separator;
+	private static final String DEPENDENCY_BASED3_FOLDER = 
+			"DependencyBased03" + File.separator;
+	private static final String DEPENDENCY_BASED4_FOLDER = 
+			"DependencyBased04" + File.separator;
+
+	private static final String DEPENDENCY_BASED7_FOLDER = 
+			"DependencyBased07" + File.separator;
+	
 	private static final String UNEXPECTED_OVERIDE_FOLDER = 
 			"UnexpectedOverriding01" + File.separator;
-	private static final String UNEXPECTED_OVERIDE2_FOLDER = 
-			"UnexpectedOverriding02" + File.separator;
+	private static final String UNEXPECTED_OVERIDE_01_FOLDER = 
+			"UnexpectedOverriding01_01" + File.separator;
+	private static final String UNEXPECTED_OVERIDE_02_FOLDER = 
+			"UnexpectedOverriding01_02" + File.separator;
+	
 	private static final String UNEXPECTED_OVERIDE3_FOLDER = 
 			"UnexpectedOverriding03" + File.separator;
 	private static final String UNEXPECTED_OVERIDE301_FOLDER = 
 			"UnexpectedOverriding03_01" + File.separator;
-	private static final String PARALLEL_CHANGED_FOLDER = "ParallelChanges" + File.separator;
+	private static final String UNEXPECTED_OVERIDE302_FOLDER = 
+			"UnexpectedOverriding03_02" + File.separator;
+	
+	private static final String PARALLEL_CHANGED_FOLDER = 
+			"ParallelChanges" + File.separator;
 
 
 	@Test
-	public void overloadByAdditionTest() throws ApplicationException {
+	public void overloadByAdditionNewMethodTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ OVERLOAD_ADDITION_FOLDER + CONFIG_FILE_NAME);
 
@@ -128,7 +163,7 @@ public class TestMatcherSemanticConflicts {
 	}
 
 	@Test
-	public void overloadByAddition2Test() throws ApplicationException {
+	public void overloadByAdditionNewClassTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ OVERLOAD_ADDITION1_FOLDER + CONFIG_FILE_NAME);
 
@@ -185,6 +220,68 @@ public class TestMatcherSemanticConflicts {
 		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
 		assertEquals(targetMethods.get(0), "base.B.reset()V", 
 				"Method to cover is not base.B.reset()V?");
+		assertEquals(targetMethods.get(1), "base.A.move(II)V", 
+				"Method to cover is not base.A.move(II)V?");
+	}
+	
+	@Test
+	public void overloadByAdditionNewCallTest() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ OVERLOAD_ADDITION2_FOLDER + CONFIG_FILE_NAME);
+
+		String basePath = SRC_FOLDER + OVERLOAD_ADDITION2_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String firstVarPath = SRC_FOLDER + OVERLOAD_ADDITION2_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String secondVarPath = SRC_FOLDER + OVERLOAD_ADDITION2_FOLDER + 
+				VAR2_BRANCH_FOLDER + "A.java";
+
+		String[] bases = {basePath};
+		String[] variants1 = {firstVarPath};
+		String[] variants2 = {secondVarPath};
+
+		ConflictPattern cp = 
+				ConflictPatternCatalog.getConflict(
+						ConflictPatternCatalog.OVERLOAD_BY_ADDITION_CALL_NEW);
+
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
+		
+		assertEquals(1, result.size(), "Not one result for overloading method?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("base.A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("move(java.lang.Number, java.lang.Number)", 
+				assignments.get(1).getSecond(), 
+				"Method in class is not move(java.lang.Number, java.lang.Number)?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("k()", assignments.get(2).getSecond(), 
+				"Method that already exists is not k()?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("move(int, int)", assignments.get(3).getSecond(), 
+				"Inserted compatible method is not move(int, int)?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("base.A", assignments.get(4).getSecond(), "Class is not A");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertEquals(1, goals.size(), "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "base.A", "The target class to test is not base.A?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "base.A.k()V", 
+				"Method to cover is not base.A.k()V?");
 		assertEquals(targetMethods.get(1), "base.A.move(II)V", 
 				"Method to cover is not base.A.move(II)V?");
 	}
@@ -292,6 +389,69 @@ public class TestMatcherSemanticConflicts {
 		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
 		assertEquals("reset()", assignments.get(4).getSecond(), 
 				"Inserted method with invocation is not reset()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertEquals(1, goals.size(), "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.reset()V", 
+				"Method to cover is not B.reset()V?");
+		assertEquals(targetMethods.get(1), "A.move(II)V", 
+				"Method to cover is not A.move(II)V?");
+	}
+	
+	@Test
+	public void overloadingAccessChangeNewCallTest() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ OVERLOAD_ACCESS_CHANGE12_FOLDER + CONFIG_FILE_NAME);
+
+		String base1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE12_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE12_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String base2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE12_FOLDER + 
+				BASE_BRANCH_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE12_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
+
+		String[] bases = {base1Path, base2Path};
+		String[] variants1 = {var1Path, null};
+		String[] variants2 = {null, var2Path};
+
+		ConflictPattern cp = ConflictPatternCatalog.getConflict(
+				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_CALL_NEW);
+
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
+
+		assertEquals(1, result.size(), "Not one result for overloading method?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Superclass is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), "Class is not B?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("move(java.lang.Number, java.lang.Number)", 
+				assignments.get(2).getSecond(), 
+				"Top method is not move(java.lang.Number, java.lang.Number)?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("move(int, int)", assignments.get(3).getSecond(), 
+				"Sub method is not move(int, int)?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("reset()", assignments.get(4).getSecond(), 
+				"Method with invocation is not reset()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
@@ -431,6 +591,69 @@ public class TestMatcherSemanticConflicts {
 		assertEquals(targetMethods.get(1), "A.move(Ljava/lang/Number;Ljava/lang/Number;)V", 
 				"Method to cover is not A.move(Ljava/lang/Number;Ljava/lang/Number;)V?");
 	}
+	
+	@Test
+	public void overloadingAccessChange2NewCallTest() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ OVERLOAD_ACCESS_CHANGE2012_FOLDER + CONFIG_FILE_NAME);
+
+		String base1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2012_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2012_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String base2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2012_FOLDER + 
+				BASE_BRANCH_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + OVERLOAD_ACCESS_CHANGE2012_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B.java";
+
+		String[] bases = {base1Path, base2Path};
+		String[] variants1 = {var1Path, null};
+		String[] variants2 = {null, var2Path};
+
+		ConflictPattern cp = ConflictPatternCatalog.getConflict(
+				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_2_CALL_NEW);
+
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
+		
+		assertEquals(1, result.size(), "Not one result for overloading method?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Superclass is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), "Class is not B?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("move(java.lang.Number, java.lang.Number)", 
+				assignments.get(2).getSecond(), 
+				"Top method is not move(java.lang.Number, java.lang.Number)?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("move(int, int)", assignments.get(3).getSecond(), 
+				"Sub method is not move(int, int)?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("reset()", assignments.get(4).getSecond(), 
+				"Method with invocation is not reset()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertEquals(1, goals.size(), "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "B", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "B.reset()V", 
+				"Method to cover is not B.reset()V?");
+		assertEquals(targetMethods.get(1), "A.move(Ljava/lang/Number;Ljava/lang/Number;)V", 
+				"Method to cover is not A.move(Ljava/lang/Number;Ljava/lang/Number;)V?");
+	}
 
 	@Test
 	public void overloadingAccessChange2_1Test() throws ApplicationException {
@@ -494,7 +717,7 @@ public class TestMatcherSemanticConflicts {
 	}
 
 	@Test
-	public void overridingTest() throws ApplicationException {
+	public void addMethodOverridingNewMethodTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ OVERRIDING_FOLDER + CONFIG_FILE_NAME);
 
@@ -510,7 +733,7 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {var2Path};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.ADD_METHOD_OVERRIDING_2);
+				ConflictPatternCatalog.ADD_METHOD_OVERRIDING_NEW_METHOD);
 
 		
 		List<List<Pair<Integer, String>>> result =
@@ -550,6 +773,130 @@ public class TestMatcherSemanticConflicts {
 		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
 		assertEquals(targetMethods.get(0), "B.reset()V", 
 				"Method to cover is not B.reset()V?");
+		assertEquals(targetMethods.get(1), "B.move(II)V", 
+				"Method to cover is not B.move(II)V?");
+	}
+	
+	@Test
+	public void addMethodOverridingNewClassTest() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ OVERRIDING_FOLDER_01 + CONFIG_FILE_NAME);
+
+		String basePath = SRC_FOLDER + OVERRIDING_FOLDER_01 + 
+				BASE_BRANCH_FOLDER + "B.java";
+		String var1Path = SRC_FOLDER + OVERRIDING_FOLDER_01 + 
+				VAR1_BRANCH_FOLDER + "B.java";
+		String newClassPath = SRC_FOLDER + OVERRIDING_FOLDER_01 + 
+				VAR2_BRANCH_FOLDER + "C.java";
+
+		String[] bases = {basePath, null};
+		String[] variants1 = {var1Path, null};
+		String[] variants2 = {null, newClassPath};
+
+		ConflictPattern cp = ConflictPatternCatalog.getConflict(
+				ConflictPatternCatalog.ADD_METHOD_OVERRIDING_NEW_CLASS);
+
+		
+		List<List<Pair<Integer, String>>> result =
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
+		
+		assertEquals(1, result.size(), "Not one result for overriding method?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Superclass is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), "Class is not B?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("move(int, int)", assignments.get(2).getSecond(), 
+				"Method overwritten is not move(int, int)?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("k()", assignments.get(3).getSecond(), 
+				"Method with invocation is not k()?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("C", assignments.get(4).getSecond(), "New "
+				+ "class that holds k() is not C?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertEquals(1, goals.size(), "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "C", "The target class to test is not C?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "C.k()V", 
+				"Method to cover is not C.k()V?");
+		assertEquals(targetMethods.get(1), "B.move(II)V", 
+				"Method to cover is not B.move(II)V?");
+	}
+	
+	@Test
+	public void addMethodOverridingNewCallTest() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ OVERRIDING_FOLDER_02 + CONFIG_FILE_NAME);
+
+		String basePath = SRC_FOLDER + OVERRIDING_FOLDER_02 + 
+				BASE_BRANCH_FOLDER + "B.java";
+		String basePath2 = SRC_FOLDER + OVERRIDING_FOLDER_02 + 
+				BASE_BRANCH_FOLDER + "C.java";
+		
+		String var1Path = SRC_FOLDER + OVERRIDING_FOLDER_02 + 
+				VAR1_BRANCH_FOLDER + "B.java";
+		String var2Path = SRC_FOLDER + OVERRIDING_FOLDER_02 + 
+				VAR2_BRANCH_FOLDER + "C.java";
+
+		String[] bases = {basePath, basePath2};
+		String[] variants1 = {var1Path, null};
+		String[] variants2 = {null, var2Path};
+
+		ConflictPattern cp = ConflictPatternCatalog.getConflict(
+				ConflictPatternCatalog.ADD_METHOD_OVERRIDING_NEW_CALL);
+
+		List<List<Pair<Integer, String>>> result =
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
+		
+		assertEquals(1, result.size(), "Not one result for overriding method?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Superclass is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), "Class is not B?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("move(int, int)", assignments.get(2).getSecond(), 
+				"Method overwritten is not move(int, int)?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("k()", assignments.get(3).getSecond(), 
+				"Method with new invocation is not k()?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("C", assignments.get(4).getSecond(), "Class that "
+				+ "holds k() is not C?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertEquals(1, goals.size(), "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "C", "The target class to test is not C?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "C.k()I", 
+				"Method to cover is not C.k()I?");
 		assertEquals(targetMethods.get(1), "B.move(II)V", 
 				"Method to cover is not B.move(II)V?");
 	}
@@ -1269,188 +1616,6 @@ public class TestMatcherSemanticConflicts {
 	}
 
 	@Test
-	public void dependencyBased5Test() throws ApplicationException {
-		Matcher matcher = new Matcher(SRC_FOLDER 
-				+ DEPENDENCY_BASED5_FOLDER + CONFIG_FILE_NAME);
-
-
-		String basePath = SRC_FOLDER + DEPENDENCY_BASED5_FOLDER + 
-				BASE_BRANCH_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + DEPENDENCY_BASED5_FOLDER + 
-				VAR1_BRANCH_FOLDER + "A.java";
-		String newClassPath = SRC_FOLDER + DEPENDENCY_BASED5_FOLDER + 
-				VAR2_BRANCH_FOLDER + "B.java";
-
-		String[] bases = {basePath, null};
-		String[] variants1 = {var1Path, null};
-		String[] variants2 = {null, newClassPath};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_FIELD_TYPE_UPDATE_CLASS_NEW);
-
-		List<List<Pair<Integer, String>>> result = 
-				matcher.matchingAssignments(bases, variants1, variants2, cp);
-
-		assertEquals(1, result.size(), "Not one result for dependency based 5?");
-		
-		List<Pair<Integer,String>> assignments = result.get(0);
-		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
-		
-		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
-		
-		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("x", assignments.get(1).getSecond(), "Updated field is not x?");
-		
-		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("m1()", assignments.get(2).getSecond(), 
-				"Method that reads x is not m1()?");
-		
-		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("B", assignments.get(3).getSecond(), "New class is not B?");
-		
-		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("k()", assignments.get(4).getSecond(), 
-				"Method inserted with invocation is not k()?");
-		
-		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
-		
-		assertEquals(1, goals.size(), "There is not one goal to test?");
-		
-		Pair<String, List<String>> goal = goals.get(0);
-		String targetClass = goal.getFirst();
-		List<String> targetMethods = goal.getSecond();
-		assertEquals(targetClass, "B", "The target class to test is not B?");
-		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
-		assertEquals(targetMethods.get(0), "B.k()I", 
-				"Method to cover is not B.k()I?");
-		assertEquals(targetMethods.get(1), "A.m1()I", 
-				"Method to cover is not A.m1()I?");
-	}
-
-	@Test
-	public void dependencyBased6Test() throws ApplicationException {
-		Matcher matcher = new Matcher(SRC_FOLDER 
-				+ DEPENDENCY_BASED6_FOLDER + CONFIG_FILE_NAME);
-
-		String base1Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + 
-				BASE_BRANCH_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + 
-				VAR1_BRANCH_FOLDER + "A.java";
-		String base2Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + 
-				BASE_BRANCH_FOLDER + "B.java";
-		String var2Path = SRC_FOLDER + DEPENDENCY_BASED6_FOLDER + 
-				VAR2_BRANCH_FOLDER + "B.java";
-
-		String[] bases = {base1Path, base2Path};
-		String[] variants1 = {var1Path, null};
-		String[] variants2 = {null, var2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_FIELD_TYPE_UPDATE_CLASS_EXISTS);
-
-		List<List<Pair<Integer, String>>> result = 
-				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		
-		assertEquals(1, result.size(), "Not one result for dependency based 5?");
-		
-		List<Pair<Integer,String>> assignments = result.get(0);
-		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
-		
-		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
-		
-		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("x", assignments.get(1).getSecond(), "Updated field is not x?");
-		
-		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("m1()", assignments.get(2).getSecond(), 
-				"Method that reads x is not m1()?");
-		
-		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("B", assignments.get(3).getSecond(), 
-				"Class is not B?");
-		
-		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("k()", assignments.get(4).getSecond(), 
-				"Method that depends on m1() is not k()?");
-		
-		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
-		
-		assertEquals(1, goals.size(), "There is not one goal to test?");
-		
-		Pair<String, List<String>> goal = goals.get(0);
-		String targetClass = goal.getFirst();
-		List<String> targetMethods = goal.getSecond();
-		assertEquals(targetClass, "B", "The target class to test is not B?");
-		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
-		assertEquals(targetMethods.get(0), "B.k()I", 
-				"Method to cover is not B.k()I?");
-		assertEquals(targetMethods.get(1), "A.m1()I", 
-				"Method to cover is not A.m1()I?");
-	}
-
-	@Test
-	public void dependencyBased6_01Test() throws ApplicationException {
-		Matcher matcher = new Matcher(SRC_FOLDER 
-				+ DEPENDENCY_BASED601_FOLDER + CONFIG_FILE_NAME);
-
-
-		String basePath = SRC_FOLDER + DEPENDENCY_BASED601_FOLDER + 
-				BASE_BRANCH_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + DEPENDENCY_BASED601_FOLDER + 
-				VAR1_BRANCH_FOLDER + "A.java";
-		String var2Path = SRC_FOLDER + DEPENDENCY_BASED601_FOLDER + 
-				VAR2_BRANCH_FOLDER + "A.java";
-
-		String[] bases = {basePath};
-		String[] variants1 = {var1Path};
-		String[] variants2 = {var2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_FIELD_TYPE_UPDATE_CLASS_EXISTS);
-
-		List<List<Pair<Integer, String>>> result = 
-				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		
-		assertEquals(1, result.size(), "Not one result for dependency based 5?");
-		
-		List<Pair<Integer,String>> assignments = result.get(0);
-		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
-		
-		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
-		
-		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("x", assignments.get(1).getSecond(), "Updated field is not x?");
-		
-		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("m1()", assignments.get(2).getSecond(), 
-				"Method that reads x is not m1()?");
-		
-		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("A", assignments.get(3).getSecond(), "Class is not A?");
-		
-		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("m2()", assignments.get(4).getSecond(), 
-				"Method that depends on m1() is not m2()?");
-		
-		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
-		
-		assertEquals(1, goals.size(), "There is not one goal to test?");
-		
-		Pair<String, List<String>> goal = goals.get(0);
-		String targetClass = goal.getFirst();
-		List<String> targetMethods = goal.getSecond();
-		assertEquals(targetClass, "A", "The target class to test is not A?");
-		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
-		assertEquals(targetMethods.get(0), "A.m2()I", 
-				"Method to cover is not A.m2()I?");
-		assertEquals(targetMethods.get(1), "A.m1()I", 
-				"Method to cover is not A.m1()I?");
-	}
-
-	@Test
 	public void dependencyBased7Test() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ DEPENDENCY_BASED7_FOLDER + CONFIG_FILE_NAME);
@@ -1517,7 +1682,7 @@ public class TestMatcherSemanticConflicts {
 	}
 
 	@Test
-	public void unexpectedOverridingTest() throws ApplicationException {
+	public void unexpectedOverridingNewMethodTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ UNEXPECTED_OVERIDE_FOLDER + CONFIG_FILE_NAME);
 
@@ -1535,14 +1700,14 @@ public class TestMatcherSemanticConflicts {
 		String[] variants2 = {null, var2Path};
 
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.UNEXPECTED_OVERRIDING);
+				ConflictPatternCatalog.UNEXPECTED_OVERRIDING_NEW_METHOD);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		assertEquals(1, result.size(), "Not one result for unexpected overriding 1?");
 		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertEquals(4, assignments.size(), "Not 4 assignments with only 5 variables?");
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
 		
 		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
 		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
@@ -1574,46 +1739,47 @@ public class TestMatcherSemanticConflicts {
 	}
 
 	@Test
-	public void unexpectedOverriding2Test() throws ApplicationException {
+	public void unexpectedOverridingNewClassTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
-				+ UNEXPECTED_OVERIDE2_FOLDER + CONFIG_FILE_NAME);
-
-		String base1Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + 
-				BASE_BRANCH_FOLDER + "A.java";
-		String var1Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + 
+				+ UNEXPECTED_OVERIDE_01_FOLDER + CONFIG_FILE_NAME);
+		
+		String base1Path = SRC_FOLDER + UNEXPECTED_OVERIDE_01_FOLDER + 
+				BASE_BRANCH_FOLDER + "B0.java";
+		
+		String newClassPath = SRC_FOLDER + UNEXPECTED_OVERIDE_01_FOLDER + 
 				VAR1_BRANCH_FOLDER + "A.java";
-		String base2Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + 
-				BASE_BRANCH_FOLDER + "B2.java";
-		String var2Path = SRC_FOLDER + UNEXPECTED_OVERIDE2_FOLDER + 
-				VAR2_BRANCH_FOLDER + "B2.java";
 
-		String[] bases = {base1Path, base2Path};
-		String[] variants1 = {var1Path, null};
-		String[] variants2 = {null, var2Path};
+		String var1Path = SRC_FOLDER + UNEXPECTED_OVERIDE_01_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B0.java";
 
+		String[] bases = {null, base1Path};
+		String[] variants1 = {newClassPath, null};
+		String[] variants2 = {null, var1Path};
+		
 		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.UNEXPECTED_OVERRIDING);
+				ConflictPatternCatalog.UNEXPECTED_OVERRIDING_NEW_CLASS);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		assertEquals(1, result.size(), "Not one result for unexpected overriding?");
+		
+		assertEquals(1, result.size(), "Not one result for unexpected overriding 1_01?");
 		
 		List<Pair<Integer,String>> assignments = result.get(0);
 		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
 		
 		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		assertEquals("A", assignments.get(0).getSecond(), "New class is not A");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("B2", assignments.get(1).getSecond(), "Other class is not B2?");
+		assertEquals("B0", assignments.get(1).getSecond(), "Existing class is not B0?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("n()", assignments.get(2).getSecond(), 
-				"Method that invokes overriden method is not n()?");
+		assertEquals("n(B)", assignments.get(2).getSecond(), 
+				"Method that depends on overriden is not n(B)?");
 		
-		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("m()", assignments.get(3).getSecond(), 
-				"Method overriden is not m()");
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3? "); 
+		assertEquals("equals(java.lang.Object)", assignments.get(3).getSecond(), 
+				"Method overriden is not equals(java.lang.Object)");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
@@ -1624,14 +1790,72 @@ public class TestMatcherSemanticConflicts {
 		List<String> targetMethods = goal.getSecond();
 		assertEquals(targetClass, "A", "The target class to test is not A?");
 		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
-		assertEquals(targetMethods.get(0), "A.n()I", 
-				"Method to cover is not A.n()I?");
-		assertEquals(targetMethods.get(1), "B2.m()I", 
-				"Method to cover is not B2.m()I");
+		assertEquals(targetMethods.get(0), "A.n(LB;)Z", 
+				"Method to cover is not A.n(LB;)Z?");
+		assertEquals(targetMethods.get(1), "B0.equals(Ljava/lang/Object;)Z", 
+				"Method to cover is not B0.equals(Ljava/lang/Object;)Z?");
+	}
+	
+	@Test
+	public void unexpectedOverridingNewCallTest() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ UNEXPECTED_OVERIDE_02_FOLDER + CONFIG_FILE_NAME);
+
+		String base1Path = SRC_FOLDER + UNEXPECTED_OVERIDE_02_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + UNEXPECTED_OVERIDE_02_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String base2Path = SRC_FOLDER + UNEXPECTED_OVERIDE_02_FOLDER + 
+				BASE_BRANCH_FOLDER + "B0.java";
+		String var2Path = SRC_FOLDER + UNEXPECTED_OVERIDE_02_FOLDER + 
+				VAR2_BRANCH_FOLDER + "B0.java";
+
+		String[] bases = {base1Path, base2Path};
+		String[] variants1 = {var1Path, null};
+		String[] variants2 = {null, var2Path};
+
+		ConflictPattern cp = ConflictPatternCatalog.getConflict(
+				ConflictPatternCatalog.UNEXPECTED_OVERRIDING_NEW_CALL);
+
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
+		
+		assertEquals(1, result.size(), "Not one result for unexpected overriding 1?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B0", assignments.get(1).getSecond(), "Other class is not B0?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("n(B)", assignments.get(2).getSecond(), 
+				"Inserted method is not n(B)?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3? "); 
+		assertEquals("equals(java.lang.Object)", assignments.get(3).getSecond(), 
+				"Method overriden is not equals(java.lang.Object)");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertEquals(1, goals.size(), "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "A", "The target class to test is not A?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "A.n(LB;)Z", 
+				"Method to cover is not A.n(LB;)Z?");
+		assertEquals(targetMethods.get(1), "B0.equals(Ljava/lang/Object;)Z", 
+				"Method to cover is not B0.equals(Ljava/lang/Object;)Z?");
 	}
 
 	@Test
-	public void unexpectedOverriding3Test() throws ApplicationException {
+	public void unexpectedOverriding3NewMethodTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ UNEXPECTED_OVERIDE3_FOLDER + CONFIG_FILE_NAME);
 
@@ -1694,9 +1918,73 @@ public class TestMatcherSemanticConflicts {
 		assertEquals(targetMethods.get(1), "B.m(I)V", 
 				"Method to cover is not B.m(I)V?");
 	}
+	
+	@Test
+	public void unexpectedOverriding3NewClassTest() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ UNEXPECTED_OVERIDE302_FOLDER + CONFIG_FILE_NAME);
+
+		String base1Path = SRC_FOLDER + UNEXPECTED_OVERIDE302_FOLDER + 
+				BASE_BRANCH_FOLDER + "B.java";
+		String var1Path = SRC_FOLDER + UNEXPECTED_OVERIDE302_FOLDER + 
+				VAR1_BRANCH_FOLDER + "B.java";
+		String newClassPath = SRC_FOLDER + UNEXPECTED_OVERIDE302_FOLDER + 
+				VAR2_BRANCH_FOLDER + "C.java";
+
+		String[] bases = {base1Path, null};
+		String[] variants1 = {var1Path, null};
+		String[] variants2 = {null, newClassPath};
+
+		ConflictPattern cp = ConflictPatternCatalog.getConflict(
+				ConflictPatternCatalog.UNEXPECTED_OVERRIDING_3_NEW_CLASS);
+
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
+
+		assertEquals(1, result.size(), "Not one result for unexpected overriding 2?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(6, assignments.size(), "Not 6 assignments with only 6 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("B", assignments.get(1).getSecond(), 
+				"Class that extends A is not B?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("C", assignments.get(2).getSecond(), "New class is not C?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m(java.lang.Number)", assignments.get(3).getSecond(), 
+				"Method in A is not m(java.lang.Number)");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("m(int)", assignments.get(4).getSecond(), 
+				"Compatible method inserted in B is not m(int)");
+		
+		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
+		assertEquals("k(A)", assignments.get(5).getSecond(), 
+				"Method added that depends on m(java.lang.Number) is not k(A)");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertEquals(1, goals.size(), "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "C", "The target class to test is not C?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "C.k(LA;)V", 
+				"Method to cover is not C.k(LA;)V?");
+		assertEquals(targetMethods.get(1), "B.m(I)V", 
+				"Method to cover is not B.m(I)V?");
+	}
 
 	@Test
-	public void unexpectedOverriding3_1Test() throws ApplicationException {
+	public void unexpectedOverriding3NewCallTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ UNEXPECTED_OVERIDE301_FOLDER + CONFIG_FILE_NAME);
 
