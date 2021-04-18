@@ -1,0 +1,16 @@
+Name: "Parallel Changes"
+Variables: $A $M
+
+Base Condition:
+Class $A 
+Class $A has method $M
+
+Delta:
+Update method $M
+
+Delta:
+Update method $M
+
+Testing Goal: 
+$A
+$A.$M    

@@ -1,0 +1,19 @@
+Name: "Unexpected Overriding (new class)"
+Variables: $A $B $M $M1
+
+Base Condition:
+Class $B
+Class $B does not have method $M1
+
+Delta:
+Insert class $A
+Class $A has method $M
+Method $M depends on method $M1
+
+Delta:
+Insert method $M1 in class $B
+
+Testing Goal: 
+$A
+$A.$M
+$B.$M1

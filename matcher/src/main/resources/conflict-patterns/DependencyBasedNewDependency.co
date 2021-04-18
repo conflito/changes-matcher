@@ -1,0 +1,22 @@
+Name: "Dependency Based (new dependency)"
+Variables: $A $B $M $M1
+
+Additional Rules:
+$A can be equal to $B
+
+Base Condition:
+Class $A 
+Class $A has method $M
+Class $B
+Class $B has method $M1
+
+Delta:
+Update method $M
+
+Delta:
+Insert dependency to method $M in method $M1
+
+Testing Goal: 
+$B
+$B.$M1
+$A.$M
