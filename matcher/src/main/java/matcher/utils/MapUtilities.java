@@ -1,5 +1,6 @@
 package matcher.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +19,14 @@ public class MapUtilities {
 			if(first.containsKey(e.getKey())) {
 				List<String> firsts = first.get(e.getKey());
 				List<String> seconds = e.getValue();
-				List<String> intersect = firsts.stream().filter(seconds::contains)
-														.collect(Collectors.toList());
+//				List<String> intersect = firsts.stream().filter(seconds::contains)
+//														.collect(Collectors.toList());
+				List<String> intersect = new ArrayList<>(firsts);
+				seconds.forEach(s -> {
+					if(!intersect.contains(s)) {
+						intersect.add(s);
+					}
+				});
 				first.put(e.getKey(), intersect);
 			}
 			else {
