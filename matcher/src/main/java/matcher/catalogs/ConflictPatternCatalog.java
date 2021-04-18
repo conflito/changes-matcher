@@ -391,31 +391,24 @@ public class ConflictPatternCatalog {
 	
 	private ConflictPattern getDependencyBasedNewCallPattern() {
 		FreeVariable classVar = new FreeVariable(0);
-		FreeVariable classVar2 = new FreeVariable(1);
-		FreeVariable classVar3 = new FreeVariable(2);
-		FreeVariable methodVar1 = new FreeVariable(3);
-		FreeVariable methodVar2 = new FreeVariable(4);
-		FreeVariable methodVar3 = new FreeVariable(5);
+		FreeVariable classVar3 = new FreeVariable(1);
+		FreeVariable methodVar1 = new FreeVariable(2);
+		FreeVariable methodVar3 = new FreeVariable(3);
 
 		BasePattern basePattern = new BasePattern();
 		ClassPattern classPattern = new ClassPattern(classVar);
-		ClassPattern classPattern2 = new ClassPattern(classVar2);
 		ClassPattern classPattern3 = new ClassPattern(classVar3);
 		MethodPattern methodPattern1 = new MethodPattern(methodVar1, null);
-		MethodPattern methodPattern2 = new MethodPattern(methodVar2, null);
-		methodPattern2.addDependency(methodVar1);
 		MethodPattern methodPattern3 = new MethodPattern(methodVar3, null);
 		classPattern.addMethodPattern(methodPattern1);
-		classPattern2.addMethodPattern(methodPattern2);
 		classPattern3.addMethodPattern(methodPattern3);
 		basePattern.addClassPattern(classPattern);
-		basePattern.addClassPattern(classPattern2);
 		basePattern.addClassPattern(classPattern3);
 
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
 		MethodInvocationPattern insertedInvocationPattern =
-				new MethodInvocationPattern(methodVar2);
+				new MethodInvocationPattern(methodVar1);
 
 		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern1));
 		dp2.addActionPattern(
@@ -425,9 +418,7 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
-		conflict.addEqualVariableRule(classVar, classVar2);
 		conflict.addEqualVariableRule(classVar, classVar3);
-		conflict.addEqualVariableRule(classVar2, classVar3);
 		
 		TestingGoal goal = new TestingGoal(classPattern3);
 		goal.addMethodToCall(classPattern3, methodPattern3);

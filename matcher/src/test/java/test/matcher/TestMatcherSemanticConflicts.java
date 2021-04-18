@@ -1640,7 +1640,7 @@ public class TestMatcherSemanticConflicts {
 		assertEquals(1, result.size(), "Not one result for dependency based 7?");
 		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertEquals(6, assignments.size(), "Not 6 assignments with only 6 variables?");
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
 		
 		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
 		assertEquals("A", assignments.get(0).getSecond(), 
@@ -1650,21 +1650,12 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("A", assignments.get(1).getSecond(), 
 				"Class that holds n() is not A?");
 		
-		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("A", assignments.get(2).getSecond(), 
-				"Class that holds m1() is not A?");
-		
-		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("n1()", assignments.get(3).getSecond(), 
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 3?"); 
+		assertEquals("n1()", assignments.get(2).getSecond(), 
 				"Updated method is not n1()?");
 		
-		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("n3()", assignments.get(4).getSecond(), 
-				"Method that depends on n1() and is the the new callee "
-				+ "is not 3()?");
-		
-		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
-		assertEquals("n4()", assignments.get(5).getSecond(), 
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 5?"); 
+		assertEquals("n4()", assignments.get(3).getSecond(), 
 				"Method that receives a call to n3() is not n4()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
