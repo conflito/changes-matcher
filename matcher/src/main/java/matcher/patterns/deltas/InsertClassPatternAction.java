@@ -72,5 +72,12 @@ public class InsertClassPatternAction extends InsertPatternAction {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("Insert class $" + insertedClassPattern.getVariableId() + "\n");
+		result.append(insertedClassPattern.toString());
+		return result.toString();
+	}
 
 }

@@ -116,5 +116,17 @@ public class InsertInvocationPatternAction extends InsertPatternAction {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("Insert dependency to method $" + 
+				insertedInvocationPattern.getVariableId());
+		if(insertedInMethod())
+			result.append(" in method $" + holderMethodPattern.getVariableId());
+		else
+			result.append(" in constructor $" + holderConstructorPattern.getVariableId());
+		
+		return result.toString();
+	}
 
 }

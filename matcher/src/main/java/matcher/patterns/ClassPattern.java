@@ -13,6 +13,7 @@ import matcher.entities.ConstructorInstance;
 import matcher.entities.FieldInstance;
 import matcher.entities.InterfaceImplementationInstance;
 import matcher.entities.MethodInstance;
+import matcher.entities.Visibility;
 import matcher.utils.Pair;
 
 public class ClassPattern {
@@ -644,56 +645,26 @@ public class ClassPattern {
 		return instance.getQualifiedName().equals(freeVariable.getValue());
 	}
 	
-	public String toStringDebug() {
+	public String toString() {
 		StringBuilder result = new StringBuilder();
 		
-		if(hasSuperClass()) {
-			result.append("#" + getVariableId() + " extends #" 
-					+ superClass.getVariableId() + "\n");
-			result.append(superClass.toStringDebug());
-		}
-		for(FieldPattern f : fields) {
-			result.append("#" + getVariableId() + " has " + f.toStringDegub() + "\n");
-		}
-		for(ConstructorPattern c: constructors) {
-			result.append(c.toStringDebug(getVariableId()));
-		}
 		for(MethodPattern m: methods) {
-			result.append(m.toStringDebug(getVariableId()));
-		}
-		for(Entry<FreeVariable, List<FreeVariable>> e: compatible.entrySet()) {
-			FreeVariable v = e.getKey();
-			for(FreeVariable f: e.getValue()) {
-				result.append("#" + v.getId() + " compatible with " + f.getId() + "\n");
-			}
+			Visibility visibility = m.getVisibility();
+			
+			result.append("Class $" + getVariableId() + " has" + 
+					(visibility == null?" ": 
+						" " + visibility.toString().toLowerCase() + " "));
+			result.append("method $" + m.getVariableId() + "\n");
+			result.append(m.toString());
 		}
 		
-		return result.toString();
-	}
-
-	public String toStringFilled() {
-		StringBuilder result = new StringBuilder();
+		for(FreeVariable var: excludedMethods) {
+			result.append("Class $" + getVariableId() + " does not have ");
+			result.append("method $" + var.getId() + "\n");
+		}
 		
-		if(hasSuperClass()) {
-			result.append("#" + freeVariable.getValue() + " extends #" 
-					+ superClass.freeVariable.getValue() + "\n");
-			result.append(superClass.toStringFilled());
-		}
-		for(FieldPattern f : fields) {
-			result.append("#" + freeVariable.getValue() + " has field: " + f.toStringFilled() + "\n");
-		}
-		for(ConstructorPattern c: constructors) {
-			result.append(c.toStringFilled(freeVariable.getValue()));
-		}
-		for(MethodPattern m: methods) {
-			result.append(m.toStringFilled(freeVariable.getValue()));
-		}
-		for(Entry<FreeVariable, List<FreeVariable>> e: compatible.entrySet()) {
-			FreeVariable v = e.getKey();
-			for(FreeVariable f: e.getValue()) {
-				result.append("#" + v.getValue() + " compatible with " + f.getValue() + "\n");
-			}
-		}
+		if(result.length() > 0)
+			result.deleteCharAt(result.length()-1);
 		
 		return result.toString();
 	}

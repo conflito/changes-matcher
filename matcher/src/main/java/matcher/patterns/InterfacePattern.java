@@ -54,4 +54,8 @@ public class InterfacePattern {
 	private boolean sameName(InterfaceInstance i) {
 		return i.getQualifiedName().equals(getFreeVariable().getValue());
 	}
+	
+	public String toString() {
+		return "Interface $" + getVariableId(); 
+	}
 }

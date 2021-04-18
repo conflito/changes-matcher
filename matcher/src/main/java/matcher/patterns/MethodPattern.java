@@ -77,6 +77,10 @@ public class MethodPattern {
 		return freeVariable;
 	}
 	
+	public Visibility getVisibility() {
+		return visibility;
+	}
+
 	public int getVariableId() {
 		return freeVariable.getId();
 	}
@@ -206,46 +210,14 @@ public class MethodPattern {
 	private boolean sameVisibility(MethodInstance instance) {
 		return instance.getVisibility() == visibility;
 	}
-
-	public String toStringDebug(int classVariableId) {
+	
+	public String toString() {
 		StringBuilder result = new StringBuilder();
-		
-		result.append("#" + classVariableId + " has " + 
-					(visibility == null?"*":visibility.toString().toLowerCase()));
-		result.append(" method #" + getVariableId() + "\n");
-		
-		for(FreeVariable v: dependencies) {
-			result.append("#" + getVariableId() + " depends on #" + v.getId() + "\n");
+		for(FreeVariable var: dependencies) {
+			result.append("Method $" + getVariableId() + " depends on method $" 
+					+ var.getId() + "\n");
 		}
-		for(FieldAccessPattern f: fieldAccesses) {
-			String access = null;
-			if(f.isAnyAccess())
-				access = " accesses ";
-			else
-				access = " " + f.getType().toString().toLowerCase() + "s ";
-			result.append("#" + getVariableId() + access + "field #" + f.getVariableId() + "\n");
-		}
-		return result.toString();
-	}
-
-	public String toStringFilled(String value) {
-		StringBuilder result = new StringBuilder();
 		
-		result.append("#" + value + " has " + 
-					(visibility == null?"*":visibility.toString().toLowerCase()));
-		result.append(" method #" + freeVariable.getValue() + "\n");
-		
-		for(FreeVariable v: dependencies) {
-			result.append("#" + freeVariable.getValue() + " depends on #" + v.getValue() + "\n");
-		}
-		for(FieldAccessPattern f: fieldAccesses) {
-			String access = null;
-			if(f.isAnyAccess())
-				access = " accesses ";
-			else
-				access = " " + f.getType().toString().toLowerCase() + "s ";
-			result.append("#" + freeVariable.getValue() + access + "field #" + f.getFreeVariable().getValue() + "\n");
-		}
 		return result.toString();
 	}
 }

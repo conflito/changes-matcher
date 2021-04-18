@@ -58,5 +58,9 @@ public class UpdateMethodPatternAction extends UpdatePatternAction {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public String toString() {
+		return "Update method $" + updatedMethodPattern.getVariableId();
+	}
 
 }

@@ -433,4 +433,13 @@ public class DeltaPattern {
 		
 		return result.toString();
 	}
+	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		
+		for(ActionPattern a: actions)
+			result.append(a.toString() + "\n");
+		
+		return result.toString();
+	}
 }

@@ -172,5 +172,22 @@ public class BasePattern {
 	private List<Integer> distinct(List<Integer> list){
 		return list.stream().distinct().collect(Collectors.toList());
 	}
+	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		
+		for(InterfacePattern ip: interfacePatterns) {
+			result.append(ip.toString() + "\n");
+		}
+		
+		for(ClassPattern cp: classPatterns) {
+			result.append("Class $" + cp.getVariableId() + "\n");
+			String cpString = cp.toString();
+			if(!cpString.equals(""))
+				result.append(cp.toString() + "\n");
+		}
+		
+		return result.toString();
+	}
 
 }

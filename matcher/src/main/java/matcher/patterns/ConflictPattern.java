@@ -470,5 +470,20 @@ public class ConflictPattern {
 		result.addAll(secondDelta.getVisibilityActionsVariableIds());
 		return result.stream().distinct().collect(Collectors.toList());
 	}
+	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		
+		result.append("Base Pattern:\n");
+		result.append(basePattern.toString() + "\n");
+		
+		result.append("Delta Pattern:\n");
+		result.append(firstDelta.toString() + "\n");
+		
+		result.append("Delta Pattern:\n");
+		result.append(secondDelta.toString());
+		
+		return result.toString();
+	}
 
 }
