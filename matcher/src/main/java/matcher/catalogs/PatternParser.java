@@ -904,14 +904,21 @@ public class PatternParser {
 					visibility = Visibility.valueOf(stringVis.toUpperCase());
 				}
 				
+				ClassPattern classPattern = getClassPattern(classVar);
+				
+				if(classPattern.excludesMethod(variables.get(methodVar))) {
+					ClassPattern clone = new ClassPattern(classPattern);
+					clone.removeExcludedMethod(variables.get(methodVar));
+					classPattern = clone;
+				}
+				
 				MethodPattern methodPattern = 
 						new MethodPattern(variables.get(methodVar), visibility);
 				definedMethods.put(methodVar, methodPattern);
-				methodOwners.put(methodVar, getClassPattern(classVar));
+				methodOwners.put(methodVar, classPattern);
 				
 				InsertMethodPatternAction impa = 
-						new InsertMethodPatternAction(methodPattern, 
-								getClassPattern(classVar));
+						new InsertMethodPatternAction(methodPattern, classPattern);
 				currentDelta.addActionPattern(impa);
 				
 				lastAction = impa;
