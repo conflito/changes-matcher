@@ -880,7 +880,6 @@ public class ConflictPatternCatalog {
 		conflict.setBasePattern(basePattern);
 		conflict.setFirstDeltaPattern(dp1);
 		conflict.setSecondDeltaPattern(dp2);
-		conflict.addEqualVariableRule(classVar, holderClassVar);
 		
 		TestingGoal goal = new TestingGoal(holderClassPattern);
 		goal.addMethodToCall(holderClassPattern, insertedMethodPattern1);
