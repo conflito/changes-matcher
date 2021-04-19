@@ -12,7 +12,7 @@ Insert method $M in class $B
 Method $M writes field $X
 
 Delta:
-Insert public field $X in class $B
+Insert field $X in class $B
 
 Testing Goal: 
 $B
