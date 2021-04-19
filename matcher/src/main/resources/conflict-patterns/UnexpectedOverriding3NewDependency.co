@@ -1,6 +1,9 @@
 Name: "Unexpected Overriding 3 (new dependency)"
 Variables: $A $B $C $M $M1 $M2
 
+Additional Rules:
+$B can be equal to $C
+
 Base Condition:
 Class $A
 Class $A has method $M
