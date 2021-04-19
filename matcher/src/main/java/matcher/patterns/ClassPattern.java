@@ -126,6 +126,16 @@ public class ClassPattern {
 		excludedMethods.add(method);
 	}
 	
+	public boolean excludesMethod(FreeVariable method) {
+		return excludedMethods.contains(method);
+	}
+	
+	public void removeExcludedMethod(FreeVariable method) {
+		if(excludesMethod(method)) {
+			excludedMethods.remove(method);
+		}
+	}
+	
 	public void addInterface(InterfaceImplementationPattern i) {
 		interfaces.add(i);
 	}
