@@ -341,16 +341,15 @@ public class PatternParser {
 					+ targetClassVar + " in line " + getCurrentLine());
 		
 		TestingGoal goal = new TestingGoal(getClassPattern(targetClassVar));
-		
 		String line = readLine(br);
-		
 		while(line != null) {
 			
 			//ignore blank lines
 			if(!line.equals("")) {
 				//remove whitespaces
 				line = line.replaceAll("\\s", "");
-				if(line.matches("\\$[A-Z]\\.\\$[A-Z]")) {
+
+				if(line.matches(VAR_PATTERN + "\\." + VAR_PATTERN)) {
 					String[] components = line.split("\\.");
 					String callClassVar = components[0];
 					String callMethodVar = components[1];
