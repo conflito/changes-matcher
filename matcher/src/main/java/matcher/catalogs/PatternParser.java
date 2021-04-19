@@ -13,30 +13,42 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
+import matcher.entities.FieldAccessType;
 import matcher.entities.Visibility;
+import matcher.entities.deltas.Action;
 import matcher.exceptions.ApplicationException;
 import matcher.patterns.BasePattern;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.ConflictPattern;
+import matcher.patterns.FieldAccessPattern;
+import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
 import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
+import matcher.patterns.deltas.ActionPattern;
 import matcher.patterns.deltas.DeltaPattern;
 import matcher.patterns.deltas.InsertClassPatternAction;
+import matcher.patterns.deltas.InsertFieldPatternAction;
 import matcher.patterns.deltas.InsertInvocationPatternAction;
 import matcher.patterns.deltas.InsertMethodPatternAction;
 import matcher.patterns.deltas.UpdateMethodPatternAction;
+import matcher.patterns.deltas.VisibilityActionPattern;
 import matcher.patterns.goals.TestingGoal;
 
 public class PatternParser {
 	
 	private static final String VAR_PATTERN = "\\$[A-Z]([1-9]+)?";
+	private static final String VISIBILITY_PATTERN = "(public|private|package|protected)";
 	private static final Pattern VAR_REGEX_PATTERN = Pattern.compile(VAR_PATTERN);
+	private static final Pattern VISIBILITY_REGEX_PATTERN = Pattern.compile(VISIBILITY_PATTERN);
 		
 	private Map<String, FreeVariable> variables;
 	
 	private Map<String, ClassPattern> definedClasses;
 	private Map<String, MethodPattern> definedMethods;
+	private Map<String, FieldPattern> definedFields;
+	
+	private Map<String, ClassPattern> methodOwners;
 	
 	private Map<String, ClassPattern> insertedClasses;
 	
@@ -44,16 +56,22 @@ public class PatternParser {
 	
 	private ConflictPattern conflictPattern;
 	private DeltaPattern currentDelta;
+	private boolean processingDeltas;
+	private ActionPattern lastAction;
 	
 	public PatternParser() {
 		lineNumber = 1;
 		variables = new HashMap<>();
 		definedClasses = new HashMap<>();
 		definedMethods = new HashMap<>();
+		definedFields = new HashMap<>();
+		
+		methodOwners = new HashMap<>();
 		
 		insertedClasses = new HashMap<>();
 		
 		currentDelta = new DeltaPattern();
+		processingDeltas = false;
 	}
 	
 	public static ConflictPattern getConflictPattern(String filePath) throws ApplicationException {
@@ -76,7 +94,7 @@ public class PatternParser {
 		processAdditionalRules(br);
 		
 		processBasePattern(br);
-		
+		processingDeltas = true;
 		processDeltaPattern(br, true);
 		
 		processDeltaPattern(br, false);
@@ -99,6 +117,10 @@ public class PatternParser {
 	private boolean existsClass(String variable) {
 		return definedClasses.containsKey(variable) ||
 				insertedClasses.containsKey(variable);
+	}
+	
+	private boolean existsField(String variable) {
+		return definedFields.containsKey(variable);
 	}
 	
 	private ClassPattern getClassPattern(String variable) {
@@ -390,8 +412,6 @@ public class PatternParser {
 			return ;
 		else if(isClassDef(line))
 			processClassDef(line);
-		else if(isMethodNotDef(line))
-			processMethodNotDef(line);
 		else
 			processEntityAspects(line);
 	}
@@ -399,8 +419,18 @@ public class PatternParser {
 	private void processEntityAspects(String line) throws ApplicationException {
 		if(isMethodDef(line))
 			processMethodDef(line);
+		else if(isMethodNotDef(line))
+			processMethodNotDef(line);
 		else if(isMethodDependency(line))
 			processMethodDependency(line);
+		else if(isMethodCompatibility(line))
+			processMethodCompatibility(line);
+		else if(isExtendsDef(line))
+			processExtendsDef(line);
+		else if(isFieldDef(line))
+			processFieldDef(line);
+		else if(isFieldUse(line))
+			processFieldUse(line);
 	}
 	
 	private void processClassDef(String line) throws ApplicationException {	
@@ -419,6 +449,129 @@ public class PatternParser {
 			
 			ClassPattern cp = new ClassPattern(variables.get(var));
 			definedClasses.put(var, cp);
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
+	private void processFieldDef(String line) throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+
+		if(matcher.find()) {
+			String classVar = matcher.group();
+			
+			if(!existsVariable(classVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ classVar  + " in line " + getCurrentLine());
+			
+			if(!existsClass(classVar))
+				throw new ApplicationException("Invalid pattern: undefined class "
+						+ classVar + " in line " + getCurrentLine());
+			
+			if(matcher.find()) {
+				String fieldVar = matcher.group();
+				
+				if(!existsVariable(fieldVar))
+					throw new ApplicationException("Invalid pattern: unknown variable "
+							+ fieldVar  + " in line " + getCurrentLine());
+				
+				Visibility vis = null;
+				if(isFieldDefWithVisibility(line)) {
+					int indexOfHas = line.indexOf("has");
+					int indexOfMethod = line.indexOf("field");
+					String stringVis = line.substring(indexOfHas + 4, indexOfMethod - 1);
+					vis = Visibility.valueOf(stringVis.toUpperCase());
+				}
+				
+				FieldPattern fieldPattern = 
+						new FieldPattern(variables.get(fieldVar), vis);
+				getClassPattern(classVar).addFieldPattern(fieldPattern);
+				
+				definedFields.put(fieldVar, fieldPattern);
+			}
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
+	private void processFieldUse(String line) throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String methodVar = matcher.group();
+			
+			if(!existsVariable(methodVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ methodVar  + " in line " + getCurrentLine());
+			
+			if(!existsMethod(methodVar))
+				throw new ApplicationException("Invalid pattern: undefined method "
+						+ methodVar + " in line " + getCurrentLine());
+			
+			if(matcher.find()) {
+				String fieldVar = matcher.group();
+				
+				if(!existsVariable(fieldVar))
+					throw new ApplicationException("Invalid pattern: unknown variable "
+							+ fieldVar  + " in line " + getCurrentLine());
+				
+				if(!existsField(fieldVar))
+					throw new ApplicationException("Invalid pattern: undefined field "
+							+ fieldVar + " in line " + getCurrentLine());
+				
+				FieldAccessType accessType = null;
+				if(isFieldRead(line))
+					accessType = FieldAccessType.READ;
+				else if(isFieldWrite(line))
+					accessType = FieldAccessType.WRITE;
+				
+				FieldAccessPattern accessPattern = 
+						new FieldAccessPattern(variables.get(fieldVar), accessType);
+				
+				definedMethods.get(methodVar).addFieldAccessPattern(accessPattern);
+			}
+			else 
+				throw new ApplicationException("Something went wrong reading line " 
+						+ getCurrentLine());
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
+	private void processExtendsDef(String line) throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String classVar = matcher.group();
+			
+			if(!existsVariable(classVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ classVar  + " in line " + getCurrentLine());
+			
+			if(!existsClass(classVar))
+				throw new ApplicationException("Invalid pattern: undefined class "
+						+ classVar + " in line " + getCurrentLine());
+			
+			if(matcher.find()) {
+				String superClassVar = matcher.group();
+				
+				if(!existsVariable(superClassVar))
+					throw new ApplicationException("Invalid pattern: unknown variable "
+							+ superClassVar  + " in line " + getCurrentLine());
+				
+				if(!existsClass(superClassVar))
+					throw new ApplicationException("Invalid pattern: undefined class "
+							+ superClassVar + " in line " + getCurrentLine());
+				
+				ClassPattern classPattern = getClassPattern(classVar);
+				ClassPattern superClassPattern = getClassPattern(superClassVar);
+				classPattern.setSuperClass(superClassPattern);
+				
+			}
+			else 
+				throw new ApplicationException("Something went wrong reading line " 
+						+ getCurrentLine());
 		}
 		else 
 			throw new ApplicationException("Something went wrong reading line " 
@@ -456,6 +609,7 @@ public class PatternParser {
 				MethodPattern mp = new MethodPattern(variables.get(methodVar), vis);
 				getClassPattern(classVar).addMethodPattern(mp);
 				definedMethods.put(methodVar, mp);
+				methodOwners.put(methodVar, getClassPattern(classVar));
 			}
 			else 
 				throw new ApplicationException("Something went wrong reading line " 
@@ -527,28 +681,116 @@ public class PatternParser {
 					+ getCurrentLine());
 	}
 	
-	private void processUpdateAction(String line) throws ApplicationException {
-		if(isUpdateMethodAction(line)) {
-			Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+	private void processMethodCompatibility(String line) 
+			throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String methodVar = matcher.group();
+			
+			if(!existsVariable(methodVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ methodVar  + " in line " + getCurrentLine());
+			
+			if(!existsMethod(methodVar))
+				throw new ApplicationException("Invalid pattern: undefined method "
+						+ methodVar + " in line " + getCurrentLine());
+			
 			if(matcher.find()) {
-				String methodVar = matcher.group();
+				String compatibleMethodVar = matcher.group();
 				
-				if(!existsVariable(methodVar))
+				if(!existsVariable(compatibleMethodVar))
 					throw new ApplicationException("Invalid pattern: unknown variable "
-							+ methodVar  + " in line " + getCurrentLine());
+							+ compatibleMethodVar  + " in line " + getCurrentLine());
 				
-				if(!existsMethod(methodVar))
+				if(!existsMethod(compatibleMethodVar))
 					throw new ApplicationException("Invalid pattern: undefined method "
-							+ methodVar + " in line " + getCurrentLine());
+							+ compatibleMethodVar + " in line " + getCurrentLine());
 				
-				UpdateMethodPatternAction umpa =
-						new UpdateMethodPatternAction(definedMethods.get(methodVar));
-				currentDelta.addActionPattern(umpa);
+				if(!processingDeltas) {
+					ClassPattern classPattern = methodOwners.get(methodVar);
+					classPattern.addCompatible(variables.get(methodVar), 
+							variables.get(compatibleMethodVar));
+				}
+				else if(lastAction instanceof InsertMethodPatternAction){
+					InsertMethodPatternAction impa = 
+							(InsertMethodPatternAction) lastAction;
+					impa.addCompatible(definedMethods.get(compatibleMethodVar));
+				}
+				
+			}
+		}
+	}
+	
+	private void processUpdateAction(String line) throws ApplicationException {
+		if(isUpdateMethodAction(line))
+			processUpdateMethodAction(line);
+		else if(isUpdateVisibilityAction(line)) {
+			processUpdateVisibilityAction(line);
+		}
+	}
+	
+	private void processUpdateMethodAction(String line) throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String methodVar = matcher.group();
+			
+			if(!existsVariable(methodVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ methodVar  + " in line " + getCurrentLine());
+			
+			if(!existsMethod(methodVar))
+				throw new ApplicationException("Invalid pattern: undefined method "
+						+ methodVar + " in line " + getCurrentLine());
+			
+			UpdateMethodPatternAction umpa =
+					new UpdateMethodPatternAction(definedMethods.get(methodVar));
+			currentDelta.addActionPattern(umpa);
+			
+			lastAction = umpa;
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
+	private void processUpdateVisibilityAction(String line) 
+			throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String methodVar = matcher.group();
+			if(!existsVariable(methodVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ methodVar  + " in line " + getCurrentLine());
+			
+			if(!existsMethod(methodVar))
+				throw new ApplicationException("Invalid pattern: undefined method "
+						+ methodVar + " in line " + getCurrentLine());
+			
+			Matcher visMatcher = VISIBILITY_REGEX_PATTERN.matcher(line);
+			if(visMatcher.find()) {
+				String visString = visMatcher.group();
+				Visibility newVisibility = 
+						Visibility.valueOf(visString.toUpperCase());
+				
+				MethodPattern methodPattern = definedMethods.get(methodVar);
+				
+				Visibility oldVisibility = methodPattern.getVisibility();
+				
+				VisibilityActionPattern vap = 
+						new VisibilityActionPattern(Action.UPDATE, newVisibility, 
+								oldVisibility, variables.get(methodVar));
+				
+				currentDelta.addActionPattern(vap);
+				lastAction = vap;
+				
 			}
 			else 
 				throw new ApplicationException("Something went wrong reading line " 
 						+ getCurrentLine());
 		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
 	}
 	
 	private void processInsertAction(String line) throws ApplicationException{
@@ -558,6 +800,8 @@ public class PatternParser {
 			processMethodInsert(line);
 		else if(isInsertDependencyAction(line))
 			processDependencyInsert(line);
+		else if(isInsertFieldAction(line))
+			processFieldInsert(line);
 	}
 	
 	private void processClassInsert(String line) throws ApplicationException{
@@ -579,7 +823,12 @@ public class PatternParser {
 			InsertClassPatternAction icpa = 
 					new InsertClassPatternAction(classPattern);
 			currentDelta.addActionPattern(icpa);
+			
+			lastAction = icpa;
 		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
 	}
 	
 	private void processMethodInsert(String line) throws ApplicationException {
@@ -590,10 +839,6 @@ public class PatternParser {
 			if(!existsVariable(methodVar))
 				throw new ApplicationException("Invalid pattern: unknown variable "
 						+ methodVar  + " in line " + getCurrentLine());
-			
-			if(existsMethod(methodVar))
-				throw new ApplicationException("Invalid pattern: duplicate method "
-						+ methodVar + " in line " + getCurrentLine());
 			
 			if(matcher.find()) {
 				String classVar = matcher.group();
@@ -617,13 +862,22 @@ public class PatternParser {
 				MethodPattern methodPattern = 
 						new MethodPattern(variables.get(methodVar), visibility);
 				definedMethods.put(methodVar, methodPattern);
+				methodOwners.put(methodVar, getClassPattern(classVar));
 				
 				InsertMethodPatternAction impa = 
 						new InsertMethodPatternAction(methodPattern, 
 								getClassPattern(classVar));
 				currentDelta.addActionPattern(impa);
+				
+				lastAction = impa;
 			}
+			else 
+				throw new ApplicationException("Something went wrong reading line " 
+						+ getCurrentLine());
 		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
 	}
 	
 	private void processDependencyInsert(String line) throws ApplicationException {
@@ -652,8 +906,65 @@ public class PatternParser {
 								definedMethods.get(dependantVar));
 				
 				currentDelta.addActionPattern(iipa);
+				
+				lastAction = iipa;
 			}
+			else 
+				throw new ApplicationException("Something went wrong reading line " 
+						+ getCurrentLine());
 		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
+	private void processFieldInsert(String line) throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String fieldVar = matcher.group();
+			if(!existsVariable(fieldVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ fieldVar  + " in line " + getCurrentLine());
+		
+			if(matcher.find()) {
+				String classVar = matcher.group();
+				
+				if(!existsVariable(classVar))
+					throw new ApplicationException("Invalid pattern: unknown variable "
+							+ classVar  + " in line " + getCurrentLine());
+				
+				if(!existsClass(classVar))
+					throw new ApplicationException("Invalid pattern: undefined class "
+							+ classVar + " in line " + getCurrentLine());
+				
+				Visibility visibility = null;
+				if(isInsertFieldWithVisibility(line)) {
+					int indexOfHas = line.indexOf("Insert");
+					int indexOfMethod = line.indexOf("field");
+					String stringVis = line.substring(indexOfHas + 7, indexOfMethod - 1);
+					visibility = Visibility.valueOf(stringVis.toUpperCase());
+				}
+				
+				FieldPattern fieldPattern = 
+						new FieldPattern(variables.get(fieldVar), visibility);
+				
+				InsertFieldPatternAction ifpa = 
+						new InsertFieldPatternAction(fieldPattern, 
+								getClassPattern(classVar));
+				
+				definedFields.put(fieldVar, fieldPattern);
+				currentDelta.addActionPattern(ifpa);
+				
+				lastAction = ifpa;
+				
+			}
+			else 
+				throw new ApplicationException("Something went wrong reading line " 
+						+ getCurrentLine());
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
 	}
 	
 	private boolean isBlankLine(String line) {
@@ -662,6 +973,11 @@ public class PatternParser {
 	
 	private boolean isClassDef(String line) {
 		return line.matches("Class " + VAR_PATTERN +"\\s*");
+	}
+	
+	private boolean isExtendsDef(String line) {
+		return line.matches("Class " + VAR_PATTERN + " extends class " + 
+				VAR_PATTERN + "\\s*");
 	}
 	
 	private boolean isUpdateAction(String line) {
@@ -676,6 +992,11 @@ public class PatternParser {
 		return line.matches("Update method " + VAR_PATTERN + "\\s*");
 	}
 	
+	private boolean isUpdateVisibilityAction(String line) {
+		return line.matches("Update visibility of method " + VAR_PATTERN + 
+				" to " + VISIBILITY_PATTERN + "\\s*");
+	}
+	
 	private boolean isInsertClassAction(String line) {
 		return line.matches("Insert class " + VAR_PATTERN + "\\s*");
 	}
@@ -683,6 +1004,22 @@ public class PatternParser {
 	private boolean isInsertDependencyAction(String line) {
 		return line.matches("Insert dependency to method " + VAR_PATTERN + 
 				" in method " + VAR_PATTERN + "\\s*");
+	}
+	
+	private boolean isInsertFieldAction(String line) {
+		return isInsertFieldWithoutVisibility(line) ||
+				isInsertFieldWithVisibility(line);
+	}
+	
+	private boolean isInsertFieldWithoutVisibility(String line) {
+		return line.matches("Insert field " + VAR_PATTERN + " in class " +
+				VAR_PATTERN + "\\s*");
+	}
+	
+	private boolean isInsertFieldWithVisibility(String line) {
+		return line.matches("Insert " + VISIBILITY_PATTERN + 
+				" field " + VAR_PATTERN + " in class " +
+				VAR_PATTERN + "\\s*");
 	}
 	
 	private boolean isInsertMethodAction(String line) {
@@ -696,8 +1033,8 @@ public class PatternParser {
 	}
 	
 	private boolean isInsertMethodWithVisibility(String line) {
-		return line.matches("Insert (public|private|package|protected) " + 
-				"method " + VAR_PATTERN + " in class " +
+		return line.matches("Insert " + VISIBILITY_PATTERN + 
+				" method " + VAR_PATTERN + " in class " +
 				VAR_PATTERN + "\\s*");
 	}
 	
@@ -713,7 +1050,41 @@ public class PatternParser {
 	
 	private boolean isMethodDefWithVisibility(String line) {
 		return line.matches("Class " + VAR_PATTERN + " has "
-				+ "(public|private|package|protected) method " +
+				+ VISIBILITY_PATTERN + " method " + VAR_PATTERN + "\\s*");
+	}
+	
+	private boolean isFieldDef(String line) {
+		return isFieldDefWithoutVisibility(line) ||
+				isFieldDefWithVisibility(line);
+	}
+
+	private boolean isFieldDefWithoutVisibility(String line) {
+		return line.matches("Class " + VAR_PATTERN + " has field " +
+				VAR_PATTERN + "\\s*");
+	}
+
+	private boolean isFieldDefWithVisibility(String line) {
+		return line.matches("Class " + VAR_PATTERN + " has "
+				+  VISIBILITY_PATTERN + " field " +
+				VAR_PATTERN + "\\s*");
+	}
+	
+	private boolean isFieldUse(String line) {
+		return isFieldRead(line) || isFieldWrite(line) || isFieldAnyUse(line);
+	}
+	
+	private boolean isFieldRead(String line) {
+		return line.matches("Method " + VAR_PATTERN + " reads field " + 
+				VAR_PATTERN + "\\s*");
+	}
+	
+	private boolean isFieldWrite(String line) {
+		return line.matches("Method " + VAR_PATTERN + " writes field " + 
+				VAR_PATTERN + "\\s*");
+	}
+	
+	private boolean isFieldAnyUse(String line) {
+		return line.matches("Method " + VAR_PATTERN + " uses field " + 
 				VAR_PATTERN + "\\s*");
 	}
 	
@@ -727,6 +1098,11 @@ public class PatternParser {
 				VAR_PATTERN + "\\s*");
 	}
 	
+	private boolean isMethodCompatibility(String line) {
+		return line.matches("Method " + VAR_PATTERN + " compatible with method " +
+				VAR_PATTERN + "\\s*");
+	}
+	
 	private boolean isDifferentVariableRule(String line) {
 		return line.matches(VAR_PATTERN + " different from " + VAR_PATTERN + "\\s*");
 	}
@@ -735,12 +1111,17 @@ public class PatternParser {
 		return line.matches(VAR_PATTERN + " can be equal to " + VAR_PATTERN + "\\s*");
 	}
 	
-	public static void main(String[] args) throws ApplicationException {
-		String filePath = "src" + File.separator + "main" + File.separator + 
-				"resources" + File.separator + "conflict-patterns" + 
-				File.separator + "UnexpectedOverridingNewDependency.co";
-		
-		ConflictPattern cp = PatternParser.getConflictPattern(filePath);
-		System.out.println(cp.toString());
-	}
+//	public static void main(String[] args) throws ApplicationException {
+//		String dirPath = "src" + File.separator + "main" + File.separator + 
+//				"resources" + File.separator + "conflict-patterns" + 
+//				File.separator;
+//		
+//		File dir = new File(dirPath);
+//		for(File f: dir.listFiles()) {
+//			String filePath = f.getPath();
+//			ConflictPattern cp = PatternParser.getConflictPattern(filePath);
+//			System.out.println("########" + cp.getConflictName() + "##########");
+//			System.out.println(cp.toString());
+//		}
+//	}
 }
