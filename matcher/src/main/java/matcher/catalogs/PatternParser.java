@@ -26,6 +26,7 @@ import matcher.patterns.FreeVariable;
 import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
 import matcher.patterns.deltas.ActionPattern;
+import matcher.patterns.deltas.DeleteMethodPatternAction;
 import matcher.patterns.deltas.DeltaPattern;
 import matcher.patterns.deltas.InsertClassPatternAction;
 import matcher.patterns.deltas.InsertFieldPatternAction;
@@ -398,6 +399,8 @@ public class PatternParser {
 			processUpdateAction(line);
 		else if(isInsertAction(line))
 			processInsertAction(line);
+		else if(isDeleteMethodAction(line))
+			processDeleteMethodAction(line);
 		else
 			processEntityAspects(line);
 
@@ -803,6 +806,49 @@ public class PatternParser {
 			processFieldInsert(line);
 	}
 	
+	private void processDeleteMethodAction(String line) 
+			throws ApplicationException{
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String methodVar = matcher.group();
+			
+			if(!existsVariable(methodVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ methodVar  + " in line " + getCurrentLine());
+			
+			if(!existsMethod(methodVar))
+				throw new ApplicationException("Invalid pattern: undefined method "
+						+ methodVar + " in line " + getCurrentLine());
+			
+			if(matcher.find()) {
+				String classVar = matcher.group();
+				
+				if(!existsVariable(classVar))
+					throw new ApplicationException("Invalid pattern: unknown variable "
+							+ classVar  + " in line " + getCurrentLine());
+				
+				if(!existsClass(classVar))
+					throw new ApplicationException("Invalid pattern: undefined class "
+							+ classVar + " in line " + getCurrentLine());
+				
+				MethodPattern methodPattern = definedMethods.get(methodVar);
+				ClassPattern classPattern = getClassPattern(classVar);
+				
+				DeleteMethodPatternAction dmpa = 
+						new DeleteMethodPatternAction(methodPattern, classPattern);
+				
+				currentDelta.addActionPattern(dmpa);
+				lastAction = dmpa;
+			}
+			else 
+				throw new ApplicationException("Something went wrong reading line " 
+						+ getCurrentLine());
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
 	private void processClassInsert(String line) throws ApplicationException{
 		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
 		if(matcher.find()) {
@@ -987,6 +1033,11 @@ public class PatternParser {
 		return line.startsWith("Insert");
 	}
 	
+	private boolean isDeleteMethodAction(String line) {
+		return line.matches("Delete method " + VAR_PATTERN + 
+				" from class " + VAR_PATTERN);
+	}
+	
 	private boolean isUpdateMethodAction(String line) {
 		return line.matches("Update method " + VAR_PATTERN + "\\s*");
 	}
@@ -1110,7 +1161,7 @@ public class PatternParser {
 		return line.matches(VAR_PATTERN + " can be equal to " + VAR_PATTERN + "\\s*");
 	}
 	
-//	public static void main(String[] args) throws ApplicationException {
+	public static void main(String[] args) throws ApplicationException {
 //		String dirPath = "src" + File.separator + "main" + File.separator + 
 //				"resources" + File.separator + "conflict-patterns" + 
 //				File.separator;
@@ -1122,5 +1173,12 @@ public class PatternParser {
 //			System.out.println("########" + cp.getConflictName() + "##########");
 //			System.out.println(cp.toString());
 //		}
-//	}
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "RemoveOverriding.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
+		System.out.println(cp.toString());
+	}
 }
