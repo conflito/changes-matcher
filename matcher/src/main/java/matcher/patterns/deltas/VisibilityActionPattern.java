@@ -116,4 +116,20 @@ public class VisibilityActionPattern extends ActionPattern{
 		entity.clean();
 	}
 	
+	public String toString() {
+		if(isVisibilityInsert()) {
+			String vis = newVisibility == null?"*":newVisibility.toString().toLowerCase();
+			return "insert visibility " + vis + " into #" + entity.getId();
+		}
+		else if(isVisibilityDelete()) {
+			String vis = oldVisibility == null?"*":oldVisibility.toString().toLowerCase();
+			return "remove visibility " + vis + " from #" + entity.getId();
+		}
+		else {
+			String visNew = newVisibility == null?"*":newVisibility.toString().toLowerCase();
+			String visOld = oldVisibility == null?"*":oldVisibility.toString().toLowerCase();
+			return "Update visibility of $" + entity.getId() + " from " + visOld + " to " + visNew;
+		}
+	}
+	
 }

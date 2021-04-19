@@ -1,5 +1,6 @@
 package matcher.patterns.deltas;
 
+import matcher.entities.Visibility;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.InsertFieldAction;
 import matcher.patterns.ClassPattern;
@@ -67,6 +68,16 @@ public class InsertFieldPatternAction extends InsertPatternAction {
 	public String toStringFilled() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		Visibility visibility = insertedFieldPattern.getVisibility();
+		result.append("Insert" + (visibility == null?" ": 
+			" " + visibility.toString().toLowerCase() + " "));
+		result.append("field $" + insertedFieldPattern.getVariableId());
+		result.append(" in class $" + holderClassPattern.getVariableId());
+		return result.toString();
 	}
 	
 	

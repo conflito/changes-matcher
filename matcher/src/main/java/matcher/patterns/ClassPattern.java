@@ -648,6 +648,18 @@ public class ClassPattern {
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		
+		if(hasSuperClass())
+			result.append("Class $" + getVariableId() + " extends class $" + 
+					superClass.getVariableId() + "\n");
+		
+		for(FieldPattern f: fields) {
+			Visibility visibility = f.getVisibility();
+			result.append("Class $" + getVariableId() + " has" + 
+					(visibility == null?" ": 
+						" " + visibility.toString().toLowerCase() + " "));
+			result.append("field $" + f.getVariableId() + "\n");
+		}
+		
 		for(MethodPattern m: methods) {
 			Visibility visibility = m.getVisibility();
 			
@@ -656,6 +668,13 @@ public class ClassPattern {
 						" " + visibility.toString().toLowerCase() + " "));
 			result.append("method $" + m.getVariableId() + "\n");
 			result.append(m.toString());
+		}
+		
+		for(Map.Entry<FreeVariable, List<FreeVariable>> e: compatible.entrySet()) {
+			for(FreeVariable v: e.getValue()) {
+				result.append("Method $" + e.getKey().getId() + " compatible with ");
+				result.append("method $" + v.getId() + "\n");
+			}
 		}
 		
 		for(FreeVariable var: excludedMethods) {

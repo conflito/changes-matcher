@@ -218,6 +218,17 @@ public class MethodPattern {
 					+ var.getId() + "\n");
 		}
 		
+		for(FieldAccessPattern f: fieldAccesses) {
+			result.append("Method $" + getVariableId() + " ");
+			if(f.isAnyAccess())
+				result.append("uses ");
+			else if(f.isFieldRead())
+				result.append("reads ");
+			else
+				result.append("writes ");
+			result.append("field $" + f.getVariableId() + "\n");
+		}
+		
 		return result.toString();
 	}
 }

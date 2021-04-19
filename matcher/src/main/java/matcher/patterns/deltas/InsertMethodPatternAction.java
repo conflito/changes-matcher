@@ -108,6 +108,10 @@ public class InsertMethodPatternAction extends InsertPatternAction {
 		result.append("Insert method $" + insertedMethodPattern.getVariableId());
 		result.append(" in class $" + holderClassPattern.getVariableId() + "\n");
 		result.append(insertedMethodPattern.toString());
+		for(MethodPattern mp: compatibles) {
+			result.append("Method $" + insertedMethodPattern.getVariableId());
+			result.append(" compatible with method $" + mp.getVariableId() + "\n");
+		}
 		return result.toString();
 	}
 	
