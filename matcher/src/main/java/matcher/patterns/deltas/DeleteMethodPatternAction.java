@@ -75,4 +75,11 @@ public class DeleteMethodPatternAction extends DeletePatternAction {
 		return null;
 	}
 	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("Delete method $" + deletedMethodPattern.getVariableId());
+		result.append(" from class $" + holderClassPattern.getVariableId());
+		return result.toString();
+	}
+	
 }
