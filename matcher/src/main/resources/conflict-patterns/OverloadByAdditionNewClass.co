@@ -1,0 +1,20 @@
+Name: "Overload by Addition (new class)"
+Variables: $A $B $M $M1 $M2
+
+Base Condition:
+Class $A
+Class $A has method $M
+
+Delta:
+Insert class $B
+Class $B has method $M1
+Method $M1 depends on method $M
+
+Delta:
+Insert method $M2 in class $A
+Method $M2 compatible with method $M
+
+Testing Goal: 
+$B
+$B.$M1
+$A.$M2

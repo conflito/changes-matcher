@@ -1,0 +1,23 @@
+Name: "Overload by Addition (new method)"
+Variables: $A $B $M $M1 $M2
+
+Additional Rules:
+$A can be equal to $B
+
+Base Condition:
+Class $A
+Class $A has method $M
+Class $B
+
+Delta:
+Insert method $M1 in class $B
+Method $M1 depends on method $M
+
+Delta:
+Insert method $M2 in class $A
+Method $M2 compatible with method $M
+
+Testing Goal: 
+$B
+$B.$M1
+$A.$M2

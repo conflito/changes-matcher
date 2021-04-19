@@ -1,0 +1,21 @@
+Name: "Add Overriding (new class)"
+Variables: $A $B $C $M $M1
+
+Base Condition:
+Class $A
+Class $A has method $M
+Class $B
+Class $B extends class $A
+
+Delta:
+Insert class $C
+Class $C has method $M1
+Method $M1 depends on method $M
+
+Delta:
+Insert method $M in class $B
+
+Testing Goal: 
+$C
+$C.$M1
+$B.$M

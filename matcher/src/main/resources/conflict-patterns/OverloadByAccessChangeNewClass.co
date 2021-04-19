@@ -1,0 +1,21 @@
+Name: "Overload by Access Change (new class)"
+Variables: $A $B $M $M1 $M2
+
+Base Condition:
+Class $A
+Class $A has public method $M
+Class $A has private method $M1
+Method $M1 compatible with method $M
+
+Delta:
+Update visibility of method $M1 to public
+
+Delta:
+Insert class $B
+Class $B has method $M2
+Method $M2 depends on method $M
+
+Testing Goal: 
+$B
+$B.$M2
+$A.$M1

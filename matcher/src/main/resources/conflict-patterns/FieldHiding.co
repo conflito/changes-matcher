@@ -1,0 +1,19 @@
+Name: "Field Hiding"
+Variables: $A $B $M $X
+
+Base Condition:
+Class $A
+Class $A has field $X
+Class $B
+Class $B extends class $A
+
+Delta:
+Insert method $M in class $B
+Method $M writes field $X
+
+Delta:
+Insert public field $X in class $B
+
+Testing Goal: 
+$B
+$B.$M

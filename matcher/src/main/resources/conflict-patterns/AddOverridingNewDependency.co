@@ -1,0 +1,24 @@
+Name: "Add Overriding (new dependency)"
+Variables: $A $B $C $M $M1
+
+Additional Rules:
+$B can be equal to $C
+
+Base Condition:
+Class $A
+Class $A has method $M
+Class $B
+Class $B extends class $A
+Class $C
+Class $C has method $M1
+
+Delta:
+Insert dependency to method $M in method $M1
+
+Delta:
+Insert method $M in class $B
+
+Testing Goal: 
+$C
+$C.$M1
+$B.$M
