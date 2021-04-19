@@ -26,6 +26,10 @@ public class FieldPattern {
 			this.typePattern = new TypePattern(fieldPattern.typePattern);
 	}
 	
+	public Visibility getVisibility() {
+		return visibility;
+	}
+	
 	public FreeVariable getFreeVariable() {
 		return freeVariable;
 	}
