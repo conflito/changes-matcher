@@ -29,9 +29,15 @@ import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
 import matcher.patterns.TypePattern;
 import matcher.patterns.deltas.ActionPattern;
+import matcher.patterns.deltas.DeleteConstructorPatternAction;
+import matcher.patterns.deltas.DeleteFieldAccessPatternAction;
+import matcher.patterns.deltas.DeleteFieldPatternAction;
+import matcher.patterns.deltas.DeleteInvocationPatternAction;
 import matcher.patterns.deltas.DeleteMethodPatternAction;
 import matcher.patterns.deltas.DeltaPattern;
 import matcher.patterns.deltas.InsertClassPatternAction;
+import matcher.patterns.deltas.InsertConstructorPatternAction;
+import matcher.patterns.deltas.InsertFieldAccessPatternAction;
 import matcher.patterns.deltas.InsertFieldPatternAction;
 import matcher.patterns.deltas.InsertInvocationPatternAction;
 import matcher.patterns.deltas.InsertMethodPatternAction;
@@ -390,7 +396,7 @@ public class PatternParser {
 								+ callVar  + " in line " + getCurrentLine());
 					
 					if(!existsMethod(callVar) && !existsConstructor(callVar))
-						throw new ApplicationException("Invalid pattern: unknown method "
+						throw new ApplicationException("Invalid pattern: unknown method/constructor "
 								+ callVar + " in line " + getCurrentLine());
 					
 					ClassPattern callClass = getClassPattern(callClassVar);
@@ -428,8 +434,8 @@ public class PatternParser {
 			processUpdateAction(line);
 		else if(isInsertAction(line))
 			processInsertAction(line);
-		else if(isDeleteMethodAction(line))
-			processDeleteMethodAction(line);
+		else if(isDeleteAction(line))
+			processDeleteAction(line);
 		else
 			processEntityAspects(line);
 
@@ -992,22 +998,31 @@ public class PatternParser {
 							+ newMethodDependencyVar  + " in line " + getCurrentLine());
 				
 				if(matcher.find()) {
-					String methodVar = matcher.group();
+					String var = matcher.group();
 					
-					if(!existsVariable(methodVar))
+					if(!existsVariable(var))
 						throw new ApplicationException("Invalid pattern: unknown variable "
-								+ methodVar  + " in line " + getCurrentLine());
+								+ var  + " in line " + getCurrentLine());
 					
-					if(!existsMethod(methodVar))
-						throw new ApplicationException("Invalid pattern: undefined method "
-								+ methodVar + " in line " + getCurrentLine());
+					if(!existsMethod(var) && !existsConstructor(var))
+						throw new ApplicationException("Invalid pattern: undefined method/constructor "
+								+ var + " in line " + getCurrentLine());
 					
-					MethodPattern methodPattern = definedMethods.get(methodVar);
-					
-					UpdateDependencyPatternAction udpa =
-							new UpdateDependencyPatternAction(methodPattern, 
-									variables.get(oldMethodDependencyVar), 
-									variables.get(newMethodDependencyVar));
+					UpdateDependencyPatternAction udpa;
+					if(existsMethod(var)) {
+						MethodPattern methodPattern = definedMethods.get(var);
+						
+						udpa = new UpdateDependencyPatternAction(methodPattern, 
+										variables.get(oldMethodDependencyVar), 
+										variables.get(newMethodDependencyVar));
+					}
+					else {
+						ConstructorPattern cPattern = definedConstructors.get(var);
+						
+						udpa = new UpdateDependencyPatternAction(cPattern, 
+								variables.get(oldMethodDependencyVar), 
+								variables.get(newMethodDependencyVar));
+					}
 					
 					currentDelta.addActionPattern(udpa);
 					lastAction = udpa;
@@ -1034,6 +1049,23 @@ public class PatternParser {
 			processDependencyInsert(line);
 		else if(isInsertFieldAction(line))
 			processFieldInsert(line);
+		else if(isInsertConstructorAction(line))
+			processConstructorInsert(line);
+		else if(isInsertFieldAccessAction(line))
+			processFieldAccessInsert(line);
+	}
+	
+	private void processDeleteAction(String line) throws ApplicationException{
+		if(isDeleteMethodAction(line))
+			processDeleteMethodAction(line);
+		else if(isDeleteConstructorAction(line))
+			processDeleteConstructorAction(line);
+		else if(isDeleteFieldAction(line))
+			processDeleteFieldAction(line);
+		else if(isDeleteFieldAccessAction(line))
+			processDeleteFieldAccessAction(line);
+		else if(isDeleteDependencyAction(line))
+			processDeleteDependencyAction(line);
 	}
 	
 	private void processDeleteMethodAction(String line) 
@@ -1069,6 +1101,185 @@ public class PatternParser {
 				
 				currentDelta.addActionPattern(dmpa);
 				lastAction = dmpa;
+			}
+			else 
+				throw new ApplicationException("Something went wrong reading line " 
+						+ getCurrentLine());
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
+	private void processDeleteConstructorAction(String line) throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String constructorVar = matcher.group();
+			
+			if(!existsVariable(constructorVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ constructorVar  + " in line " + getCurrentLine());
+			
+			if(!existsConstructor(constructorVar))
+				throw new ApplicationException("Invalid pattern: undefined constructor "
+						+ constructorVar + " in line " + getCurrentLine());
+			
+			if(matcher.find()) {
+				String classVar = matcher.group();
+				
+				if(!existsVariable(classVar))
+					throw new ApplicationException("Invalid pattern: unknown variable "
+							+ classVar  + " in line " + getCurrentLine());
+				
+				if(!existsClass(classVar))
+					throw new ApplicationException("Invalid pattern: undefined class "
+							+ classVar + " in line " + getCurrentLine());
+				
+				ConstructorPattern cPattern = definedConstructors.get(constructorVar);
+				ClassPattern classPattern = getClassPattern(classVar);
+				
+				DeleteConstructorPatternAction dcpa = 
+						new DeleteConstructorPatternAction(cPattern, classPattern);
+				
+				currentDelta.addActionPattern(dcpa);
+				lastAction = dcpa;
+				
+			}
+			else 
+				throw new ApplicationException("Something went wrong reading line " 
+						+ getCurrentLine());
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
+	private void processDeleteFieldAction(String line) throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String fieldVar = matcher.group();
+			
+			if(!existsVariable(fieldVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ fieldVar  + " in line " + getCurrentLine());
+			
+			if(!existsField(fieldVar))
+				throw new ApplicationException("Invalid pattern: undefined field "
+						+ fieldVar + " in line " + getCurrentLine());
+			
+			if(matcher.find()) {
+				String classVar = matcher.group();
+				
+				if(!existsVariable(classVar))
+					throw new ApplicationException("Invalid pattern: unknown variable "
+							+ classVar  + " in line " + getCurrentLine());
+				
+				if(!existsClass(classVar))
+					throw new ApplicationException("Invalid pattern: undefined class "
+							+ classVar + " in line " + getCurrentLine());
+				
+				FieldPattern fieldPattern = definedFields.get(fieldVar);
+				ClassPattern classPattern = getClassPattern(classVar);
+				
+				DeleteFieldPatternAction dfpa = 
+						new DeleteFieldPatternAction(fieldPattern, classPattern);
+				
+				currentDelta.addActionPattern(dfpa);
+				lastAction = dfpa;
+				
+			}
+			else 
+				throw new ApplicationException("Something went wrong reading line " 
+						+ getCurrentLine());
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
+	private void processDeleteFieldAccessAction(String line) throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String fieldVar = matcher.group();
+			
+			if(!existsVariable(fieldVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ fieldVar  + " in line " + getCurrentLine());
+			
+			if(!existsField(fieldVar))
+				throw new ApplicationException("Invalid pattern: undefined field "
+						+ fieldVar + " in line " + getCurrentLine());
+			
+			if(matcher.find()) {
+				String methodVar = matcher.group();
+				
+				if(!existsVariable(methodVar))
+					throw new ApplicationException("Invalid pattern: unknown variable "
+							+ methodVar  + " in line " + getCurrentLine());
+				
+				if(!existsMethod(methodVar))
+					throw new ApplicationException("Invalid pattern: undefined method "
+							+ methodVar + " in line " + getCurrentLine());
+				
+				FieldAccessType accessType = null;
+				if(isDeleteFieldReadAction(line))
+					accessType = FieldAccessType.READ;
+				else if(isDeleteFieldWriteAction(line))
+					accessType = FieldAccessType.WRITE;
+				
+				FieldAccessPattern accessPattern = 
+						new FieldAccessPattern(variables.get(fieldVar), accessType);
+				
+				DeleteFieldAccessPatternAction dfpa = 
+						new DeleteFieldAccessPatternAction(accessPattern, 
+								definedMethods.get(methodVar));
+						
+				currentDelta.addActionPattern(dfpa);
+				lastAction = dfpa;
+			}
+			else
+				throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+		}
+		else
+			throw new ApplicationException("Something went wrong reading line " 
+				+ getCurrentLine());
+	}
+	
+	private void processDeleteDependencyAction(String line) throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String dependencyVar = matcher.group();
+			if(!existsVariable(dependencyVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ dependencyVar  + " in line " + getCurrentLine());
+			
+			if(matcher.find()) {
+				String dependantVar = matcher.group();
+				if(!existsVariable(dependantVar))
+					throw new ApplicationException("Invalid pattern: unknown variable "
+							+ dependantVar  + " in line " + getCurrentLine());
+				
+				if(!existsMethod(dependantVar) && !existsConstructor(dependantVar))
+					throw new ApplicationException("Invalid pattern: undefined method/constructor "
+							+ dependantVar + " in line " + getCurrentLine());
+				
+				MethodInvocationPattern mip = 
+						new MethodInvocationPattern(variables.get(dependencyVar));
+				
+				DeleteInvocationPatternAction dipa;
+				
+				if(existsMethod(dependantVar)) {
+					dipa = new DeleteInvocationPatternAction(mip, 
+									definedMethods.get(dependantVar));
+				}
+				else {
+					dipa = new DeleteInvocationPatternAction(mip, 
+							definedConstructors.get(dependantVar));
+				}
+				
+				currentDelta.addActionPattern(dipa);
+				lastAction = dipa;
 			}
 			else 
 				throw new ApplicationException("Something went wrong reading line " 
@@ -1162,6 +1373,99 @@ public class PatternParser {
 					+ getCurrentLine());
 	}
 	
+	private void processFieldAccessInsert(String line) throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String fieldVar = matcher.group();
+			
+			if(!existsField(fieldVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ fieldVar  + " in line " + getCurrentLine());
+			
+			if(matcher.find()) {
+				String methodVar = matcher.group();
+				
+				if(!existsVariable(methodVar))
+					throw new ApplicationException("Invalid pattern: unknown variable "
+							+ methodVar  + " in line " + getCurrentLine());
+				
+				if(!existsMethod(methodVar))
+					throw new ApplicationException("Invalid pattern: undefined method "
+							+ methodVar + " in line " + getCurrentLine());
+				
+				FieldAccessType access = null;
+				if(isInsertFieldReadAction(line))
+					access = FieldAccessType.READ;
+				else if(isInsertFieldWriteAction(line))
+					access = FieldAccessType.WRITE;
+				
+				FieldAccessPattern accessPattern = 
+						new FieldAccessPattern(variables.get(fieldVar), access);
+				
+				InsertFieldAccessPatternAction ifpa = 
+						new InsertFieldAccessPatternAction(accessPattern, 
+								definedMethods.get(methodVar));
+						
+				currentDelta.addActionPattern(ifpa);
+				lastAction = ifpa;
+			}
+			else
+				throw new ApplicationException("Something went wrong reading line " 
+						+ getCurrentLine());
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
+	private void processConstructorInsert(String line) throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String constructorVar = matcher.group();
+			
+			if(!existsVariable(constructorVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ constructorVar  + " in line " + getCurrentLine());
+			
+			if(matcher.find()) {
+				String classVar = matcher.group();
+				
+				if(!existsVariable(classVar))
+					throw new ApplicationException("Invalid pattern: unknown variable "
+							+ classVar  + " in line " + getCurrentLine());
+				
+				if(!existsClass(classVar))
+					throw new ApplicationException("Invalid pattern: undefined class "
+							+ classVar + " in line " + getCurrentLine());
+				
+				Visibility visibility = null;
+				if(isInsertConstructorWithVisibility(line)) {
+					int indexOfHas = line.indexOf("Insert");
+					int indexOfMethod = line.indexOf("constructor");
+					String stringVis = line.substring(indexOfHas + 7, indexOfMethod - 1);
+					visibility = Visibility.valueOf(stringVis.toUpperCase());
+				}
+				
+				ClassPattern classPattern = getClassPattern(classVar);
+				ConstructorPattern cPattern = 
+						new ConstructorPattern(variables.get(constructorVar), visibility);
+				
+				definedConstructors.put(constructorVar, cPattern);
+				
+				InsertConstructorPatternAction icpa = 
+						new InsertConstructorPatternAction(cPattern, classPattern);
+				currentDelta.addActionPattern(icpa);
+				lastAction = icpa;
+			}
+			else 
+				throw new ApplicationException("Something went wrong reading line " 
+						+ getCurrentLine());
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
 	private void processDependencyInsert(String line) throws ApplicationException {
 		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
 		if(matcher.find()) {
@@ -1176,19 +1480,25 @@ public class PatternParser {
 					throw new ApplicationException("Invalid pattern: unknown variable "
 							+ dependantVar  + " in line " + getCurrentLine());
 				
-				if(!existsMethod(dependantVar))
-					throw new ApplicationException("Invalid pattern: undefined method "
+				if(!existsMethod(dependantVar) && !existsConstructor(dependantVar))
+					throw new ApplicationException("Invalid pattern: undefined method/constructor "
 							+ dependantVar + " in line " + getCurrentLine());
 				
 				MethodInvocationPattern mip = 
 						new MethodInvocationPattern(variables.get(dependencyVar));
 				
-				InsertInvocationPatternAction iipa = 
-						new InsertInvocationPatternAction(mip, 
-								definedMethods.get(dependantVar));
+				InsertInvocationPatternAction iipa;
+				
+				if(existsMethod(dependantVar)) {
+					iipa = new InsertInvocationPatternAction(mip, 
+									definedMethods.get(dependantVar));
+				}
+				else {
+					iipa = new InsertInvocationPatternAction(mip, 
+							definedConstructors.get(dependantVar));
+				}
 				
 				currentDelta.addActionPattern(iipa);
-				
 				lastAction = iipa;
 			}
 			else 
@@ -1274,9 +1584,49 @@ public class PatternParser {
 		return line.startsWith("Insert");
 	}
 	
+	private boolean isDeleteAction(String line) {
+		return line.startsWith("Delete");
+	}
+	
 	private boolean isDeleteMethodAction(String line) {
 		return line.matches("Delete method " + VAR_PATTERN + 
 				" from class " + VAR_PATTERN);
+	}
+	
+	private boolean isDeleteConstructorAction(String line) {
+		return line.matches("Delete constructor " + VAR_PATTERN + 
+				" from class " + VAR_PATTERN);
+	}
+	
+	private boolean isDeleteFieldAction(String line) {
+		return line.matches("Delete field " + VAR_PATTERN + 
+				" from class " + VAR_PATTERN);
+	}
+	
+	private boolean isDeleteFieldAccessAction(String line) {
+		return isDeleteFieldReadAction(line) ||
+				isDeleteFieldWriteAction(line) ||
+				isDeleteFieldUseAction(line);
+	}
+	
+	private boolean isDeleteFieldReadAction(String line) {
+		return line.matches("Delete field read of field " + 
+				VAR_PATTERN + " in method " + VAR_PATTERN);
+	}
+	
+	private boolean isDeleteFieldWriteAction(String line) {
+		return line.matches("Delete field write of field " + 
+				VAR_PATTERN + " in method " + VAR_PATTERN);
+	}
+	
+	private boolean isDeleteFieldUseAction(String line) {
+		return line.matches("Delete field use of field " + 
+				VAR_PATTERN + " in method " + VAR_PATTERN);
+	}
+	
+	private boolean isDeleteDependencyAction(String line) {
+		return line.matches("Delete dependency to method " + VAR_PATTERN + 
+				" in (method|constructor) " + VAR_PATTERN + "\\s*");
 	}
 	
 	private boolean isUpdateMethodAction(String line) {
@@ -1299,7 +1649,7 @@ public class PatternParser {
 	
 	private boolean isUpdateDependency(String line) {
 		return line.matches("Update dependency from method " + VAR_PATTERN + 
-				" to method " + VAR_PATTERN + " in method " + VAR_PATTERN + "\\s*");
+				" to method " + VAR_PATTERN + " in (method|constructor) " + VAR_PATTERN + "\\s*");
 	}
 	
 	private boolean isInsertClassAction(String line) {
@@ -1308,7 +1658,7 @@ public class PatternParser {
 	
 	private boolean isInsertDependencyAction(String line) {
 		return line.matches("Insert dependency to method " + VAR_PATTERN + 
-				" in method " + VAR_PATTERN + "\\s*");
+				" in (method|constructor) " + VAR_PATTERN + "\\s*");
 	}
 	
 	private boolean isInsertFieldAction(String line) {
@@ -1327,6 +1677,27 @@ public class PatternParser {
 				VAR_PATTERN + "\\s*");
 	}
 	
+	private boolean isInsertFieldAccessAction(String line) {
+		return isInsertFieldReadAction(line) ||
+				isInsertFieldWriteAction(line) ||
+				isInsertFieldUseAction(line);
+	}
+	
+	private boolean isInsertFieldReadAction(String line) {
+		return line.matches("Insert field read of field " + 
+				VAR_PATTERN + " in method " + VAR_PATTERN);
+	}
+	
+	private boolean isInsertFieldWriteAction(String line) {
+		return line.matches("Insert field write of field " + 
+				VAR_PATTERN + " in method " + VAR_PATTERN);
+	}
+	
+	private boolean isInsertFieldUseAction(String line) {
+		return line.matches("Insert field use of field " + 
+				VAR_PATTERN + " in method " + VAR_PATTERN);
+	}
+	
 	private boolean isInsertMethodAction(String line) {
 		return isInsertMethodWithoutVisibility(line) ||
 				isInsertMethodWithVisibility(line);
@@ -1340,6 +1711,22 @@ public class PatternParser {
 	private boolean isInsertMethodWithVisibility(String line) {
 		return line.matches("Insert " + VISIBILITY_PATTERN + 
 				" method " + VAR_PATTERN + " in class " +
+				VAR_PATTERN + "\\s*");
+	}
+	
+	private boolean isInsertConstructorAction(String line) {
+		return isInsertConstructorWithoutVisibility(line) ||
+				isInsertConstructorWithVisibility(line);
+	}
+	
+	private boolean isInsertConstructorWithoutVisibility(String line) {
+		return line.matches("Insert constructor " + VAR_PATTERN + " in class " +
+				VAR_PATTERN + "\\s*");
+	}
+	
+	private boolean isInsertConstructorWithVisibility(String line) {
+		return line.matches("Insert " + VISIBILITY_PATTERN + 
+				" constructor " + VAR_PATTERN + " in class " +
 				VAR_PATTERN + "\\s*");
 	}
 	
@@ -1437,7 +1824,7 @@ public class PatternParser {
 		return line.matches(VAR_PATTERN + " can be equal to " + VAR_PATTERN + "\\s*");
 	}
 	
-	public static void main(String[] args) throws ApplicationException {
+//	public static void main(String[] args) throws ApplicationException {
 //		String dirPath = "src" + File.separator + "main" + File.separator + 
 //				"resources" + File.separator + "conflict-patterns" + 
 //				File.separator;
@@ -1449,12 +1836,12 @@ public class PatternParser {
 //			System.out.println("########" + cp.getConflictName() + "##########");
 //			System.out.println(cp.toString());
 //		}
-		
-		String conflictPath = "src" + File.separator + "main" + File.separator + 
-				"resources" + File.separator + "conflict-patterns" + 
-				File.separator + "ParallelChangesConstructor.co";
-		
-		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
-		System.out.println(cp.toString());
-	}
+//		
+//		String conflictPath = "src" + File.separator + "main" + File.separator + 
+//				"resources" + File.separator + "conflict-patterns" + 
+//				File.separator + "ParallelChanges.co";
+//		
+//		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
+//		System.out.println(cp.toString());
+//	}
 }
