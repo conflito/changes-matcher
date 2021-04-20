@@ -83,5 +83,14 @@ public class UpdateFieldTypePatternAction extends UpdatePatternAction {
 		if(newType != null)
 			newType.clean();
 	}
+	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("Update field type of field $" + 
+				updatedFieldPattern.getVariableId());
+		if(hasNewType())
+			result.append(" to $" + newType.getVariableId());
+		return result.toString();
+	}
 
 }

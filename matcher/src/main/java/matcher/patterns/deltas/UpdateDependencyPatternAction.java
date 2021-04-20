@@ -132,4 +132,15 @@ public class UpdateDependencyPatternAction extends UpdatePatternAction {
 		else
 			holderMethodPattern.clean();
 	}
+	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("Update dependency from method $" + oldDependency.getId());
+		result.append(" to method $" + newDependency.getId());
+		if(updatedInConstructor())
+			result.append(" in constructor $" + holderConstructorPattern.getVariableId());
+		else
+			result.append(" in method $" + holderMethodPattern.getVariableId());
+		return result.toString();
+	}
 }

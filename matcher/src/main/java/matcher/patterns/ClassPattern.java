@@ -667,7 +667,10 @@ public class ClassPattern {
 			result.append("Class $" + getVariableId() + " has" + 
 					(visibility == null?" ": 
 						" " + visibility.toString().toLowerCase() + " "));
-			result.append("field $" + f.getVariableId() + "\n");
+			result.append("field $" + f.getVariableId());
+			if(f.hasType())
+				result.append(" of type $" + f.getTypeVariableId());
+			result.append("\n");
 		}
 		
 		for(MethodPattern m: methods) {
