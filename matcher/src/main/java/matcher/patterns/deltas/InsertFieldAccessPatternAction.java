@@ -69,5 +69,17 @@ public class InsertFieldAccessPatternAction extends InsertPatternAction {
 		return null;
 	}
 	
-	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("Insert field ");
+		if(insertedFieldAccessPattern.isFieldRead())
+			result.append("read ");
+		else if(insertedFieldAccessPattern.isFieldWrite())
+			result.append("write ");
+		else
+			result.append("use ");
+		result.append("of field $" + insertedFieldAccessPattern.getVariableId());
+		result.append(" in method " + holderMethodPattern.getVariableId());
+		return result.toString();
+	}
 }

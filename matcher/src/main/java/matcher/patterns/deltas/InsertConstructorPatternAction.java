@@ -73,5 +73,13 @@ public class InsertConstructorPatternAction extends InsertPatternAction {
 		return null;
 	}
 	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("Insert constructor $" + insertedConstructorPattern.getVariableId());
+		result.append(" in class $" + holderClassPattern.getVariableId() + "\n");
+		result.append(insertedConstructorPattern.toString());
+		return result.toString();
+	}
+	
 	
 }

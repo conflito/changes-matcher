@@ -69,4 +69,18 @@ public class DeleteFieldAccessPatternAction extends DeletePatternAction {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("Delete field ");
+		if(deletedFieldAccessPattern.isFieldRead())
+			result.append("read ");
+		else if(deletedFieldAccessPattern.isFieldWrite())
+			result.append("write ");
+		else
+			result.append("use ");
+		result.append("of field $" + deletedFieldAccessPattern.getVariableId());
+		result.append(" in method " + holderMethodPattern.getVariableId());
+		return result.toString();
+	}
 }

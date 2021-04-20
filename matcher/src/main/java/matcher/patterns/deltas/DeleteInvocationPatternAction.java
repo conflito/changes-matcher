@@ -113,5 +113,17 @@ public class DeleteInvocationPatternAction extends DeletePatternAction {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("Delete dependency to method $" + 
+				deletedInvocationPattern.getVariableId());
+		if(deletedFromMethod())
+			result.append(" in method $" + holderMethodPattern.getVariableId());
+		else
+			result.append(" in constructor $" + holderConstructorPattern.getVariableId());
+		
+		return result.toString();
+	}
 
 }
