@@ -1,0 +1,16 @@
+Name: "Parallel Changes Constructor"
+Variables: $A $C
+
+Base Condition:
+Class $A
+Class $A has constructor $C
+
+Delta:
+Update constructor $C
+
+Delta:
+Update constructor $C
+
+Testing Goal: 
+$A
+$A.$C
