@@ -683,6 +683,16 @@ public class ClassPattern {
 			result.append(m.toString());
 		}
 		
+		for(ConstructorPattern c: constructors) {
+			Visibility visibility = c.getVisibility();
+			
+			result.append("Class $" + getVariableId() + " has" + 
+					(visibility == null?" ": 
+						" " + visibility.toString().toLowerCase() + " "));
+			result.append("constructor $" + c.getVariableId() + "\n");
+			result.append(c.toString());
+		}
+		
 		for(Map.Entry<FreeVariable, List<FreeVariable>> e: compatible.entrySet()) {
 			for(FreeVariable v: e.getValue()) {
 				result.append("Method $" + e.getKey().getId() + " compatible with ");

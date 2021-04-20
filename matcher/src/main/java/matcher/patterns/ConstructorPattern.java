@@ -42,6 +42,10 @@ public class ConstructorPattern {
 				lastMatchedConstructor.getDescriptor();
 	}
 	
+	public Visibility getVisibility() {
+		return visibility;
+	}
+	
 	public void addDependency(FreeVariable v) {
 		dependencies.add(v);
 	}
@@ -151,6 +155,15 @@ public class ConstructorPattern {
 			result.append("#" + freeVariable.getValue() + " depends on #" + v.getValue() + "\n");
 		}
 		
+		return result.toString();
+	}
+	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		for(FreeVariable var: dependencies) {
+			result.append("Method $" + getVariableId() + " depends on method $" 
+					+ var.getId() + "\n");
+		}		
 		return result.toString();
 	}
 }
