@@ -3,7 +3,7 @@ package test.matcher;
 import org.junit.jupiter.api.Test;
 
 import matcher.Matcher;
-import matcher.catalogs.ConflictPatternCatalog;
+import matcher.catalogs.PatternParser;
 import matcher.exceptions.ApplicationException;
 import matcher.patterns.ConflictPattern;
 import matcher.utils.Pair;
@@ -115,14 +115,16 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
 		String[] variants2 = {secondVarPath};
-
-		ConflictPattern cp = 
-				ConflictPatternCatalog.getConflict(
-						ConflictPatternCatalog.OVERLOAD_BY_ADDITION_NEW_METHOD);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "OverloadByAdditionNewMethod.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		
+
 		assertEquals(1, result.size(), "Not one result for overloading method?");
 		
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -132,21 +134,21 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("base.A", assignments.get(0).getSecond(), "Class is not A");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("move(java.lang.Number, java.lang.Number)", 
-				assignments.get(1).getSecond(), 
-				"Method in class is not move(java.lang.Number, java.lang.Number)?");
+		assertEquals("base.A", assignments.get(1).getSecond(), "Holder class is not A");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("reset()", assignments.get(2).getSecond(), 
-				"Inserted method with invocation is not reset()?");
+		assertEquals("move(java.lang.Number, java.lang.Number)", 
+				assignments.get(2).getSecond(), 
+				"Method in class is not move(java.lang.Number, java.lang.Number)?");
 		
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("move(int, int)", assignments.get(3).getSecond(), 
-				"Inserted compatible method is not move(int, int)?");
+		assertEquals("reset()", assignments.get(3).getSecond(), 
+				"Inserted method with invocation is not reset()?");
 		
 		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("base.A", assignments.get(4).getSecond(), "Class is not A");
-		
+		assertEquals("move(int, int)", assignments.get(4).getSecond(), 
+				"Inserted compatible method is not move(int, int)?");
+
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
 		assertEquals(1, goals.size(), "There is not one goal to test?");
@@ -177,10 +179,12 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {base1Path, null};
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, newPath};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.OVERLOAD_BY_ADDITION_NEW_CLASS);
 				
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "OverloadByAdditionNewClass.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -194,20 +198,20 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("base.A", assignments.get(0).getSecond(), "Class is not A");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("move(java.lang.Number, java.lang.Number)", 
-				assignments.get(1).getSecond(), 
-				"Method in class is not move(java.lang.Number, java.lang.Number)?");
+		assertEquals("base.B", assignments.get(1).getSecond(), "New class is not B");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("move(int, int)", assignments.get(2).getSecond(), 
-				"Inserted compatible method is not move(int, int)?");
+		assertEquals("move(java.lang.Number, java.lang.Number)", 
+				assignments.get(2).getSecond(), 
+				"Method in class is not move(java.lang.Number, java.lang.Number)?");
 		
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
 		assertEquals("reset()", assignments.get(3).getSecond(), 
 				"Inserted method in new class with invocation is not reset()?");
 		
 		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("base.B", assignments.get(4).getSecond(), "New class is not B");
+		assertEquals("move(int, int)", assignments.get(4).getSecond(), 
+				"Inserted compatible method is not move(int, int)?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
@@ -239,10 +243,12 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
 		String[] variants2 = {secondVarPath};
-
-		ConflictPattern cp = 
-				ConflictPatternCatalog.getConflict(
-						ConflictPatternCatalog.OVERLOAD_BY_ADDITION_NEW_CALL);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "OverloadByAdditionNewDependency.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -256,20 +262,20 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("base.A", assignments.get(0).getSecond(), "Class is not A");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("move(java.lang.Number, java.lang.Number)", 
-				assignments.get(1).getSecond(), 
-				"Method in class is not move(java.lang.Number, java.lang.Number)?");
+		assertEquals("base.A", assignments.get(1).getSecond(), "Holder class is not A");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("k()", assignments.get(2).getSecond(), 
-				"Method that already exists is not k()?");
+		assertEquals("move(java.lang.Number, java.lang.Number)", 
+				assignments.get(2).getSecond(), 
+				"Method in class is not move(java.lang.Number, java.lang.Number)?");
 		
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("move(int, int)", assignments.get(3).getSecond(), 
-				"Inserted compatible method is not move(int, int)?");
+		assertEquals("k()", assignments.get(3).getSecond(), 
+				"Method that already exists is not k()?");
 		
 		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("base.A", assignments.get(4).getSecond(), "Class is not A");
+		assertEquals("move(int, int)", assignments.get(4).getSecond(), 
+				"Inserted compatible method is not move(int, int)?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
@@ -301,9 +307,12 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {basePath};
 		String[] variants1 = {firstVarPath};
 		String[] variants2 = {secondVarPath};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.FIELD_HIDING);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "FieldHiding.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -311,7 +320,7 @@ public class TestMatcherSemanticConflicts {
 		assertEquals(1, result.size(), "Not one result for overloading method?");
 		
 		List<Pair<Integer,String>> assignments = result.get(0);
-		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
 		
 		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
 		assertEquals("A", assignments.get(0).getSecond(), "Superclass is not A");
@@ -320,14 +329,11 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("B", assignments.get(1).getSecond(), "Class is not B?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("size", assignments.get(2).getSecond(), "Field is not size?");
-		
-		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("m()", assignments.get(3).getSecond(), 
+		assertEquals("m()", assignments.get(2).getSecond(), 
 				"Inserted method that writes to field is not m()?");
 		
-		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("size", assignments.get(4).getSecond(), "Inserted field not size?");
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("size", assignments.get(3).getSecond(), "Field is not size?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
@@ -343,7 +349,7 @@ public class TestMatcherSemanticConflicts {
 	}
 
 	@Test
-	public void overloadingAccessChangeTest() throws ApplicationException {
+	public void overloadingAccessChangeNewMethodTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ OVERLOAD_ACCESS_CHANGE_FOLDER + CONFIG_FILE_NAME);
 
@@ -359,9 +365,12 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {base1Path, base2Path};
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, var2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_NEW_METHOD);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "OverloadByAccessChangeNewMethod.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -422,9 +431,12 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {base1Path, base2Path};
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, var2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_CALL_NEW);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "OverloadByAccessChangeNewDependency.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -469,7 +481,7 @@ public class TestMatcherSemanticConflicts {
 	}
 
 	@Test
-	public void overloadingAccessChange_1Test() throws ApplicationException {
+	public void overloadingAccessChangeNewClassTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ OVERLOAD_ACCESS_CHANGE1_FOLDER + CONFIG_FILE_NAME);
 
@@ -484,8 +496,14 @@ public class TestMatcherSemanticConflicts {
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, newClassPath};
 
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_NEW_CLASS);
+//		ConflictPattern cp = ConflictPatternCatalog.getConflict(
+//				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_NEW_CLASS);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "OverloadByAccessChangeNewClass.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -530,7 +548,7 @@ public class TestMatcherSemanticConflicts {
 	}
 
 	@Test
-	public void overloadingAccessChange2Test() throws ApplicationException {
+	public void overloadingAccessChange2NewMethodTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ OVERLOAD_ACCESS_CHANGE2_FOLDER + CONFIG_FILE_NAME);
 
@@ -547,9 +565,12 @@ public class TestMatcherSemanticConflicts {
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, var2Path};
 
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_2_NEW_METHOD);
-
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "OverloadByAccessChange2NewMethod.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
+		
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
@@ -609,9 +630,12 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {base1Path, base2Path};
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, var2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_2_NEW_CALL);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "OverloadByAccessChange2NewDependency.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -656,7 +680,7 @@ public class TestMatcherSemanticConflicts {
 	}
 
 	@Test
-	public void overloadingAccessChange2_1Test() throws ApplicationException {
+	public void overloadingAccessChange2NewClassTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER 
 				+ OVERLOAD_ACCESS_CHANGE201_FOLDER + CONFIG_FILE_NAME);
 
@@ -671,9 +695,12 @@ public class TestMatcherSemanticConflicts {
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, newClassPath};
 
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.OVERLOAD_BY_ACCESS_CHANGE_2_NEW_CLASS);
-
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "OverloadByAccessChange2NewClass.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
+		
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
@@ -732,9 +759,11 @@ public class TestMatcherSemanticConflicts {
 		String[] variants1 = {var1Path};
 		String[] variants2 = {var2Path};
 
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.ADD_METHOD_OVERRIDING_NEW_METHOD);
-
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "AddOverridingNewMethod.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 		
 		List<List<Pair<Integer, String>>> result =
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -751,16 +780,16 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("B", assignments.get(1).getSecond(), "Class is not B?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("move(int, int)", assignments.get(2).getSecond(), 
-				"Method overwritten is not move(int, int)?");
+		assertEquals("B", assignments.get(2).getSecond(), "Class that holds reset()"
+				+ " is not B?");
 		
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("reset()", assignments.get(3).getSecond(), 
-				"Method with invocation is not reset()?");
+		assertEquals("move(int, int)", assignments.get(3).getSecond(), 
+				"Method overwritten is not move(int, int)?");
 		
 		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("B", assignments.get(4).getSecond(), "Class that holds reset()"
-				+ " is not B?");
+		assertEquals("reset()", assignments.get(4).getSecond(), 
+				"Method with invocation is not reset()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
@@ -793,13 +822,15 @@ public class TestMatcherSemanticConflicts {
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, newClassPath};
 
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.ADD_METHOD_OVERRIDING_NEW_CLASS);
-
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "AddOverridingNewClass.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 		
 		List<List<Pair<Integer, String>>> result =
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-		
+
 		assertEquals(1, result.size(), "Not one result for overriding method?");
 		
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -812,16 +843,16 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("B", assignments.get(1).getSecond(), "Class is not B?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("move(int, int)", assignments.get(2).getSecond(), 
-				"Method overwritten is not move(int, int)?");
+		assertEquals("C", assignments.get(2).getSecond(), "New "
+				+ "class that holds k() is not C?");
 		
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("k()", assignments.get(3).getSecond(), 
-				"Method with invocation is not k()?");
+		assertEquals("move(int, int)", assignments.get(3).getSecond(), 
+				"Method overwritten is not move(int, int)?");
 		
 		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("C", assignments.get(4).getSecond(), "New "
-				+ "class that holds k() is not C?");
+		assertEquals("k()", assignments.get(4).getSecond(), 
+				"Method with invocation is not k()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
@@ -857,9 +888,12 @@ public class TestMatcherSemanticConflicts {
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, var2Path};
 
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.ADD_METHOD_OVERRIDING_NEW_CALL);
-
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "AddOverridingNewDependency.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
+		
 		List<List<Pair<Integer, String>>> result =
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 		
@@ -875,16 +909,16 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("B", assignments.get(1).getSecond(), "Class is not B?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("move(int, int)", assignments.get(2).getSecond(), 
-				"Method overwritten is not move(int, int)?");
+		assertEquals("C", assignments.get(2).getSecond(), "Class that "
+				+ "holds k() is not C?");		
 		
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("k()", assignments.get(3).getSecond(), 
-				"Method with new invocation is not k()?");
+		assertEquals("move(int, int)", assignments.get(3).getSecond(), 
+				"Method overwritten is not move(int, int)?");
 		
 		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("C", assignments.get(4).getSecond(), "Class that "
-				+ "holds k() is not C?");
+		assertEquals("k()", assignments.get(4).getSecond(), 
+				"Method with new invocation is not k()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
@@ -916,9 +950,12 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
 		String[] variants2 = {var2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.REMOVE_OVERRIDING);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "RemoveOverriding.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -972,13 +1009,16 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
 		String[] variants2 = {var2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.CHANGE_METHOD);
-
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "ChangeMethod.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
+		
 		List<List<Pair<Integer, String>>> result =
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-
+		
 		assertEquals(2, result.size(), "Not two results for method change?");
 		
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -988,50 +1028,50 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("m()", assignments.get(1).getSecond(), 
-				"Method with invocations is not m()?");
-		
-		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("m1()", assignments.get(2).getSecond(),
-				"Method updated is not m1()?");
-		
-		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("m2()", assignments.get(3).getSecond(), 
-				"Other method updated is not m2()?");
-		
-		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("A", assignments.get(4).getSecond(),
+		assertEquals("A", assignments.get(1).getSecond(),
 				"Class that holds m1() isn't A?");
 		
-		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
-		assertEquals("A", assignments.get(5).getSecond(), 
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("A", assignments.get(2).getSecond(), 
 				"Class that holds m2() isn't A?");
-
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m()", assignments.get(3).getSecond(), 
+				"Method with invocations is not m()?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("m1()", assignments.get(4).getSecond(),
+				"Method updated is not m1()?");
+		
+		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
+		assertEquals("m2()", assignments.get(5).getSecond(), 
+				"Other method updated is not m2()?");
+		
 		assignments = result.get(1);
 		assertEquals(6, assignments.size(), "Not 6 assignments with only 6 variables?");
-		
+
 		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
 		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("m()", assignments.get(1).getSecond(), 
-				"Method with invocations is not m()?");
+		assertEquals("A", assignments.get(1).getSecond(),
+				"Class that holds m1() isn't A?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("m2()", assignments.get(2).getSecond(),
-				"Method updated is not m2()?");
-		
-		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("m1()", assignments.get(3).getSecond(), 
-				"Other method updated is not m1()?");
-		
-		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("A", assignments.get(4).getSecond(),
+		assertEquals("A", assignments.get(2).getSecond(), 
 				"Class that holds m2() isn't A?");
 		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m()", assignments.get(3).getSecond(), 
+				"Method with invocations is not m()?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("m2()", assignments.get(4).getSecond(),
+				"Method updated is not m2()?");
+		
 		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
-		assertEquals("A", assignments.get(5).getSecond(), 
-				"Class that holds m1() isn't A?");
+		assertEquals("m1()", assignments.get(5).getSecond(), 
+				"Other method updated is not m1()?");
 				
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
@@ -1077,9 +1117,12 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
 		String[] variants2 = {var2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.CHANGE_METHOD);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "ChangeMethod.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result =
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -1093,50 +1136,51 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("B", assignments.get(0).getSecond(), "Dependant class is not B");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("m()", assignments.get(1).getSecond(), 
-				"Method with invocations is not m()?");
-		
-		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("m1()", assignments.get(2).getSecond(), 
-				"Method updated is not m1()?");
-		
-		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("m2()", assignments.get(3).getSecond(), 
-				"Other method updated is not m2()?");
-		
-		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("A", assignments.get(4).getSecond(), 
+		assertEquals("A", assignments.get(1).getSecond(), 
 				"Class that holds m1() isn't A?");
 		
-		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
-		assertEquals("A", assignments.get(5).getSecond(), 
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("A", assignments.get(2).getSecond(), 
 				"Class that holds m2() isn't A?");
-
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m()", assignments.get(3).getSecond(), 
+				"Method with invocations is not m()?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("m1()", assignments.get(4).getSecond(), 
+				"Method updated is not m1()?");
+		
+		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
+		assertEquals("m2()", assignments.get(5).getSecond(), 
+				"Other method updated is not m2()?");
+		
 		assignments = result.get(1);
+
 		assertEquals(6, assignments.size(), "Not 6 assignments with only 6 variables?");
 		
 		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
 		assertEquals("B", assignments.get(0).getSecond(), "Dependant class is not B");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("m()", assignments.get(1).getSecond(), 
-				"Method with invocations is not m()?");
+		assertEquals("A", assignments.get(1).getSecond(), 
+				"Class that holds m1() isn't A?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("m2()", assignments.get(2).getSecond(), 
-				"Method updated is not m2()?");
-		
-		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-		assertEquals("m1()", assignments.get(3).getSecond(), 
-				"Other method updated is not m1()?");
-		
-		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("A", assignments.get(4).getSecond(), 
+		assertEquals("A", assignments.get(2).getSecond(), 
 				"Class that holds m2() isn't A?");
 		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m()", assignments.get(3).getSecond(), 
+				"Method with invocations is not m()?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("m2()", assignments.get(4).getSecond(), 
+				"Method updated is not m2()?");
+		
 		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
-		assertEquals("A", assignments.get(5).getSecond(), 
-				"Class that holds m1() isn't A?");
+		assertEquals("m1()", assignments.get(5).getSecond(), 
+				"Other method updated is not m1()?");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
@@ -1183,10 +1227,12 @@ public class TestMatcherSemanticConflicts {
 		String[] variants1 = {var1Path};
 		String[] variants2 = {var2Path};
 
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.CHANGE_METHOD_2);
-
-
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "ChangeMethod2.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
+		
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
@@ -1260,9 +1306,12 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
 		String[] variants2 = {var2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_NEW_METHOD);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "DependencyBasedNewMethod.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -1276,16 +1325,16 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("m1()", assignments.get(1).getSecond(),
-				"Updated method is not m1()?");
+		assertEquals("A", assignments.get(1).getSecond(), 
+				"Class that holds the new method is not A?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("A", assignments.get(2).getSecond(), 
-				"Class that holds the new method is not A?");
+		assertEquals("m1()", assignments.get(2).getSecond(),
+				"Updated method is not m1()?");
 		
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
 		assertEquals("k()", assignments.get(3).getSecond(), 
-				"Method inserted with t is not k()?");
+				"Method inserted with dependency is not k()?");
 				
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
@@ -1320,8 +1369,11 @@ public class TestMatcherSemanticConflicts {
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, var2Path};
 
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_NEW_METHOD);
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "DependencyBasedNewMethod.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -1335,12 +1387,12 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("m1()", assignments.get(1).getSecond(), 
-				"Updated method is not m1()?");
+		assertEquals("B", assignments.get(1).getSecond(), 
+				"Class that holds the new method is not B?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("B", assignments.get(2).getSecond(), 
-				"Class that holds the new method is not B?");
+		assertEquals("m1()", assignments.get(2).getSecond(), 
+				"Updated method is not m1()?");
 		
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
 		assertEquals("k()", assignments.get(3).getSecond(), 
@@ -1376,9 +1428,12 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {basePath, null};
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, newClassPath};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_NEW_CLASS);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "DependencyBasedNewClass.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -1392,11 +1447,11 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("m1()", assignments.get(1).getSecond(),
-				"Method updated is not m1()?");
+		assertEquals("B", assignments.get(1).getSecond(), "New class is not B?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("B", assignments.get(2).getSecond(), "New class is not B?");
+		assertEquals("m1()", assignments.get(2).getSecond(),
+				"Method updated is not m1()?");
 		
 		assertEquals(3,assignments.get(3).getFirst(), "Variable id is not 3?"); 
 		assertEquals("k()", assignments.get(3).getSecond(), 
@@ -1434,13 +1489,16 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {basePath, null, null};
 		String[] variants1 = {var1Path, null, null};
 		String[] variants2 = {null, newClassPath, newClass2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_NEW_CLASS);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "DependencyBasedNewClass.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
-
+		
 		assertEquals(2, result.size(), "Not 2 results for dependency based 2_01?");
 		
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -1450,11 +1508,11 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("m1()", assignments.get(1).getSecond(), 
-				"Method updated is not m1()?");
+		assertEquals("B", assignments.get(1).getSecond(), "New class is not B?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("B", assignments.get(2).getSecond(), "New class is not B?");
+		assertEquals("m1()", assignments.get(2).getSecond(), 
+				"Method updated is not m1()?");
 		
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
 		assertEquals("k()", assignments.get(3).getSecond(), 
@@ -1467,11 +1525,11 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("m1()", assignments.get(1).getSecond(), 
-				"Method updated is not m1()?");
+		assertEquals("C", assignments.get(1).getSecond(), "New class is not C?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("C", assignments.get(2).getSecond(), "New class is not C?");
+		assertEquals("m1()", assignments.get(2).getSecond(), 
+				"Method updated is not m1()?");
 		
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
 		assertEquals("method()", assignments.get(3).getSecond(), 
@@ -1518,9 +1576,12 @@ public class TestMatcherSemanticConflicts {
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, newClassPath};
 
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_NEW_CLASS);
-
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "DependencyBasedNewClass.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
+		
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
 
@@ -1533,11 +1594,11 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("m1(int, int)", assignments.get(1).getSecond(), 
-				"Method in A is not m1(int, int)?");
+		assertEquals("B", assignments.get(1).getSecond(), "New class is not B?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("B", assignments.get(2).getSecond(), "New class is not B?");
+		assertEquals("m1(int, int)", assignments.get(2).getSecond(), 
+				"Method in A is not m1(int, int)?");
 		
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
 		assertEquals("k()", assignments.get(3).getSecond(), 
@@ -1573,9 +1634,12 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {basePath, null};
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, newClassPath};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_NEW_CLASS);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "DependencyBasedNewClass.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);				
@@ -1589,12 +1653,12 @@ public class TestMatcherSemanticConflicts {
 		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
 		
 		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-		assertEquals("m1(double, int)", assignments.get(1).getSecond(), 
-				"Method updated is not m1(doublt, int)?");
+		assertEquals("B", assignments.get(1).getSecond(), 
+				"New class is not B?");
 		
 		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-		assertEquals("B", assignments.get(2).getSecond(), 
-				"New class is not B?");
+		assertEquals("m1(double, int)", assignments.get(2).getSecond(), 
+				"Method updated is not m1(doublt, int)?");
 		
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
 		assertEquals("k()", assignments.get(3).getSecond(), 
@@ -1631,12 +1695,16 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
 		String[] variants2 = {var2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.DEPENDENCY_BASED_NEW_CALL);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "DependencyBasedNewDependency.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
+
 		assertEquals(1, result.size(), "Not one result for dependency based 7?");
 		
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -1690,12 +1758,16 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {base1Path, base2Path};
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, var2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.UNEXPECTED_OVERRIDING_NEW_METHOD);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "UnexpectedOverridingNewMethod.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
+		
 		assertEquals(1, result.size(), "Not one result for unexpected overriding 1?");
 		
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -1748,8 +1820,11 @@ public class TestMatcherSemanticConflicts {
 		String[] variants1 = {newClassPath, null};
 		String[] variants2 = {null, var1Path};
 		
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.UNEXPECTED_OVERRIDING_NEW_CLASS);
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "UnexpectedOverridingNewClass.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -1805,9 +1880,12 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {base1Path, base2Path};
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, var2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.UNEXPECTED_OVERRIDING_NEW_CALL);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "UnexpectedOverridingNewDependency.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -1863,12 +1941,16 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {base1Path, base2Path};
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, var2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.UNEXPECTED_OVERRIDING_3_NEW_METHOD);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "UnexpectedOverriding3NewMethod.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
+
 		assertEquals(1, result.size(), "Not one result for unexpected overriding 2?");
 		
 		List<Pair<Integer,String>> assignments = result.get(0);
@@ -1927,8 +2009,14 @@ public class TestMatcherSemanticConflicts {
 		String[] variants1 = {var1Path, null};
 		String[] variants2 = {null, newClassPath};
 
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.UNEXPECTED_OVERRIDING_3_NEW_CLASS);
+//		ConflictPattern cp = ConflictPatternCatalog.getConflict(
+//				ConflictPatternCatalog.UNEXPECTED_OVERRIDING_3_NEW_CLASS);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "UnexpectedOverriding3NewClass.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -1991,9 +2079,12 @@ public class TestMatcherSemanticConflicts {
 		String[] bases = {basePath};
 		String[] variants1 = {var1Path};
 		String[] variants2 = {var2Path};
-
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.UNEXPECTED_OVERRIDING_3_NEW_CALL);
+		
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "UnexpectedOverriding3NewDependency.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
@@ -2019,12 +2110,12 @@ public class TestMatcherSemanticConflicts {
 				"Method in A is not m(java.lang.Number)");
 		
 		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-		assertEquals("m1()", assignments.get(4).getSecond(), 
-				"Method in B is not m1()");
+		assertEquals("m(int)", assignments.get(4).getSecond(), 
+				"Method added compatible with m(java.lang.Number) is not m(int)");
 		
 		assertEquals(5, assignments.get(5).getFirst(), "Variable id is not 5?"); 
-		assertEquals("m(int)", assignments.get(5).getSecond(), 
-				"Method added compatible with m(java.lang.Number) is not m(int)");
+		assertEquals("m1()", assignments.get(5).getSecond(), 
+				"Method in B is not m1()");
 		
 		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
 		
@@ -2057,8 +2148,11 @@ public class TestMatcherSemanticConflicts {
 		String[] variants1 = {var1Path};
 		String[] variants2 = {var2Path};
 
-		ConflictPattern cp = ConflictPatternCatalog.getConflict(
-				ConflictPatternCatalog.PARALLEL_CHANGES);
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "ParallelChanges.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(bases, variants1, variants2, cp);
