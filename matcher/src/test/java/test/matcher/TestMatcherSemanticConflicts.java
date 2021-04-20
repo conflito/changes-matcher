@@ -98,6 +98,9 @@ public class TestMatcherSemanticConflicts {
 	
 	private static final String PARALLEL_CHANGED_FOLDER = 
 			"ParallelChanges" + File.separator;
+	
+	private static final String PARALLEL_CHANGED_CONSTRUCTOR_FOLDER = 
+			"ParallelChangesConstructor" + File.separator;
 
 
 	@Test
@@ -2180,5 +2183,55 @@ public class TestMatcherSemanticConflicts {
 		assertEquals(targetMethods.size(), 1, "There is not one method to cover?");
 		assertEquals(targetMethods.get(0), "A.m()I", 
 				"Method to cover is not A.m()I?");
+	}
+	
+	@Test
+	public void parallelChangesConstructorTest() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ PARALLEL_CHANGED_CONSTRUCTOR_FOLDER + CONFIG_FILE_NAME);
+
+		String basePath = SRC_FOLDER + PARALLEL_CHANGED_CONSTRUCTOR_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + PARALLEL_CHANGED_CONSTRUCTOR_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String var2Path = SRC_FOLDER + PARALLEL_CHANGED_CONSTRUCTOR_FOLDER + 
+				VAR2_BRANCH_FOLDER + "A.java";
+
+		String[] bases = {basePath};
+		String[] variants1 = {var1Path};
+		String[] variants2 = {var2Path};
+
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "ParallelChangesConstructor.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
+
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
+
+		assertEquals(1, result.size(), "Not one result for parallel changes?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(2, assignments.size(), "Not 2 assignments with only 2 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("A.<init>()", assignments.get(1).getSecond(),
+				"Updated constructor is not A.<init>()?");
+				
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertEquals(1, goals.size(), "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "A", "The target class to test is not A?");
+		assertEquals(targetMethods.size(), 1, "There is not one constructor to cover?");
+		assertEquals(targetMethods.get(0), "A.<init>()V", 
+				"Constructor to cover is not A.<init>()V?");
 	}
 }
