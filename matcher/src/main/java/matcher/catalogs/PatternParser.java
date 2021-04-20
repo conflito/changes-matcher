@@ -20,6 +20,7 @@ import matcher.exceptions.ApplicationException;
 import matcher.patterns.BasePattern;
 import matcher.patterns.ClassPattern;
 import matcher.patterns.ConflictPattern;
+import matcher.patterns.ConstructorPattern;
 import matcher.patterns.FieldAccessPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
@@ -34,6 +35,7 @@ import matcher.patterns.deltas.InsertClassPatternAction;
 import matcher.patterns.deltas.InsertFieldPatternAction;
 import matcher.patterns.deltas.InsertInvocationPatternAction;
 import matcher.patterns.deltas.InsertMethodPatternAction;
+import matcher.patterns.deltas.UpdateConstructorPatternAction;
 import matcher.patterns.deltas.UpdateDependencyPatternAction;
 import matcher.patterns.deltas.UpdateFieldTypePatternAction;
 import matcher.patterns.deltas.UpdateMethodPatternAction;
@@ -51,6 +53,7 @@ public class PatternParser {
 	
 	private Map<String, ClassPattern> definedClasses;
 	private Map<String, MethodPattern> definedMethods;
+	private Map<String, ConstructorPattern> definedConstructors;
 	private Map<String, FieldPattern> definedFields;
 	private Map<String, InterfacePattern> definedInterfaces;
 	
@@ -70,6 +73,7 @@ public class PatternParser {
 		variables = new HashMap<>();
 		definedClasses = new HashMap<>();
 		definedMethods = new HashMap<>();
+		definedConstructors = new HashMap<>();
 		definedFields = new HashMap<>();
 		definedInterfaces = new HashMap<>();
 		
@@ -143,6 +147,10 @@ public class PatternParser {
 	
 	private boolean existsMethod(String variable) {
 		return definedMethods.containsKey(variable);
+	}
+	
+	private boolean existsConstructor(String variable) {
+		return definedConstructors.containsKey(variable);
 	}
 	
 	private BufferedReader openReader(File f) throws ApplicationException {
@@ -367,7 +375,7 @@ public class PatternParser {
 				if(line.matches(VAR_PATTERN + "\\." + VAR_PATTERN)) {
 					String[] components = line.split("\\.");
 					String callClassVar = components[0];
-					String callMethodVar = components[1];
+					String callVar = components[1];
 					
 					if(!existsVariable(callClassVar))
 						throw new ApplicationException("Invalid pattern: unknown variable "
@@ -377,17 +385,24 @@ public class PatternParser {
 						throw new ApplicationException("Invalid pattern: unknown class "
 								+ callClassVar + " in line " + getCurrentLine());
 					
-					if(!existsVariable(callMethodVar))
+					if(!existsVariable(callVar))
 						throw new ApplicationException("Invalid pattern: unknown variable "
-								+ callMethodVar  + " in line " + getCurrentLine());
+								+ callVar  + " in line " + getCurrentLine());
 					
-					if(!existsMethod(callMethodVar))
+					if(!existsMethod(callVar) && !existsConstructor(callVar))
 						throw new ApplicationException("Invalid pattern: unknown method "
-								+ callMethodVar + " in line " + getCurrentLine());
+								+ callVar + " in line " + getCurrentLine());
 					
 					ClassPattern callClass = getClassPattern(callClassVar);
-					MethodPattern callMethod = definedMethods.get(callMethodVar);
-					goal.addMethodToCall(callClass, callMethod);
+					if(existsMethod(callVar)) {
+						MethodPattern callMethod = definedMethods.get(callVar);
+						goal.addMethodToCall(callClass, callMethod);
+					}
+					else {
+						ConstructorPattern callConstructor = definedConstructors.get(callVar);
+						goal.addConstructorToCall(callClass, callConstructor);
+					}
+					
 				}
 				
 			}
@@ -437,6 +452,8 @@ public class PatternParser {
 	private void processEntityAspects(String line) throws ApplicationException {
 		if(isMethodDef(line))
 			processMethodDef(line);
+		else if(isConstructorDef(line))
+			processConstructorDef(line);
 		else if(isMethodNotDef(line))
 			processMethodNotDef(line);
 		else if(isMethodDependency(line))
@@ -678,6 +695,47 @@ public class PatternParser {
 					+ getCurrentLine());
 	}
 	
+	private void processConstructorDef(String line) throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String classVar = matcher.group();
+			
+			if(!existsVariable(classVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ classVar  + " in line " + getCurrentLine());
+			
+			if(!existsClass(classVar))
+				throw new ApplicationException("Invalid pattern: undefined class "
+						+ classVar + " in line " + getCurrentLine());
+			
+			if(matcher.find()) {
+				String constructorVar = matcher.group();
+				
+				if(!existsVariable(constructorVar))
+					throw new ApplicationException("Invalid pattern: unknown variable "
+							+ constructorVar  + " in line " + getCurrentLine());
+				
+				Visibility vis = null;
+				if(isConstructorDefWithVisibility(line)) {
+					int indexOfHas = line.indexOf("has");
+					int indexOfMethod = line.indexOf("constructor");
+					String stringVis = line.substring(indexOfHas + 4, indexOfMethod - 1);
+					vis = Visibility.valueOf(stringVis.toUpperCase());
+				}
+				
+				ConstructorPattern cp = new ConstructorPattern(variables.get(constructorVar), vis);
+				getClassPattern(classVar).addConstructorPattern(cp);
+				definedConstructors.put(constructorVar, cp);
+			}
+			else 
+				throw new ApplicationException("Something went wrong reading line " 
+						+ getCurrentLine());
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
 	private void processMethodNotDef(String line) throws ApplicationException {
 		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
 		if(matcher.find()) {
@@ -778,6 +836,8 @@ public class PatternParser {
 	private void processUpdateAction(String line) throws ApplicationException {
 		if(isUpdateMethodAction(line))
 			processUpdateMethodAction(line);
+		else if(isUpdateConstructorAction(line))
+			processUpdateConstructorAction(line);
 		else if(isUpdateVisibilityAction(line))
 			processUpdateVisibilityAction(line);
 		else if(isUpdateFieldType(line))
@@ -804,6 +864,30 @@ public class PatternParser {
 			currentDelta.addActionPattern(umpa);
 			
 			lastAction = umpa;
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
+	private void processUpdateConstructorAction(String line) throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String constructorVar = matcher.group();
+			
+			if(!existsVariable(constructorVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ constructorVar  + " in line " + getCurrentLine());
+			
+			if(!existsConstructor(constructorVar))
+				throw new ApplicationException("Invalid pattern: undefined constructor "
+						+ constructorVar + " in line " + getCurrentLine());
+			
+			UpdateConstructorPatternAction ucpa =
+					new UpdateConstructorPatternAction(definedConstructors.get(constructorVar));
+			currentDelta.addActionPattern(ucpa);
+			
+			lastAction = ucpa;
 		}
 		else 
 			throw new ApplicationException("Something went wrong reading line " 
@@ -1199,6 +1283,10 @@ public class PatternParser {
 		return line.matches("Update method " + VAR_PATTERN + "\\s*");
 	}
 	
+	private boolean isUpdateConstructorAction(String line) {
+		return line.matches("Update constructor " + VAR_PATTERN + "\\s*");
+	}
+	
 	private boolean isUpdateVisibilityAction(String line) {
 		return line.matches("Update visibility of method " + VAR_PATTERN + 
 				" to " + VISIBILITY_PATTERN + "\\s*");
@@ -1268,6 +1356,21 @@ public class PatternParser {
 	private boolean isMethodDefWithVisibility(String line) {
 		return line.matches("Class " + VAR_PATTERN + " has "
 				+ VISIBILITY_PATTERN + " method " + VAR_PATTERN + "\\s*");
+	}
+	
+	private boolean isConstructorDef(String line) {
+		return isConstructorDefWithoutVisibility(line) ||
+				isConstructorDefWithVisibility(line);
+	}
+	
+	private boolean isConstructorDefWithoutVisibility(String line) {
+		return line.matches("Class " + VAR_PATTERN + " has constructor " +
+					VAR_PATTERN + "\\s*");
+	}
+	
+	private boolean isConstructorDefWithVisibility(String line) {
+		return line.matches("Class " + VAR_PATTERN + " has "
+				+ VISIBILITY_PATTERN + " constructor " + VAR_PATTERN + "\\s*");
 	}
 	
 	private boolean isFieldDef(String line) {
@@ -1349,7 +1452,7 @@ public class PatternParser {
 		
 		String conflictPath = "src" + File.separator + "main" + File.separator + 
 				"resources" + File.separator + "conflict-patterns" + 
-				File.separator + "ChangeMethod2.co";
+				File.separator + "ParallelChangesConstructor.co";
 		
 		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 		System.out.println(cp.toString());
