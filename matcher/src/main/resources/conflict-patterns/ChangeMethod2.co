@@ -1,0 +1,34 @@
+Name: "Change Method 2"
+Variables: $A $I $B1 $B2 $N $M1 $M2 $H $F
+
+Base Condition:
+Interface $I
+
+Class $B1
+Class $B1 implements interface $I
+Class $B1 has method $H
+
+Class $B2
+Class $B2 implements interface $I
+Class $B2 does not have method $H
+
+Class $A
+Class $A has field $F of type $B1
+Class $A has method $N
+Method $N reads field $F
+Method $N depends on method $M2
+Class $A has method $M1
+Method $M1 depends on method $H
+Class $A has method $M2
+
+Delta:
+Update field type of field $F to $B2
+
+Delta:
+Update dependency from method $M2 to method $M1 in method $N
+
+Testing Goal: 
+$A
+$A.$N
+$A.$M1
+$B2.$H
