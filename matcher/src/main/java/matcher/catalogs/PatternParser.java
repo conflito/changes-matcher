@@ -23,8 +23,10 @@ import matcher.patterns.ConflictPattern;
 import matcher.patterns.FieldAccessPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
+import matcher.patterns.InterfacePattern;
 import matcher.patterns.MethodInvocationPattern;
 import matcher.patterns.MethodPattern;
+import matcher.patterns.TypePattern;
 import matcher.patterns.deltas.ActionPattern;
 import matcher.patterns.deltas.DeleteMethodPatternAction;
 import matcher.patterns.deltas.DeltaPattern;
@@ -32,6 +34,8 @@ import matcher.patterns.deltas.InsertClassPatternAction;
 import matcher.patterns.deltas.InsertFieldPatternAction;
 import matcher.patterns.deltas.InsertInvocationPatternAction;
 import matcher.patterns.deltas.InsertMethodPatternAction;
+import matcher.patterns.deltas.UpdateDependencyPatternAction;
+import matcher.patterns.deltas.UpdateFieldTypePatternAction;
 import matcher.patterns.deltas.UpdateMethodPatternAction;
 import matcher.patterns.deltas.VisibilityActionPattern;
 import matcher.patterns.goals.TestingGoal;
@@ -48,6 +52,7 @@ public class PatternParser {
 	private Map<String, ClassPattern> definedClasses;
 	private Map<String, MethodPattern> definedMethods;
 	private Map<String, FieldPattern> definedFields;
+	private Map<String, InterfacePattern> definedInterfaces;
 	
 	private Map<String, ClassPattern> methodOwners;
 	
@@ -66,6 +71,7 @@ public class PatternParser {
 		definedClasses = new HashMap<>();
 		definedMethods = new HashMap<>();
 		definedFields = new HashMap<>();
+		definedInterfaces = new HashMap<>();
 		
 		methodOwners = new HashMap<>();
 		
@@ -118,6 +124,10 @@ public class PatternParser {
 	private boolean existsClass(String variable) {
 		return definedClasses.containsKey(variable) ||
 				insertedClasses.containsKey(variable);
+	}
+	
+	private boolean existsInterface(String variable) {
+		return definedInterfaces.containsKey(variable);
 	}
 	
 	private boolean existsField(String variable) {
@@ -304,6 +314,10 @@ public class PatternParser {
 	
 	private void buildBasePattern() {
 		BasePattern basePattern = new BasePattern();
+		for(Map.Entry<String, InterfacePattern> e: definedInterfaces.entrySet()) {
+			basePattern.addInterfacePattern(e.getValue());
+		}
+		
 		for(Map.Entry<String, ClassPattern> e: definedClasses.entrySet()) {
 			basePattern.addClassPattern(e.getValue());
 		}
@@ -414,6 +428,8 @@ public class PatternParser {
 			return ;
 		else if(isClassDef(line))
 			processClassDef(line);
+		else if(isInterfaceDef(line))
+			processInterfaceDef(line);
 		else
 			processEntityAspects(line);
 	}
@@ -457,6 +473,27 @@ public class PatternParser {
 					+ getCurrentLine());
 	}
 	
+	private void processInterfaceDef(String line) throws ApplicationException{
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		
+		if(matcher.find()) {
+			String var = matcher.group();
+			if(!existsVariable(var))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ var  + " in line " + getCurrentLine());
+			
+			if(existsInterface(var))
+				throw new ApplicationException("Invalid pattern: duplicate interface "
+						+ var + " in line " + getCurrentLine());
+			
+			InterfacePattern ip = new InterfacePattern(variables.get(var));
+			definedInterfaces.put(var, ip);
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
 	private void processFieldDef(String line) throws ApplicationException {
 		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
 
@@ -488,6 +525,25 @@ public class PatternParser {
 				
 				FieldPattern fieldPattern = 
 						new FieldPattern(variables.get(fieldVar), vis);
+				
+				
+				if(isFieldDefWithType(line)) {
+					int indexOfType = line.indexOf("type");
+					String typeVar = line.substring(indexOfType+5)
+							.replaceAll("\\s", "");
+					
+					if(!existsVariable(typeVar))
+						throw new ApplicationException("Invalid pattern: unknown variable "
+								+ typeVar  + " in line " + getCurrentLine());
+					
+					if(!existsClass(typeVar) && !existsInterface(typeVar))
+						throw new ApplicationException("Invalid pattern: undefined type "
+								+ typeVar + " in line " + getCurrentLine());
+					
+					TypePattern typePattern = new TypePattern(variables.get(typeVar));
+					fieldPattern.setType(typePattern);
+				}
+				
 				getClassPattern(classVar).addFieldPattern(fieldPattern);
 				
 				definedFields.put(fieldVar, fieldPattern);
@@ -642,10 +698,6 @@ public class PatternParser {
 					throw new ApplicationException("Invalid pattern: unknown variable "
 							+ methodVar  + " in line " + getCurrentLine());
 				
-				if(existsMethod(methodVar))
-					throw new ApplicationException("Invalid pattern: duplicate method "
-							+ methodVar + " in line " + getCurrentLine());
-				
 				getClassPattern(classVar).addExcludedMethod(variables.get(methodVar));
 			}
 		}
@@ -726,9 +778,12 @@ public class PatternParser {
 	private void processUpdateAction(String line) throws ApplicationException {
 		if(isUpdateMethodAction(line))
 			processUpdateMethodAction(line);
-		else if(isUpdateVisibilityAction(line)) {
+		else if(isUpdateVisibilityAction(line))
 			processUpdateVisibilityAction(line);
-		}
+		else if(isUpdateFieldType(line))
+			processUpdateFieldTypeAction(line);
+		else if(isUpdateDependency(line))
+			processUpdateDependencyAction(line);
 	}
 	
 	private void processUpdateMethodAction(String line) throws ApplicationException {
@@ -785,6 +840,97 @@ public class PatternParser {
 				currentDelta.addActionPattern(vap);
 				lastAction = vap;
 				
+			}
+			else 
+				throw new ApplicationException("Something went wrong reading line " 
+						+ getCurrentLine());
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
+	private void processUpdateFieldTypeAction(String line) throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String fieldVar = matcher.group();
+			
+			if(!existsVariable(fieldVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ fieldVar  + " in line " + getCurrentLine());
+			
+			if(!existsField(fieldVar))
+				throw new ApplicationException("Invalid pattern: undefined field "
+						+ fieldVar + " in line " + getCurrentLine());
+			
+			FieldPattern fieldPattern = definedFields.get(fieldVar);
+			TypePattern newTypePattern = null;
+			if(matcher.find()) {
+				String typeVar = matcher.group();
+				
+				if(!existsVariable(typeVar))
+					throw new ApplicationException("Invalid pattern: unknown variable "
+							+ typeVar  + " in line " + getCurrentLine());
+				
+				if(!existsClass(typeVar) && !existsInterface(typeVar))
+					throw new ApplicationException("Invalid pattern: undefined type "
+							+ typeVar + " in line " + getCurrentLine());
+				
+				
+				newTypePattern = new TypePattern(variables.get(typeVar));				
+			}
+			UpdateFieldTypePatternAction uftpa = 
+					new UpdateFieldTypePatternAction(fieldPattern, newTypePattern);
+			
+			currentDelta.addActionPattern(uftpa);
+			lastAction = uftpa;
+		}
+		else 
+			throw new ApplicationException("Something went wrong reading line " 
+					+ getCurrentLine());
+	}
+	
+	private void processUpdateDependencyAction(String line) 
+			throws ApplicationException{
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String oldMethodDependencyVar = matcher.group();
+			
+			if(!existsVariable(oldMethodDependencyVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ oldMethodDependencyVar  + " in line " + getCurrentLine());
+			
+			if(matcher.find()) {
+				String newMethodDependencyVar = matcher.group();
+				
+				if(!existsVariable(newMethodDependencyVar))
+					throw new ApplicationException("Invalid pattern: unknown variable "
+							+ newMethodDependencyVar  + " in line " + getCurrentLine());
+				
+				if(matcher.find()) {
+					String methodVar = matcher.group();
+					
+					if(!existsVariable(methodVar))
+						throw new ApplicationException("Invalid pattern: unknown variable "
+								+ methodVar  + " in line " + getCurrentLine());
+					
+					if(!existsMethod(methodVar))
+						throw new ApplicationException("Invalid pattern: undefined method "
+								+ methodVar + " in line " + getCurrentLine());
+					
+					MethodPattern methodPattern = definedMethods.get(methodVar);
+					
+					UpdateDependencyPatternAction udpa =
+							new UpdateDependencyPatternAction(methodPattern, 
+									variables.get(oldMethodDependencyVar), 
+									variables.get(newMethodDependencyVar));
+					
+					currentDelta.addActionPattern(udpa);
+					lastAction = udpa;
+				}
+				else 
+					throw new ApplicationException("Something went wrong reading line " 
+							+ getCurrentLine());
 			}
 			else 
 				throw new ApplicationException("Something went wrong reading line " 
@@ -1027,6 +1173,10 @@ public class PatternParser {
 		return line.matches("Class " + VAR_PATTERN +"\\s*");
 	}
 	
+	private boolean isInterfaceDef(String line) {
+		return line.matches("Interface " + VAR_PATTERN + "\\s*");
+	}
+	
 	private boolean isExtendsDef(String line) {
 		return line.matches("Class " + VAR_PATTERN + " extends class " + 
 				VAR_PATTERN + "\\s*");
@@ -1052,6 +1202,16 @@ public class PatternParser {
 	private boolean isUpdateVisibilityAction(String line) {
 		return line.matches("Update visibility of method " + VAR_PATTERN + 
 				" to " + VISIBILITY_PATTERN + "\\s*");
+	}
+	
+	private boolean isUpdateFieldType(String line) {
+		return line.matches("Update field type of field " + VAR_PATTERN + 
+				" to " + VAR_PATTERN + "\\s*");
+	}
+	
+	private boolean isUpdateDependency(String line) {
+		return line.matches("Update dependency from method " + VAR_PATTERN + 
+				" to method " + VAR_PATTERN + " in method " + VAR_PATTERN + "\\s*");
 	}
 	
 	private boolean isInsertClassAction(String line) {
@@ -1117,13 +1277,19 @@ public class PatternParser {
 
 	private boolean isFieldDefWithoutVisibility(String line) {
 		return line.matches("Class " + VAR_PATTERN + " has field " +
-				VAR_PATTERN + "\\s*");
+				VAR_PATTERN + ".*\\s*");
 	}
 
 	private boolean isFieldDefWithVisibility(String line) {
 		return line.matches("Class " + VAR_PATTERN + " has "
 				+  VISIBILITY_PATTERN + " field " +
-				VAR_PATTERN + "\\s*");
+				VAR_PATTERN + ".*\\s*");
+	}
+	
+	private boolean isFieldDefWithType(String line) {
+		return line.matches("Class " + VAR_PATTERN + " has ("
+				+  VISIBILITY_PATTERN + " )?field " +
+				VAR_PATTERN + " of type " + VAR_PATTERN + "\\s*");
 	}
 	
 	private boolean isFieldUse(String line) {
@@ -1183,7 +1349,7 @@ public class PatternParser {
 		
 		String conflictPath = "src" + File.separator + "main" + File.separator + 
 				"resources" + File.separator + "conflict-patterns" + 
-				File.separator + "RemoveOverriding.co";
+				File.separator + "ChangeMethod2.co";
 		
 		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
 		System.out.println(cp.toString());
