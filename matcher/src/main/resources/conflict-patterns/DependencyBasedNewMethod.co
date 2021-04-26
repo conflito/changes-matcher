@@ -13,7 +13,7 @@ Delta:
 Update method $M
 
 Delta:
-Insert public method $M1 in class $B
+Insert method $M1 in class $B
 Method $M1 depends on method $M
 
 Testing Goal: 
