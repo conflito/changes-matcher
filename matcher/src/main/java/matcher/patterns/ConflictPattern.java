@@ -14,7 +14,6 @@ import matcher.entities.deltas.DeltaInstance;
 import matcher.patterns.deltas.DeltaPattern;
 import matcher.patterns.goals.BDDTestingGoal;
 import matcher.patterns.goals.TestingGoal;
-import matcher.utils.Pair;
 
 public class ConflictPattern {
 	
@@ -22,8 +21,6 @@ public class ConflictPattern {
 	
 	private DeltaPattern firstDelta;
 	private DeltaPattern secondDelta;
-	
-	private List<Pair<FreeVariable, FreeVariable>> differentVariables;
 
 	private Map<FreeVariable, Set<FreeVariable>> equalVariables;
 	
@@ -34,7 +31,6 @@ public class ConflictPattern {
 	
 	public ConflictPattern(String conflictName) {
 		this.conflictName = conflictName;
-		this.differentVariables = new ArrayList<>();
 		this.equalVariables = new HashMap<>();
 	}
 	
@@ -45,15 +41,7 @@ public class ConflictPattern {
 		this.firstDelta = new DeltaPattern(cp.firstDelta);
 		this.secondDelta = new DeltaPattern(cp.secondDelta);
 		
-		this.differentVariables = new ArrayList<>();
 		this.equalVariables = new HashMap<>();
-		
-		for(Pair<FreeVariable, FreeVariable> p: cp.differentVariables) {
-			FreeVariable firstCopy = new FreeVariable(p.getFirst());
-			FreeVariable secondCopy = new FreeVariable(p.getSecond());
-			Pair<FreeVariable, FreeVariable> copy = new Pair<>(firstCopy, secondCopy);
-			this.differentVariables.add(copy);
-		}
 		
 		for(Entry<FreeVariable, Set<FreeVariable>> e: cp.equalVariables.entrySet()) {
 			FreeVariable keyCopy = new FreeVariable(e.getKey());
@@ -107,10 +95,6 @@ public class ConflictPattern {
 	
 	public void setSecondDeltaPattern(DeltaPattern deltaPattern) {
 		this.secondDelta = deltaPattern;
-	}
-	
-	public void addDifferentVariablesRule(FreeVariable v1, FreeVariable v2) {
-		this.differentVariables.add(new Pair<>(v1, v2));
 	}
 	
 	public void addEqualVariableRule(FreeVariable v1, FreeVariable v2) {
@@ -302,13 +286,7 @@ public class ConflictPattern {
 	public boolean matches(ChangeInstance instance) {
 		return basePattern.filled() && deltasFilled() &&
 			   basePattern.matches(instance.getBaseInstance()) &&
-			   deltasMatch(instance) &&
-			   differentVariableMatch();
-	}
-	
-	private boolean differentVariableMatch() {
-		return differentVariables.stream().allMatch(p ->
-				!p.getFirst().getValue().equals(p.getSecond().getValue()));
+			   deltasMatch(instance);
 	}
 
 	private boolean deltasFilled() {
@@ -338,12 +316,7 @@ public class ConflictPattern {
 		basePattern.setVariableValue(id, value);
 		firstDelta.setVariableValue(id, value);
 		secondDelta.setVariableValue(id, value);
-		for(Pair<FreeVariable, FreeVariable> p: differentVariables) {
-			if(p.getFirst().isId(id))
-				p.getFirst().setValue(value);
-			if(p.getSecond().isId(id))
-				p.getSecond().setValue(value);
-		}
+		
 		for(Entry<FreeVariable, Set<FreeVariable>> e: equalVariables.entrySet()) {
 			FreeVariable v1 = e.getKey();
 			if(v1.isId(id))

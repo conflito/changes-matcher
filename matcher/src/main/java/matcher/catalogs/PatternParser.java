@@ -228,12 +228,8 @@ public class PatternParser {
 				do{
 					line = readLine(br);
 					
-					if(!line.equals("")) {
-						if(isDifferentVariableRule(line))
-							processDifferentVariableRule(line);
-						else if(isCanBeEqualVariableRule(line))
-							processCanBeEqualVariableRule(line);
-					}
+					if(!line.equals("") && isCanBeEqualVariableRule(line))
+						processCanBeEqualVariableRule(line);
 					
 				}while(!line.startsWith("Base Condition:"));
 			}
@@ -241,35 +237,6 @@ public class PatternParser {
 				throw new ApplicationException("Missing base condition");	
 			} 
 		}
-	}
-	
-	private void processDifferentVariableRule(String line) throws ApplicationException {
-		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
-		
-		if(matcher.find()) {
-			String firstVar = matcher.group();
-			
-			if(!existsVariable(firstVar))
-				throw new ApplicationException("Invalid pattern: unknown variable "
-						+ firstVar  + " in line " + getCurrentLine());
-			
-			if(matcher.find()) {
-				String secondVar = matcher.group();
-				
-				if(!existsVariable(secondVar))
-					throw new ApplicationException("Invalid pattern: unknown variable "
-							+ secondVar  + " in line " + getCurrentLine());
-				
-				conflictPattern.addDifferentVariablesRule(variables.get(firstVar), 
-						variables.get(secondVar));
-			}
-			else 
-				throw new ApplicationException("Something went wrong reading line " 
-						+ getCurrentLine());
-		}
-		else 
-			throw new ApplicationException("Something went wrong reading line " 
-					+ getCurrentLine());
 	}
 	
 	private void processCanBeEqualVariableRule(String line) 
@@ -1814,10 +1781,6 @@ public class PatternParser {
 	private boolean isMethodCompatibility(String line) {
 		return line.matches("Method " + VAR_PATTERN + " compatible with method " +
 				VAR_PATTERN + "\\s*");
-	}
-	
-	private boolean isDifferentVariableRule(String line) {
-		return line.matches(VAR_PATTERN + " different from " + VAR_PATTERN + "\\s*");
 	}
 	
 	private boolean isCanBeEqualVariableRule(String line) {

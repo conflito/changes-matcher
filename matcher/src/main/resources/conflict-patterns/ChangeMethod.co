@@ -2,7 +2,6 @@ Name: "Change Method"
 Variables: $A $B $C $M $M1 $M2
 
 Constraints:
-$M1 different from $M2
 $A can be equal to $B
 $A can be equal to $C
 $B can be equal to $C
