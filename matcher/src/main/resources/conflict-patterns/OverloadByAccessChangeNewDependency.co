@@ -1,7 +1,7 @@
 Name: "Overload by Access Change (new dependency)"
 Variables: $A $B $M $M1 $M2
 
-Additional Rules:
+Constraints:
 $A can be equal to $B
 
 Base Condition:

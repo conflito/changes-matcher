@@ -1,7 +1,7 @@
 Name: "Change Method"
 Variables: $A $B $C $M $M1 $M2
 
-Additional Rules:
+Constraints:
 $M1 different from $M2
 $A can be equal to $B
 $A can be equal to $C

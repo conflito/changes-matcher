@@ -1,7 +1,7 @@
 Name: "Dependency Based (new dependency)"
 Variables: $A $B $M $M1
 
-Additional Rules:
+Constraints:
 $A can be equal to $B
 
 Base Condition:

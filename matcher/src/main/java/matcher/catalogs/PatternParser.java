@@ -108,7 +108,7 @@ public class PatternParser {
 		
 		parseVariables(br);
 		
-		processAdditionalRules(br);
+		processConstraints(br);
 		
 		processBasePattern(br);
 		processingDeltas = true;
@@ -220,8 +220,8 @@ public class PatternParser {
 		}
 	}
 	
-	private void processAdditionalRules(BufferedReader br) throws ApplicationException {
-		boolean existRules = findAdditonalRules(br);
+	private void processConstraints(BufferedReader br) throws ApplicationException {
+		boolean existRules = findConstraints(br);
 		if(existRules) {
 			String line;
 			try {
@@ -302,18 +302,18 @@ public class PatternParser {
 					+ getCurrentLine());
 	}
 	
-	private boolean findAdditonalRules(BufferedReader br) throws ApplicationException {
+	private boolean findConstraints(BufferedReader br) throws ApplicationException {
 		String line;
 		try {
 			do{
 				line = readLine(br);
-			}while(!line.startsWith("Additional Rules:") &&
+			}while(!line.startsWith("Constraints:") &&
 					!line.startsWith("Base Condition:"));
 		}
 		catch (NullPointerException e) {
 			throw new ApplicationException("Missing base condition");	
 		} 
-		return line.startsWith("Additional Rules:");
+		return line.startsWith("Constraints:");
 	}
 	
 	private void processBasePattern(BufferedReader br) throws ApplicationException {

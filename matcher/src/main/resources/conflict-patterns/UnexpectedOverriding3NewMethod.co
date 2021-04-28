@@ -1,7 +1,7 @@
 Name: "Unexpected Overriding 3 (new method)"
 Variables: $A $B $C $M $M1 $M2
 
-Additional Rules:
+Constraints:
 $B can be equal to $C
 
 Base Condition:
