@@ -1,4 +1,4 @@
-package test.matcher;
+package matcher;
 
 import matcher.Matcher;
 import matcher.entities.Visibility;

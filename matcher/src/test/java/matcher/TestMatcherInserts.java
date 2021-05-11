@@ -1,4 +1,4 @@
-package test.matcher;
+package matcher;
 
 import static org.junit.jupiter.api.Assertions.*;
 
