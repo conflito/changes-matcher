@@ -129,35 +129,8 @@ public class ConstructorPattern {
 	private boolean sameVisibility(ConstructorInstance instance) {
 		return instance.getVisibility() == visibility;
 	}
-
-	public String toStringDebug(int classVariableId) {
-		StringBuilder result = new StringBuilder();
-		
-		result.append("#" + classVariableId + " has " + 
-				(visibility == null?"*":visibility.toString().toLowerCase()));
-		result.append(" constructor #" + getVariableId() + "\n");
-		
-		for(FreeVariable v: dependencies) {
-			result.append("#" + getVariableId() + " depends on #" + v.getId() + "\n");
-		}
-		
-		return result.toString();
-	}
-
-	public String toStringFilled(String classVal) {
-		StringBuilder result = new StringBuilder();
-		
-		result.append("#" + classVal + " has " + 
-				(visibility == null?"*":visibility.toString().toLowerCase()));
-		result.append(" constructor #" + freeVariable.getValue() + "\n");
-		
-		for(FreeVariable v: dependencies) {
-			result.append("#" + freeVariable.getValue() + " depends on #" + v.getValue() + "\n");
-		}
-		
-		return result.toString();
-	}
 	
+	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		for(FreeVariable var: dependencies) {

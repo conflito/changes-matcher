@@ -174,15 +174,6 @@ public class DeltaPattern {
 	public boolean hasVisibilityActions() {
 		return actions.stream().anyMatch(a -> a instanceof VisibilityActionPattern);
 	}
-	
-	public String toStringDebug() {
-		StringBuilder result = new StringBuilder();
-		
-		for(ActionPattern a: actions)
-			result.append(a.toStringDebug() + "\n");
-		
-		return result.toString();
-	}
 
 	public List<Integer> getFieldsVariableIds() {
 		List<Integer> result = getInsertedFieldsVariableIds();
@@ -424,16 +415,8 @@ public class DeltaPattern {
 			a.clean();
 		}
 	}
-
-	public String toStringFilled() {
-		StringBuilder result = new StringBuilder();
-		
-		for(ActionPattern a: actions)
-			result.append(a.toStringFilled() + "\n");
-		
-		return result.toString();
-	}
 	
+	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		

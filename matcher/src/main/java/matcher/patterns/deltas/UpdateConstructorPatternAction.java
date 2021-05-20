@@ -43,22 +43,11 @@ public class UpdateConstructorPatternAction extends UpdatePatternAction {
 	}
 
 	@Override
-	public String toStringDebug() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void clean() {
 		updatedConstructorPattern.clean();
 	}
 
 	@Override
-	public String toStringFilled() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	public String toString() {
 		return "Update constructor $" + updatedConstructorPattern.getVariableId();
 	}

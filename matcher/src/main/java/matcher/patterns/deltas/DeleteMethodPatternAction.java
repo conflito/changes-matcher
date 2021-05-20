@@ -62,19 +62,8 @@ public class DeleteMethodPatternAction extends DeletePatternAction {
 	public boolean filled() {
 		return deletedMethodPattern.filled() && holderClassPattern.filled();
 	}
-
-	@Override
-	public String toStringDebug() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String toStringFilled() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
+	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append("Delete method $" + deletedMethodPattern.getVariableId());

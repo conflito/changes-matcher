@@ -92,12 +92,4 @@ public class FieldPattern {
 	private boolean sameName(FieldInstance instance) {
 		return instance.getQualifiedName().equals(freeVariable.getValue());
 	}
-	
-	public String toStringDegub() {
-		return (visibility == null?"*":visibility.toString().toLowerCase()) + " #" + getVariableId();
-	}
-	
-	public String toStringFilled() {
-		return (visibility == null?"*":visibility.toString().toLowerCase()) + " #" + freeVariable.getValue();
-	}
 }

@@ -78,44 +78,11 @@ public class VisibilityActionPattern extends ActionPattern{
 	}
 
 	@Override
-	public String toStringDebug() {
-		if(isVisibilityInsert()) {
-			String vis = newVisibility == null?"*":newVisibility.toString().toLowerCase();
-			return "insert visibility " + vis + " into #" + entity.getId();
-		}
-		else if(isVisibilityDelete()) {
-			String vis = oldVisibility == null?"*":oldVisibility.toString().toLowerCase();
-			return "remove visibility " + vis + " from #" + entity.getId();
-		}
-		else {
-			String visNew = newVisibility == null?"*":newVisibility.toString().toLowerCase();
-			String visOld = oldVisibility == null?"*":oldVisibility.toString().toLowerCase();
-			return "update visibility of #" + entity.getId() + " from " + visNew + " to " + visOld;
-		}
-	}
-	
-	@Override
-	public String toStringFilled() {
-		if(isVisibilityInsert()) {
-			String vis = newVisibility == null?"*":newVisibility.toString().toLowerCase();
-			return "insert visibility " + vis + " into #" + entity.getValue();
-		}
-		else if(isVisibilityDelete()) {
-			String vis = oldVisibility == null?"*":oldVisibility.toString().toLowerCase();
-			return "remove visibility " + vis + " from #" + entity.getValue();
-		}
-		else {
-			String visNew = newVisibility == null?"*":newVisibility.toString().toLowerCase();
-			String visOld = oldVisibility == null?"*":oldVisibility.toString().toLowerCase();
-			return "update visibility of #" + entity.getValue() + " from " + visNew + " to " + visOld;
-		}
-	}
-
-	@Override
 	public void clean() {
 		entity.clean();
 	}
 	
+	@Override
 	public String toString() {
 		if(isVisibilityInsert()) {
 			String vis = newVisibility == null?"*":newVisibility.toString().toLowerCase();

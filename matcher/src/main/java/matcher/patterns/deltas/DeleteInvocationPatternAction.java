@@ -104,16 +104,6 @@ public class DeleteInvocationPatternAction extends DeletePatternAction {
 	}
 	
 	@Override
-	public String toStringDebug() {
-		return null;
-	}
-
-	@Override
-	public String toStringFilled() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append("Delete dependency to method $" + 

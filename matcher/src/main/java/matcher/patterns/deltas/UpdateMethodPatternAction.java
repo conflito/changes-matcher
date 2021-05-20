@@ -43,22 +43,11 @@ public class UpdateMethodPatternAction extends UpdatePatternAction {
 	}
 
 	@Override
-	public String toStringDebug() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void clean() {
 		updatedMethodPattern.clean();
 	}
-
-	@Override
-	public String toStringFilled() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
+	@Override
 	public String toString() {
 		return "Update method $" + updatedMethodPattern.getVariableId();
 	}

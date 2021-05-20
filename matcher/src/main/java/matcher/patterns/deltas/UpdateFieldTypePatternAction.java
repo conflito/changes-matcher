@@ -68,22 +68,13 @@ public class UpdateFieldTypePatternAction extends UpdatePatternAction {
 	}
 
 	@Override
-	public String toStringDebug() {
-		return null;
-	}
-
-	@Override
-	public String toStringFilled() {
-		return null;
-	}
-
-	@Override
 	public void clean() {
 		updatedFieldPattern.clean();
 		if(newType != null)
 			newType.clean();
 	}
 	
+	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append("Update field type of field $" + 

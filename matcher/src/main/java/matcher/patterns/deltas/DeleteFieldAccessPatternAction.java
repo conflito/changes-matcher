@@ -59,17 +59,6 @@ public class DeleteFieldAccessPatternAction extends DeletePatternAction {
 	}
 
 	@Override
-	public String toStringDebug() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String toStringFilled() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append("Delete field ");

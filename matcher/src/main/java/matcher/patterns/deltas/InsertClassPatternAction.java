@@ -62,17 +62,6 @@ public class InsertClassPatternAction extends InsertPatternAction {
 	}
 
 	@Override
-	public String toStringDebug() {
-		// TODO Auto-generated method stub
-		return null;
-	}	
-
-	@Override
-	public String toStringFilled() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append("Insert class $" + insertedClassPattern.getVariableId() + "\n");

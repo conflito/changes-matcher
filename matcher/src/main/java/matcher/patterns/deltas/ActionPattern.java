@@ -24,15 +24,11 @@ public abstract class ActionPattern {
 
 	public abstract boolean matches(ActionInstance action);
 	
-	public abstract String toStringDebug();
-	
 	public abstract void clean();
 	
 	public boolean matchesOne(List<ActionInstance> actions) {
 		return actions.stream().anyMatch(a -> matches(a));
 	}
-
-	public abstract String toStringFilled();
 	
 	public abstract ActionPattern makeCopy();
 }

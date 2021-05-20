@@ -112,16 +112,6 @@ public class UpdateDependencyPatternAction extends UpdatePatternAction {
 		else
 			holderMethodPattern.setVariableValue(id, value);
 	}
-	
-	@Override
-	public String toStringDebug() {
-		return null;
-	}
-	
-	@Override
-	public String toStringFilled() {
-		return null;
-	}
 
 	@Override
 	public void clean() {
@@ -133,6 +123,7 @@ public class UpdateDependencyPatternAction extends UpdatePatternAction {
 			holderMethodPattern.clean();
 	}
 	
+	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append("Update dependency from method $" + oldDependency.getId());
