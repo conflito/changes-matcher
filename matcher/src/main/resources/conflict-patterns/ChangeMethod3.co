@@ -1,0 +1,23 @@
+Name: "Change Method 3"
+Variables: $A $B $M $M1
+
+Constraints:
+$A can be equal to $B
+
+Base Condition:
+Class $A 
+Class $A has method $M
+Class $B
+Class $B has method $M1
+Method $M depends on method $M1
+
+Delta:
+Update method $M
+
+Delta:
+Update method $M1
+
+Testing Goal: 
+$A
+$A.$M
+$B.$M1

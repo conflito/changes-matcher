@@ -65,6 +65,8 @@ public class TestMatcherSemanticConflicts {
 	
 	private static final String CHANGE_METHOD2_FOLDER = 
 			"ChangeMethod02" + File.separator;
+	private static final String CHANGE_METHOD3_FOLDER = 
+			"ChangeMethod03" + File.separator;
 	
 	private static final String DEPENDENCY_BASED1_FOLDER = 
 			"DependencyBased01" + File.separator;
@@ -1292,6 +1294,65 @@ public class TestMatcherSemanticConflicts {
 				"Method to cover is not A.m1([LB;)Z?");
 		assertEquals(targetMethods.get(2), "B2.hashCode()I", 
 				"Method to cover is not B2.hasCode()I?");
+	}
+	
+	@Test
+	public void changeMethod3Test() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER 
+				+ CHANGE_METHOD3_FOLDER + CONFIG_FILE_NAME);
+
+		String basePath = SRC_FOLDER + CHANGE_METHOD3_FOLDER + 
+				BASE_BRANCH_FOLDER + "A.java";
+		String var1Path = SRC_FOLDER + CHANGE_METHOD3_FOLDER + 
+				VAR1_BRANCH_FOLDER + "A.java";
+		String var2Path = SRC_FOLDER + CHANGE_METHOD3_FOLDER + 
+				VAR2_BRANCH_FOLDER + "A.java";
+
+		String[] bases = {basePath};
+		String[] variants1 = {var1Path};
+		String[] variants2 = {var2Path};
+
+		String conflictPath = "src" + File.separator + "main" + File.separator + 
+				"resources" + File.separator + "conflict-patterns" + 
+				File.separator + "ChangeMethod3.co";
+		
+		ConflictPattern cp = PatternParser.getConflictPattern(conflictPath);
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(bases, variants1, variants2, cp);
+
+		assertEquals(1, result.size(), "Not one result for change method 3?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("A", assignments.get(0).getSecond(), "Class is not A");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("A", assignments.get(1).getSecond(), "Class is not A?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("m()", assignments.get(2).getSecond(), 
+				"Updated method with dependency is not m()?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("m1()", assignments.get(3).getSecond(), 
+				"Updated method that's the dependency is not m1()?");
+		
+		List<Pair<String, List<String>>> goals = matcher.getTestingGoals();
+		
+		assertEquals(1, goals.size(), "There is not one goal to test?");
+		
+		Pair<String, List<String>> goal = goals.get(0);
+		String targetClass = goal.getFirst();
+		List<String> targetMethods = goal.getSecond();
+		assertEquals(targetClass, "A", "The target class to test is not B?");
+		assertEquals(targetMethods.size(), 2, "There are not two methods to cover?");
+		assertEquals(targetMethods.get(0), "A.m()I", 
+				"Method to cover is not A.m()I?");
+		assertEquals(targetMethods.get(1), "A.m1()I", 
+				"Method to cover is not A.m1()I?");
 	}
 
 	@Test
