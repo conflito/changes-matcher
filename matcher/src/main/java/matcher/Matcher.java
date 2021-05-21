@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
@@ -26,6 +25,7 @@ import matcher.utils.Pair;
 
 public class Matcher {
 	
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(Matcher.class);
 	
 	private ConflictPatternCatalog conflictsCatalog;
@@ -58,25 +58,18 @@ public class Matcher {
 		
 		ExecutorService es = Executors.newCachedThreadPool();
 		Semaphore sem = new Semaphore(1);
-		BlockingQueue<Pair<String, List<String>>> outputQueue = 
-				new LinkedBlockingQueue<>();
 		
 		for(ConflictPattern cp: conflictsCatalog.getPatterns()) {
-			MatchingRunnable mt = new MatchingRunnable(basesFile, variants1File, variants2File);
-			mt.setConflictPattern(cp);
-			mt.setSem(sem);
-			mt.setOutputQueue(outputQueue);
-			
-			es.submit(mt);
+			UnsettleRunnable ur = new UnsettleRunnable(basesFile, variants1File, 
+					variants2File, cp, sem);
+			es.submit(ur);
 		}
 		es.shutdown();
-		while(!es.isTerminated() || !outputQueue.isEmpty()) {
-			if(!outputQueue.isEmpty()) {
-				Pair<String, List<String>> testGoal = outputQueue.poll();
-				logger.info("Using EvoSuite to generate test to cover: " + testGoal.toString());
-			}
+		try {
+			es.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+		} catch (InterruptedException e) {
+			throw new ApplicationException("Something went wrong generating tests");
 		}
-		
 	}
 	
 	public List<List<Pair<Integer, String>>> matchingAssignments(String[] bases,
@@ -103,9 +96,9 @@ public class Matcher {
 		Semaphore sem = new Semaphore(1);
 		
 		for(ConflictPattern cp: conflictsCatalog.getPatterns()) {
-			MatchingRunnable mt = new MatchingRunnable(basesFile, variants1File, variants2File);
-			mt.setConflictPattern(cp);
-			mt.setSem(sem);
+			MatchingRunnable mt = new MatchingRunnable(basesFile, variants1File, 
+					variants2File, cp, sem);
+
 			runnables.add(mt);
 			futures.add(es.submit(mt));
 		}
@@ -152,9 +145,8 @@ public class Matcher {
 		
 		Semaphore sem = new Semaphore(1);
 		
-		MatchingRunnable mt = new MatchingRunnable(basesFile, variants1File, variants2File);
-		mt.setConflictPattern(cp);
-		mt.setSem(sem);
+		MatchingRunnable mt = new MatchingRunnable(basesFile, variants1File, 
+				variants2File, cp, sem);
 		
 		Future<List<List<Pair<Integer, String>>>> future = es.submit(mt);
 		
@@ -177,12 +169,18 @@ public class Matcher {
 		return bases.length == variants1.length && bases.length == variants2.length;
 	}
 	
-	private File[] fromStringArray(String[] filePaths) {
+	private File[] fromStringArray(String[] filePaths) throws ApplicationException {
 		File[] result = new File[filePaths.length];
 		for(int i = 0; i < filePaths.length; i++) {
 			String path = filePaths[i];
-			if(path != null)
-				result[i] = new File(path);
+			if(path != null) {
+				File f = new File(path);
+				if(!f.exists())
+					throw new ApplicationException("File " + f.getAbsolutePath() +
+							" does not exist.");
+				result[i] = f;
+				
+			}
 		}
 		return result;
 	}
