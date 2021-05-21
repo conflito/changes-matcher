@@ -2,7 +2,6 @@ package matcher;
 
 import java.io.File;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Semaphore;
 
@@ -23,8 +22,6 @@ public class MatchingRunnable implements Callable<List<List<Pair<Integer, String
 	
 	private ChangeInstanceHandler cih;
 	private MatchingHandler mh;
-	
-	private BlockingQueue<Pair<String, List<String>>> outputQueue;
 
 	private File[] basesFile;
 	private File[] variants1File;
@@ -32,32 +29,26 @@ public class MatchingRunnable implements Callable<List<List<Pair<Integer, String
 
 	private ConflictPattern cp;
 
-	public MatchingRunnable(File[] basesFile, File[] variants1File, File[] variants2File) {
+	public MatchingRunnable(File[] basesFile, File[] variants1File, 
+			File[] variants2File, ConflictPattern cp, Semaphore sem) {
 		super();
 		this.basesFile = basesFile;
 		this.variants1File = variants1File;
 		this.variants2File = variants2File;
+		this.cp = cp;
+		this.sem = sem;
 
 		cih = new ChangeInstanceHandler();
 		mh = new MatchingHandler();
 	}
 
-	public void setConflictPattern(ConflictPattern cp) {
-		this.cp = cp;
-	}
-	
-	public void setSem(Semaphore sem) {
-		this.sem = sem;
-	}
-
-	public void setOutputQueue(BlockingQueue<Pair<String, List<String>>> outputQueue) {
-		this.outputQueue = outputQueue;
-	}
-
 	@Override
 	public List<List<Pair<Integer, String>>> call() throws Exception {
 		if(cp == null) 
-			throw new ApplicationException("Null conflict pattern.");
+			throw new ApplicationException("Missing conflict pattern.");
+		
+		if(sem == null)
+			throw new ApplicationException("Something went wrong with the matching");
 		
 		sem.acquire();
 	
@@ -69,10 +60,6 @@ public class MatchingRunnable implements Callable<List<List<Pair<Integer, String
 		logger.info("Starting matching for " + cp.getConflictName() + "...");
 		
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
-		
-		if(outputQueue != null) {
-			outputQueue.addAll(getTestingGoals());
-		}
 		
 		return result;
 	}
