@@ -1,9 +1,20 @@
 package matcher.entities;
 
+/**
+ * A class representing a method invocation in the system's domain
+ * 
+ * @author Nuno Castanho
+ *
+ */
 public class MethodInvocationInstance {
 	
 	private MethodInstance invokedMethod;
 
+	/**
+	 * Creates an instance of MethodInvocationInstance
+	 * @param invokedMethod
+	 * 			the invoked method
+	 */
 	public MethodInvocationInstance(MethodInstance invokedMethod) {
 		super();
 		this.invokedMethod = invokedMethod;
@@ -34,10 +45,18 @@ public class MethodInvocationInstance {
 		return true;
 	}
 
+	/**
+	 * Get the invoked method in this invocation
+	 * @return the invoked method in this invocation
+	 */
 	public MethodInstance getInvokedMethod() {
 		return invokedMethod;
 	}
 
+	/**
+	 * Get the qualified name of the invoked method in this invocation
+	 * @return the qualified name of the invoked method
+	 */
 	public String getQualifiedName() {
 		return invokedMethod.getQualifiedName();
 	}
