@@ -46,7 +46,7 @@ public class Matcher {
 			throws ApplicationException{
 		if(bases == null || variants1 == null || variants2 == null)
 			return ;
-		if(!sameLenght(bases, variants1, variants2))
+		if(!sameLength(bases, variants1, variants2))
 			return ;
 		
 		File[] basesFile = fromStringArray(bases);
@@ -77,7 +77,7 @@ public class Matcher {
 			throws ApplicationException{
 		if(bases == null || variants1 == null || variants2 == null)
 			return new ArrayList<>();
-		if(!sameLenght(bases, variants1, variants2))
+		if(!sameLength(bases, variants1, variants2))
 			return new ArrayList<>();
 		File[] basesFile = fromStringArray(bases);
 		File[] variants1File = fromStringArray(variants1);
@@ -131,7 +131,7 @@ public class Matcher {
 			throws ApplicationException{ 
 		if(bases == null || variants1 == null || variants2 == null)
 			return new ArrayList<>();
-		if(!sameLenght(bases, variants1, variants2))
+		if(!sameLength(bases, variants1, variants2))
 			return new ArrayList<>();
 		
 		File[] basesFile = fromStringArray(bases);
@@ -165,7 +165,7 @@ public class Matcher {
 		return this.testingGoals;
 	}
 
-	private boolean sameLenght(String[] bases, String[] variants1, String[] variants2) {
+	private boolean sameLength(String[] bases, String[] variants1, String[] variants2) {
 		return bases.length == variants1.length && bases.length == variants2.length;
 	}
 	

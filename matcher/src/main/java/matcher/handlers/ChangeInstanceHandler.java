@@ -30,7 +30,7 @@ public class ChangeInstanceHandler {
 			ConflictPattern  cp) throws ApplicationException {
 		if(bases == null || variants1 == null || variants2 == null)
 			return null;
-		if(!sameLenght(bases, variants1, variants2))
+		if(!sameLength(bases, variants1, variants2))
 			return null;
 		
 		ChangeInstance result = new ChangeInstance();
@@ -55,7 +55,7 @@ public class ChangeInstanceHandler {
 					.getFullCtType(elements, basicType.getQualifiedName());
 	}
 	
-	private boolean sameLenght(File[] bases, File[] variants1, File[] variants2) {
+	private boolean sameLength(File[] bases, File[] variants1, File[] variants2) {
 		return bases.length == variants1.length && bases.length == variants2.length;
 	}
 	
