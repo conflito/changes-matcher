@@ -2,6 +2,12 @@ package matcher.entities;
 
 import matcher.entities.deltas.Visible;
 
+/**
+ * A class representing a field in the system's domain
+ * 
+ * @author Nuno Castanho
+ *
+ */
 public class FieldInstance implements Visible {
 
 	private String name;
@@ -10,6 +16,15 @@ public class FieldInstance implements Visible {
 	
 	private Type type;
 
+	/**
+	 * Creates an instance of FieldInstance
+	 * @param name
+	 * 			the name of this field
+	 * @param visibility
+	 * 			the visibility this field
+	 * @param type
+	 * 			the type of this field
+	 */
 	public FieldInstance(String name, Visibility visibility, Type type) {
 		super();
 		this.name = name;
@@ -17,24 +32,44 @@ public class FieldInstance implements Visible {
 		this.type = type;
 	}
 
+	/**
+	 * Get the name of this field
+	 * @return the name of this field
+	 */
 	public String getQualifiedName() {
 		return name;
 	}
 
+	/**
+	 * Get the visibility of this field
+	 * @return the visibility of this field
+	 */
 	public Visibility getVisibility() {
 		return visibility;
 	}
 
+	/**
+	 * Get the type of this field
+	 * @return the type of this field
+	 */
 	public Type getType() {
 		return type;
 	}
 	
+	/**
+	 * Get the name of this field's type
+	 * @return the name of this field's type 
+	 */
 	public String getTypeName() {
 		if(type.isArray())
-			return type.getArrayType().toString();
-		return type.toString();
+			return type.getArrayType().getTypeName();
+		return type.getTypeName();
 	}
 	
+	/**
+	 * Checks if this field has a primitive type
+	 * @return true if this field has a primitive type; false otherwise
+	 */
 	public boolean primitiveType() {
 		return type.isPrimitive();
 	}
