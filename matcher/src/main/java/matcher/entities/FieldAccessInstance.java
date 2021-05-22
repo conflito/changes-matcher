@@ -1,29 +1,58 @@
 package matcher.entities;
 
+/**
+ * A class representing an access to a field
+ * 
+ * @author Nuno Castanho
+ *
+ */
 public class FieldAccessInstance {
 
 	private String qualifiedName;
 	
 	private FieldAccessType accessType;
 
+	/**
+	 * Creates an instance of FieldAccessInstance
+	 * @param qualifiedName
+	 * 			the accessed field's name
+	 * @param accessType
+	 * 			the type of access
+	 */
 	public FieldAccessInstance(String qualifiedName, FieldAccessType accessType) {
 		super();
 		this.qualifiedName = qualifiedName;
 		this.accessType = accessType;
 	}
 
+	/**
+	 * Get the name of the accessed field
+	 * @return the name of the accessed field
+	 */
 	public String getQualifiedName() {
 		return qualifiedName;
 	}
 
+	/**
+	 * Get the type of the access to the field
+	 * @return the type of the access
+	 */
 	public FieldAccessType getAccessType() {
 		return accessType;
 	}
 	
+	/**
+	 * Checks if this access is a read
+	 * @return true if this access is a read to the field; false otherwise
+	 */
 	public boolean isFieldRead() {
 		return getAccessType() == FieldAccessType.READ;
 	}
 	
+	/**
+	 * Checks if this access is a write
+	 * @return true if this access is a write to the field; false otherwise
+	 */
 	public boolean isFieldWrite() {
 		return getAccessType() == FieldAccessType.WRITE;
 	}
