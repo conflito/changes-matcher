@@ -23,6 +23,7 @@ import matcher.utils.Pair;
 
 public class MatchingHandler {
 	
+	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(MatchingHandler.class);
 
 	private FieldVariableIdentifier fvi;
@@ -58,8 +59,6 @@ public class MatchingHandler {
 		List<Pair<Integer, List<String>>> variablePossibleValues = variableValues(ci, cp);
 
 		List<List<Pair<Integer, String>>> combinations = calculateResults(variablePossibleValues, cp);
-
-		logger.info("Calculating pattern instances...");
 
 		for(List<Pair<Integer, String>> l: combinations) {
 			assignValues(cp, l);
