@@ -1,9 +1,6 @@
 Name: "Overload by Access Change (new method)"
 Variables: $A $B $M $M1 $M2
 
-Constraints:
-$A can be equal to $B
-
 Base Condition:
 Class $A
 Class $A has public method $M
