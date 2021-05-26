@@ -96,7 +96,7 @@ public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 		List<CtInvocation<?>> invocations = element.getElements(new TypeFilter(CtInvocation.class));
 		MethodProcessor invocationsProcessor = new MethodProcessor(conflictPattern);
 		for(CtInvocation<?> invocation: invocations) {
-			if(!invocation.toString().equals("super()")){
+			if(SpoonHandler.validInvocation(invocation)){
 				try {
 					if(SpoonHandler.invocationOfObjectMethod(invocation) || 
 							SpoonHandler.invocationFromTheSystem(invocation)) {

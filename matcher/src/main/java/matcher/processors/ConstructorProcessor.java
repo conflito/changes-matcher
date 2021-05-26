@@ -52,7 +52,7 @@ public class ConstructorProcessor extends Processor<ConstructorInstance, CtConst
 			, ConstructorInstance constructorInstance) {
 		List<CtInvocation<?>> invocations = element.getElements(new TypeFilter(CtInvocation.class));
 		for(CtInvocation<?> invocation: invocations) {
-			if(!invocation.toString().equals("super()")) {
+			if(SpoonHandler.validInvocation(invocation)) {
 				try {
 					if(SpoonHandler.invocationFromTheSystem(invocation)) {
 						MethodInstance invoked = 
