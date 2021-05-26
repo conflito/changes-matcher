@@ -74,43 +74,46 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 	}
 	
 	private void visitInvocationUpdate(CtInvocation<?> invocation) {
-		CtMethod<?> oldInvocation = SpoonHandler.getMethodFromInvocation(invocation);
-		CtMethod<?> newInvocation = SpoonHandler.getMethodFromInvocation((CtInvocation<?>)newOne);
-		MethodInstance oldDependency = getMethodInstance(oldInvocation);
-		MethodInstance newDependency = getMethodInstance(newInvocation);
-		Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
-		if(possibleCaller.isPresent()) {
-			Optional<CtMethod<?>> newPossibleCaller = getMethodNode(newOne);
-			if(newPossibleCaller.isPresent()) {
-				CtMethod<?> oldMethod = possibleCaller.get();
-				CtMethod<?> newMethod = newPossibleCaller.get();
-				MethodInstance oldMethodInstance = getMethodInstance(oldMethod);
-				MethodInstance newMethodInstance = getMethodInstance(newMethod);
-				ActionInstance result = 
-						new UpdateDependencyAction(oldMethodInstance, newMethodInstance, 
-								oldDependency, newDependency);
-				setResult(result);
-			}
-
-		}
-		else {
-			Optional<CtConstructor<?>> constructor = getConstructorNode(invocation);
-			if(constructor.isPresent()) {
-				Optional<CtConstructor<?>> newConstructor = getConstructorNode(invocation);
-				if(newConstructor.isPresent()) {
-					CtConstructor<?> c = constructor.get();
-					CtConstructor<?> nC = newConstructor.get();
-					ClassInstance classInstance = getClassInstance(c);
-					ConstructorInstance cInstance = getConstructorInstance(c, classInstance);
-					ConstructorInstance nCInstance = getConstructorInstance(nC, classInstance);
+		if(SpoonHandler.validInvocation(invocation)) {
+			CtMethod<?> oldInvocation = SpoonHandler.getMethodFromInvocation(invocation);
+			CtMethod<?> newInvocation = SpoonHandler.getMethodFromInvocation((CtInvocation<?>)newOne);
+			MethodInstance oldDependency = getMethodInstance(oldInvocation);
+			MethodInstance newDependency = getMethodInstance(newInvocation);
+			Optional<CtMethod<?>> possibleCaller = getMethodNode(invocation);
+			if(possibleCaller.isPresent()) {
+				Optional<CtMethod<?>> newPossibleCaller = getMethodNode(newOne);
+				if(newPossibleCaller.isPresent()) {
+					CtMethod<?> oldMethod = possibleCaller.get();
+					CtMethod<?> newMethod = newPossibleCaller.get();
+					MethodInstance oldMethodInstance = getMethodInstance(oldMethod);
+					MethodInstance newMethodInstance = getMethodInstance(newMethod);
 					ActionInstance result = 
-							new UpdateDependencyAction(cInstance, nCInstance, 
+							new UpdateDependencyAction(oldMethodInstance, newMethodInstance, 
 									oldDependency, newDependency);
 					setResult(result);
 				}
-				
+
+			}
+			else {
+				Optional<CtConstructor<?>> constructor = getConstructorNode(invocation);
+				if(constructor.isPresent()) {
+					Optional<CtConstructor<?>> newConstructor = getConstructorNode(invocation);
+					if(newConstructor.isPresent()) {
+						CtConstructor<?> c = constructor.get();
+						CtConstructor<?> nC = newConstructor.get();
+						ClassInstance classInstance = getClassInstance(c);
+						ConstructorInstance cInstance = getConstructorInstance(c, classInstance);
+						ConstructorInstance nCInstance = getConstructorInstance(nC, classInstance);
+						ActionInstance result = 
+								new UpdateDependencyAction(cInstance, nCInstance, 
+										oldDependency, newDependency);
+						setResult(result);
+					}
+					
+				}
 			}
 		}
+		
 	}
 
 	private void visit(CtElement element) {
