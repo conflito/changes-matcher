@@ -440,6 +440,11 @@ public class SpoonHandler {
 			String invocationQualifiedName) {
 		return getInvocationFullName(invocation).equals(invocationQualifiedName);
 	}
+	
+	public static boolean validInvocation(CtInvocation<?> invocation) {
+		return invocation.getExecutable() != null &&
+				invocation.getExecutable().getDeclaringType() != null;
+	}
 
 	public static String getFieldQualifiedName(CtFieldReference<?> field) {
 		String fieldName = field.getSimpleName();
