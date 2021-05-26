@@ -117,7 +117,7 @@ public class Matcher {
 					} catch (InterruptedException e) {
 						throw new ApplicationException("Interrupted execution");
 					} catch (ExecutionException e) {
-						throw new ApplicationException(e.getMessage());
+						throw new ApplicationException("Something went wrong");
 					}
 				}				
 			}			
@@ -157,7 +157,7 @@ public class Matcher {
 		} catch (InterruptedException e) {
 			throw new ApplicationException("Interrupted execution");
 		} catch (ExecutionException e) {
-			throw new ApplicationException(e.getMessage());
+			throw new ApplicationException("Something went wrong");
 		}
 	}
 	
