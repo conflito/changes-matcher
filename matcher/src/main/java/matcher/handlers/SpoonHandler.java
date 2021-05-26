@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Set;
@@ -45,6 +46,10 @@ public class SpoonHandler {
 	private Set<CtType<?>> variant1Types;
 	private Set<CtType<?>> variant2Types;
 	
+	private Map<String, CtType<?>> baseMap;
+	private Map<String, CtType<?>> variant1Map;
+	private Map<String, CtType<?>> variant2Map;
+	
 	public static void createInstance() {
 		instance  = new SpoonHandler();
 	}
@@ -57,6 +62,10 @@ public class SpoonHandler {
 		this.baseLauncher = new Launcher();
 		this.variantLauncher1 = new Launcher();
 		this.variantLauncher2 = new Launcher();
+		
+		baseMap = new HashMap<>();
+		variant1Map = new HashMap<>();
+		variant2Map = new HashMap<>();
 	}
 	
 	public Launcher getBaseLauncher() {
@@ -129,16 +138,16 @@ public class SpoonHandler {
 		
 	}
 	
-	public Iterable<CtType<?>> baseTypes(){
-		return baseTypes;
+	public Map<String, CtType<?>> baseTypes(){
+		return baseMap;
 	}
 	
-	public Iterable<CtType<?>> firstVariantTypes(){
-		return variant1Types;
+	public Map<String, CtType<?>> firstVariantTypes(){
+		return variant1Map;
 	}
 	
-	public Iterable<CtType<?>> secondVariantTypes(){
-		return variant2Types;
+	public Map<String, CtType<?>> secondVariantTypes(){
+		return variant2Map;
 	}
 	
 	public void loadLaunchers(File[] bases, File[] variants1, File[] variants2) 
@@ -162,7 +171,21 @@ public class SpoonHandler {
 		
 		logger.info("Adding information from deltas to base...");
 		
-		addDeltaTypesToBase(variants1, variants2);		
+		addDeltaTypesToBase(variants1, variants2);
+		
+		fillMap(baseMap, baseTypes);
+		fillMap(variant1Map, variant1Types);
+		fillMap(variant2Map, variant2Types);
+		
+		baseTypes = null;
+		variant1Types = null;
+		variant2Types = null;
+	}
+	
+	private void fillMap(Map<String, CtType<?>> map, Iterable<CtType<?>> elements) {
+		for(CtType<?> type: elements) {
+			map.put(type.getQualifiedName(), type);
+		}
 	}
 	
 	private void addDeltaTypesToBase(File[] variants1, File[] variants2) throws ApplicationException {
@@ -205,15 +228,6 @@ public class SpoonHandler {
 		}
 		catch(Exception e) {}
 		return false;
-	}
-	
-	public CtType<?> getFullCtType(Iterable<CtType<?>> types, String typeName){
-		for(CtType<?> type: types) {
-			if(type.getQualifiedName().equals(typeName)) {
-				return type;
-			}
-		}
-		return null;
 	}
 	
 	private Set<CtType<?>> getElements(Launcher launcher, File[] files) throws ApplicationException {
@@ -443,7 +457,13 @@ public class SpoonHandler {
 	
 	public static boolean validInvocation(CtInvocation<?> invocation) {
 		return invocation.getExecutable() != null &&
-				invocation.getExecutable().getDeclaringType() != null;
+				invocation.getExecutable().getDeclaringType() != null &&
+				(!invocation.getExecutable().isConstructor() || 
+						!isSuper(invocation));
+	}
+	
+	private static boolean isSuper(CtInvocation<?> invocation) {
+		return invocation.toString().startsWith("super(");
 	}
 
 	public static String getFieldQualifiedName(CtFieldReference<?> field) {

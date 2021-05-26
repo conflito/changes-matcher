@@ -3,14 +3,20 @@ package matcher.handlers;
 import java.util.HashMap;
 import java.util.Map;
 
+import matcher.utils.Pair;
 import matcher.entities.MethodInstance;
+import matcher.entities.deltas.ActionInstance;
 import matcher.entities.ClassInstance;
 import matcher.entities.ConstructorInstance;
 import matcher.entities.FieldInstance;
 import spoon.reflect.declaration.CtMethod;
+import spoon.reflect.declaration.CtType;
+import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtConstructor;
 import spoon.reflect.declaration.CtField;
+import spoon.reflect.declaration.*;
+import gumtree.spoon.diff.Diff;
 
 public class InstancesCache {
 
@@ -21,11 +27,16 @@ public class InstancesCache {
 	private Map<CtConstructor<?>, ConstructorInstance> constructors;
 	private Map<CtField<?>, FieldInstance> fields;
 	
+	private Map<Pair<CtType<?>, CtType<?>>, Diff> diffs;
+	private Map<String, CtType<?>> basicTypes;
+	
 	private InstancesCache() {
 		methods = new HashMap<>();
 		classes = new HashMap<>();
 		constructors = new HashMap<>();
 		fields = new HashMap<>();
+		diffs = new HashMap<>();
+		basicTypes = new HashMap<>();
 	}
 	
 	public boolean hasMethod(CtMethod<?> method) {
@@ -74,6 +85,30 @@ public class InstancesCache {
 	
 	public void putField(CtField<?> field, FieldInstance fieldInstance) {
 		fields.put(field, fieldInstance);
+	}
+	
+	public boolean hasDiff(CtType<?> t1, CtType<?> t2) {
+		return diffs.containsKey(new Pair<>(t1, t2));
+	}
+	
+	public Diff getDiff(CtType<?> t1, CtType<?> t2) {
+		return diffs.get(new Pair<>(t1, t2));
+	}
+	
+	public void putDiff(CtType<?> t1, CtType<?> t2, Diff diff) {
+		diffs.put(new Pair<>(t1, t2), diff);
+	}
+	
+	public boolean hasBasicType(String s) {
+		return basicTypes.containsKey(s);
+	}
+	
+	public CtType<?> getBasicType(String s){
+		return basicTypes.get(s);
+	}
+	
+	public void putBasicType(String s, CtType<?> t) {
+		basicTypes.put(s, t);
 	}
 	
 	public static void createInstance() {

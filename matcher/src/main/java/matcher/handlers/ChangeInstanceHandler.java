@@ -3,6 +3,7 @@ package matcher.handlers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -46,13 +47,18 @@ public class ChangeInstanceHandler {
 		return result;
 	}
 	
-	private CtType<?> getFullCtType(File file, Iterable<CtType<?>> elements) 
+	private CtType<?> getFullCtType(File file, Map<String, CtType<?>> elements) 
 			throws ApplicationException{
-		
-		CtType<?> basicType = SpoonHandler.getInstance().getCtType(
-				SpoonHandler.getInstance().getSpoonResource(file));
-		return SpoonHandler.getInstance()
-					.getFullCtType(elements, basicType.getQualifiedName());
+		String fileName = file.getAbsolutePath();
+		CtType<?> basicType;
+		if(InstancesCache.getInstance().hasBasicType(fileName))
+			basicType = InstancesCache.getInstance().getBasicType(fileName);
+		else {
+			basicType = SpoonHandler.getInstance().getCtType(
+					SpoonHandler.getInstance().getSpoonResource(file));
+			InstancesCache.getInstance().putBasicType(fileName, basicType);
+		}
+		return elements.get(basicType.getQualifiedName());
 	}
 	
 	private boolean sameLength(File[] bases, File[] variants1, File[] variants2) {
@@ -60,7 +66,7 @@ public class ChangeInstanceHandler {
 	}
 	
 	private BaseInstance processBases(ConflictPattern cp) {
-		return bih.getBaseInstance(SpoonHandler.getInstance().baseTypes(), cp);
+		return bih.getBaseInstance(SpoonHandler.getInstance().baseTypes().values(), cp);
 	}
 	
 	private List<DeltaInstance> processDeltas(File[] bases, File[] variants1, File[] variants2, 

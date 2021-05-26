@@ -33,9 +33,14 @@ public class DeltaInstanceHandler {
 	public Diff diff(CtType<?> first, CtType<?> second) throws ApplicationException {
 		if(first == null || second == null)
 			return null;
+		if(InstancesCache.getInstance().hasDiff(first, second)) {
+			return InstancesCache.getInstance().getDiff(first, second);
+		}
+		
 		Diff diff = null;
 		try {
 			diff = new AstComparator().compare(first, second);
+			InstancesCache.getInstance().putDiff(first, second, diff);
 		} catch (Exception e) {
 			throw new ApplicationException("Error calculating the delta", e);
 		}
