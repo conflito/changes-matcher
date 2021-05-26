@@ -25,7 +25,6 @@ import matcher.utils.Pair;
 
 public class Matcher {
 	
-	@SuppressWarnings("unused")
 	private final static Logger logger = Logger.getLogger(Matcher.class);
 	
 	private ConflictPatternCatalog conflictsCatalog;
@@ -115,9 +114,13 @@ public class Matcher {
 						result.addAll(future.get());
 						testingGoals.addAll(mt.getTestingGoals());
 					} catch (InterruptedException e) {
+						logger.error("Interruption error. Shutting down...");
+						es.shutdownNow();
 						throw new ApplicationException("Interrupted execution");
 					} catch (ExecutionException e) {
-						throw new ApplicationException("Something went wrong");
+						logger.error("Error in execution. Shutting down...");
+						es.shutdownNow();
+						throw new ApplicationException("Error in execution");
 					}
 				}				
 			}			
