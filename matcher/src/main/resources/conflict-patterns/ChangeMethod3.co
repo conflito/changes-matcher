@@ -12,10 +12,10 @@ Class $B has method $M1
 Method $M depends on method $M1
 
 Delta:
-Update method $M
+Update method $M of class $A
 
 Delta:
-Update method $M1
+Update method $M1 of class $B
 
 Testing Goal: 
 $A

@@ -17,10 +17,10 @@ Method $M depends on method $M1
 Method $M depends on method $M2
 
 Delta:
-Update method $M1
+Update method $M1 of class $B
 
 Delta:
-Update method $M2
+Update method $M2 of class $C
 
 Testing Goal: 
 $A

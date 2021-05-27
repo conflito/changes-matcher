@@ -31,8 +31,10 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 	@Override
 	public <T> void visitCtMethod(CtMethod<T> method) {
 		if(getConflictPattern().hasUpdateActions()) {
+			ClassInstance classInstance = getClassInstance(method);
 			MethodInstance methodInstance = getMethodInstance(method);
-			ActionInstance result = new UpdateMethodAction(methodInstance);
+			ActionInstance result = 
+					new UpdateMethodAction(methodInstance, classInstance);
 			setResult(result);
 		}
 	}

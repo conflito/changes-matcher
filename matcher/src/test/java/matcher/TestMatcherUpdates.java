@@ -191,7 +191,8 @@ public class TestMatcherUpdates {
 		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new UpdateMethodPatternAction(methodPattern));
+		dp1.addActionPattern(
+				new UpdateMethodPatternAction(methodPattern, classPattern));
 		
 		ConflictPattern conflict = new ConflictPattern("Dummy Update Pattern");
 		conflict.setBasePattern(basePattern);

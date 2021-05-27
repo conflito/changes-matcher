@@ -832,11 +832,24 @@ public class PatternParser {
 				throw new ApplicationException("Invalid pattern: undefined method "
 						+ methodVar + " in line " + getCurrentLine());
 			
-			UpdateMethodPatternAction umpa =
-					new UpdateMethodPatternAction(definedMethods.get(methodVar));
-			currentDelta.addActionPattern(umpa);
+			if(matcher.find()) {
+				String classVar = matcher.group();
+				
+				if(!existsClass(classVar))
+					throw new ApplicationException("Invalid pattern: undefined class "
+							+ classVar + " in line " + getCurrentLine());
+				
+				ClassPattern classPattern = getClassPattern(classVar);
+				UpdateMethodPatternAction umpa =
+						new UpdateMethodPatternAction(
+								definedMethods.get(methodVar), classPattern);
+				currentDelta.addActionPattern(umpa);
+				lastAction = umpa;
+			}
+			else 
+				throw new ApplicationException("Missing class in " 
+						+ getCurrentLine());
 			
-			lastAction = umpa;
 		}
 		else 
 			throw new ApplicationException("Something went wrong reading line " 
@@ -1597,7 +1610,8 @@ public class PatternParser {
 	}
 	
 	private boolean isUpdateMethodAction(String line) {
-		return line.matches("Update method " + VAR_PATTERN + "\\s*");
+		return line.matches("Update method " + VAR_PATTERN + 
+				" of class " + VAR_PATTERN + "\\s*");
 	}
 	
 	private boolean isUpdateConstructorAction(String line) {

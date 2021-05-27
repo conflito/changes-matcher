@@ -169,8 +169,10 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(element);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
+				ClassInstance classInstance = getClassInstance(method);
 				MethodInstance methodInstance = getMethodInstance(method);
-				ActionInstance result = new UpdateMethodAction(methodInstance);
+				ActionInstance result = 
+						new UpdateMethodAction(methodInstance, classInstance);
 				setResult(result);
 			}
 			else {

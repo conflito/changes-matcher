@@ -11,7 +11,7 @@ Class $B
 Class $B has method $M1
 
 Delta:
-Update method $M
+Update method $M of class $A
 
 Delta:
 Insert dependency to method $M in method $M1

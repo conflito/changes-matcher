@@ -6,7 +6,7 @@ Class $A
 Class $A has method $M
 
 Delta:
-Update method $M
+Update method $M of class $A
 
 Delta:
 Insert class $B

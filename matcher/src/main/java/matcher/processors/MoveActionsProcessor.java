@@ -109,8 +109,10 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 		Optional<CtMethod<?>> method = getMethodNode(element);
 		if(method.isPresent()) {
 			if(getConflictPattern().hasUpdateActions()) {
+				ClassInstance classInstance = getClassInstance(method.get());
 				MethodInstance methodInstance = getMethodInstance(method.get());
-				ActionInstance result = new UpdateMethodAction(methodInstance);
+				ActionInstance result = 
+						new UpdateMethodAction(methodInstance, classInstance);
 				setResult(result);
 			}
 		}
