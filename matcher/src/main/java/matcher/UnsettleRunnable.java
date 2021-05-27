@@ -70,9 +70,10 @@ public class UnsettleRunnable implements Runnable{
 				logger.info("Starting test generation for an instance of " + 
 						cp.getConflictName() + "...");
 
-				//TODO Run EvoSuite with the cmd
+				cmd.run();
 				
 			} catch (Exception e) {
+				logger.error(e.getMessage());
 				continue;
 			}
 		}

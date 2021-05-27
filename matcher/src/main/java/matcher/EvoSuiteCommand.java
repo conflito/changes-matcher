@@ -1,12 +1,18 @@
 package matcher;
 
+import java.io.File;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import matcher.exceptions.ApplicationException;
 import matcher.handlers.PropertiesHandler;
 
 public class EvoSuiteCommand {
 
+	private final static String EVO_LOCATION = ".." + File.separator + "evosuite" +
+			File.separator + "master" + File.separator + "target" + File.separator +
+			"evosuite-master-1.0.6.jar";
+	
 	private final static String CMD_LINE_TEMPLATE = 
 			"-projectCP %s -class %s -criterion methodcall " + 
 		    "-Dcover_methods=\"%s\" -Dinstrument_context=true " +
@@ -43,13 +49,29 @@ public class EvoSuiteCommand {
 	}
 	
 	public String getCommand() {
-		return String.format(CMD_LINE_TEMPLATE, mergeClassPath, targetClass, 
+		return "java -jar " + EVO_LOCATION + " " + 
+				String.format(CMD_LINE_TEMPLATE, mergeClassPath, targetClass, 
 				targetMethods, firstVariantClassPath, secondVariantClassPath, 
 				distanceThreshold, timeBudget);
 	}
 	
-	public String[] getCommandArgs() {
-		return getCommand().split(" ");
+	public void run() throws ApplicationException {
+		Process process;
+		try {
+			process = Runtime.getRuntime().exec(getCommand());
+		}
+		catch(Exception e) {
+			throw new ApplicationException("Something went wrong starting "
+					+ "the test generation");
+		}
+		EvoSuiteGobbler gobbler = new EvoSuiteGobbler(
+				process.getInputStream(), System.out::println);
+		Executors.newSingleThreadExecutor().submit(gobbler);
+		try {
+			process.waitFor();
+		} catch (InterruptedException e) {
+			throw new ApplicationException("Something went wrong generating tests");
+		}
 	}
 	
 }
