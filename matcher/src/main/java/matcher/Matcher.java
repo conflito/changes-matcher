@@ -110,9 +110,11 @@ public class Matcher {
 			String[] variants1, String[] variants2)
 			throws ApplicationException{
 		if(bases == null || variants1 == null || variants2 == null)
-			return new ArrayList<>();
+			throw new ApplicationException("Invalid arguments: null");
+		
 		if(!sameLength(bases, variants1, variants2))
-			return new ArrayList<>();
+			throw new ApplicationException("Invalid arguments: different array sizes");
+		
 		File[] basesFile = fromStringArray(bases);
 		File[] variants1File = fromStringArray(variants1);
 		File[] variants2File = fromStringArray(variants2);
@@ -165,12 +167,26 @@ public class Matcher {
 	}
 	
 	public List<List<Pair<Integer, String>>> matchingAssignments(String[] bases,
+			String[] variants1, String[] variants2, String conflictName)
+			throws ApplicationException{ 
+		if(conflictName == null)
+			throw new ApplicationException("Invalid arguments: null");
+		
+		if(!conflictsCatalog.hasPattern(conflictName))
+			throw new ApplicationException("Unknown pattern name!");
+		
+		return matchingAssignments(bases, variants1, variants2, 
+				conflictsCatalog.getPattern(conflictName));
+	}
+	
+	public List<List<Pair<Integer, String>>> matchingAssignments(String[] bases,
 			String[] variants1, String[] variants2, ConflictPattern cp)
 			throws ApplicationException{ 
 		if(bases == null || variants1 == null || variants2 == null)
-			return new ArrayList<>();
+			throw new ApplicationException("Invalid arguments: null");
+		
 		if(!sameLength(bases, variants1, variants2))
-			return new ArrayList<>();
+			throw new ApplicationException("Invalid arguments: different array sizes");
 		
 		File[] basesFile = fromStringArray(bases);
 		File[] variants1File = fromStringArray(variants1);
