@@ -4,10 +4,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 import matcher.Matcher;
 import matcher.exceptions.ApplicationException;
 import matcher.handlers.PropertiesHandler;
+import matcher.utils.Pair;
 
 import org.apache.commons.cli.*;
 
@@ -28,7 +30,21 @@ public class ExecuteMatcher {
 		
 		Matcher matcher = new Matcher(configFilePath);
 		
-		//TODO call the match method
+		if(cmd.hasOption("mo")) {
+			List<List<Pair<Integer, String>>> result;
+			if(cmd.hasOption("cn")) {
+				String conflictName = cmd.getOptionValue("cn");
+				result = matcher.matchingAssignments(baseFilePaths, var1FilePaths, 
+						var2FilePaths, conflictName);
+			}
+			else
+				result = matcher.matchingAssignments(baseFilePaths, var1FilePaths, 
+						var2FilePaths);
+			System.out.println(result);
+		}
+		else {
+			//TODO call the match method checking for conflict name before
+		}
 	}
 	
 	private static CommandLine getCommandLine(String[] args) {
@@ -70,11 +86,19 @@ public class ExecuteMatcher {
 		Option configFileHelp = new Option("ch", "config_help", false, 
 				"Dumps the template for the config file");
 		
+		Option matchOnly = new Option("mo", "match_only", false,
+				"Only performs the matching, it does not generate tests");
+		
+		Option conflictName = new Option("cn", "conflict_name", true,
+				"The name of the conflict to try to match");
+		
 		options.addOption(base);
 		options.addOption(firstVariant);
 		options.addOption(secondVariant);
 		options.addOption(configFile);
 		options.addOption(configFileHelp);
+		options.addOption(matchOnly);
+		options.addOption(conflictName);
 		
 		return options;
 	}
