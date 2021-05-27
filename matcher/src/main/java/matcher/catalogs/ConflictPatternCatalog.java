@@ -1,8 +1,8 @@
 package matcher.catalogs;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import matcher.exceptions.ApplicationException;
 
@@ -14,15 +14,23 @@ public class ConflictPatternCatalog {
 			File.separator + "resources" + File.separator + "conflict-patterns" + 
 			File.separator;
 	
-	private List<ConflictPattern> patterns;
+	private Map<String, ConflictPattern> patterns;
 	
 	public ConflictPatternCatalog() throws ApplicationException {
-		patterns = new ArrayList<>();
+		patterns = new HashMap<>();
 		loadPatterns();
 	}
 	
+	public boolean hasPattern(String patternName) {
+		return patterns.containsKey(patternName);
+	}
+	
+	public ConflictPattern getPattern(String patternName) {
+		return patterns.get(patternName);
+	}
+	
 	public Iterable<ConflictPattern> getPatterns(){
-		return patterns;
+		return patterns.values();
 	}
 	
 	private void loadPatterns() throws ApplicationException {
@@ -34,7 +42,7 @@ public class ConflictPatternCatalog {
 		for(File f: conflictsDir.listFiles()) {
 			String filePath = f.getPath();
 			ConflictPattern cp = PatternParser.getConflictPattern(filePath);
-			patterns.add(cp);
+			patterns.put(cp.getConflictName(), cp);
 		}
 	}
 }
