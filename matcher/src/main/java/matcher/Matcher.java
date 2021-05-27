@@ -44,9 +44,9 @@ public class Matcher {
 	public void match(String[] bases, String[] variants1, String[] variants2)
 			throws ApplicationException{
 		if(bases == null || variants1 == null || variants2 == null)
-			return ;
+			throw new ApplicationException("Invalid arguments: null");
 		if(!sameLength(bases, variants1, variants2))
-			return ;
+			throw new ApplicationException("Invalid arguments: different array sizes");
 		
 		File[] basesFile = fromStringArray(bases);
 		File[] variants1File = fromStringArray(variants1);
@@ -63,6 +63,41 @@ public class Matcher {
 					variants2File, cp, sem);
 			es.submit(ur);
 		}
+		es.shutdown();
+		try {
+			es.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+		} catch (InterruptedException e) {
+			throw new ApplicationException("Something went wrong generating tests");
+		}
+	}
+	
+	public void match(String[] bases, String[] variants1, String[] variants2,
+			String conflictName) throws ApplicationException{
+		
+		if(bases == null || variants1 == null || variants2 == null 
+				|| conflictName == null)
+			throw new ApplicationException("Invalid arguments: null");
+		
+		if(!sameLength(bases, variants1, variants2))
+			throw new ApplicationException("Invalid arguments: different array sizes");
+		
+		if(!conflictsCatalog.hasPattern(conflictName))
+			throw new ApplicationException("Unknown pattern name!");
+		
+		File[] basesFile = fromStringArray(bases);
+		File[] variants1File = fromStringArray(variants1);
+		File[] variants2File = fromStringArray(variants2);
+		
+		SpoonHandler.getInstance().loadLaunchers(basesFile, variants1File, 
+				variants2File);
+		
+		ExecutorService es = Executors.newCachedThreadPool();
+		Semaphore sem = new Semaphore(1);
+		ConflictPattern cp = conflictsCatalog.getPattern(conflictName);
+		
+		UnsettleRunnable ur = new UnsettleRunnable(basesFile, variants1File, 
+				variants2File, cp, sem);
+		es.submit(ur);
 		es.shutdown();
 		try {
 			es.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
