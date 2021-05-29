@@ -211,6 +211,11 @@ public class ConflictPattern {
 				secondDelta.hasUpdateFieldTypeActions();
 	}
 	
+	public boolean hasUpdateFieldActions() {
+		return firstDelta.hasUpdateFieldActions() ||
+				secondDelta.hasUpdateFieldActions();
+	}
+	
 	public boolean hasUpdateInvocationActions() {
 		return firstDelta.hasUpdateInvocationActions() || 
 				secondDelta.hasUpdateInvocationActions();
@@ -274,6 +279,8 @@ public class ConflictPattern {
 			result &= instance.hasUpdateActions();
 		if(result && hasUpdateFieldTypeActions())
 			result &= instance.hasUpdateFieldTypeActions();
+		if(result && hasUpdateFieldActions())
+			result &= instance.hasUpdateFieldActions();
 		if(result && hasUpdateInvocationActions())
 			result &= instance.hasUpdateInvocationActions();
 		

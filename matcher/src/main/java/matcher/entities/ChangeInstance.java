@@ -194,6 +194,10 @@ public class ChangeInstance {
 		return deltas.stream().anyMatch(d -> d.hasUpdateFieldTypeActions());
 	}
 	
+	public boolean hasUpdateFieldActions() {
+		return deltas.stream().anyMatch(d -> d.hasUpdateFieldActions());
+	}
+	
 	public boolean hasUpdateInvocationActions() {
 		return deltas.stream().anyMatch(d -> d.hasUpdateInvocationActions());
 	}

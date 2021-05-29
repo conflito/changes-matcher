@@ -11,6 +11,7 @@ import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.UpdateConstructorAction;
 import matcher.entities.deltas.UpdateFieldTypeAction;
 import matcher.entities.deltas.UpdateDependencyAction;
+import matcher.entities.deltas.UpdateFieldAction;
 import matcher.entities.deltas.UpdateMethodAction;
 import matcher.handlers.SpoonHandler;
 import matcher.patterns.ConflictPattern;
@@ -51,7 +52,13 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
 	@Override
 	public <T> void visitCtField(CtField<T> f) {
-		if(getConflictPattern().hasUpdateFieldTypeActions()) {
+		if(getConflictPattern().hasUpdateFieldActions()) {
+			FieldInstance fieldInstance = getFieldInstance(f);
+			ClassInstance classInstance = getClassInstance(f);
+			ActionInstance result = new UpdateFieldAction(fieldInstance, classInstance);
+			setResult(result);
+		}
+		else if(getConflictPattern().hasUpdateFieldTypeActions()) {
 			Optional<CtField<?>> newF = getFieldNode(newOne);
 			if(newF.isPresent()) {
 				FieldInstance fieldInstance = getFieldInstance(f);

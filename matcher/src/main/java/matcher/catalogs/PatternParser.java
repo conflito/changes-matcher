@@ -43,6 +43,7 @@ import matcher.patterns.deltas.InsertInvocationPatternAction;
 import matcher.patterns.deltas.InsertMethodPatternAction;
 import matcher.patterns.deltas.UpdateConstructorPatternAction;
 import matcher.patterns.deltas.UpdateDependencyPatternAction;
+import matcher.patterns.deltas.UpdateFieldPatternAction;
 import matcher.patterns.deltas.UpdateFieldTypePatternAction;
 import matcher.patterns.deltas.UpdateMethodPatternAction;
 import matcher.patterns.deltas.VisibilityActionPattern;
@@ -813,6 +814,8 @@ public class PatternParser {
 			processUpdateConstructorAction(line);
 		else if(isUpdateVisibilityAction(line))
 			processUpdateVisibilityAction(line);
+		else if(isUpdateField(line))
+			processUpdateFieldAction(line);
 		else if(isUpdateFieldType(line))
 			processUpdateFieldTypeAction(line);
 		else if(isUpdateDependency(line))
@@ -958,6 +961,41 @@ public class PatternParser {
 		else 
 			throw new ApplicationException("Something went wrong reading line " 
 					+ getCurrentLine());
+	}
+	
+	private void processUpdateFieldAction(String line) throws ApplicationException {
+		Matcher matcher = VAR_REGEX_PATTERN.matcher(line);
+		if(matcher.find()) {
+			String fieldVar = matcher.group();
+			
+			if(!existsVariable(fieldVar))
+				throw new ApplicationException("Invalid pattern: unknown variable "
+						+ fieldVar  + " in line " + getCurrentLine());
+			
+			if(!existsField(fieldVar))
+				throw new ApplicationException("Invalid pattern: undefined field "
+						+ fieldVar + " in line " + getCurrentLine());
+			
+			FieldPattern fieldPattern = definedFields.get(fieldVar);
+			if(matcher.find()) {
+				String classVar = matcher.group();
+				
+				if(!existsVariable(classVar))
+					throw new ApplicationException("Invalid pattern: unknown variable "
+							+ classVar  + " in line " + getCurrentLine());
+				
+				if(!existsClass(classVar))
+					throw new ApplicationException("Invalid pattern: undefined class "
+							+ classVar + " in line " + getCurrentLine());
+				
+				ClassPattern classPattern = getClassPattern(classVar);
+				
+				UpdateFieldPatternAction ufpa = 
+						new UpdateFieldPatternAction(fieldPattern, classPattern);
+				currentDelta.addActionPattern(ufpa);
+				lastAction = ufpa;
+			}
+		}
 	}
 	
 	private void processUpdateDependencyAction(String line) 
@@ -1626,6 +1664,11 @@ public class PatternParser {
 	private boolean isUpdateFieldType(String line) {
 		return line.matches("Update field type of field " + VAR_PATTERN + 
 				" to " + VAR_PATTERN + "\\s*");
+	}
+	
+	private boolean isUpdateField(String line) {
+		return line.matches("Update field " + VAR_PATTERN +
+				" of class " + VAR_PATTERN + "\\s*");
 	}
 	
 	private boolean isUpdateDependency(String line) {

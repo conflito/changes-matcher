@@ -160,7 +160,12 @@ public class DeltaPattern {
 	public boolean hasUpdateActions() {
 		return actions.stream().anyMatch(a -> a instanceof UpdatePatternAction &&
 				!(a instanceof UpdateFieldTypePatternAction) && 
-				!(a instanceof UpdateDependencyPatternAction));
+				!(a instanceof UpdateDependencyPatternAction) &&
+				!(a instanceof UpdateFieldPatternAction));
+	}
+	
+	public boolean hasUpdateFieldActions() {
+		return actions.stream().anyMatch(a -> a instanceof UpdateFieldPatternAction);
 	}
 	
 	public boolean hasUpdateFieldTypeActions() {

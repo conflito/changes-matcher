@@ -18,6 +18,7 @@ import matcher.entities.deltas.InsertFieldAction;
 import matcher.entities.deltas.InsertInvocationAction;
 import matcher.entities.deltas.InsertMethodAction;
 import matcher.entities.deltas.UpdateConstructorAction;
+import matcher.entities.deltas.UpdateFieldAction;
 import matcher.entities.deltas.UpdateMethodAction;
 import matcher.handlers.SpoonHandler;
 import matcher.patterns.ConflictPattern;
@@ -183,6 +184,17 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 					ActionInstance result = new UpdateConstructorAction(cInstance);
 					setResult(result);
 				}
+			}
+		}
+		else if(getConflictPattern().hasUpdateFieldActions()) {
+			Optional<CtField<?>> possibleField = getFieldNode(element);
+			if(possibleField.isPresent()) {
+				CtField<?> field = possibleField.get();
+				FieldInstance fieldInstance = getFieldInstance(field);
+				ClassInstance classInstance = getClassInstance(field);
+				ActionInstance result = 
+						new UpdateFieldAction(fieldInstance, classInstance);
+				setResult(result);
 			}
 		}
 	}

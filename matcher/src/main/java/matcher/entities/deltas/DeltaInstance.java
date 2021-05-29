@@ -227,6 +227,10 @@ public class DeltaInstance {
 				!isUpdateInvocationAction(a);
 	}
 	
+	private boolean isUpdateFieldAction(ActionInstance a) {
+		return a instanceof UpdateFieldAction;
+	}
+	
 	private boolean isUpdateFieldTypeAction(ActionInstance a) {
 		return a instanceof UpdateFieldTypeAction;
 	}
@@ -296,6 +300,10 @@ public class DeltaInstance {
 	
 	public boolean hasUpdateFieldTypeActions() {
 		return actions.stream().anyMatch(a -> isUpdateFieldTypeAction(a));
+	}
+	
+	public boolean hasUpdateFieldActions() {
+		return actions.stream().anyMatch(a -> isUpdateFieldAction(a));
 	}
 	
 	public boolean hasUpdateInvocationActions() {
