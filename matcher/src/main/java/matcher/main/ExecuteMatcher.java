@@ -41,6 +41,7 @@ public class ExecuteMatcher {
 				result = matcher.matchingAssignments(baseFilePaths, var1FilePaths, 
 						var2FilePaths);
 			System.out.println(result);
+			System.out.println(matcher.getTestingGoals());
 		}
 		else {
 			//TODO call the match method checking for conflict name before
