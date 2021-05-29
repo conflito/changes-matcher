@@ -27,6 +27,8 @@ public class Matcher {
 	
 	private final static Logger logger = Logger.getLogger(Matcher.class);
 	
+	private final int THREAD_NUMBER = 2;
+	
 	private ConflictPatternCatalog conflictsCatalog;
 	
 	private List<Pair<String, List<String>>> testingGoals;
@@ -55,7 +57,7 @@ public class Matcher {
 		SpoonHandler.getInstance().loadLaunchers(basesFile, variants1File, 
 				variants2File);
 		
-		ExecutorService es = Executors.newCachedThreadPool();
+		ExecutorService es = Executors.newFixedThreadPool(THREAD_NUMBER);
 		Semaphore sem = new Semaphore(1);
 		
 		for(ConflictPattern cp: conflictsCatalog.getPatterns()) {
@@ -124,7 +126,7 @@ public class Matcher {
 		
 		List<List<Pair<Integer, String>>> result = new ArrayList<>();
 		
-		ExecutorService es = Executors.newCachedThreadPool();
+		ExecutorService es = Executors.newFixedThreadPool(THREAD_NUMBER);
 		
 		List<MatchingRunnable> runnables = new ArrayList<>();
 		List<Future<List<List<Pair<Integer, String>>>>> futures = new ArrayList<>();
@@ -138,7 +140,7 @@ public class Matcher {
 			runnables.add(mt);
 			futures.add(es.submit(mt));
 		}
-		
+		es.shutdown();
 		Set<Integer> completedFutures = new HashSet<>();
 		
 		while(completedFutures.size() != futures.size()) {
