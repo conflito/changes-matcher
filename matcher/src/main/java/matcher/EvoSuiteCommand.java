@@ -14,7 +14,7 @@ public class EvoSuiteCommand {
 			"evosuite-master-1.0.6.jar";
 	
 	private final static String CMD_LINE_TEMPLATE = 
-			"-projectCP %s -class %s -criterion methodcall " + 
+			"%s %s -class %s -criterion methodcall " + 
 		    "-Dcover_methods=\"%s\" -Dinstrument_context=true " +
 		    "-Dtest_factory=multi_test -Dregressioncp=\"%s\" " +
 		    "-Dsecond_regressioncp=\"%s\" -Dassertion_strategy=specific " +
@@ -31,6 +31,7 @@ public class EvoSuiteCommand {
 	
 	private final double distanceThreshold;
 	private final int timeBudget;
+	private final String targetFlag;
 	
 	public EvoSuiteCommand(String targetClass, List<String> targetMethods) 
 			throws ApplicationException {
@@ -46,11 +47,16 @@ public class EvoSuiteCommand {
 		this.distanceThreshold =
 				PropertiesHandler.getInstance().getDistanceThreshold();
 		this.timeBudget = PropertiesHandler.getInstance().getTimeBudget();
+		
+		if(PropertiesHandler.getInstance().isJarClasspath())
+			this.targetFlag = "-target";
+		else
+			this.targetFlag = "-projectCP";
 	}
 	
-	public String getCommand() {
+	public String getCommand() {		
 		return "java -jar " + EVO_LOCATION + " " + 
-				String.format(CMD_LINE_TEMPLATE, mergeClassPath, targetClass, 
+				String.format(CMD_LINE_TEMPLATE, targetFlag, mergeClassPath, targetClass, 
 				targetMethods, firstVariantClassPath, secondVariantClassPath, 
 				distanceThreshold, timeBudget);
 	}

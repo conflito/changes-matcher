@@ -171,6 +171,12 @@ public class ExecuteMatcher {
 				bw.append("# Time budget in seconds (int) for the test generation");
 				bw.newLine();
 				bw.append("#" + PropertiesHandler.TIME_BUDGET_KEY + "=60");
+				bw.newLine();
+				bw.newLine();
+				bw.append("# If the classpath is in jar form");
+				bw.newLine();
+				bw.append("#" + PropertiesHandler.JAR_CLASSPATH + "=true");
+				
 				
 				bw.close();
 			} catch (IOException e) {

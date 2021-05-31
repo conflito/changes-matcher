@@ -25,6 +25,7 @@ public class PropertiesHandler {
 	//Configurable properties
 	public static final String DISTANCE_THRESHOLD_KEY = "distance.threshold";
 	public static final String TIME_BUDGET_KEY = "time.budget";
+	public static final String JAR_CLASSPATH = "jar.classpath";
 	
 	//Default values for configurable properties
 	private static final double DEFAULT_DISTANCE_THRESHOLD = 0.05d;
@@ -111,12 +112,22 @@ public class PropertiesHandler {
 		return result;
 	}
 	
+	public boolean isJarClasspath() {
+		if(!hasJarClasspath())
+			return false;
+		return Boolean.parseBoolean(prop.getProperty(JAR_CLASSPATH));
+	}
+	
 	private boolean hasDistanceThreshold() {
 		return prop.containsKey(DISTANCE_THRESHOLD_KEY);
 	}
 	
 	private boolean hasTimeBudget() {
 		return prop.containsKey(TIME_BUDGET_KEY);
+	}
+	
+	private boolean hasJarClasspath() {
+		return prop.contains(JAR_CLASSPATH);
 	}
 	
 	public static void createInstance(String path) throws ApplicationException {
