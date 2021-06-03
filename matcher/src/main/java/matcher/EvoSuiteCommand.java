@@ -18,7 +18,7 @@ public class EvoSuiteCommand {
 		    "-Dcover_methods=\"%s\" -Dinstrument_context=true " +
 		    "-Dtest_factory=multi_test -Dregressioncp=\"%s\" " +
 		    "-Dsecond_regressioncp=\"%s\" -Dassertion_strategy=specific " +
-		    "-Dreplace_calls=false -Ddistance_threshold=%f -Dsearch_budget=%d";
+		    "-Dreplace_calls=false -Ddistance_threshold=%f -Dsearch_budget=%d -Dsandbox_mode=off";
 	
 	private final static String METHOD_DELIMITIER = ":";
 	
