@@ -61,6 +61,8 @@ public class MatchingRunnable implements Callable<List<List<Pair<Integer, String
 		
 		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
 		
+		logger.info("Finished matching for " + cp.getConflictName() + "...");
+		
 		return result;
 	}
 
