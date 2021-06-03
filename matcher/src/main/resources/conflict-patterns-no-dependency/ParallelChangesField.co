@@ -1,0 +1,18 @@
+Name: "Parallel Changes Field"
+Variables: $A $F $M
+
+Base Condition:
+Class $A 
+Class $A has field $F
+Class $A has method $M
+Method $M reads field $F
+
+Delta:
+Update field $F of class $A
+
+Delta:
+Update field $F of class $A
+
+Testing Goal: 
+$A
+$A.$M    
