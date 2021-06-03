@@ -26,6 +26,7 @@ import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
 import spoon.reflect.reference.*;
 import spoon.reflect.visitor.CtVisitor;
+import spoon.support.reflect.declaration.CtClassImpl;
 
 public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	
@@ -46,21 +47,24 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	@Override
 	public <T> void visitCtMethod(CtMethod<T> method) {
 		if(getConflictPattern().hasInsertMethodActions()) {
-			ClassInstance holderInstance = getClassInstance(method);
-			MethodInstance insertedInstance = getMethodInstance(method);
-			InsertMethodAction result = new InsertMethodAction(insertedInstance, holderInstance);
-			boolean stop = false;
-			do {
-				for(MethodInstance m: holderInstance.getMethods()) {
-					if(!insertedInstance.equals(m) && insertedInstance.isCompatibleWith(m))
-						result.addCompatible(m);
-				}
-				if(holderInstance.getSuperClass().isPresent())
-					holderInstance = holderInstance.getSuperClass().get();
-				else
-					stop = true;
-			}while(!stop);
-			setResult(result);
+			if(method.getDeclaringType() instanceof CtClass ||
+					method.getDeclaringType() instanceof CtClassImpl) {
+				ClassInstance holderInstance = getClassInstance(method);
+				MethodInstance insertedInstance = getMethodInstance(method);
+				InsertMethodAction result = new InsertMethodAction(insertedInstance, holderInstance);
+				boolean stop = false;
+				do {
+					for(MethodInstance m: holderInstance.getMethods()) {
+						if(!insertedInstance.equals(m) && insertedInstance.isCompatibleWith(m))
+							result.addCompatible(m);
+					}
+					if(holderInstance.getSuperClass().isPresent())
+						holderInstance = holderInstance.getSuperClass().get();
+					else
+						stop = true;
+				}while(!stop);
+				setResult(result);
+			}
 		}
 	}
 	
@@ -170,11 +174,14 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(element);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
-				ClassInstance classInstance = getClassInstance(method);
-				MethodInstance methodInstance = getMethodInstance(method);
-				ActionInstance result = 
-						new UpdateMethodAction(methodInstance, classInstance);
-				setResult(result);
+				if(method.getDeclaringType() instanceof CtClass ||
+						method.getDeclaringType() instanceof CtClassImpl) {
+					ClassInstance classInstance = getClassInstance(method);
+					MethodInstance methodInstance = getMethodInstance(method);
+					ActionInstance result = 
+							new UpdateMethodAction(methodInstance, classInstance);
+					setResult(result);
+				}
 			}
 			else {
 				Optional<CtConstructor<?>> c = getConstructorNode(element);
