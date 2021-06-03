@@ -72,6 +72,9 @@ public class UnsettleRunnable implements Runnable{
 
 				cmd.run();
 				
+				logger.info("Finished test generation for an instance of " + 
+						cp.getConflictName() + "...");
+				
 			} catch (Exception e) {
 				logger.error(e.getMessage());
 				continue;
