@@ -44,7 +44,13 @@ public class ExecuteMatcher {
 			System.out.println(matcher.getTestingGoals());
 		}
 		else {
-			//TODO call the match method checking for conflict name before
+			if(cmd.hasOption("cn")) {
+				String conflictName = cmd.getOptionValue("cn");
+				matcher.match(baseFilePaths, var1FilePaths, var2FilePaths, 
+						conflictName);
+			}
+			else
+				matcher.match(baseFilePaths, var1FilePaths, var2FilePaths);
 		}
 	}
 	
