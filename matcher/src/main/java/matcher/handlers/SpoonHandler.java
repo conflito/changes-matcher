@@ -458,12 +458,17 @@ public class SpoonHandler {
 	public static boolean validInvocation(CtInvocation<?> invocation) {
 		return invocation.getExecutable() != null &&
 				invocation.getExecutable().getDeclaringType() != null &&
+				!isThis(invocation) &&
 				(!invocation.getExecutable().isConstructor() || 
 						!isSuper(invocation));
 	}
 	
 	private static boolean isSuper(CtInvocation<?> invocation) {
 		return invocation.toString().startsWith("super(");
+	}
+	
+	private static boolean isThis(CtInvocation<?> invocation) {
+		return invocation.toString().startsWith("this(");
 	}
 
 	public static String getFieldQualifiedName(CtFieldReference<?> field) {
