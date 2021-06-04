@@ -1,9 +1,16 @@
 package matcher;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 
@@ -11,6 +18,7 @@ import matcher.entities.ChangeInstance;
 import matcher.exceptions.ApplicationException;
 import matcher.handlers.ChangeInstanceHandler;
 import matcher.handlers.MatchingHandler;
+import matcher.handlers.PropertiesHandler;
 import matcher.patterns.ConflictPattern;
 import matcher.utils.Pair;
 
@@ -50,17 +58,45 @@ public class MatchingRunnable implements Callable<List<List<Pair<Integer, String
 		if(sem == null)
 			throw new ApplicationException("Something went wrong with the matching");
 		
-		sem.acquire();
-	
-		ChangeInstance ci = cih.getChangeInstance(basesFile, variants1File, 
-				variants2File, cp);
+		ChangeInstance ci;
 		
-		sem.release();
+		try {
+			sem.acquire();
+
+			ci = cih.getChangeInstance(basesFile, variants1File, 
+					variants2File, cp);
+
+			sem.release();
+		}
+		catch(Exception e) {
+			sem.release();
+			throw e;
+		}
+		
+		List<List<Pair<Integer, String>>> result;
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		MatchingCallable matcher = new MatchingCallable(mh, ci, cp);
 		
 		logger.info("Starting matching for " + cp.getConflictName() + "...");
 		
-		List<List<Pair<Integer, String>>> result = mh.matchingAssignments(ci, cp);
-		
+		Future<List<List<Pair<Integer, String>>>> future = executor.submit(matcher);
+
+		try {
+			result = future.get(PropertiesHandler.getInstance().getMatchingBudget(), TimeUnit.SECONDS);
+		}
+		catch (TimeoutException ex) {
+			logger.info("Ran out of time for matching " + cp.getConflictName() + "...");
+			return new ArrayList<>();
+		} 
+		catch (InterruptedException e) {
+			logger.info("Something went wrong in matching for " + cp.getConflictName() + "...");
+			return new ArrayList<>();
+		} 
+		catch (ExecutionException e) {
+			logger.info("Something went wrong in matching for " + cp.getConflictName() + "...");
+			return new ArrayList<>();
+		}
+
 		logger.info("Finished matching for " + cp.getConflictName() + "...");
 		
 		return result;

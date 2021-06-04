@@ -26,10 +26,12 @@ public class PropertiesHandler {
 	public static final String DISTANCE_THRESHOLD_KEY = "distance.threshold";
 	public static final String TIME_BUDGET_KEY = "time.budget";
 	public static final String JAR_CLASSPATH = "jar.classpath";
+	public static final String MATCHING_BUDGET_KEY = "matching.budget";
 	
 	//Default values for configurable properties
 	private static final double DEFAULT_DISTANCE_THRESHOLD = 0.05d;
 	private static final int DEFAULT_TIME_BUDGET = 60;
+	private static final int DEFAULT_MATCHING_BUDGET = 120;
 	
 	private Properties prop;
 	
@@ -86,7 +88,7 @@ public class PropertiesHandler {
 		return result;
 	}
 	
-	public double getDistanceThreshold() throws ApplicationException {
+	public double getDistanceThreshold() {
 		if(!hasDistanceThreshold())
 			return DEFAULT_DISTANCE_THRESHOLD;
 		double result = 0.0d;
@@ -94,12 +96,12 @@ public class PropertiesHandler {
 			result = Double.parseDouble(prop.getProperty(DISTANCE_THRESHOLD_KEY));
 		}
 		catch(NumberFormatException e) {
-			throw new ApplicationException("Invalid distance threshold format");
+			return DEFAULT_DISTANCE_THRESHOLD;
 		}
 		return result;
 	}
 	
-	public int getTimeBudget() throws ApplicationException {
+	public int getTimeBudget() {
 		if(!hasTimeBudget())
 			return DEFAULT_TIME_BUDGET;
 		int result = 0;
@@ -107,7 +109,7 @@ public class PropertiesHandler {
 			result = Integer.parseInt(prop.getProperty(DISTANCE_THRESHOLD_KEY));
 		}
 		catch(NumberFormatException e) {
-			throw new ApplicationException("Invalid time budget format");
+			return DEFAULT_TIME_BUDGET;
 		}
 		return result;
 	}
@@ -116,6 +118,23 @@ public class PropertiesHandler {
 		if(!hasJarClasspath())
 			return false;
 		return Boolean.parseBoolean(prop.getProperty(JAR_CLASSPATH));
+	}
+	
+	public int getMatchingBudget() {
+		if(!hasMatchingBudget())
+			return DEFAULT_MATCHING_BUDGET;
+		int result = 0;
+		try {
+			result = Integer.parseInt(prop.getProperty(MATCHING_BUDGET_KEY));
+		}
+		catch(NumberFormatException e) {
+			return DEFAULT_MATCHING_BUDGET;
+		}
+		return result;
+	}
+	
+	private boolean hasMatchingBudget() {
+		return prop.containsKey(MATCHING_BUDGET_KEY);
 	}
 	
 	private boolean hasDistanceThreshold() {
@@ -127,7 +146,7 @@ public class PropertiesHandler {
 	}
 	
 	private boolean hasJarClasspath() {
-		return prop.contains(JAR_CLASSPATH);
+		return prop.containsKey(JAR_CLASSPATH);
 	}
 	
 	public static void createInstance(String path) throws ApplicationException {

@@ -2,13 +2,21 @@ package matcher;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 
 import matcher.entities.ChangeInstance;
+import matcher.exceptions.ApplicationException;
 import matcher.handlers.ChangeInstanceHandler;
 import matcher.handlers.MatchingHandler;
+import matcher.handlers.PropertiesHandler;
 import matcher.patterns.ConflictPattern;
 import matcher.utils.Pair;
 
@@ -53,13 +61,41 @@ public class UnsettleRunnable implements Runnable{
 					variants2File, cp);
 			sem.release();
 		} catch (Exception e) {
+			sem.release();
 			return ;
 		}
 		
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		MatchingCallable matcher = new MatchingCallable(mh, ci, cp);
+		
 		logger.info("Starting matching for " + cp.getConflictName() + "...");
 		
-		mh.matchingAssignments(ci, cp);
+		Future<List<List<Pair<Integer, String>>>> future = executor.submit(matcher);
 		
+		try {
+			future.get(PropertiesHandler.getInstance().getMatchingBudget(), TimeUnit.SECONDS);
+		}
+		catch (TimeoutException ex) {
+			logger.info("Ran out of time for matching " + cp.getConflictName() + "...");
+			return ;
+		} 
+		catch (InterruptedException e) {
+			logger.info("Something went wrong with " + cp.getConflictName() + "...");
+			return ;
+		} 
+		catch (ExecutionException e) {
+			logger.info("Something went wrong with " + cp.getConflictName() + "...");
+			return ;
+		}
+		catch (ApplicationException e) {
+			logger.info("Something went wrong with " + cp.getConflictName() + "...");
+			return ;
+		}
+		
+		runEvoSuite();
+	}
+	
+	private void runEvoSuite() {
 		List<Pair<String, List<String>>> testingGoals = mh.getTestingGoals();
 		for(Pair<String, List<String>> goal: testingGoals) {
 			String targetClass = goal.getFirst();
@@ -80,8 +116,6 @@ public class UnsettleRunnable implements Runnable{
 				continue;
 			}
 		}
-		
-		
 	}
 
 }
