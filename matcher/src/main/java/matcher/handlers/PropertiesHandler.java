@@ -27,11 +27,13 @@ public class PropertiesHandler {
 	public static final String TIME_BUDGET_KEY = "time.budget";
 	public static final String JAR_CLASSPATH = "jar.classpath";
 	public static final String MATCHING_BUDGET_KEY = "matching.budget";
+	public static final String THREAD_NUMBER_KEY = "thread.number";
 	
 	//Default values for configurable properties
 	private static final double DEFAULT_DISTANCE_THRESHOLD = 0.05d;
 	private static final int DEFAULT_TIME_BUDGET = 60;
 	private static final int DEFAULT_MATCHING_BUDGET = 120;
+	private static final int DEFAULT_THREADS = 2;
 	
 	private Properties prop;
 	
@@ -139,6 +141,27 @@ public class PropertiesHandler {
 		else if(result <= 0)
 			return DEFAULT_MATCHING_BUDGET;
 		return result;
+	}
+	
+	public int getNumberThreads() {
+		if(!hasThreadNumber())
+			return DEFAULT_THREADS;
+		int result = 0;
+		try {
+			result = Integer.parseInt(prop.getProperty(THREAD_NUMBER_KEY));
+		}
+		catch(NumberFormatException e) {
+			return DEFAULT_THREADS;
+		}
+		if(result == -1)
+			return Runtime.getRuntime().availableProcessors();
+		else if(result <= 0)
+			return DEFAULT_THREADS;
+		return result;
+	}
+	
+	private boolean hasThreadNumber() {
+		return prop.containsKey(THREAD_NUMBER_KEY);
 	}
 	
 	private boolean hasMatchingBudget() {

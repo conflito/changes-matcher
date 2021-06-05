@@ -187,6 +187,11 @@ public class ExecuteMatcher {
 				bw.append("# Time budget in seconds (int) for the matching");
 				bw.newLine();
 				bw.append("#" + PropertiesHandler.MATCHING_BUDGET_KEY + "=120");
+				bw.newLine();
+				bw.newLine();
+				bw.append("# Number of threads to run in parallel");
+				bw.newLine();
+				bw.append("#" + PropertiesHandler.THREAD_NUMBER_KEY + "=2");
 				
 				
 				bw.close();
