@@ -25,7 +25,6 @@ public class PropertiesHandler {
 	//Configurable properties
 	public static final String DISTANCE_THRESHOLD_KEY = "distance.threshold";
 	public static final String TIME_BUDGET_KEY = "time.budget";
-	public static final String JAR_CLASSPATH = "jar.classpath";
 	public static final String MATCHING_BUDGET_KEY = "matching.budget";
 	public static final String THREAD_NUMBER_KEY = "thread.number";
 	
@@ -120,12 +119,6 @@ public class PropertiesHandler {
 		return result;
 	}
 	
-	public boolean isJarClasspath() {
-		if(!hasJarClasspath())
-			return false;
-		return Boolean.parseBoolean(prop.getProperty(JAR_CLASSPATH));
-	}
-	
 	public int getMatchingBudget() {
 		if(!hasMatchingBudget())
 			return DEFAULT_MATCHING_BUDGET;
@@ -174,10 +167,6 @@ public class PropertiesHandler {
 	
 	private boolean hasTimeBudget() {
 		return prop.containsKey(TIME_BUDGET_KEY);
-	}
-	
-	private boolean hasJarClasspath() {
-		return prop.containsKey(JAR_CLASSPATH);
 	}
 	
 	public static void createInstance(String path) throws ApplicationException {

@@ -179,11 +179,6 @@ public class ExecuteMatcher {
 				bw.append("#" + PropertiesHandler.TIME_BUDGET_KEY + "=60");
 				bw.newLine();
 				bw.newLine();
-				bw.append("# If the classpath is in jar form");
-				bw.newLine();
-				bw.append("#" + PropertiesHandler.JAR_CLASSPATH + "=true");
-				bw.newLine();
-				bw.newLine();
 				bw.append("# Time budget in seconds (int) for the matching");
 				bw.newLine();
 				bw.append("#" + PropertiesHandler.MATCHING_BUDGET_KEY + "=120");
