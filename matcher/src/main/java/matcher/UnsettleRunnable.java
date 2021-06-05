@@ -80,15 +80,16 @@ public class UnsettleRunnable implements Runnable{
 			return ;
 		} 
 		catch (InterruptedException e) {
-			logger.info("Something went wrong with " + cp.getConflictName() + "...");
+			logger.info("Interruption in matching for " + cp.getConflictName() + "...");
 			return ;
 		} 
 		catch (ExecutionException e) {
-			logger.info("Something went wrong with " + cp.getConflictName() + "...");
+			logger.info("Something went wrong in matching for " + cp.getConflictName() + "...");
+			logger.warn(e);
 			return ;
 		}
 		catch (ApplicationException e) {
-			logger.info("Something went wrong with " + cp.getConflictName() + "...");
+			logger.info(e.getMessage());
 			return ;
 		}
 		

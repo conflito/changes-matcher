@@ -89,11 +89,12 @@ public class MatchingRunnable implements Callable<List<List<Pair<Integer, String
 			return new ArrayList<>();
 		} 
 		catch (InterruptedException e) {
-			logger.info("Something went wrong in matching for " + cp.getConflictName() + "...");
+			logger.info("Interruption in matching for " + cp.getConflictName() + "...");
 			return new ArrayList<>();
 		} 
 		catch (ExecutionException e) {
 			logger.info("Something went wrong in matching for " + cp.getConflictName() + "...");
+			logger.warn(e);
 			return new ArrayList<>();
 		}
 
