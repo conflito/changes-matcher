@@ -24,6 +24,7 @@ import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
 import spoon.reflect.reference.*;
 import spoon.reflect.visitor.CtVisitor;
+import spoon.support.reflect.declaration.CtClassImpl;
 
 public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 
@@ -34,10 +35,13 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	@Override
 	public <T> void visitCtConstructor(CtConstructor<T> c) {
 		if(getConflictPattern().hasDeleteConstructorsActions()) {
-			ClassInstance holderInstance = getClassInstance(c);
-			ConstructorInstance deletedInstance = getConstructorInstance(c, holderInstance);
-			ActionInstance result = new DeleteConstructorAction(deletedInstance, holderInstance);
-			setResult(result);
+			if(c.getDeclaringType() instanceof CtClass ||
+					c.getDeclaringType() instanceof CtClassImpl) {
+				ClassInstance holderInstance = getClassInstance(c);
+				ConstructorInstance deletedInstance = getConstructorInstance(c, holderInstance);
+				ActionInstance result = new DeleteConstructorAction(deletedInstance, holderInstance);
+				setResult(result);
+			}
 		}
 
 	}
@@ -45,10 +49,13 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	@Override
 	public <T> void visitCtField(CtField<T> field) {
 		if(getConflictPattern().hasDeleteFieldActions()) {
-			ClassInstance holderInstance = getClassInstance(field);
-			FieldInstance deletedInstance = getFieldInstance(field);
-			ActionInstance result = new DeleteFieldAction(deletedInstance, holderInstance);
-			setResult(result);
+			if(field.getDeclaringType() instanceof CtClass ||
+					field.getDeclaringType() instanceof CtClassImpl) {
+				ClassInstance holderInstance = getClassInstance(field);
+				FieldInstance deletedInstance = getFieldInstance(field);
+				ActionInstance result = new DeleteFieldAction(deletedInstance, holderInstance);
+				setResult(result);
+			}
 		}
 	}
 
@@ -72,10 +79,16 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 					Optional<CtConstructor<?>> constructor = getConstructorNode(invocation);
 					if(constructor.isPresent()) {
 						CtConstructor<?> c = constructor.get();
-						ClassInstance classInstance = getClassInstance(c);
-						ConstructorInstance constructorInstance = getConstructorInstance(c, classInstance);
-						ActionInstance result = new DeleteInvocationAction(mii, constructorInstance);
-						setResult(result);
+						if(c.getDeclaringType() instanceof CtClass ||
+								c.getDeclaringType() instanceof CtClassImpl) {
+							ClassInstance classInstance = getClassInstance(c);
+							ConstructorInstance constructorInstance = 
+									getConstructorInstance(c, classInstance);
+							ActionInstance result = 
+									new DeleteInvocationAction(mii, constructorInstance);
+							setResult(result);
+						}
+						
 					}
 				}
 			}
@@ -89,10 +102,13 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	@Override
 	public <T> void visitCtMethod(CtMethod<T> method) {
 		if(getConflictPattern().hasDeleteMethodActions()) {
-			ClassInstance holderInstance = getClassInstance(method);
-			MethodInstance deletedInstance = getMethodInstance(method);
-			ActionInstance result =  new DeleteMethodAction(deletedInstance, holderInstance);
-			setResult(result);
+			if(method.getDeclaringType() instanceof CtClass ||
+					method.getDeclaringType() instanceof CtClassImpl) {
+				ClassInstance holderInstance = getClassInstance(method);
+				MethodInstance deletedInstance = getMethodInstance(method);
+				ActionInstance result =  new DeleteMethodAction(deletedInstance, holderInstance);
+				setResult(result);
+			}
 		}
 	}
 
@@ -139,19 +155,27 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 			Optional<CtMethod<?>> possibleCaller = getMethodNode(element);
 			if(possibleCaller.isPresent()) {
 				CtMethod<?> method = possibleCaller.get();
-				ClassInstance classInstance = getClassInstance(method);
-				MethodInstance methodInstance = getMethodInstance(method);
-				ActionInstance result = 
-						new UpdateMethodAction(methodInstance, classInstance);
-				setResult(result);
+				if(method.getDeclaringType() instanceof CtClass ||
+						method.getDeclaringType() instanceof CtClassImpl) {
+					ClassInstance classInstance = getClassInstance(method);
+					MethodInstance methodInstance = getMethodInstance(method);
+					ActionInstance result = 
+							new UpdateMethodAction(methodInstance, classInstance);
+					setResult(result);
+				}
 			}
 			else {
 				Optional<CtConstructor<?>> c = getConstructorNode(element);
 				if(c.isPresent()) {
-					ClassInstance holderInstance = getClassInstance(c.get());
-					ConstructorInstance cInstance = getConstructorInstance(c.get(), holderInstance);
-					ActionInstance result = new UpdateConstructorAction(cInstance);
-					setResult(result);
+					CtConstructor<?> constructor = c.get();
+					if(constructor.getDeclaringType() instanceof CtClass ||
+							constructor.getDeclaringType() instanceof CtClassImpl) {
+						ClassInstance holderInstance = getClassInstance(constructor);
+						ConstructorInstance cInstance = 
+								getConstructorInstance(constructor, holderInstance);
+						ActionInstance result = new UpdateConstructorAction(cInstance);
+						setResult(result);
+					}
 				}
 			}
 		}

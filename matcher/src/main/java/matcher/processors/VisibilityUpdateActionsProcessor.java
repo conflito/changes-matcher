@@ -9,7 +9,9 @@ import matcher.entities.deltas.Action;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.VisibilityAction;
 import matcher.patterns.ConflictPattern;
+import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtElement;
+import spoon.support.reflect.declaration.CtClassImpl;
 import spoon.support.reflect.declaration.CtConstructorImpl;
 import spoon.support.reflect.declaration.CtFieldImpl;
 import spoon.support.reflect.declaration.CtMethodImpl;
@@ -61,14 +63,17 @@ public class VisibilityUpdateActionsProcessor extends DeltaProcessor{
 	}
 	
 	private void visit(CtConstructorImpl<?> srcImpl, CtConstructorImpl<?> dstImpl) {
-		ClassInstance classInstance = getClassInstance(dstImpl.getTopLevelType());
-		ConstructorInstance dstConstructorInstance = getConstructorInstance(dstImpl, classInstance);
-		ConstructorInstance srcConstructorInstance = getConstructorInstance(srcImpl, classInstance);
-		Visibility oldVisibility = srcConstructorInstance.getVisibility();
-		Visibility newVisibility = dstConstructorInstance.getVisibility();
-		ActionInstance result = new VisibilityAction(Action.UPDATE, dstConstructorInstance, 
-				oldVisibility, newVisibility);
-		setResult(result);
+		if(srcImpl.getDeclaringType() instanceof CtClass ||
+				srcImpl.getDeclaringType() instanceof CtClassImpl) {
+			ClassInstance classInstance = getClassInstance(dstImpl.getTopLevelType());
+			ConstructorInstance dstConstructorInstance = getConstructorInstance(dstImpl, classInstance);
+			ConstructorInstance srcConstructorInstance = getConstructorInstance(srcImpl, classInstance);
+			Visibility oldVisibility = srcConstructorInstance.getVisibility();
+			Visibility newVisibility = dstConstructorInstance.getVisibility();
+			ActionInstance result = new VisibilityAction(Action.UPDATE, dstConstructorInstance, 
+					oldVisibility, newVisibility);
+			setResult(result);
+		}
 	}
 
 }

@@ -98,6 +98,7 @@ import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.reference.CtUnboundVariableReference;
 import spoon.reflect.reference.CtWildcardReference;
 import spoon.reflect.visitor.CtVisitor;
+import spoon.support.reflect.declaration.CtClassImpl;
 
 public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 
@@ -109,22 +110,31 @@ public class MoveActionsProcessor extends DeltaProcessor implements CtVisitor{
 		Optional<CtMethod<?>> method = getMethodNode(element);
 		if(method.isPresent()) {
 			if(getConflictPattern().hasUpdateActions()) {
-				ClassInstance classInstance = getClassInstance(method.get());
-				MethodInstance methodInstance = getMethodInstance(method.get());
-				ActionInstance result = 
-						new UpdateMethodAction(methodInstance, classInstance);
-				setResult(result);
+				CtMethod<?> m = method.get();
+				if(m.getDeclaringType() instanceof CtClass ||
+						m.getDeclaringType() instanceof CtClassImpl) {
+					ClassInstance classInstance = getClassInstance(m);
+					MethodInstance methodInstance = getMethodInstance(m);
+					ActionInstance result = 
+							new UpdateMethodAction(methodInstance, classInstance);
+					setResult(result);
+				}
+				
 			}
 		}
 		else {
 			Optional<CtConstructor<?>> c = getConstructorNode(element);
 			if(c.isPresent()) {
 				if(getConflictPattern().hasUpdateActions()) {
-					ClassInstance holderInstance = getClassInstance(c.get());
-					ConstructorInstance cInstance = getConstructorInstance(c.get(), 
-							holderInstance);
-					ActionInstance result = new UpdateConstructorAction(cInstance);
-					setResult(result);
+					CtConstructor<?> constructor = c.get();
+					if(constructor.getDeclaringType() instanceof CtClass ||
+							constructor.getDeclaringType() instanceof CtClassImpl) {
+						ClassInstance holderInstance = getClassInstance(c.get());
+						ConstructorInstance cInstance = getConstructorInstance(c.get(), 
+								holderInstance);
+						ActionInstance result = new UpdateConstructorAction(cInstance);
+						setResult(result);
+					}
 				}
 			}
 		}

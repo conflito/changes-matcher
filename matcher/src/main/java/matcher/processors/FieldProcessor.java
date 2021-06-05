@@ -10,6 +10,8 @@ public class FieldProcessor extends Processor<FieldInstance, CtField<?>>{
 		
 	@Override
 	public FieldInstance process(CtField<?> element) {
+		if(element == null)
+			return null;
 		if(InstancesCache.getInstance().hasField(element))
 			return InstancesCache.getInstance().getField(element);
 		Visibility visibility = Visibility.PACKAGE;

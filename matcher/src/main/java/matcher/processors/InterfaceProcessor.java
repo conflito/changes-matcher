@@ -7,6 +7,8 @@ public class InterfaceProcessor extends Processor<InterfaceInstance, CtTypeRefer
 
 	@Override
 	public InterfaceInstance process(CtTypeReference<?> element) {
+		if(element == null)
+			return null;
 		return new InterfaceInstance(element.getQualifiedName());
 	}
 

@@ -2,6 +2,7 @@ package matcher.handlers;
 
 import matcher.entities.BaseInstance;
 import matcher.entities.ClassInstance;
+import matcher.entities.InterfaceInstance;
 import matcher.patterns.ConflictPattern;
 import matcher.processors.ClassProcessor;
 import matcher.processors.InterfaceProcessor;
@@ -33,14 +34,18 @@ public class BaseInstanceHandler {
 		CtClass<?> ctClass = (CtClass<?>)type;
 		ClassProcessor processor = new ClassProcessor(cp);
 		ClassInstance classInstance = processor.process(ctClass);
-		result.addClassInstance(classInstance);
-		if(!ctClass.getNestedTypes().isEmpty()) {
-			result.merge(getBaseInstance(ctClass.getNestedTypes(), cp));
+		if(classInstance != null) {
+			result.addClassInstance(classInstance);
+			if(!ctClass.getNestedTypes().isEmpty()) {
+				result.merge(getBaseInstance(ctClass.getNestedTypes(), cp));
+			}
 		}
 	}
 	
 	private void processInterface(BaseInstance result, CtType<?> type) {
 		InterfaceProcessor processor = new InterfaceProcessor();
-		result.addInterfaceInstance(processor.process(type.getReference()));
+		InterfaceInstance instance = processor.process(type.getReference());
+		if(instance != null)
+			result.addInterfaceInstance(instance);
 	}
 }

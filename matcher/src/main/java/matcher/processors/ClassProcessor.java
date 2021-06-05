@@ -110,8 +110,10 @@ public class ClassProcessor extends Processor<ClassInstance, CtClass<?>>{
 		ConstructorProcessor constructorProcessor = new ConstructorProcessor(conflictPattern);
 		for(CtConstructor<?> constructor: element.getConstructors()) {
 			ConstructorInstance constructorInstance = constructorProcessor.process(constructor);
-			constructorInstance.setClassInstance(classInstance);
-			classInstance.addConstructor(constructorInstance);
+			if(constructorInstance != null) {
+				constructorInstance.setClassInstance(classInstance);
+				classInstance.addConstructor(constructorInstance);
+			}
 		}
 	}
 
@@ -119,7 +121,8 @@ public class ClassProcessor extends Processor<ClassInstance, CtClass<?>>{
 		FieldProcessor fieldProcessor = new FieldProcessor();
 		for(CtFieldReference<?> f: element.getDeclaredFields()) {
 			FieldInstance field = fieldProcessor.process(f.getFieldDeclaration());
-			classInstance.addField(field);
+			if(field != null)
+				classInstance.addField(field);
 		}
 
 	}
@@ -129,8 +132,10 @@ public class ClassProcessor extends Processor<ClassInstance, CtClass<?>>{
 		List<MethodInstance> methods = new ArrayList<>();
 		for(CtMethod<?> method: element.getMethods()) {
 			MethodInstance methodInstance = methodProcessor.process(method);
-			classInstance.addMethod(methodInstance);
-			methods.add(methodInstance);
+			if(methodInstance != null) {
+				classInstance.addMethod(methodInstance);
+				methods.add(methodInstance);
+			}
 		}
 		return methods;
 	}
@@ -140,7 +145,10 @@ public class ClassProcessor extends Processor<ClassInstance, CtClass<?>>{
 		if(superClass != null) {
 			ClassProcessor superClassProcessor = new ClassProcessor(conflictPattern);
 			CtType<?> superType = superClass.getTypeDeclaration();
-			classInstance.setSuperClass(superClassProcessor.process((CtClass<?>)superType));
+			ClassInstance superClassInstance =
+					superClassProcessor.process((CtClass<?>)superType);
+			if(superClassInstance != null)
+				classInstance.setSuperClass(superClassInstance);
 		}
 	}
 

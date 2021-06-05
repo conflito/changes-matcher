@@ -29,6 +29,8 @@ public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
 
 	@Override
 	public MethodInstance process(CtMethod<?> element) {
+		if(element == null)
+			return null;
 		Set<String> invocationsVisited = new HashSet<>();
 		
 		if(InstancesCache.getInstance().hasMethod(element)) {

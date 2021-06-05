@@ -9,7 +9,9 @@ import matcher.entities.deltas.Action;
 import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.VisibilityAction;
 import matcher.patterns.ConflictPattern;
+import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtElement;
+import spoon.support.reflect.declaration.CtClassImpl;
 import spoon.support.reflect.declaration.CtConstructorImpl;
 import spoon.support.reflect.declaration.CtFieldImpl;
 import spoon.support.reflect.declaration.CtMethodImpl;
@@ -54,13 +56,16 @@ public class VisibilityInsertActionsProcessor extends DeltaProcessor{
 	}
 	
 	private void visit(CtConstructorImpl<?> elementImpl) {
-		ClassInstance classInstance = getClassInstance(elementImpl);
-		ConstructorInstance constructorInstance = 
-				getConstructorInstance(elementImpl, classInstance);
-		Visibility newVisibility = constructorInstance.getVisibility();
-		ActionInstance result = new VisibilityAction(Action.INSERT, constructorInstance, 
-				null, newVisibility);
-		setResult(result);
+		if(elementImpl.getDeclaringType() instanceof CtClass ||
+				elementImpl.getDeclaringType() instanceof CtClassImpl) {
+			ClassInstance classInstance = getClassInstance(elementImpl);
+			ConstructorInstance constructorInstance = 
+					getConstructorInstance(elementImpl, classInstance);
+			Visibility newVisibility = constructorInstance.getVisibility();
+			ActionInstance result = new VisibilityAction(Action.INSERT, constructorInstance, 
+					null, newVisibility);
+			setResult(result);
+		}
 	}
 
 }

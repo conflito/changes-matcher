@@ -19,6 +19,7 @@ import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
 import spoon.reflect.reference.*;
 import spoon.reflect.visitor.CtVisitor;
+import spoon.support.reflect.declaration.CtClassImpl;
 
 public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 		
@@ -32,31 +33,42 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 	@Override
 	public <T> void visitCtMethod(CtMethod<T> method) {
 		if(getConflictPattern().hasUpdateActions()) {
-			ClassInstance classInstance = getClassInstance(method);
-			MethodInstance methodInstance = getMethodInstance(method);
-			ActionInstance result = 
-					new UpdateMethodAction(methodInstance, classInstance);
-			setResult(result);
+			if(method.getDeclaringType() instanceof CtClass ||
+					method.getDeclaringType() instanceof CtClassImpl) {
+				ClassInstance classInstance = getClassInstance(method);
+				MethodInstance methodInstance = getMethodInstance(method);
+				ActionInstance result = 
+						new UpdateMethodAction(methodInstance, classInstance);
+				setResult(result);
+			}
 		}
 	}
 	
 	@Override
 	public <T> void visitCtConstructor(CtConstructor<T> c) {
 		if(getConflictPattern().hasUpdateActions()) {
-			ClassInstance holderInstance = getClassInstance(c);
-			ConstructorInstance cInstance = getConstructorInstance(c, holderInstance);
-			ActionInstance result = new UpdateConstructorAction(cInstance);
-			setResult(result);
+			if(c.getDeclaringType() instanceof CtClass ||
+					c.getDeclaringType() instanceof CtClassImpl) {
+				ClassInstance holderInstance = getClassInstance(c);
+				ConstructorInstance cInstance = 
+						getConstructorInstance(c, holderInstance);
+				ActionInstance result = new UpdateConstructorAction(cInstance);
+				setResult(result);
+			}
 		}
 	}
 	
 	@Override
 	public <T> void visitCtField(CtField<T> f) {
 		if(getConflictPattern().hasUpdateFieldActions()) {
-			FieldInstance fieldInstance = getFieldInstance(f);
-			ClassInstance classInstance = getClassInstance(f);
-			ActionInstance result = new UpdateFieldAction(fieldInstance, classInstance);
-			setResult(result);
+			if(f.getDeclaringType() instanceof CtClass ||
+					f.getDeclaringType() instanceof CtClassImpl) {
+				FieldInstance fieldInstance = getFieldInstance(f);
+				ClassInstance classInstance = getClassInstance(f);
+				ActionInstance result = 
+						new UpdateFieldAction(fieldInstance, classInstance);
+				setResult(result);
+			}
 		}
 		else if(getConflictPattern().hasUpdateFieldTypeActions()) {
 			Optional<CtField<?>> newF = getFieldNode(newOne);
@@ -110,15 +122,19 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 					if(newConstructor.isPresent()) {
 						CtConstructor<?> c = constructor.get();
 						CtConstructor<?> nC = newConstructor.get();
-						ClassInstance classInstance = getClassInstance(c);
-						ConstructorInstance cInstance = getConstructorInstance(c, classInstance);
-						ConstructorInstance nCInstance = getConstructorInstance(nC, classInstance);
-						ActionInstance result = 
-								new UpdateDependencyAction(cInstance, nCInstance, 
-										oldDependency, newDependency);
-						setResult(result);
+						if(c.getDeclaringType() instanceof CtClass ||
+								c.getDeclaringType() instanceof CtClassImpl) {
+							ClassInstance classInstance = getClassInstance(c);
+							ConstructorInstance cInstance = 
+									getConstructorInstance(c, classInstance);
+							ConstructorInstance nCInstance = 
+									getConstructorInstance(nC, classInstance);
+							ActionInstance result = 
+									new UpdateDependencyAction(cInstance, nCInstance, 
+											oldDependency, newDependency);
+							setResult(result);
+						}
 					}
-					
 				}
 			}
 		}

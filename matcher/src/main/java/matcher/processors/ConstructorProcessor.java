@@ -24,6 +24,8 @@ public class ConstructorProcessor extends Processor<ConstructorInstance, CtConst
 
 	@Override
 	public ConstructorInstance process(CtConstructor<?> element) {
+		if(element == null)
+			return null;
 		if(InstancesCache.getInstance().hasConstructor(element)) {
 			ConstructorInstance result = InstancesCache.getInstance().getConstructor(element);
 			if(conflictPattern.hasInvocations() && !result.hasDependencies()) {

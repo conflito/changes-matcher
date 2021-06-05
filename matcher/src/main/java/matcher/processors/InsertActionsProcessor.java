@@ -71,20 +71,26 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 	@Override
 	public <T> void visitCtConstructor(CtConstructor<T> c) {
 		if(getConflictPattern().hasInsertConstructorActions()) {
-			ClassInstance holderInstance = getClassInstance(c);
-			ConstructorInstance insertedInstance = getConstructorInstance(c, holderInstance);
-			ActionInstance result = new InsertConstructorAction(insertedInstance, holderInstance);
-			setResult(result);
+			if(c.getDeclaringType() instanceof CtClass ||
+					c.getDeclaringType() instanceof CtClassImpl) {
+				ClassInstance holderInstance = getClassInstance(c);
+				ConstructorInstance insertedInstance = getConstructorInstance(c, holderInstance);
+				ActionInstance result = new InsertConstructorAction(insertedInstance, holderInstance);
+				setResult(result);
+			}
 		}
 	}
 	
 	@Override
 	public <T> void visitCtField(CtField<T> field) {
 		if(getConflictPattern().hasInsertFieldActions()) {
-			ClassInstance holderInstance = getClassInstance(field);
-			FieldInstance insertedInstance = getFieldInstance(field);
-			ActionInstance result = new InsertFieldAction(insertedInstance, holderInstance);
-			setResult(result);
+			if(field.getDeclaringType() instanceof CtClass ||
+					field.getDeclaringType() instanceof CtClassImpl) {
+				ClassInstance holderInstance = getClassInstance(field);
+				FieldInstance insertedInstance = getFieldInstance(field);
+				ActionInstance result = new InsertFieldAction(insertedInstance, holderInstance);
+				setResult(result);
+			}
 		}
 	}
 	
@@ -118,10 +124,14 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 					Optional<CtConstructor<?>> constructor = getConstructorNode(invocation);
 					if(constructor.isPresent()) {
 						CtConstructor<?> c = constructor.get();
-						ClassInstance classInstance = getClassInstance(c);
-						ConstructorInstance insertedInstance = getConstructorInstance(c, classInstance);
-						ActionInstance result = new InsertInvocationAction(mii, insertedInstance);
-						setResult(result);
+						if(c.getDeclaringType() instanceof CtClass ||
+								c.getDeclaringType() instanceof CtClassImpl) {
+							ClassInstance classInstance = getClassInstance(c);
+							ConstructorInstance insertedInstance = 
+									getConstructorInstance(c, classInstance);
+							ActionInstance result = new InsertInvocationAction(mii, insertedInstance);
+							setResult(result);
+						}
 					}
 				}
 			}
@@ -186,10 +196,15 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 			else {
 				Optional<CtConstructor<?>> c = getConstructorNode(element);
 				if(c.isPresent()) {
-					ClassInstance holderInstance = getClassInstance(c.get());
-					ConstructorInstance cInstance = getConstructorInstance(c.get(), holderInstance);
-					ActionInstance result = new UpdateConstructorAction(cInstance);
-					setResult(result);
+					CtConstructor<?> constructor = c.get();
+					if(constructor.getDeclaringType() instanceof CtClass ||
+							constructor.getDeclaringType() instanceof CtClassImpl) {
+						ClassInstance holderInstance = getClassInstance(constructor);
+						ConstructorInstance cInstance = 
+								getConstructorInstance(c.get(), holderInstance);
+						ActionInstance result = new UpdateConstructorAction(cInstance);
+						setResult(result);
+					}
 				}
 			}
 		}
@@ -197,11 +212,14 @@ public class InsertActionsProcessor extends DeltaProcessor implements CtVisitor{
 			Optional<CtField<?>> possibleField = getFieldNode(element);
 			if(possibleField.isPresent()) {
 				CtField<?> field = possibleField.get();
-				FieldInstance fieldInstance = getFieldInstance(field);
-				ClassInstance classInstance = getClassInstance(field);
-				ActionInstance result = 
-						new UpdateFieldAction(fieldInstance, classInstance);
-				setResult(result);
+				if(field.getDeclaringType() instanceof CtClass ||
+						field.getDeclaringType() instanceof CtClassImpl) {
+					FieldInstance fieldInstance = getFieldInstance(field);
+					ClassInstance classInstance = getClassInstance(field);
+					ActionInstance result = 
+							new UpdateFieldAction(fieldInstance, classInstance);
+					setResult(result);
+				}
 			}
 		}
 	}
