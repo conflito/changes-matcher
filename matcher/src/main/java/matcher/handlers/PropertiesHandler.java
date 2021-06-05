@@ -98,6 +98,8 @@ public class PropertiesHandler {
 		catch(NumberFormatException e) {
 			return DEFAULT_DISTANCE_THRESHOLD;
 		}
+		if(result <= 0)
+			return DEFAULT_DISTANCE_THRESHOLD;
 		return result;
 	}
 	
@@ -111,6 +113,8 @@ public class PropertiesHandler {
 		catch(NumberFormatException e) {
 			return DEFAULT_TIME_BUDGET;
 		}
+		if(result <= 0)
+			return DEFAULT_TIME_BUDGET;
 		return result;
 	}
 	
@@ -130,6 +134,10 @@ public class PropertiesHandler {
 		catch(NumberFormatException e) {
 			return DEFAULT_MATCHING_BUDGET;
 		}
+		if(result == -1)
+			return Integer.MAX_VALUE;
+		else if(result <= 0)
+			return DEFAULT_MATCHING_BUDGET;
 		return result;
 	}
 	
