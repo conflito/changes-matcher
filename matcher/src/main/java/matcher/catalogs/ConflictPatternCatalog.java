@@ -11,8 +11,8 @@ import matcher.patterns.ConflictPattern;
 public class ConflictPatternCatalog {
 	
 	private static final String CONFLICTS_DIR = "src" + File.separator + "main" + 
-			File.separator + "resources" + File.separator + "conflict-patterns-no-dependency" + 
-			File.separator;
+			File.separator + "resources" + File.separator + "conflict-patterns" + 
+			File.separator;//-no-dependency
 	
 	private Map<String, ConflictPattern> patterns;
 	
