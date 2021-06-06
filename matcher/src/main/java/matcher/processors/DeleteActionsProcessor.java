@@ -497,8 +497,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 
 	@Override
 	public <T> void visitCtTypeAccess(CtTypeAccess<T> typeAccess) {
-		// TODO Auto-generated method stub
-
+		visit(typeAccess);
 	}
 
 	@Override
