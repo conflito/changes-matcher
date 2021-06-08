@@ -12,7 +12,7 @@ import matcher.patterns.ConflictPattern;
 import matcher.patterns.FieldPattern;
 import matcher.patterns.FreeVariable;
 import matcher.patterns.deltas.DeltaPattern;
-import matcher.patterns.deltas.VisibilityActionPattern;
+import matcher.patterns.deltas.VisibilityPatternAction;
 import matcher.utils.Pair;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -151,7 +151,7 @@ public class TestMatcherVisibilities {
 		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new VisibilityActionPattern(Action.INSERT, Visibility.PRIVATE, 
+		dp1.addActionPattern(new VisibilityPatternAction(Action.INSERT, Visibility.PRIVATE, 
 				null, fieldvar));
 		
 		ConflictPattern conflict = new ConflictPattern("Dummy Visibility Pattern");
@@ -176,7 +176,7 @@ public class TestMatcherVisibilities {
 		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new VisibilityActionPattern(Action.DELETE, null, 
+		dp1.addActionPattern(new VisibilityPatternAction(Action.DELETE, null, 
 				Visibility.PRIVATE, fieldvar));
 		
 		ConflictPattern conflict = new ConflictPattern("Dummy Visibility Pattern 2");
@@ -201,7 +201,7 @@ public class TestMatcherVisibilities {
 		
 		DeltaPattern dp1 = new DeltaPattern();
 		DeltaPattern dp2 = new DeltaPattern();
-		dp1.addActionPattern(new VisibilityActionPattern(Action.UPDATE, Visibility.PROTECTED, 
+		dp1.addActionPattern(new VisibilityPatternAction(Action.UPDATE, Visibility.PROTECTED, 
 				Visibility.PRIVATE, fieldvar));
 		
 		ConflictPattern conflict = new ConflictPattern("Dummy Visibility Pattern 2");

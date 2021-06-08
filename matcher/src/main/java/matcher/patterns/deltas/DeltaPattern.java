@@ -177,7 +177,7 @@ public class DeltaPattern {
 	}
 	
 	public boolean hasVisibilityActions() {
-		return actions.stream().anyMatch(a -> a instanceof VisibilityActionPattern);
+		return actions.stream().anyMatch(a -> a instanceof VisibilityPatternAction);
 	}
 
 	public List<Integer> getFieldsVariableIds() {
@@ -407,12 +407,12 @@ public class DeltaPattern {
 	public List<Integer> getVisibilityActionsVariableIds() {
 		return actions.stream()
 				  .filter(a -> isVisibilityAction(a))
-				  .map(a -> ((VisibilityActionPattern)a).getEntityId())
+				  .map(a -> ((VisibilityPatternAction)a).getEntityId())
 				  .collect(Collectors.toList());
 	}
 	
 	private boolean isVisibilityAction(ActionPattern a) {
-		return a instanceof VisibilityActionPattern;
+		return a instanceof VisibilityPatternAction;
 	}
 	
 	public void clean() {

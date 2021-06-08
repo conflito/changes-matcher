@@ -6,7 +6,7 @@ import matcher.entities.deltas.ActionInstance;
 import matcher.entities.deltas.VisibilityAction;
 import matcher.patterns.FreeVariable;
 
-public class VisibilityActionPattern extends ActionPattern{
+public class VisibilityPatternAction extends ActionPattern{
 
 	private Visibility newVisibility;
 	
@@ -14,7 +14,7 @@ public class VisibilityActionPattern extends ActionPattern{
 	
 	private FreeVariable entity;
 
-	public VisibilityActionPattern(Action action, Visibility newVisibility, 
+	public VisibilityPatternAction(Action action, Visibility newVisibility, 
 			Visibility oldVisibility, FreeVariable entity) {
 		super(action);
 		this.newVisibility = newVisibility;
@@ -23,7 +23,7 @@ public class VisibilityActionPattern extends ActionPattern{
 	}
 	
 	public ActionPattern makeCopy() {
-		return new VisibilityActionPattern(getAction(), newVisibility, 
+		return new VisibilityPatternAction(getAction(), newVisibility, 
 				oldVisibility, new FreeVariable(entity));
 	}
 	

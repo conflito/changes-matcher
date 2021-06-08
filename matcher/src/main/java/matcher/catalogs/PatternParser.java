@@ -46,7 +46,7 @@ import matcher.patterns.deltas.UpdateDependencyPatternAction;
 import matcher.patterns.deltas.UpdateFieldPatternAction;
 import matcher.patterns.deltas.UpdateFieldTypePatternAction;
 import matcher.patterns.deltas.UpdateMethodPatternAction;
-import matcher.patterns.deltas.VisibilityActionPattern;
+import matcher.patterns.deltas.VisibilityPatternAction;
 import matcher.patterns.goals.TestingGoal;
 
 public class PatternParser {
@@ -906,8 +906,8 @@ public class PatternParser {
 				
 				Visibility oldVisibility = methodPattern.getVisibility();
 				
-				VisibilityActionPattern vap = 
-						new VisibilityActionPattern(Action.UPDATE, newVisibility, 
+				VisibilityPatternAction vap = 
+						new VisibilityPatternAction(Action.UPDATE, newVisibility, 
 								oldVisibility, variables.get(methodVar));
 				
 				currentDelta.addActionPattern(vap);
