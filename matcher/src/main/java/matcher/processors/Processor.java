@@ -1,6 +1,6 @@
 package matcher.processors;
 
-public abstract class Processor<K, T> {
+public interface Processor<K, T> {
 
-	public abstract K process(T element);
+	public K process(T element);
 }

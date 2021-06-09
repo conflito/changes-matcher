@@ -18,7 +18,7 @@ import spoon.reflect.declaration.CtType;
 import spoon.reflect.reference.CtFieldReference;
 import spoon.reflect.reference.CtTypeReference;
 
-public class ClassProcessor extends Processor<ClassInstance, CtClass<?>>{
+public class ClassProcessor implements Processor<ClassInstance, CtClass<?>>{
 	
 	private ConflictPattern conflictPattern;
 

@@ -6,7 +6,7 @@ import matcher.entities.Visibility;
 import matcher.handlers.InstancesCache;
 import spoon.reflect.declaration.CtField;
 
-public class FieldProcessor extends Processor<FieldInstance, CtField<?>>{
+public class FieldProcessor implements Processor<FieldInstance, CtField<?>>{
 		
 	@Override
 	public FieldInstance process(CtField<?> element) {

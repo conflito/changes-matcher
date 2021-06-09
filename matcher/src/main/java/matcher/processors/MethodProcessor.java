@@ -19,7 +19,7 @@ import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.visitor.filter.TypeFilter;
 
-public class MethodProcessor extends Processor<MethodInstance, CtMethod<?>>{
+public class MethodProcessor implements Processor<MethodInstance, CtMethod<?>>{
 
 	private ConflictPattern conflictPattern;
 

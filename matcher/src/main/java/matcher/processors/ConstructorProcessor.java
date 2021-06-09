@@ -14,7 +14,7 @@ import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtConstructor;
 import spoon.reflect.visitor.filter.TypeFilter;
 
-public class ConstructorProcessor extends Processor<ConstructorInstance, CtConstructor<?>>{
+public class ConstructorProcessor implements Processor<ConstructorInstance, CtConstructor<?>>{
 
 	private ConflictPattern conflictPattern;
 	
