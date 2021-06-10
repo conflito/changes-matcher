@@ -43,7 +43,7 @@ public class MethodProcessor implements Processor<MethodInstance, CtMethod<?>>{
 				processFieldAccesses(element, result);
 				InstancesCache.getInstance().putMethod(element, result);
 			}		
-			return result;
+			return new MethodInstance(result);
 		}
 		return process(element, invocationsVisited);
 	}

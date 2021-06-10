@@ -13,7 +13,7 @@ public class FieldProcessor implements Processor<FieldInstance, CtField<?>>{
 		if(element == null)
 			return null;
 		if(InstancesCache.getInstance().hasField(element))
-			return InstancesCache.getInstance().getField(element);
+			return new FieldInstance(InstancesCache.getInstance().getField(element));
 		Visibility visibility = Visibility.PACKAGE;
 		if(element.getVisibility() != null)
 			visibility = Visibility.valueOf(element.getVisibility().toString().toUpperCase());

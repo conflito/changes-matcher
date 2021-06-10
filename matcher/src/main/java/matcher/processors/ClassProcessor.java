@@ -88,7 +88,7 @@ public class ClassProcessor implements Processor<ClassInstance, CtClass<?>>{
 		if(conflictPattern.hasInterfaces() && !result.hasInterfaces())
 			processInterfaces(element, result);
 		InstancesCache.getInstance().putClass(element, result);
-		return result;
+		return new ClassInstance(result);
 	}
 
 	private void processInterfaces(CtClass<?> element, ClassInstance classInstance) {

@@ -32,7 +32,7 @@ public class ConstructorProcessor implements Processor<ConstructorInstance, CtCo
 				processMethodInvocations(element, result);
 				InstancesCache.getInstance().putConstructor(element, result);
 			}
-			return result;
+			return new ConstructorInstance(result);
 		}
 		Visibility visibility = Visibility.PACKAGE;
 		if(element.getVisibility() != null)
