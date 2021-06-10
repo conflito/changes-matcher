@@ -19,6 +19,15 @@ public class InterfaceImplementationInstance {
 		super();
 		this.name = name;
 	}
+	
+	/**
+	 * Creates an instance of InterfaceImplementationInstance from another instance
+	 * @param i
+	 * 			the other instance
+	 */
+	public InterfaceImplementationInstance(InterfaceImplementationInstance i) {
+		this.name = i.name;
+	}
 
 	/**
 	 * Get the implemented interface's name

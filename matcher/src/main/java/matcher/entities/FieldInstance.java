@@ -31,6 +31,17 @@ public class FieldInstance implements Visible {
 		this.visibility = visibility;
 		this.type = type;
 	}
+	
+	/**
+	 * Creates an instance of FieldInstance from another instance
+	 * @param field
+	 * 			the other instance
+	 */
+	public FieldInstance(FieldInstance field) {
+		this.name = field.name;
+		this.visibility = field.visibility;
+		this.type = new Type(field.type);
+	}
 
 	/**
 	 * Get the name of this field

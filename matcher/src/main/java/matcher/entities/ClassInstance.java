@@ -63,6 +63,52 @@ public class ClassInstance {
 		this.interfaces = new ArrayList<>();
 		this.compatibleMethods = new HashMap<>();
 	}
+	
+	/**
+	 * Creates an instance of ClassInstance from another instance
+	 * @param classInstance
+	 * 			the other instance
+	 */
+	public ClassInstance(ClassInstance classInstance) {
+		this.name = classInstance.name;
+		this.qualifiedName = classInstance.qualifiedName;
+		this.superClass = classInstance.superClass != null?
+				new ClassInstance(classInstance.superClass):null;
+		
+		this.fields = new ArrayList<>();
+		this.methods = new ArrayList<>();
+		this.constructors = new ArrayList<>();
+		this.interfaces = new ArrayList<>();
+		this.compatibleMethods = new HashMap<>();
+		
+		for(FieldInstance f: classInstance.fields) {
+			this.fields.add(new FieldInstance(f));
+		}
+		
+		for(MethodInstance m: classInstance.methods) {
+			this.methods.add(new MethodInstance(m));
+		}
+		
+		for(ConstructorInstance c: classInstance.constructors) {
+			ConstructorInstance newC = new ConstructorInstance(c);
+			newC.setClassInstance(this);
+			this.constructors.add(newC);
+		}
+		
+		for(InterfaceImplementationInstance i: classInstance.interfaces) {
+			this.interfaces.add(new InterfaceImplementationInstance(i));
+		}
+		
+		for(Entry<MethodInstance, List<MethodInstance>> e: 
+			classInstance.compatibleMethods.entrySet()) {
+			MethodInstance newKey = new MethodInstance(e.getKey());
+			List<MethodInstance> newValue = new ArrayList<>();
+			for(MethodInstance m: e.getValue()) {
+				newValue.add(new MethodInstance(m));
+			}
+			this.compatibleMethods.put(newKey, newValue);
+		}
+	}
 
 	/**
 	 * Get this class' simple name

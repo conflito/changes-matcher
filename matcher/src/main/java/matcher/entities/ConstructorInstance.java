@@ -33,6 +33,25 @@ public class ConstructorInstance implements Visible {
 		this.parameters = new ArrayList<>();
 		this.directDependencies = new ArrayList<>();
 	}
+	
+	/**
+	 * Creates an instance of ConstructorInstance from another instance
+	 * @param c
+	 * 			the other instance
+	 */
+	public ConstructorInstance(ConstructorInstance c) {
+		this.visibility = c.visibility;
+		this.parameters = new ArrayList<>();
+		this.directDependencies = new ArrayList<>();
+		
+		for(Type t: c.parameters) {
+			this.parameters.add(new Type(t));
+		}
+		
+		for(MethodInstance m : c.directDependencies) {
+			this.directDependencies.add(new MethodInstance(m));
+		}
+	}
 
 	/**
 	 * Creates an instance of ConstructorInstance

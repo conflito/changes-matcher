@@ -19,6 +19,10 @@ public class MethodInvocationInstance {
 		super();
 		this.invokedMethod = invokedMethod;
 	}
+	
+	public MethodInvocationInstance(MethodInvocationInstance m) {
+		this.invokedMethod = new MethodInstance(m.invokedMethod);
+	}
 
 	@Override
 	public int hashCode() {

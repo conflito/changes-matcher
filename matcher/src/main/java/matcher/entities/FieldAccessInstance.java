@@ -24,6 +24,16 @@ public class FieldAccessInstance {
 		this.qualifiedName = qualifiedName;
 		this.accessType = accessType;
 	}
+	
+	/**
+	 * Creates an instance of FieldAccessInstance from another instance
+	 * @param access
+	 * 			the other instance
+	 */
+	public FieldAccessInstance(FieldAccessInstance access) {
+		this.qualifiedName = access.qualifiedName;
+		this.accessType = access.accessType;
+	}
 
 	/**
 	 * Get the name of the accessed field

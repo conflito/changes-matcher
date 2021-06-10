@@ -70,6 +70,33 @@ public class MethodInstance implements Visible {
 	}
 	
 	/**
+	 * Creates an instance of MethodInstance from another instance
+	 * @param m
+	 * 			the other instance
+	 */
+	public MethodInstance(MethodInstance m) {
+		this.name = m.name;
+		this.visibility = m.visibility;
+		this.returnType = new Type(m.returnType);
+		
+		this.parameters = new ArrayList<>();
+		this.fieldAccesses = new ArrayList<>();
+		this.directDependencies = new ArrayList<>();
+		
+		for(Type t: m.parameters) {
+			this.parameters.add(new Type(t));
+		}
+		
+		for(FieldAccessInstance f: m.fieldAccesses) {
+			this.fieldAccesses.add(new FieldAccessInstance(f));
+		}
+		
+		for(MethodInstance d: m.directDependencies) {
+			this.directDependencies.add(new MethodInstance(d));
+		}
+	}
+	
+	/**
 	 * Get this method's direct dependencies
 	 * @return this method's direct dependencies
 	 */

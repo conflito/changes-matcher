@@ -19,6 +19,15 @@ public class InterfaceInstance {
 		super();
 		this.name = name;
 	}
+	
+	/**
+	 * Creates an instance of InterfaceInstance from another instance
+	 * @param i
+	 * 			the other instance
+	 */
+	public InterfaceInstance(InterfaceInstance i) {
+		this.name = i.name;
+	}
 
 	/**
 	 * Get the interface's qualified name

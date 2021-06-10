@@ -25,6 +25,15 @@ public class Type {
 	}
 	
 	/**
+	 * Creates an instance of Type from another instance
+	 * @param t
+	 * 			the other instance
+	 */
+	public Type(Type t) {
+		this.typeRef = t.typeRef.clone();
+	}
+	
+	/**
 	 * Get this type's name
 	 * @return the qualified name of this type
 	 */
