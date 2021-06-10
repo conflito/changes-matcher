@@ -254,6 +254,13 @@ public class ClassInstance {
 	}
 	
 	/**
+	 * Removes the methods from this class
+	 */
+	public void clearMethods() {
+		methods = new ArrayList<>();
+	}
+	
+	/**
 	 * Adds an implementation of an interface to this class
 	 * @param i
 	 * 			the interface implementation to add

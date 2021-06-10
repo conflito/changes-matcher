@@ -67,7 +67,19 @@ public class ClassProcessor implements Processor<ClassInstance, CtClass<?>>{
 		if(conflictPattern.hasFields() && !result.hasFields())
 			processFields(element, result);
 		if(conflictPattern.hasMethods()) {
-			List<MethodInstance> methods = processMethods(element, result);
+			List<MethodInstance> methods;
+			if(!result.hasMethods()) {
+				methods = processMethods(element, result);
+			}
+			else if((conflictPattern.hasInvocations() && !result.hasInvocations()) ||
+					conflictPattern.hasFieldAccesses() && !result.hasFieldAccesses()) {
+				result.clearMethods();
+				methods = processMethods(element, result);
+			}
+			else {
+				methods = result.getMethods();
+			}
+
 			if(conflictPattern.hasCompatibleMethods() && !result.hasCompatibles())
 				processCompatibleMethods(methods, result);
 		}
