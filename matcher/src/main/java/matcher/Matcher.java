@@ -56,7 +56,8 @@ public class Matcher {
 				variants2File);
 		
 		ExecutorService es = Executors.newFixedThreadPool(
-				PropertiesHandler.getInstance().getNumberThreads());
+				PropertiesHandler.getInstance().getNumberThreads(),
+				new UnsettleThreadFactory());
 		Semaphore sem = new Semaphore(1);
 		
 		for(ConflictPattern cp: conflictsCatalog.getPatterns()) {
@@ -92,7 +93,7 @@ public class Matcher {
 		SpoonHandler.getInstance().loadLaunchers(basesFile, variants1File, 
 				variants2File);
 		
-		ExecutorService es = Executors.newCachedThreadPool();
+		ExecutorService es = Executors.newCachedThreadPool(new UnsettleThreadFactory());
 		Semaphore sem = new Semaphore(1);
 		ConflictPattern cp = conflictsCatalog.getPattern(conflictName);
 		
@@ -126,7 +127,8 @@ public class Matcher {
 		List<List<Pair<Integer, String>>> result = new ArrayList<>();
 		
 		ExecutorService es = Executors.newFixedThreadPool(
-				PropertiesHandler.getInstance().getNumberThreads());
+				PropertiesHandler.getInstance().getNumberThreads(),
+				new UnsettleThreadFactory());
 		
 		List<MatchingRunnable> runnables = new ArrayList<>();
 		List<Future<List<List<Pair<Integer, String>>>>> futures = new ArrayList<>();
@@ -197,7 +199,7 @@ public class Matcher {
 		SpoonHandler.getInstance().loadLaunchers(basesFile, variants1File, 
 				variants2File);
 		
-		ExecutorService es = Executors.newCachedThreadPool();
+		ExecutorService es = Executors.newCachedThreadPool(new UnsettleThreadFactory());
 		
 		Semaphore sem = new Semaphore(1);
 		
