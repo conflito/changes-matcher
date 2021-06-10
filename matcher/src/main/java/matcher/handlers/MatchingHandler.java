@@ -56,20 +56,63 @@ public class MatchingHandler {
 		if(!cp.fitForMatch(ci))
 			return result;
 			
-		List<Pair<Integer, List<String>>> variablePossibleValues = variableValues(ci, cp);
-
-		List<List<Pair<Integer, String>>> combinations = calculateResults(variablePossibleValues, cp);
-
-		for(List<Pair<Integer, String>> l: combinations) {
-			assignValues(cp, l);
-			if(cp.matches(ci)) {
-				result.add(l);
-				matchedPatterns.add(new ConflictPattern(cp));
-			}
-			cp.clean();
-		}
+		List<Pair<Integer, List<String>>> variablePossibleValues = identifyVariableValues(ci, cp);
+		
+		calculateMatchings(ci, cp, variablePossibleValues, new ArrayList<>(), result);
+		
 		return result;
 	}
+	
+	private void calculateMatchings(ChangeInstance ci, ConflictPattern cp, 
+			List<Pair<Integer, List<String>>> variablePossibleValues,
+			List<Pair<Integer, String>> currentAssignment,
+			List<List<Pair<Integer, String>>> result){
+		
+		if(!variablePossibleValues.isEmpty()) {
+			Pair<Integer, List<String>> nextVariablePairValues = 
+					variablePossibleValues.get(0);
+			variablePossibleValues.remove(0);
+			int varId = nextVariablePairValues.getFirst();
+			List<String> varValues = nextVariablePairValues.getSecond();
+			for(String possibleValue: varValues) {
+				currentAssignment.add(new Pair<>(varId, possibleValue));
+				calculateMatchings(ci, cp, new ArrayList<>(variablePossibleValues), 
+						new ArrayList<>(currentAssignment), result);
+				currentAssignment.remove(currentAssignment.size()-1);
+			}
+		}
+		else {
+			if(validAssignment(cp, currentAssignment))
+				checkMatching(ci, cp, currentAssignment, result);
+		}
+	}
+	
+	private void checkMatching(ChangeInstance ci, ConflictPattern cp,
+			List<Pair<Integer, String>> assignment,
+			List<List<Pair<Integer, String>>> result) {
+		
+		assignValues(cp, assignment);
+		if(cp.matches(ci)) {
+			result.add(assignment);
+			matchedPatterns.add(new ConflictPattern(cp));
+		}
+		cp.clean();
+	}
+	
+	private boolean validAssignment(ConflictPattern cp, 
+			List<Pair<Integer, String>> assignment) {
+		for(int i = 0; i < assignment.size(); i++) {
+			for(int j = i + 1; j < assignment.size(); j++) {
+				Pair<Integer, String> p1 = assignment.get(i);
+				Pair<Integer, String> p2 = assignment.get(j);
+				if(p1.getSecond().equals(p2.getSecond()) &&
+						!cp.canBeEqual(p1.getFirst(), p2.getFirst()))
+					return false;
+			}
+		}
+		return true;
+	}
+	
 	
 	public List<String> getTestBDDs(){
 		return matchedPatterns.stream()
@@ -95,7 +138,7 @@ public class MatchingHandler {
 		}
 	}
 
-	private List<Pair<Integer, List<String>>> variableValues(ChangeInstance ci, ConflictPattern cp){
+	private List<Pair<Integer, List<String>>> identifyVariableValues(ChangeInstance ci, ConflictPattern cp){
 		Map<Integer, List<String>> result = fvi.identify(ci, cp);
 		Map<Integer, List<String>> methods = mvi.identify(ci, cp);
 		Map<Integer, List<String>> constructors = cvi.identify(ci, cp);
@@ -119,53 +162,6 @@ public class MatchingHandler {
 		for(Entry<Integer, List<String>> e: values.entrySet()) {
 			Pair<Integer, List<String>> p = new Pair<>(e.getKey(), e.getValue());
 			result.add(p);
-		}
-		return result;
-	}
-
-	private List<List<Pair<Integer, String>>> calculateResults(List<Pair<Integer, List<String>>> values,
-			ConflictPattern cp) {
-		List<List<Pair<Integer, String>>> result = new ArrayList<>();
-		calculateResults(values, result, new ArrayList<>(), cp);
-		return result;
-	}
-	
-	private void calculateResults(List<Pair<Integer, List<String>>> values, 
-			List<List<Pair<Integer, String>>> result, List<Pair<Integer, String>> curr
-			, ConflictPattern cp) {
-		if(!values.isEmpty()) {
-			Pair<Integer, List<String>> p = values.get(0);
-			values.remove(0);
-			int varId = p.getFirst();
-			List<String> varValues = p.getSecond();
-			for(String s: varValues) {
-				curr.add(new Pair<>(varId, s));
-				calculateResults(forwardCheck(values, varId, s, cp), result, new ArrayList<>(curr), cp);
-				curr.remove(curr.size()-1);
-			}
-		}
-		else {
-			result.add(curr);
-		}
-	}
-	
-	private List<Pair<Integer, List<String>>> forwardCheck(List<Pair<Integer, List<String>>> values, 
-			int id, String value, ConflictPattern cp) {
-		List<Pair<Integer, List<String>>> result = new ArrayList<>();
-		for(Pair<Integer, List<String>> p: values) {
-			if(cp.canBeEqual(id, p.getFirst())) {
-				result.add(new Pair<>(p.getFirst(), p.getSecond()));
-			}
-			else {
-				List<String> trimmedValues = new ArrayList<>();
-				for(String s: p.getSecond()) {
-					
-					if(!s.equals(value))
-						trimmedValues.add(s);
-				}
-				result.add(new Pair<>(p.getFirst(), trimmedValues));
-			}
-			
 		}
 		return result;
 	}
