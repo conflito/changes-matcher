@@ -30,7 +30,7 @@ public class Type {
 	 * 			the other instance
 	 */
 	public Type(Type t) {
-		this.typeRef = t.typeRef.clone();
+		this.typeRef = t.typeRef;
 	}
 	
 	/**
