@@ -92,7 +92,10 @@ public class MethodInstance implements Visible {
 		}
 		
 		for(MethodInstance d: m.directDependencies) {
-			this.directDependencies.add(d);
+			if(m.directDependencies.contains(this))
+				this.directDependencies.add(this);
+			else
+				this.directDependencies.add(new MethodInstance(d));
 		}
 	}
 	
