@@ -35,6 +35,8 @@ public class TestFabricatedInstances {
 	
 	private static final String CSS_UNEXPECTED_OVERRIDING = "css2021_projeto1_009_UN" + File.separator;
 	
+	private static final String CSS_NO_CONFLICT = "css2021_projeto1_009_no_conflict" + File.separator;
+	
 	@Test
 	public void aedDependencyBasedTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER + AED_FOLDER + "config.properties");
@@ -642,5 +644,70 @@ public class TestFabricatedInstances {
 		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
 		assertEquals("hashCode()", assignments.get(3).getSecond(), 
 				"Overwritten method is not hashCode()?");
+	}
+	
+	@Test
+	public void cssNoConflictTest() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER + CSS_NO_CONFLICT + "config.properties");
+		
+		String seat = "src" + File.separator + "main" + File.separator + "java" + 
+				File.separator + "business" + File.separator + "event" + File.separator +
+				"Seat.java";
+		
+		String handler = "src" + File.separator + "main" + File.separator + "java" + 
+				File.separator + "business" + File.separator + "handlers" + File.separator +
+				"CreateEventHandler.java";
+		
+		String producer = "src" + File.separator + "main" + File.separator + "java" + 
+				File.separator + "business" + File.separator + "Producer" + File.separator +
+				"Producer.java";
+		
+		String coupleTicket = "src" + File.separator + "main" + File.separator + "java" + 
+				File.separator + "business" + File.separator + "ticket" + File.separator +
+				"CouplesTicket.java";
+		
+		String familyTicket = "src" + File.separator + "main" + File.separator + "java" + 
+				File.separator + "business" + File.separator + "ticket" + File.separator +
+				"FamilyTicket.java";
+		
+		String[] baseFiles = {
+				SRC_FOLDER + CSS_NO_CONFLICT + File.separator + "base" +
+						File.separator + seat,
+				SRC_FOLDER + CSS_NO_CONFLICT + File.separator + "base" +
+						File.separator + handler,
+				SRC_FOLDER + CSS_NO_CONFLICT + File.separator + "base" +
+						File.separator + producer,
+				null,
+				null
+		};
+		
+		String[] variants1Files = {
+				SRC_FOLDER + CSS_NO_CONFLICT + File.separator + "branch01" +
+						File.separator + seat,
+				SRC_FOLDER + CSS_NO_CONFLICT + File.separator + "branch01" +
+						File.separator + handler,
+				SRC_FOLDER + CSS_NO_CONFLICT + File.separator + "branch01" +
+						File.separator + producer,
+				null,
+				null
+		};
+		
+		String[] variants2Files = {
+				SRC_FOLDER + CSS_NO_CONFLICT + File.separator + "branch02" +
+						File.separator + seat,
+				SRC_FOLDER + CSS_NO_CONFLICT + File.separator + "branch02" +
+						File.separator + handler,
+				SRC_FOLDER + CSS_NO_CONFLICT + File.separator + "branch02" +
+						File.separator + producer,
+				SRC_FOLDER + CSS_NO_CONFLICT + File.separator + "branch02" +
+						File.separator + coupleTicket,
+				SRC_FOLDER + CSS_NO_CONFLICT + File.separator + "branch02" +
+						File.separator + familyTicket
+		};
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files);
+		
+		assertEquals(0, result.size(), "Found a conflict when there is none?");
 	}
 }
