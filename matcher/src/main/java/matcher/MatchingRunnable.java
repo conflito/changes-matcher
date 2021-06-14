@@ -107,4 +107,8 @@ public class MatchingRunnable implements Callable<List<List<Pair<Integer, String
 	public List<Pair<String, List<String>>> getTestingGoals(){
 		return mh.getTestingGoals();
 	}
+	
+	public String getConflictName() {
+		return cp.getConflictName();
+	}
 }
