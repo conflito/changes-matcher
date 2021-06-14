@@ -1,7 +1,9 @@
 package matcher.catalogs;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import matcher.exceptions.ApplicationException;
@@ -30,7 +32,14 @@ public class ConflictPatternCatalog {
 	}
 	
 	public Iterable<ConflictPattern> getPatterns(){
-		return patterns.values();
+		List<ConflictPattern> result = new ArrayList<>();
+		for(ConflictPattern cp: patterns.values()) {
+			if(cp.getConflictName().startsWith("Parallel"))
+				result.add(0, cp);
+			else
+				result.add(cp);
+		}
+		return result;
 	}
 	
 	private void loadPatterns() throws ApplicationException {

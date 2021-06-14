@@ -62,6 +62,7 @@ public class DeleteActionsProcessor extends DeltaProcessor implements CtVisitor{
 	@Override
 	public <T> void visitCtInvocation(CtInvocation<T> invocation) {
 		if(SpoonHandler.validInvocation(invocation) && 
+				SpoonHandler.getMethodFromInvocation(invocation) != null &&
 				(SpoonHandler.invocationOfObjectMethod(invocation) ||
 				SpoonHandler.invocationFromTheSystem(invocation))) {
 			if(getConflictPattern().hasDeleteInvocationActions()) {
