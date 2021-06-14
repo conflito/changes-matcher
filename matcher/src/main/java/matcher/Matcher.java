@@ -155,11 +155,9 @@ public class Matcher {
 						result.addAll(future.get());
 						testingGoals.addAll(mt.getTestingGoals());
 					} catch (InterruptedException e) {
-						logger.error("Interruption error. Shutting down...");
-						es.shutdownNow();
-						throw new ApplicationException("Interrupted execution");
+						logger.warn("Interruption...");
 					} catch (ExecutionException e) {
-						logger.error("Error in execution. Shutting down...");
+						logger.error("Error in execution for " + mt.getConflictName());
 						es.shutdownNow();
 						throw new ApplicationException("Error in execution");
 					}
