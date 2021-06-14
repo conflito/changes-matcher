@@ -93,7 +93,7 @@ public class UnsettleRunnable implements Runnable{
 			logger.info(e.getMessage());
 			return ;
 		}
-		
+		logger.info("Finished matching for " + cp.getConflictName() + "...");
 		runEvoSuite();
 	}
 	
