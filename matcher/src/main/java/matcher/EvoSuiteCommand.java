@@ -1,7 +1,12 @@
 package matcher;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 
 import matcher.exceptions.ApplicationException;
@@ -15,10 +20,10 @@ public class EvoSuiteCommand {
 	
 	private final static String CMD_LINE_TEMPLATE = 
 			"-projectCP %s -class %s -criterion methodcall " + 
-		    "-Dcover_methods=\"%s\" -Dinstrument_context=true " +
+		    "-Dcover_methods=\"%s\" " +
 		    "-Dtest_factory=multi_test -Dregressioncp=\"%s\" " +
 		    "-Dsecond_regressioncp=\"%s\" -Dassertion_strategy=specific " +
-		    "-Dreplace_calls=false -Ddistance_threshold=%f -Dsearch_budget=%d";
+		    "-Dreplace_calls=false -Ddistance_threshold=%f -Dsearch_budget=%d -Dtest_dir=%s";
 	
 	private final static String METHOD_DELIMITIER = ":";
 	
@@ -31,6 +36,8 @@ public class EvoSuiteCommand {
 	
 	private final double distanceThreshold;
 	private final int timeBudget;
+	private final boolean useNotAll;
+	private final String outputDir;
 	
 	public EvoSuiteCommand(String targetClass, List<String> targetMethods) 
 			throws ApplicationException {
@@ -46,13 +53,39 @@ public class EvoSuiteCommand {
 		this.distanceThreshold =
 				PropertiesHandler.getInstance().getDistanceThreshold();
 		this.timeBudget = PropertiesHandler.getInstance().getTimeBudget();
+		
+		this.useNotAll = useNotAll(targetMethods);
+		
+		LocalDateTime timestamp = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+		String formatDateTime = timestamp.format(formatter);
+		this.outputDir = "unsettle" + File.separator + targetClass + File.separator + 
+				formatDateTime;
 	}
 	
-	public String getCommand() {		
+	private boolean useNotAll(List<String> targetMethods) {
+		if(targetMethods.size() == 1)
+			return true;
+		
+		Set<String> set = new HashSet<>();
+		for(String method: targetMethods) {
+			String[] components = method.split("\\.");
+			components[components.length - 1] = "";
+			String classString = String.join(".", components);
+			set.add(classString);
+		}
+		return set.size() == 1;
+	}
+	
+	public String getCommand() {
+		String notAll = "";
+		if(useNotAll)
+			notAll = " -Dnot_all=true";
+		
 		return "java -jar " + EVO_LOCATION + " " + 
 				String.format(CMD_LINE_TEMPLATE, mergeClassPath, targetClass, 
 				targetMethods, firstVariantClassPath, secondVariantClassPath, 
-				distanceThreshold, timeBudget);
+				distanceThreshold, timeBudget, outputDir) + notAll;
 	}
 	
 	public void run() throws ApplicationException {
@@ -66,7 +99,7 @@ public class EvoSuiteCommand {
 		}
 		EvoSuiteGobbler gobbler = new EvoSuiteGobbler(
 				process.getInputStream(), System.out::println);
-		Executors.newSingleThreadExecutor().submit(gobbler);
+		Executors.newSingleThreadExecutor(new UnsettleThreadFactory()).submit(gobbler);
 		try {
 			process.waitFor();
 		} catch (InterruptedException e) {
