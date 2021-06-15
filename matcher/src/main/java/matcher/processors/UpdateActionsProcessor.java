@@ -97,7 +97,6 @@ public class UpdateActionsProcessor extends DeltaProcessor implements CtVisitor{
 	private void visitInvocationUpdate(CtInvocation<?> invocation) {
 		if(SpoonHandler.validInvocation(invocation) &&
 				SpoonHandler.getMethodFromInvocation(invocation) != null) {
-			System.out.println(invocation);
 			CtMethod<?> oldInvocation = SpoonHandler.getMethodFromInvocation(invocation);
 			CtMethod<?> newInvocation = SpoonHandler.getMethodFromInvocation((CtInvocation<?>)newOne);
 			MethodInstance oldDependency = getMethodInstance(oldInvocation);
