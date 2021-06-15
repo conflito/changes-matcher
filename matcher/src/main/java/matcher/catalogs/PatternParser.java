@@ -96,6 +96,12 @@ public class PatternParser {
 		return new PatternParser().getPattern(filePath);
 	}
 	
+	public static ConflictPattern getConflictPattern(BufferedReader br) throws ApplicationException {
+		if(br == null)
+			throw new ApplicationException("Reader to conflict pattern can't be null");
+		return new PatternParser().getPattern(br);
+	}
+	
 	private ConflictPattern getPattern(String filePath) throws ApplicationException {
 		if(filePath == null)
 			throw new ApplicationException("Path to conflict pattern can't be null");
@@ -103,6 +109,10 @@ public class PatternParser {
 		
 		BufferedReader br = openReader(f);
 		
+		return getPattern(br);
+	}
+	
+	private ConflictPattern getPattern(BufferedReader br) throws ApplicationException {
 		String name = parseName(br);
 		
 		conflictPattern = new ConflictPattern(name);
