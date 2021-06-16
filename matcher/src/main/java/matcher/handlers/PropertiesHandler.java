@@ -1,5 +1,6 @@
 package matcher.handlers;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,12 +28,14 @@ public class PropertiesHandler {
 	public static final String TIME_BUDGET_KEY = "time.budget";
 	public static final String MATCHING_BUDGET_KEY = "matching.budget";
 	public static final String THREAD_NUMBER_KEY = "thread.number";
+	public static final String EVOSUITE_LOCATION_KEY = "evosuite.location";
 	
 	//Default values for configurable properties
 	private static final double DEFAULT_DISTANCE_THRESHOLD = 0.05d;
 	private static final int DEFAULT_TIME_BUDGET = 60;
 	private static final int DEFAULT_MATCHING_BUDGET = 120;
 	private static final int DEFAULT_THREADS = 2;
+	private static final String DEFAULT_EVOSUITE_LOCATION = "." + File.separator + "evosuite.jar";
 	
 	private Properties prop;
 	
@@ -151,6 +154,16 @@ public class PropertiesHandler {
 		else if(result <= 0)
 			return DEFAULT_THREADS;
 		return result;
+	}
+	
+	public String getEvoSuiteLocation() {
+		if(!hasEvoSuiteLocation())
+			return DEFAULT_EVOSUITE_LOCATION;
+		return prop.getProperty(EVOSUITE_LOCATION_KEY);
+	}
+	
+	private boolean hasEvoSuiteLocation() {
+		return prop.containsKey(EVOSUITE_LOCATION_KEY);
 	}
 	
 	private boolean hasThreadNumber() {

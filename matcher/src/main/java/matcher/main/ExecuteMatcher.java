@@ -187,6 +187,11 @@ public class ExecuteMatcher {
 				bw.append("# Number of threads to run in parallel");
 				bw.newLine();
 				bw.append("#" + PropertiesHandler.THREAD_NUMBER_KEY + "=2");
+				bw.newLine();
+				bw.newLine();
+				bw.append("# EvoSuite jar location");
+				bw.newLine();
+				bw.append("#" + PropertiesHandler.EVOSUITE_LOCATION_KEY + "=.");
 				
 				
 				bw.close();

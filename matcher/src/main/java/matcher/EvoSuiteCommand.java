@@ -14,9 +14,11 @@ import matcher.handlers.PropertiesHandler;
 
 public class EvoSuiteCommand {
 
-	private final static String EVO_LOCATION = ".." + File.separator + "evosuite" +
-			File.separator + "master" + File.separator + "target" + File.separator +
-			"evosuite-master-1.0.6.jar";
+//	private final static String EVO_LOCATION = ".." + File.separator + "evosuite" +
+//			File.separator + "master" + File.separator + "target" + File.separator +
+//			"evosuite-master-1.0.6.jar";
+	
+//	private final static String EVO_LOCATION = "evosuite.jar";
 	
 	private final static String CMD_LINE_TEMPLATE = 
 			"-projectCP %s -class %s -criterion methodcall " + 
@@ -39,6 +41,8 @@ public class EvoSuiteCommand {
 	private final boolean useNotAll;
 	private final String outputDir;
 	
+	private final String evosuiteLocation;
+	
 	public EvoSuiteCommand(String targetClass, List<String> targetMethods) 
 			throws ApplicationException {
 		super();
@@ -55,6 +59,8 @@ public class EvoSuiteCommand {
 		this.timeBudget = PropertiesHandler.getInstance().getTimeBudget();
 		
 		this.useNotAll = useNotAll(targetMethods);
+		
+		this.evosuiteLocation = PropertiesHandler.getInstance().getEvoSuiteLocation();
 		
 		LocalDateTime timestamp = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
@@ -82,7 +88,7 @@ public class EvoSuiteCommand {
 		if(useNotAll)
 			notAll = " -Dnot_all=true";
 		
-		return "java -jar " + EVO_LOCATION + " " + 
+		return "java -jar " + evosuiteLocation + " " + 
 				String.format(CMD_LINE_TEMPLATE, mergeClassPath, targetClass, 
 				targetMethods, firstVariantClassPath, secondVariantClassPath, 
 				distanceThreshold, timeBudget, outputDir) + notAll;
