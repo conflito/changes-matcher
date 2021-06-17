@@ -40,6 +40,10 @@ public class TestFabricatedInstances {
 	
 	private static final String CSS_NO_CONFLICT = "css2021_projeto1_009_no_conflict" + File.separator;
 	
+	private static final String CSS_NO_CONFLICT_2 = "css_047_no_conflict" + File.separator;
+	
+	private static final String CSS_NO_CONFLICT_3 = "css_009_no_conflict_2" + File.separator;
+	
 	@Test
 	public void aedDependencyBasedTest() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER + AED_FOLDER + "config.properties");
@@ -713,7 +717,118 @@ public class TestFabricatedInstances {
 		
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files);
-		
+		logger.info("FINISHED");
 		assertEquals(0, result.size(), "Found a conflict when there is none?");
+	}
+	
+	@Test
+	public void cssNoConflictTest2() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER + CSS_NO_CONFLICT_2 + "config.properties");
+		
+		String client = "src" + File.separator + "main" + File.separator + "java" + 
+				File.separator + "client" + File.separator +
+				"SimpleClient.java";
+
+		
+		String lugarDTO = "src" + File.separator + "main" + File.separator + "java" + 
+				File.separator + "facade" + File.separator + "dto" + File.separator +
+				"LugarDTO.java";
+		
+		String[] baseFiles = {
+				SRC_FOLDER + CSS_NO_CONFLICT_2 + File.separator + "base" +
+						File.separator + "Bilges" + File.separator + client,
+				SRC_FOLDER + CSS_NO_CONFLICT_2 + File.separator + "base" +
+						File.separator + "Bilges" + File.separator + lugarDTO,
+		};
+		
+		String[] variants1Files = {
+				SRC_FOLDER + CSS_NO_CONFLICT_2 + File.separator + "branch01" +
+						File.separator + "Bilges" + File.separator + client,
+				SRC_FOLDER + CSS_NO_CONFLICT_2 + File.separator + "branch01" +
+						File.separator + "Bilges" + File.separator + lugarDTO,
+		};
+		
+		String[] variants2Files = {
+				SRC_FOLDER + CSS_NO_CONFLICT_2 + File.separator + "branch02" +
+						File.separator + "Bilges" + File.separator + client,
+				SRC_FOLDER + CSS_NO_CONFLICT_2 + File.separator + "branch02" +
+						File.separator + "Bilges" + File.separator + lugarDTO,
+		};
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files);
+		System.out.println(result);
+		logger.info("FINISHED!");
+	}
+	
+	@Test
+	public void cssNoConflictTest3() throws ApplicationException {
+		Matcher matcher = new Matcher(SRC_FOLDER + CSS_NO_CONFLICT_3 + "config.properties");
+		
+		//EventCatalog
+		//TicketCatalog (new in branch01)
+		//Customer (new in branch02)
+		//Event
+		//Ticket
+		
+		String eventCatalog = "src" + File.separator + "main" + File.separator + "java" + 
+				File.separator + "business" + File.separator + "catalogs" + File.separator +
+				"EventCatalog.java";
+		
+		String ticketCatalog = "src" + File.separator + "main" + File.separator + "java" + 
+				File.separator + "business" + File.separator + "catalogs" + File.separator +
+				"TicketCatalog.java";
+		
+		String customer = "src" + File.separator + "main" + File.separator + "java" + 
+				File.separator + "business" + File.separator + "entities" + File.separator +
+				"Customer.java";
+		
+		String event = "src" + File.separator + "main" + File.separator + "java" + 
+				File.separator + "business" + File.separator + "entities" + File.separator +
+				"Event.java";
+		
+		String ticket = "src" + File.separator + "main" + File.separator + "java" + 
+				File.separator + "business" + File.separator + "entities" + File.separator +
+				"Ticket.java";
+		
+		String[] baseFiles = {
+				SRC_FOLDER + CSS_NO_CONFLICT_3 + File.separator + "base" +
+						File.separator + eventCatalog,
+				null,
+				null,
+				SRC_FOLDER + CSS_NO_CONFLICT_3 + File.separator + "base" +
+						File.separator + event,
+				SRC_FOLDER + CSS_NO_CONFLICT_3 + File.separator + "base" +
+						File.separator + ticket,
+		};
+		
+		String[] variants1Files = {
+				SRC_FOLDER + CSS_NO_CONFLICT_3 + File.separator + "branch01" +
+						File.separator + eventCatalog,
+				SRC_FOLDER + CSS_NO_CONFLICT_3 + File.separator + "branch01" +
+						File.separator + ticketCatalog,
+				null,
+				SRC_FOLDER + CSS_NO_CONFLICT_3 + File.separator + "branch01" +
+						File.separator + event,
+				SRC_FOLDER + CSS_NO_CONFLICT_3 + File.separator + "branch01" +
+						File.separator + ticket
+		};
+		
+		String[] variants2Files = {
+				SRC_FOLDER + CSS_NO_CONFLICT_3 + File.separator + "branch02" +
+						File.separator + eventCatalog,
+				null,
+				SRC_FOLDER + CSS_NO_CONFLICT_3 + File.separator + "branch02" +
+						File.separator + customer,
+				SRC_FOLDER + CSS_NO_CONFLICT_3 + File.separator + "branch02" +
+						File.separator + event,
+				SRC_FOLDER + CSS_NO_CONFLICT_3 + File.separator + "branch02" +
+						File.separator + ticket,
+		};
+		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files);
+		System.out.println(result);
+		logger.info("FINISHED!");
 	}
 }
