@@ -1,7 +1,0 @@
-/target/
-/.settings
-/.project
-/.classpath
-/src/test/java/matcher/TestRealInstances.java
-/src/test/resources/RealMergeScenarios/
-/src/test/resources/SemanticConflictsInstances/Testing/
