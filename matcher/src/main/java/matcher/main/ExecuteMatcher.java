@@ -23,11 +23,14 @@ public class ExecuteMatcher {
 			System.exit(0);
 		}
 		
-		String baseFilePaths[] = cmd.getOptionValue('b').split(";");
-		String var1FilePaths[] = cmd.getOptionValue("v1").split(";");
-		String var2FilePaths[] = cmd.getOptionValue("v2").split(";");
+		String baseFilePaths[] = cmd.getOptionValue('b').split(";", -1);
+		String var1FilePaths[] = cmd.getOptionValue("v1").split(";", -1);
+		String var2FilePaths[] = cmd.getOptionValue("v2").split(";", -1);
 		String configFilePath = cmd.getOptionValue('c');
 		
+		turnEmptyToNull(baseFilePaths);
+		turnEmptyToNull(var1FilePaths);
+		turnEmptyToNull(var2FilePaths);
 		Matcher matcher = new Matcher(configFilePath);
 		
 		if(cmd.hasOption("mo")) {
@@ -51,6 +54,13 @@ public class ExecuteMatcher {
 			}
 			else
 				matcher.match(baseFilePaths, var1FilePaths, var2FilePaths);
+		}
+	}
+	
+	private static void turnEmptyToNull(String[] a) {
+		for (int i = 0; i < a.length; i++) {
+			if(a[i].equals(""))
+				a[i] = null;
 		}
 	}
 	
