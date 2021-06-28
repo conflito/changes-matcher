@@ -12,16 +12,18 @@ import matcher.handlers.PropertiesHandler;
 import matcher.utils.Pair;
 
 import org.apache.commons.cli.*;
+import org.apache.commons.lang3.ArrayUtils;
 
 public class ExecuteMatcher {
 
 	public static void main(String[] args) throws ApplicationException {
-		CommandLine cmd = getCommandLine(args);
 		
-		if(cmd.hasOption("ch")) {
+		if(ArrayUtils.contains(args, "-ch")) {
 			dumpConfigFileTemplate();
 			System.exit(0);
 		}
+		
+		CommandLine cmd = getCommandLine(args);		
 		
 		String baseFilePaths[] = cmd.getOptionValue('b').split(";", -1);
 		String var1FilePaths[] = cmd.getOptionValue("v1").split(";", -1);
