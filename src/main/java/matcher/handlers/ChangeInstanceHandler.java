@@ -72,6 +72,8 @@ public class ChangeInstanceHandler {
 	private List<DeltaInstance> processDeltas(File[] bases, File[] variants1, File[] variants2, 
 			ConflictPattern  cp) throws ApplicationException {
 		List<DeltaInstance> result = new ArrayList<>();
+		DeltaInstance d1 = new DeltaInstance();
+		DeltaInstance d2 = new DeltaInstance();
 		for(int i = 0; i < bases.length; i++) {
 			File base = bases[i];
 			File variant1 = variants1[i];
@@ -89,15 +91,17 @@ public class ChangeInstanceHandler {
 				var1Type = getFullCtType(variant1, 
 						SpoonHandler.getInstance().firstVariantTypes());
 				diff = dih.diff(baseType, var1Type);
-				result.add(dih.getDeltaInstance(diff, var1Type, cp));
+				d1.join(dih.getDeltaInstance(diff, var1Type, cp));
 			}
 			if(variant2 != null) {
 				var2Type = getFullCtType(variant2, 
 						SpoonHandler.getInstance().secondVariantTypes());
 				diff = dih.diff(baseType, var2Type);
-				result.add(dih.getDeltaInstance(diff, var2Type, cp));
+				d2.join(dih.getDeltaInstance(diff, var2Type, cp));
 			}
 		}
+		result.add(d1);
+		result.add(d2);
 		return result;
 	}
 }

@@ -19,6 +19,12 @@ public class DeltaInstance {
 		this.actions.add(action);
 	}
 	
+	public void join(DeltaInstance d) {
+		for(ActionInstance a: d.actions) {
+			addActionInstance(a);
+		}
+	}
+	
 	public List<ActionInstance> getActionInstances(){
 		return new ArrayList<>(actions);
 	}
