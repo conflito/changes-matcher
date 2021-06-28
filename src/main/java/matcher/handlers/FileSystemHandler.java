@@ -33,11 +33,17 @@ public class FileSystemHandler {
 		return filenames.contains(fileName);
 	}
 	
-	private void searchSourceFiles(String dirName){
+	private void searchSourceFiles(String dirName) throws ApplicationException{
 		if(dirName != null) {
 			File dir = new File(dirName);
-			searchSourceFiles(dir);
+			if(dir.exists())
+				searchSourceFiles(dir);
+			else {
+				throw new ApplicationException("Unknown source code directory: " + dirName);
+			}
 		}
+		else
+			throw new ApplicationException("Unknown source code directory: " + dirName);
 	}
 	
 	private void searchSourceFiles(File dir) {
