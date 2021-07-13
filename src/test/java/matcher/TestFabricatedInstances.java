@@ -83,10 +83,31 @@ public class TestFabricatedInstances {
 						File.separator + cloneIntTest
 		};
 		
-		System.out.println(
-				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files));
-//		matcher.match(baseFiles, variants1Files, variants2Files);
-		logger.info("FINISHED!");
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(baseFiles, variants1Files, 
+						variants2Files, "Dependency Based (new class)");
+		
+		assertEquals(5, result.size(), "Not fives result for aed project?");
+		
+		List<Pair<Integer,String>> assignments = result.get(4);
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("datatypes.ADLList", assignments.get(0).getSecond(), 
+				"Class with updated method is not datatypes.ADLList");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("ADLListStringBuilderCloneTest", assignments.get(1).getSecond(), 
+				"New class is not ADLListStringBuilderCloneTest");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("copyNodes(datatypes.ADLList)", 
+				assignments.get(2).getSecond(), 
+				"Method updated is not copyNodes(datatypes.ADLList)?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("testChangeOriginal(datatypes.ADLList)", assignments.get(3).getSecond(), 
+				"Method depends is not testChangeOriginal(datatypes.ADLList)?");
 	}
 	
 	@Test
@@ -117,10 +138,31 @@ public class TestFabricatedInstances {
 						File.separator + client
 		};
 		
-//		System.out.println(
-//				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files));
-		matcher.match(baseFiles, variants1Files, variants2Files);
-		logger.info("FINISHED!");
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(baseFiles, variants1Files, 
+						variants2Files, "Dependency Based (new class)");
+		
+		assertEquals(3, result.size(), "Not three result for second aed project?");
+		
+		List<Pair<Integer,String>> assignments = result.get(2);
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("PTTStringsMap", assignments.get(0).getSecond(), 
+				"Class with updated method is not PTTStringsMap");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("Client", assignments.get(1).getSecond(), 
+				"New class is not Client");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("copiaNodes(Node, Node)", 
+				assignments.get(2).getSecond(), 
+				"Method updated is not copiaNodes(Node, Node)?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("testCloneChangeOriginal()", assignments.get(3).getSecond(), 
+				"Method depends is not testCloneChangeOriginal()?");
 	}
 	
 	@Test
@@ -150,76 +192,76 @@ public class TestFabricatedInstances {
 				null
 		};
 		
-//		List<List<Pair<Integer, String>>> result = 
-//				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files);
-		matcher.match(baseFiles, variants1Files, variants2Files);
-		logger.info("FINISHED!");
-//		assertEquals(3, result.size(), "Not 3 results for dependency based?");
-//		
-//		List<Pair<Integer,String>> assignments = result.get(0);
-//		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
-//		
-//		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-//		assertEquals("Puzzle", assignments.get(0).getSecond(), 
-//					"First class is not Puzzle?");
-//		
-//		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-//		assertEquals("WordSearchTest", assignments.get(1).getSecond(), 
-//					"Second class is not WordSearchTest?");
-//		
-//		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-//		assertEquals("getWord(Move)", 
-//				assignments.get(2).getSecond(), 
-//				"Updated method is not getWord(Move)?");
-//		
-//		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-//		assertEquals("testPuzzle()", 
-//				assignments.get(3).getSecond(), 
-//				"Dependant is not testPuzzle()?");
-//		
-//		assignments = result.get(1);
-//		
-//		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
-//		
-//		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-//		assertEquals("Puzzle", assignments.get(0).getSecond(), 
-//					"First class is not Puzzle?");
-//		
-//		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-//		assertEquals("WordSearchTest", assignments.get(1).getSecond(), 
-//					"Second class is not WordSearchTest?");
-//		
-//		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-//		assertEquals("getWord(Move)", 
-//				assignments.get(2).getSecond(), 
-//				"Updated method is not getWord(Move)?");
-//		
-//		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-//		assertEquals("testWordSearch()", 
-//				assignments.get(3).getSecond(), 
-//				"Dependant is not testWordSearch()?");
-//		
-//		assignments = result.get(2);
-//		
-//		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
-//		
-//		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-//		assertEquals("Puzzle", assignments.get(0).getSecond(), 
-//					"First class is not Puzzle?");
-//		
-//		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-//		assertEquals("WordSearchTest", assignments.get(1).getSecond(), 
-//					"Second class is not WordSearchTest?");
-//		
-//		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-//		assertEquals("isHidden(char[][], java.lang.String)", 
-//				assignments.get(2).getSecond(), 
-//				"Updated method is not isHidden(char[][], java.lang.String)?");
-//		
-//		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-//		assertEquals("testPuzzle()", 
-//				assignments.get(3).getSecond(), 
-//				"Dependant is not testPuzzle()?");
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(baseFiles, variants1Files, 
+						variants2Files, "Dependency Based (new class)");
+		
+		assertEquals(3, result.size(), "Not 3 results for dependency based?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("Puzzle", assignments.get(0).getSecond(), 
+					"First class is not Puzzle?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("WordSearchTest", assignments.get(1).getSecond(), 
+					"Second class is not WordSearchTest?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("getWord(Move)", 
+				assignments.get(2).getSecond(), 
+				"Updated method is not getWord(Move)?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("testPuzzle()", 
+				assignments.get(3).getSecond(), 
+				"Dependant is not testPuzzle()?");
+		
+		assignments = result.get(1);
+		
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("Puzzle", assignments.get(0).getSecond(), 
+					"First class is not Puzzle?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("WordSearchTest", assignments.get(1).getSecond(), 
+					"Second class is not WordSearchTest?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("getWord(Move)", 
+				assignments.get(2).getSecond(), 
+				"Updated method is not getWord(Move)?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("testWordSearch()", 
+				assignments.get(3).getSecond(), 
+				"Dependant is not testWordSearch()?");
+		
+		assignments = result.get(2);
+		
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("Puzzle", assignments.get(0).getSecond(), 
+					"First class is not Puzzle?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("WordSearchTest", assignments.get(1).getSecond(), 
+					"Second class is not WordSearchTest?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("isHidden(char[][], java.lang.String)", 
+				assignments.get(2).getSecond(), 
+				"Updated method is not isHidden(char[][], java.lang.String)?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("testPuzzle()", 
+				assignments.get(3).getSecond(), 
+				"Dependant is not testPuzzle()?");
 	}
 	
 	@Test
@@ -257,55 +299,31 @@ public class TestFabricatedInstances {
 						File.separator + catalog
 		};
 		
-//		List<List<Pair<Integer, String>>> result = 
-//				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files);
-		matcher.match(baseFiles, variants1Files, variants2Files);
-		logger.info("FINISHED!");
-//		assertEquals(2, result.size(), "Not 2 result for leixel?");
-//		
-//		List<Pair<Integer,String>> assignments = result.get(0);
-//		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
-//		
-//		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-//		assertEquals("pt.ul.fc.di.dco000.domain.Leixcel", assignments.get(0).getSecond(), 
-//					"First class is not pt.ul.fc.di.dco000.domain.Leixcel?");
-//		
-//		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-//		assertEquals("pt.ul.fc.di.dco000.domain.formats.FormatCatalog", assignments.get(1).getSecond(), 
-//					"Second class is not pt.ul.fc.di.dco000.domain.formats.FormatCatalog?");
-//		
-//		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-//		assertEquals("loadFormats()", 
-//				assignments.get(2).getSecond(), 
-//				"Updated method is not loadFormats()?");
-//		
-//		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-//		assertEquals("put(pt.ul.fc.di.dco000.domain.formats.Format)", 
-//				assignments.get(3).getSecond(), 
-//				"Updated dependency is not put(pt.ul.fc.di.dco000.domain.formats.Format)?");
-//		
-//		assignments = result.get(1);
-//		
-//		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
-//		
-//		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-//		assertEquals("pt.ul.fc.di.dco000.domain.formats.FormatCatalog", assignments.get(0).getSecond(), 
-//					"First class is not pt.ul.fc.di.dco000.domain.formats.FormatCatalog?");
-//		
-//		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-//		assertEquals("pt.ul.fc.di.dco000.domain.Leixcel", assignments.get(1).getSecond(), 
-//					"Second class is not pt.ul.fc.di.dco000.domain.Leixcel?");
-//		
-//		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-//		assertEquals("put(pt.ul.fc.di.dco000.domain.formats.Format)", 
-//				assignments.get(2).getSecond(), 
-//				"Updated dependency is not put(pt.ul.fc.di.dco000.domain.formats.Format)?");
-//		
-//		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-//		assertEquals("loadFormats()", 
-//				assignments.get(3).getSecond(), 
-//				"Updated method is not loadFormats()?");
-//		
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files, "Change Method 3");
+
+		assertEquals(1, result.size(), "Not 1 result for leixel?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("pt.ul.fc.di.dco000.domain.Leixcel", assignments.get(0).getSecond(), 
+					"First class is not pt.ul.fc.di.dco000.domain.Leixcel?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("pt.ul.fc.di.dco000.domain.formats.FormatCatalog", assignments.get(1).getSecond(), 
+					"Second class is not pt.ul.fc.di.dco000.domain.formats.FormatCatalog?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("loadFormats()", 
+				assignments.get(2).getSecond(), 
+				"Updated method is not loadFormats()?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("put(pt.ul.fc.di.dco000.domain.formats.Format)", 
+				assignments.get(3).getSecond(), 
+				"Updated dependency is not put(pt.ul.fc.di.dco000.domain.formats.Format)?");
 		
 	}
 	
@@ -332,33 +350,32 @@ public class TestFabricatedInstances {
 						File.separator + instalacaoAssentos
 		};
 		
-//		List<List<Pair<Integer, String>>> result = 
-//				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files/*, 
-//						"Field Hiding"*/);
-		matcher.match(baseFiles, variants1Files, variants2Files);
-		logger.info("FINISHED");
-//		assertEquals(1, result.size(), "Not one result for field hiding?");
-//		
-//		List<Pair<Integer,String>> assignments = result.get(0);
-//		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
-//		
-//		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-//		assertEquals("business.Instalacao", assignments.get(0).getSecond(), 
-//					"First class is not business.Instalacao?");
-//		
-//		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-//		assertEquals("business.InstalacaoAssentos", assignments.get(1).getSecond(), 
-//					"Second class is not business.InstalacaoAssentos?");
-//		
-//		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-//		assertEquals("setFirstAndLastName(java.lang.String, java.lang.String)", 
-//				assignments.get(2).getSecond(), 
-//				"Method that uses field is not "
-//				+ "setFirstAndLastName(java.lang.String, java.lang.String)?");
-//		
-//		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-//		assertEquals("nome", assignments.get(3).getSecond(), 
-//				"Field is not nome?");
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(baseFiles, variants1Files, 
+						variants2Files, "Field Hiding");
+
+		assertEquals(1, result.size(), "Not one result for field hiding?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("business.Instalacao", assignments.get(0).getSecond(), 
+					"First class is not business.Instalacao?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("business.InstalacaoAssentos", assignments.get(1).getSecond(), 
+					"Second class is not business.InstalacaoAssentos?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("setFirstAndLastName(java.lang.String, java.lang.String)", 
+				assignments.get(2).getSecond(), 
+				"Method that uses field is not "
+				+ "setFirstAndLastName(java.lang.String, java.lang.String)?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("nome", assignments.get(3).getSecond(), 
+				"Field is not nome?");
 	}
 	
 	@Test
@@ -384,31 +401,31 @@ public class TestFabricatedInstances {
 						File.separator + instalacaoAssentos
 		};
 		
-//		List<List<Pair<Integer, String>>> result = 
-//				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files);
-		matcher.match(baseFiles, variants1Files, variants2Files);
-		logger.info("FINISHED!");
-//		assertEquals(2, result.size(), "Not one result for remove overriding?");
-//		
-//		List<Pair<Integer,String>> assignments = result.get(0);
-//		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
-//		
-//		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-//		assertEquals("business.Instalacao", assignments.get(0).getSecond(), 
-//					"First class is not business.Instalacao?");
-//		
-//		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-//		assertEquals("business.InstalacaoAssentos", assignments.get(1).getSecond(), 
-//					"Second class is not business.InstalacaoAssentos?");
-//		
-//		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-//		assertEquals("helpString()", 
-//				assignments.get(2).getSecond(), 
-//				"Method with dependency is not helpString()?");
-//		
-//		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-//		assertEquals("hashString()", assignments.get(3).getSecond(), 
-//				"Method not overwritten method is not hashString()?");
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(baseFiles, variants1Files, 
+						variants2Files, "Remove Overriding");
+
+		assertEquals(1, result.size(), "Not one result for remove overriding?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("business.Instalacao", assignments.get(0).getSecond(), 
+					"First class is not business.Instalacao?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("business.InstalacaoAssentos", assignments.get(1).getSecond(), 
+					"Second class is not business.InstalacaoAssentos?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("helpString()", 
+				assignments.get(2).getSecond(), 
+				"Method with dependency is not helpString()?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("hashString()", assignments.get(3).getSecond(), 
+				"Method not overwritten method is not hashString()?");
 		
 	}
 	
@@ -435,35 +452,35 @@ public class TestFabricatedInstances {
 						File.separator + singleTicket
 		};
 		
-//		List<List<Pair<Integer, String>>> result = 
-//				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files);
-		matcher.match(baseFiles, variants1Files, variants2Files);
-		logger.info("FINISHED");
-//		assertEquals(1, result.size(), "Not one result for add overriding?");
-//		
-//		List<Pair<Integer,String>> assignments = result.get(0);
-//		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
-//		
-//		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-//		assertEquals("business.ticket.Ticket", assignments.get(0).getSecond(), 
-//					"First class is not business.ticket.Ticket?");
-//		
-//		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-//		assertEquals("business.ticket.SingleTicket", assignments.get(1).getSecond(), 
-//					"Second class is not business.ticket.SingleTicket?");
-//		
-//		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-//		assertEquals("business.ticket.SingleTicket", 
-//				assignments.get(2).getSecond(), 
-//				"Class with the dependant method is not business.ticket.SingleTicket?");
-//		
-//		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-//		assertEquals("getValue()", assignments.get(3).getSecond(), 
-//				"Overwritten method is not getValue()?");
-//		
-//		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-//		assertEquals("doubleValue()", assignments.get(4).getSecond(), 
-//				"Dependant method is not doubleValue()?");
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(baseFiles, variants1Files, 
+						variants2Files, "Add Overriding (new method)");
+		
+		assertEquals(1, result.size(), "Not one result for add overriding?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("business.ticket.Ticket", assignments.get(0).getSecond(), 
+					"First class is not business.ticket.Ticket?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("business.ticket.SingleTicket", assignments.get(1).getSecond(), 
+					"Second class is not business.ticket.SingleTicket?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("business.ticket.SingleTicket", 
+				assignments.get(2).getSecond(), 
+				"Class with the dependant method is not business.ticket.SingleTicket?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("getValue()", assignments.get(3).getSecond(), 
+				"Overwritten method is not getValue()?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("doubleValue()", assignments.get(4).getSecond(), 
+				"Dependant method is not doubleValue()?");
 	}
 	
 	@Test
@@ -499,35 +516,35 @@ public class TestFabricatedInstances {
 						File.separator + producer
 		};
 		
-//		List<List<Pair<Integer, String>>> result = 
-//				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files);
-		matcher.match(baseFiles, variants1Files, variants2Files);
-		logger.info("FINISHED!");
-//		assertEquals(1, result.size(), "Not one result for access change?");
-//		
-//		List<Pair<Integer,String>> assignments = result.get(0);
-//		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
-//		
-//		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-//		assertEquals("business.producer.Producer", assignments.get(0).getSecond(), 
-//					"First class is not business.producer.Producer?");
-//		
-//		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-//		assertEquals("business.event.Event", assignments.get(1).getSecond(), 
-//					"Second class is not business.event.Event?");
-//		
-//		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-//		assertEquals("setResgistrationNumber(java.lang.Integer)", 
-//				assignments.get(2).getSecond(), 
-//				"Method with access changed is not setResgistrationNumber(java.lang.Integer)?");
-//		
-//		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-//		assertEquals("setResgistrationNumber(int)", assignments.get(3).getSecond(), 
-//				"Overloading method is not setResgistrationNumber(int)?");
-//		
-//		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-//		assertEquals("setProducerNumber(int)", assignments.get(4).getSecond(), 
-//				"Dependant method is not setProducerNumber(int)?");
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(baseFiles, variants1Files, 
+						variants2Files, "Overload by Access Change 2 (new method)");
+		
+		assertEquals(1, result.size(), "Not one result for access change?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("business.producer.Producer", assignments.get(0).getSecond(), 
+					"First class is not business.producer.Producer?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("business.event.Event", assignments.get(1).getSecond(), 
+					"Second class is not business.event.Event?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("setResgistrationNumber(java.lang.Integer)", 
+				assignments.get(2).getSecond(), 
+				"Method with access changed is not setResgistrationNumber(java.lang.Integer)?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("setResgistrationNumber(int)", assignments.get(3).getSecond(), 
+				"Overloading method is not setResgistrationNumber(int)?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("setProducerNumber(int)", assignments.get(4).getSecond(), 
+				"Dependant method is not setProducerNumber(int)?");
 	}
 	
 	@Test
@@ -563,36 +580,35 @@ public class TestFabricatedInstances {
 						File.separator + producer
 		};
 		
-//		List<List<Pair<Integer, String>>> result = 
-//				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files);
-//		System.out.println(result);
-		matcher.match(baseFiles, variants1Files, variants2Files);
-		logger.info("FINISHED");
-//		assertEquals(1, result.size(), "Not one result for overload by addition?");
-//		
-//		List<Pair<Integer,String>> assignments = result.get(0);
-//		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
-//		
-//		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-//		assertEquals("business.producer.Producer", assignments.get(0).getSecond(), 
-//					"First class is not business.producer.Producer?");
-//		
-//		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-//		assertEquals("business.event.Event", assignments.get(1).getSecond(), 
-//					"Second class is not business.event.Event?");
-//		
-//		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-//		assertEquals("setResgistrationNumber(java.lang.Integer)", 
-//				assignments.get(2).getSecond(), 
-//				"Overloaded method is not setResgistrationNumber(java.lang.Integer)?");
-//		
-//		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-//		assertEquals("setProducerNumber(int)", assignments.get(3).getSecond(), 
-//				"Overloading method is not setProducerNumber(int)?");
-//		
-//		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
-//		assertEquals("setResgistrationNumber(int)", assignments.get(4).getSecond(), 
-//				"Dependant method is not setResgistrationNumber(int)?");
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(baseFiles, variants1Files, 
+						variants2Files, "Overload by Addition (new method)");
+
+		assertEquals(1, result.size(), "Not one result for overload by addition?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(5, assignments.size(), "Not 5 assignments with only 5 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("business.producer.Producer", assignments.get(0).getSecond(), 
+					"First class is not business.producer.Producer?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("business.event.Event", assignments.get(1).getSecond(), 
+					"Second class is not business.event.Event?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("setResgistrationNumber(java.lang.Integer)", 
+				assignments.get(2).getSecond(), 
+				"Overloaded method is not setResgistrationNumber(java.lang.Integer)?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("setProducerNumber(int)", assignments.get(3).getSecond(), 
+				"Overloading method is not setProducerNumber(int)?");
+		
+		assertEquals(4, assignments.get(4).getFirst(), "Variable id is not 4?"); 
+		assertEquals("setResgistrationNumber(int)", assignments.get(4).getSecond(), 
+				"Dependant method is not setResgistrationNumber(int)?");
 	}
 	
 	@Test
@@ -628,32 +644,31 @@ public class TestFabricatedInstances {
 						File.separator + reservation
 		};
 		
-//		List<List<Pair<Integer, String>>> result = 
-//				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files);
-//		System.out.println(result);
-		matcher.match(baseFiles, variants1Files, variants2Files);
-		logger.info("FINISHED");
-//		assertEquals(1, result.size(), "Not one result for unexpected overriding?");
-//		
-//		List<Pair<Integer,String>> assignments = result.get(0);
-//		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
-//		
-//		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
-//		assertEquals("business.ticket.Ticket", assignments.get(0).getSecond(), 
-//					"First class is not business.ticket.Ticket?");
-//		
-//		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
-//		assertEquals("business.ticket.Reservation", assignments.get(1).getSecond(), 
-//					"Second class is not business.ticket.Reservation?");
-//		
-//		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
-//		assertEquals("resHashCode()", 
-//				assignments.get(2).getSecond(), 
-//				"Method with dependency is not resHashCode()?");
-//		
-//		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
-//		assertEquals("hashCode()", assignments.get(3).getSecond(), 
-//				"Overwritten method is not hashCode()?");
+		List<List<Pair<Integer, String>>> result = 
+				matcher.matchingAssignments(baseFiles, variants1Files, 
+						variants2Files, "Unexpected Overriding (new method)");
+
+		assertEquals(1, result.size(), "Not one result for unexpected overriding?");
+		
+		List<Pair<Integer,String>> assignments = result.get(0);
+		assertEquals(4, assignments.size(), "Not 4 assignments with only 4 variables?");
+		
+		assertEquals(0, assignments.get(0).getFirst(), "Variable id is not 0?"); 
+		assertEquals("business.ticket.Ticket", assignments.get(0).getSecond(), 
+					"First class is not business.ticket.Ticket?");
+		
+		assertEquals(1, assignments.get(1).getFirst(), "Variable id is not 1?"); 
+		assertEquals("business.ticket.Reservation", assignments.get(1).getSecond(), 
+					"Second class is not business.ticket.Reservation?");
+		
+		assertEquals(2, assignments.get(2).getFirst(), "Variable id is not 2?"); 
+		assertEquals("resHashCode()", 
+				assignments.get(2).getSecond(), 
+				"Method with dependency is not resHashCode()?");
+		
+		assertEquals(3, assignments.get(3).getFirst(), "Variable id is not 3?"); 
+		assertEquals("hashCode()", assignments.get(3).getSecond(), 
+				"Overwritten method is not hashCode()?");
 	}
 	
 	@Test
@@ -717,7 +732,6 @@ public class TestFabricatedInstances {
 		
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files);
-		logger.info("FINISHED");
 		assertEquals(0, result.size(), "Found a conflict when there is none?");
 	}
 	
@@ -757,19 +771,12 @@ public class TestFabricatedInstances {
 		
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files);
-		System.out.println(result);
-		logger.info("FINISHED!");
+		assertEquals(0, result.size(), "Found a conflict when there is none?");
 	}
 	
 	@Test
 	public void cssNoConflictTest3() throws ApplicationException {
 		Matcher matcher = new Matcher(SRC_FOLDER + CSS_NO_CONFLICT_3 + "config.properties");
-		
-		//EventCatalog
-		//TicketCatalog (new in branch01)
-		//Customer (new in branch02)
-		//Event
-		//Ticket
 		
 		String eventCatalog = "src" + File.separator + "main" + File.separator + "java" + 
 				File.separator + "business" + File.separator + "catalogs" + File.separator +
@@ -828,7 +835,6 @@ public class TestFabricatedInstances {
 		
 		List<List<Pair<Integer, String>>> result = 
 				matcher.matchingAssignments(baseFiles, variants1Files, variants2Files);
-		System.out.println(result);
-		logger.info("FINISHED!");
+		assertEquals(0, result.size(), "Found a conflict when there is none?");
 	}
 }
