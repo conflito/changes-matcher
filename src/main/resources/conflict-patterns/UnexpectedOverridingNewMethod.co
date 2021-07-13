@@ -1,4 +1,4 @@
-Name: "UnexpectedOverriding (new method)"
+Name: "Unexpected Overriding (new method)"
 Variables: $A $B $M $M1
 
 Base Condition:
