@@ -34,7 +34,7 @@
             <configuration>
               <shadedArtifactAttached>true</shadedArtifactAttached>
               <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
-              <minimizeJar>true</minimizeJar>
+              <minimizeJar>false</minimizeJar>
               <relocations>
                 <relocation>
                   <pattern>com.fasterxml</pattern>
