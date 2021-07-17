@@ -82,8 +82,8 @@
                   <shadedPattern>matcher.internal.org.aopalliance</shadedPattern>
                 </relocation>
                 <relocation>
-                  <pattern>org.apache</pattern>
-                  <shadedPattern>matcher.internal.org.apache</shadedPattern>
+                  <pattern>org.apache.commons</pattern>
+                  <shadedPattern>matcher.internal.org.apache.commons</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.atteo</pattern>
