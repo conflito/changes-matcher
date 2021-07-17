@@ -64,10 +64,11 @@
                   <pattern>gumtree.spoon</pattern>
                   <shadedPattern>matcher.internal.gumtree.spoon</shadedPattern>
                 </relocation>
-                <relocation>
+                <!-- javax cannot be relocated -->
+                <!--relocation>
                   <pattern>javax</pattern>
                   <shadedPattern>matcher.internal.javax</shadedPattern>
-                </relocation>
+                </relocation-->
                 <relocation>
                   <pattern>junit</pattern>
                   <shadedPattern>matcher.internal.junit</shadedPattern>
