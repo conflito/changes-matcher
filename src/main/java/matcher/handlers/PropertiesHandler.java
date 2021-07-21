@@ -44,44 +44,44 @@ public class PropertiesHandler {
 			prop = new Properties();
 			prop.load(input);
 		} catch (FileNotFoundException e) {
-			throw new ApplicationException("Properties file not found");
+			throw new ApplicationException("Configuration file not found");
 		} catch (IOException e) {
-			throw new ApplicationException("Error reading properties file");
+			throw new ApplicationException("Error reading configuration file");
 		}
 	}
 	
 	public String getBaseSourceDirPath() throws ApplicationException {
 		String result = prop.getProperty(BASE_SRC_DIR_PROPERTY_KEY);
 		if(result == null)
-			throw new ApplicationException("Properties missing base source dir");
+			throw new ApplicationException("Configuration file missing base source dir");
 		return result;
 	}
 	
 	public String getFirstVariantSourceDirPath() throws ApplicationException {
 		String result = prop.getProperty(VAR1_SRC_DIR_PROPERTY_KEY);
 		if(result == null)
-			throw new ApplicationException("Properties missing first variant source dir");
+			throw new ApplicationException("Configuration file missing first variant source dir");
 		return result;
 	}
 	
 	public String getSecondVariantSourceDirPath() throws ApplicationException{
 		String result = prop.getProperty(VAR2_SRC_DIR_PROPERTY_KEY);
 		if(result == null)
-			throw new ApplicationException("Properties missing second variant source dir");
+			throw new ApplicationException("Configuration file missing second variant source dir");
 		return result;
 	}
 	
 	public String getFirstVariantClasspathDirPath() throws ApplicationException {
 		String result = prop.getProperty(VAR1_CP_DIR_PROPERTY_KEY);
 		if(result == null)
-			throw new ApplicationException("Properties missing first variant classpath dir");
+			throw new ApplicationException("Configuration file missing first variant classpath dir");
 		return result;
 	}
 	
 	public String getSecondVariantClasspathDirPath() throws ApplicationException {
 		String result = prop.getProperty(VAR2_CP_DIR_PROPERTY_KEY);
 		if(result == null)
-			throw new ApplicationException("Properties missing second variant classpath dir");
+			throw new ApplicationException("Configuration file missing second variant classpath dir");
 		return result;
 	}
 	
