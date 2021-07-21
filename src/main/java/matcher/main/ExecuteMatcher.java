@@ -9,6 +9,8 @@ import java.util.List;
 import matcher.Matcher;
 import matcher.exceptions.ApplicationException;
 import matcher.handlers.PropertiesHandler;
+import matcher.main.output.Outputer;
+import matcher.main.output.OutputerFactory;
 import matcher.utils.Pair;
 
 import org.apache.commons.cli.*;
@@ -45,8 +47,10 @@ public class ExecuteMatcher {
 			else
 				result = matcher.matchingAssignments(baseFilePaths, var1FilePaths, 
 						var2FilePaths);
-			System.out.println(result);
-			System.out.println(matcher.getTestingGoals());
+			
+			Outputer out = OutputerFactory.getInstance().getOutputer();
+			out.write(result, matcher.getTestingGoals(), matcher.getMatchedConflicts());
+
 		}
 		else {
 			if(cmd.hasOption("cn")) {
