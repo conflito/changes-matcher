@@ -2,9 +2,7 @@ package matcher;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,6 +29,8 @@ public class Matcher {
 	
 	private List<Pair<String, List<String>>> testingGoals;
 	
+	private List<String> matchedConflicts;
+	
 	public Matcher(String configFilePath) throws ApplicationException {
 		PropertiesHandler.createInstance(configFilePath);
 		FileSystemHandler.createInstance();
@@ -39,6 +39,7 @@ public class Matcher {
 		
 		conflictsCatalog = new ConflictPatternCatalog();
 		testingGoals = new ArrayList<>();
+		matchedConflicts = new ArrayList<String>();
 	}
 	
 	public void match(String[] bases, String[] variants1, String[] variants2)
@@ -143,26 +144,26 @@ public class Matcher {
 			futures.add(es.submit(mt));
 		}
 		es.shutdown();
-		Set<Integer> completedFutures = new HashSet<>();
 		
-		while(completedFutures.size() != futures.size()) {
-			for (int i = 0; i < futures.size(); i++) {
-				Future<List<List<Pair<Integer, String>>>> future = futures.get(i);
-				MatchingRunnable mt = runnables.get(i);
-				if(!completedFutures.contains(i) && future.isDone()) {
-					completedFutures.add(i);
-					try {
-						result.addAll(future.get());
-						testingGoals.addAll(mt.getTestingGoals());
-					} catch (InterruptedException e) {
-						logger.warn("Interruption...");
-					} catch (ExecutionException e) {
-						logger.error("Error in execution for " + mt.getConflictName());
-						es.shutdownNow();
-						throw new ApplicationException("Error in execution");
-					}
-				}				
-			}			
+		try {
+			es.awaitTermination(Long.MAX_VALUE, TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			
+		}
+		
+		for (int i = 0; i < futures.size(); i++) {
+			Future<List<List<Pair<Integer, String>>>> future = futures.get(i);
+			MatchingRunnable mt = runnables.get(i);
+			try {
+				result.addAll(future.get());
+				testingGoals.addAll(mt.getTestingGoals());
+				matchedConflicts.add(mt.getConflictName());
+			} catch (InterruptedException e) {
+				logger.warn("Interruption...");
+			} catch (ExecutionException e) {
+				logger.error("Error in execution for " + mt.getConflictName());
+				throw new ApplicationException("Error in execution");
+			}
 		}
 		
 		return result;
@@ -209,6 +210,7 @@ public class Matcher {
 		try {
 			List<List<Pair<Integer, String>>> result = future.get();
 			testingGoals.addAll(mt.getTestingGoals());
+			matchedConflicts.add(mt.getConflictName());
 			return result;
 		} catch (InterruptedException e) {
 			throw new ApplicationException("Interrupted execution");
@@ -219,6 +221,10 @@ public class Matcher {
 	
 	public List<Pair<String, List<String>>> getTestingGoals(){
 		return this.testingGoals;
+	}
+	
+	public List<String> getMatchedConflicts(){
+		return this.matchedConflicts;
 	}
 
 	private boolean sameLength(String[] bases, String[] variants1, String[] variants2) {
