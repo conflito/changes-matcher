@@ -48,7 +48,15 @@ public class ExecuteMatcher {
 				result = matcher.matchingAssignments(baseFilePaths, var1FilePaths, 
 						var2FilePaths);
 			
-			Outputer out = OutputerFactory.getInstance().getOutputer();
+			Outputer out;
+			if(cmd.hasOption("out")) {
+				out = OutputerFactory.getInstance()
+					.getOutputer(cmd.getOptionValue("out"));
+			}
+			else {
+				out = OutputerFactory.getInstance().getOutputer();
+			}
+			
 			out.write(result, matcher.getTestingGoals(), matcher.getMatchedConflicts());
 
 		}
@@ -115,6 +123,9 @@ public class ExecuteMatcher {
 		Option conflictName = new Option("cn", "conflict_name", true,
 				"The name of the conflict to try to match");
 		
+		Option outFile = new Option("out", "output_file", true,
+				"Path to the output file");
+		
 		options.addOption(base);
 		options.addOption(firstVariant);
 		options.addOption(secondVariant);
@@ -122,6 +133,7 @@ public class ExecuteMatcher {
 		options.addOption(configFileHelp);
 		options.addOption(matchOnly);
 		options.addOption(conflictName);
+		options.addOption(outFile);
 		
 		return options;
 	}
