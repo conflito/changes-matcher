@@ -155,9 +155,14 @@ public class Matcher {
 			Future<List<List<Pair<Integer, String>>>> future = futures.get(i);
 			MatchingRunnable mt = runnables.get(i);
 			try {
-				result.addAll(future.get());
-				testingGoals.addAll(mt.getTestingGoals());
-				matchedConflicts.add(mt.getConflictName());
+				List<List<Pair<Integer, String>>> assignment = future.get();
+				if(!assignment.isEmpty()) {
+					result.addAll(assignment);
+					testingGoals.addAll(mt.getTestingGoals());
+					for(Object e: assignment) {
+						matchedConflicts.add(mt.getConflictName());
+					}
+				}
 			} catch (InterruptedException e) {
 				logger.warn("Interruption...");
 			} catch (ExecutionException e) {
@@ -209,8 +214,12 @@ public class Matcher {
 		
 		try {
 			List<List<Pair<Integer, String>>> result = future.get();
-			testingGoals.addAll(mt.getTestingGoals());
-			matchedConflicts.add(mt.getConflictName());
+			if(!result.isEmpty()) {
+				testingGoals.addAll(mt.getTestingGoals());
+				for(Object e: result) {
+					matchedConflicts.add(mt.getConflictName());
+				}
+			}
 			return result;
 		} catch (InterruptedException e) {
 			throw new ApplicationException("Interrupted execution");
