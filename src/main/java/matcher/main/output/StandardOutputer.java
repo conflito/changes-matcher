@@ -16,4 +16,9 @@ public class StandardOutputer implements Outputer {
 		System.out.println(JsonBuilder.build(assignments, testingGoals, matchedConflicts));
 	}
 
+	@Override
+	public void write(String text) throws ApplicationException {
+		System.out.println(text);		
+	}
+
 }

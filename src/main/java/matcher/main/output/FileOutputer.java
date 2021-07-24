@@ -31,4 +31,14 @@ public class FileOutputer implements Outputer{
 		}
 	}
 
+	@Override
+	public void write(String text) throws ApplicationException {
+		File fileOut = new File(filename);
+		try(BufferedWriter bw = new BufferedWriter(new FileWriter(fileOut))) {
+			bw.write(text);
+		} catch (IOException e) {
+			throw new ApplicationException("Something went wrong writing to output file");
+		}
+	}
+
 }

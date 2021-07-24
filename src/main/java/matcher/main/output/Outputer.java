@@ -10,4 +10,6 @@ public interface Outputer {
 	public void write(List<List<Pair<Integer, String>>> assignments,
 			List<Pair<String, List<String>>> testingGoals, 
 			List<String> matchedConflicts) throws ApplicationException;
+	
+	public void write(String text) throws ApplicationException;
 }
