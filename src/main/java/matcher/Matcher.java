@@ -42,6 +42,10 @@ public class Matcher {
 		matchedConflicts = new ArrayList<String>();
 	}
 	
+	public static List<String> patternNames() throws ApplicationException{
+		return new ConflictPatternCatalog().getPatternsNames();
+	}
+	
 	public void match(String[] bases, String[] variants1, String[] variants2)
 			throws ApplicationException{
 		if(bases == null || variants1 == null || variants2 == null)

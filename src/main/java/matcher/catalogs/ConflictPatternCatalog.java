@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import matcher.exceptions.ApplicationException;
 
@@ -32,7 +33,7 @@ public class ConflictPatternCatalog {
 		return patterns.get(patternName);
 	}
 	
-	public Iterable<ConflictPattern> getPatterns(){
+	public List<ConflictPattern> getPatterns(){
 		List<ConflictPattern> result = new ArrayList<>();
 		for(ConflictPattern cp: patterns.values()) {
 			if(cp.getConflictName().startsWith("Parallel"))
@@ -41,6 +42,12 @@ public class ConflictPatternCatalog {
 				result.add(cp);
 		}
 		return result;
+	}
+	
+	public List<String> getPatternsNames(){
+		return getPatterns().stream()
+				.map(ConflictPattern::getConflictName)
+				.collect(Collectors.toList());
 	}
 	
 	private void loadPatterns() throws ApplicationException {
