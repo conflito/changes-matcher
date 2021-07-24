@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import matcher.Matcher;
@@ -14,14 +15,30 @@ import matcher.main.output.OutputerFactory;
 import matcher.utils.Pair;
 
 import org.apache.commons.cli.*;
-import org.apache.commons.lang3.ArrayUtils;
 
 public class ExecuteMatcher {
 
 	public static void main(String[] args) throws ApplicationException {
 		
-		if(ArrayUtils.contains(args, "-ch")) {
+		CommandLine auxCmd = getAuxCommandLine(args);
+		
+		if(auxCmd.hasOption("ch")) {
 			dumpConfigFileTemplate();
+			System.exit(0);
+		}
+		else if(auxCmd.hasOption("l")) {
+			Outputer out;
+			if(auxCmd.hasOption("out")) {
+				out = OutputerFactory.getInstance()
+					.getOutputer(auxCmd.getOptionValue("out"));
+			}
+			else {
+				out = OutputerFactory.getInstance().getOutputer();
+			}
+			List<String> names = Matcher.patternNames();
+			Collections.sort(names);
+			String text = String.join("\n", names);
+			out.write(text);
 			System.exit(0);
 		}
 		
@@ -78,6 +95,23 @@ public class ExecuteMatcher {
 		}
 	}
 	
+	private static CommandLine getAuxCommandLine(String[] args) {
+		Options options = getAuxOptions();
+		CommandLineParser parser = new DefaultParser();
+		HelpFormatter formatter = new HelpFormatter();
+		CommandLine cmd = null;
+
+		try {
+			cmd = parser.parse(options, args);
+		} catch (ParseException e) {
+			System.out.println(e.getMessage());
+			formatter.printHelp("utility-name", options);
+			System.exit(1);
+		}
+
+		return cmd;
+	}
+	
 	private static CommandLine getCommandLine(String[] args) {
 		Options options = getOptions();
 		CommandLineParser parser = new DefaultParser();
@@ -126,6 +160,9 @@ public class ExecuteMatcher {
 		Option outFile = new Option("out", "output_file", true,
 				"Path to the output file");
 		
+		Option listPatterns = new Option("l", "list_patterns", false,
+				"List the available patterns' names");
+		
 		options.addOption(base);
 		options.addOption(firstVariant);
 		options.addOption(secondVariant);
@@ -134,6 +171,26 @@ public class ExecuteMatcher {
 		options.addOption(matchOnly);
 		options.addOption(conflictName);
 		options.addOption(outFile);
+		options.addOption(listPatterns);
+		
+		return options;
+	}
+	
+	private static Options getAuxOptions() {
+		Options options = new Options();
+		
+		Option configFileHelp = new Option("ch", "config_help", false, 
+				"Dumps the template for the config file");		
+		
+		Option outFile = new Option("out", "output_file", true,
+				"Path to the output file");
+		
+		Option listPatterns = new Option("l", "list_patterns", false,
+				"List the available patterns' names");
+		
+		options.addOption(configFileHelp);
+		options.addOption(outFile);
+		options.addOption(listPatterns);
 		
 		return options;
 	}
