@@ -15,8 +15,9 @@ public class TestFabricatedInstances {
 
 	private final static Logger logger = Logger.getLogger(TestFabricatedInstances.class);
 	
-	private static final String SRC_FOLDER = ".." + File.separator + "Examples" + 
-			File.separator + "SemanticConflicts3" + File.separator;
+	private static final String SRC_FOLDER = "src" + File.separator + "test" + 
+			File.separator + "resources" + File.separator + 
+			"FabricatedInstances" + File.separator;
 	
 	private static final String AED_FOLDER = "aed1617" + File.separator;
 	
