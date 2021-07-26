@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="domain-model-jpa" transaction-type="RESOURCE_LOCAL">
+		<class>business.Customer</class>
+		<class>business.Discount</class>
+		<class>business.EligibleProductsDiscount</class>
+		<class>business.ThresholdPercentageDiscount</class>
+		<class>business.NoDiscount</class>
+		<class>business.Unit</class>
+		<class>business.Product</class>
+		<class>business.SaleProduct</class>
+		<class>business.Sale</class>
+		<shared-cache-mode>NONE</shared-cache-mode> <!-- para permitir fazer testes de integração usando o DBSetup -->
+		<properties>
+			<property name="javax.persistence.jdbc.url" value="jdbc:derby:data/derby/css047;create=true"/>
+			<property name="javax.persistence.jdbc.user" value="css047"/>
+			<property name="javax.persistence.jdbc.password" value="css047"/>
+			<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+		</properties>
+	</persistence-unit>
+</persistence>

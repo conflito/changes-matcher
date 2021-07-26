@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="domain-model-jpa" transaction-type="RESOURCE_LOCAL">
+		<class>business.Bilhete</class>
+		<class>business.Evento</class>
+		<class>business.EventoDia</class>
+		<class>business.Instalacao</class>
+		<class>business.InstalacaoAssentos</class>
+		<class>business.InstalacaoDePe</class>
+		<class>business.Lugar</class>
+		<class>business.ReservaBilhete</class>
+		<class>business.Promotora</class>
+		<class>business.TipoEvento</class>
+		<properties>
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://dbserver.alunos.di.fc.ul.pt:3306/css047"/>
+			<property name="javax.persistence.jdbc.user" value="css047"/>
+			<property name="javax.persistence.jdbc.password" value="css047"/>
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+		</properties>
+	</persistence-unit>
+</persistence>

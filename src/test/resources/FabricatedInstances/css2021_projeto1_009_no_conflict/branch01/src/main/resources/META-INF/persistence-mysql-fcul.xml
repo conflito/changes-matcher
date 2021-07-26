@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence https://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="bilges-domain-model-data-mappers-jpa" transaction-type="RESOURCE_LOCAL">
+		<class>business.event.EventDate</class>
+		<class>business.event.EventVenue</class>
+		<class>business.event.Seat</class>
+		<class>business.ticket.Ticket</class>
+		<class>business.event.LocalDateAttributeConverter</class>
+		<class>business.event.LocalTimeAttributeConverter</class>
+		<class>business.ticket.Reservation</class>
+		<class>business.event.Event</class>
+		<class>business.producer.Producer</class>
+		<class>business.event.EventTypeConverter</class>
+		<class>business.ticket.PassTicket</class>
+		<class>business.ticket.SingleTicket</class>
+		<properties>
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://dbserver.alunos.di.fc.ul.pt/css009"/>
+			<property name="javax.persistence.jdbc.user" value="css009"/>
+			<property name="javax.persistence.jdbc.password" value="css009_1"/>
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+		</properties>
+	</persistence-unit>
+</persistence>
