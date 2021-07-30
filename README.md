@@ -1,5 +1,7 @@
 # Changes-Matcher
 
+[![Build Status](https://travis-ci.com/conflito/changes-matcher.svg?token=wh6UiSMNKU6TUu351Tse&branch=master)](https://travis-ci.com/conflito/changes-matcher)
+
 [Changes-Matcher](https://github.com/conflito/changes-matcher) is a tool that
 aims to identify whether any common cause of semantic conflicts (e.g., parallel
 modifications to the same method) has occurred in a given merge commit.
