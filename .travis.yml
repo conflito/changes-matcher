@@ -1,5 +1,8 @@
 language: java
 
+# Skip "install" stage:
+install: true
+
 # Use container-based infrastructure:
 sudo: false
 
@@ -14,5 +17,4 @@ jdk:
   - openjdk11
 
 script:
-  - find /home/travis/build/conflito/changes-matcher
   - mvn clean package
