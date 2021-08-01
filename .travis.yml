@@ -1,15 +1,12 @@
 language: java
 
-# Skip "install" stage:
-install: true
-
 # Use container-based infrastructure:
 sudo: false
 
 # Keep Maven local repository between builds:
 cache:
   directories:
-    - '$HOME/.m2/repository'
+    - $HOME/.m2
 
 jdk:
   - openjdk8
