@@ -592,7 +592,7 @@ public class TestFabricatedInstances extends AbstractTestMatcher {
 
 		String seat = buildPath(RELATIVE_SRC_DIR_PATH, "business", "event", "Seat.java");
 		String handler = buildPath(RELATIVE_SRC_DIR_PATH, "business", "handlers", "CreateEventHandler.java");
-		String producer = buildPath(RELATIVE_SRC_DIR_PATH, "business", "Producer", "Producer.java");
+		String producer = buildPath(RELATIVE_SRC_DIR_PATH, "business", "producer", "Producer.java");
 		String coupleTicket = buildPath(RELATIVE_SRC_DIR_PATH, "business", "ticket", "CouplesTicket.java");
 		String familyTicket = buildPath(RELATIVE_SRC_DIR_PATH, "business", "ticket", "FamilyTicket.java");
 
