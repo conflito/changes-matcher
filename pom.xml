@@ -140,118 +140,118 @@
               <relocations>
                 <relocation>
                   <pattern>com.fasterxml</pattern>
-                  <shadedPattern>matcher.internal.com.fasterxml</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.com.fasterxml</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>com.github</pattern>
-                  <shadedPattern>matcher.internal.com.github</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.com.github</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>com.github.gumtreediff</pattern>
-                  <shadedPattern>matcher.internal.com.github.gumtreediff</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.com.github.gumtreediff</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>com.google</pattern>
-                  <shadedPattern>matcher.internal.com.google</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.com.google</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>com.martiansoftware</pattern>
-                  <shadedPattern>matcher.internal.com.martiansoftware</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.com.martiansoftware</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>gnu.trove</pattern>
-                  <shadedPattern>matcher.internal.gnu.trove</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.gnu.trove</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>gumtree.spoon</pattern>
-                  <shadedPattern>matcher.internal.gumtree.spoon</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.gumtree.spoon</shadedPattern>
                 </relocation>
                 <!-- javax cannot be relocated -->
                 <!--relocation>
                   <pattern>javax</pattern>
-                  <shadedPattern>matcher.internal.javax</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.javax</shadedPattern>
                 </relocation-->
                 <relocation>
                   <pattern>junit</pattern>
-                  <shadedPattern>matcher.internal.junit</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.junit</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>net.bytebuddy</pattern>
-                  <shadedPattern>matcher.internal.net.bytebuddy</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.net.bytebuddy</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.aopalliance</pattern>
-                  <shadedPattern>matcher.internal.org.aopalliance</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.org.aopalliance</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.apache.commons</pattern>
-                  <shadedPattern>matcher.internal.org.apache.commons</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.org.apache.commons</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.atteo</pattern>
-                  <shadedPattern>matcher.internal.org.atteo</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.org.atteo</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.codehaus</pattern>
-                  <shadedPattern>matcher.internal.org.codehaus</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.org.codehaus</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.eclipse</pattern>
-                  <shadedPattern>matcher.internal.org.eclipse</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.org.eclipse</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.hamcrest</pattern>
-                  <shadedPattern>matcher.internal.org.hamcrest</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.org.hamcrest</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.jgrapht</pattern>
-                  <shadedPattern>matcher.internal.org.jgrapht</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.org.jgrapht</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.junit</pattern>
-                  <shadedPattern>matcher.internal.org.junit</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.org.junit</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.mockito</pattern>
-                  <shadedPattern>matcher.internal.org.mockito</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.org.mockito</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.rendersnake</pattern>
-                  <shadedPattern>matcher.internal.org.rendersnake</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.org.rendersnake</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.simmetrics</pattern>
-                  <shadedPattern>matcher.internal.org.simmetrics</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.org.simmetrics</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.slf4j</pattern>
-                  <shadedPattern>matcher.internal.org.slf4j</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.org.slf4j</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.springframework</pattern>
-                  <shadedPattern>matcher.internal.org.springframework</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.org.springframework</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.tukaani</pattern>
-                  <shadedPattern>matcher.internal.org.tukaani</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.org.tukaani</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.w3c</pattern>
-                  <shadedPattern>matcher.internal.org.w3c</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.org.w3c</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>spark</pattern>
-                  <shadedPattern>matcher.internal.spark</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.spark</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>spoon</pattern>
-                  <shadedPattern>matcher.internal.spoon</shadedPattern>
+                  <shadedPattern>org.conflito.matcher.internal.spoon</shadedPattern>
                 </relocation>
               </relocations>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <manifestEntries>
-                    <Main-Class>matcher.main.ExecuteMatcher</Main-Class>
+                    <Main-Class>org.conflito.matcher.main.ExecuteMatcher</Main-Class>
                     <Automatic-Module-Name>${project.artifactId}</Automatic-Module-Name>
                     <Implementation-Title>${project.description}</Implementation-Title>
                     <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
@@ -279,7 +279,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>matcher.main.ExecuteMatcher</mainClass>
+              <mainClass>org.conflito.matcher.main.ExecuteMatcher</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
