@@ -177,7 +177,7 @@ Once the configuration file is in place, the
 executed as
 
 ```bash
-java -jar tools/changes-matcher.jar \
+java -jar target/org.conflito.changes-matcher-0.0.1-SNAPSHOT-jar-with-dependencies.jar \
   --base <path>[;<path>] \
   --variant1 <path>[;<path>] \
   --variant2 <path>[;<path>] \
@@ -204,7 +204,7 @@ use the ``--list_patterns`` option to list the accepted names.
 For the running example, one could run the command above as
 
 ```bash
-java -jar tools/changes-matcher.jar \
+java -jar target/org.conflito.changes-matcher-0.0.1-SNAPSHOT-jar-with-dependencies.jar \
   --base "$base_modified_files" \
   --variant1 "$variant_1_modified_files" \
   --variant2 "$variant_2_modified_files" \
