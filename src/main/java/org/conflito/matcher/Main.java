@@ -21,18 +21,20 @@ import org.conflito.matcher.utils.Pair;
 
 public class Main {
 
+  private static final String name = "Changes-Matcher";
+
   public static void main(String[] args) throws ApplicationException {
 
-    CommandLine auxCmd = getAuxCommandLine(args);
+    CommandLine cmd = getCommandLine(args);
 
-    if (auxCmd.hasOption("ch")) {
+    if (cmd.hasOption("ch")) {
       dumpConfigFileTemplate();
       System.exit(0);
-    } else if (auxCmd.hasOption("l")) {
+    } else if (cmd.hasOption("l")) {
       Outputer out;
-      if (auxCmd.hasOption("out")) {
+      if (cmd.hasOption("out")) {
         out = OutputerFactory.getInstance()
-            .getOutputer(auxCmd.getOptionValue("out"));
+            .getOutputer(cmd.getOptionValue("out"));
       } else {
         out = OutputerFactory.getInstance().getOutputer();
       }
@@ -42,8 +44,6 @@ public class Main {
       out.write(text);
       System.exit(0);
     }
-
-    CommandLine cmd = getCommandLine(args);
 
     String[] baseFilePaths = cmd.getOptionValue('b').split(";", -1);
     String[] var1FilePaths = cmd.getOptionValue("v1").split(";", -1);
@@ -84,23 +84,6 @@ public class Main {
     }
   }
 
-  private static CommandLine getAuxCommandLine(String[] args) {
-    Options options = getAuxOptions();
-    CommandLineParser parser = new DefaultParser();
-    HelpFormatter formatter = new HelpFormatter();
-    CommandLine cmd = null;
-
-    try {
-      cmd = parser.parse(options, args);
-    } catch (ParseException e) {
-      System.out.println(e.getMessage());
-      formatter.printHelp("utility-name", options);
-      System.exit(1);
-    }
-
-    return cmd;
-  }
-
   private static CommandLine getCommandLine(String[] args) {
     Options options = getOptions();
     CommandLineParser parser = new DefaultParser();
@@ -111,7 +94,7 @@ public class Main {
       cmd = parser.parse(options, args);
     } catch (ParseException e) {
       System.out.println(e.getMessage());
-      formatter.printHelp("utility-name", options);
+      formatter.printHelp(name, options);
       System.exit(1);
     }
 
@@ -155,25 +138,6 @@ public class Main {
     options.addOption(configFile);
     options.addOption(configFileHelp);
     options.addOption(conflictName);
-    options.addOption(outFile);
-    options.addOption(listPatterns);
-
-    return options;
-  }
-
-  private static Options getAuxOptions() {
-    Options options = new Options();
-
-    Option configFileHelp = new Option("ch", "config_help", false,
-        "Dumps the template for the config file");
-
-    Option outFile = new Option("out", "output_file", true,
-        "Path to the output file");
-
-    Option listPatterns = new Option("l", "list_patterns", false,
-        "List the available patterns' names");
-
-    options.addOption(configFileHelp);
     options.addOption(outFile);
     options.addOption(listPatterns);
 
