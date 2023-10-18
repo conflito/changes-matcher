@@ -237,18 +237,6 @@ public class Main {
         bw.newLine();
         bw.append("######## Optional properties ########");
         bw.newLine();
-        bw.append("# Threshold value (double) to consider two versions "
-            + "'different enough' during test generation");
-        bw.newLine();
-        bw.append("#" + PropertiesHandler.DISTANCE_THRESHOLD_KEY +
-            "=0.05");
-        bw.newLine();
-        bw.newLine();
-        bw.append("# Time budget in seconds (int) for the test generation");
-        bw.newLine();
-        bw.append("#" + PropertiesHandler.TIME_BUDGET_KEY + "=60");
-        bw.newLine();
-        bw.newLine();
         bw.append("# Time budget in seconds (int) for the matching");
         bw.newLine();
         bw.append("#" + PropertiesHandler.MATCHING_BUDGET_KEY + "=120");
@@ -257,11 +245,6 @@ public class Main {
         bw.append("# Number of threads to run in parallel");
         bw.newLine();
         bw.append("#" + PropertiesHandler.THREAD_NUMBER_KEY + "=2");
-        bw.newLine();
-        bw.newLine();
-        bw.append("# EvoSuite jar location");
-        bw.newLine();
-        bw.append("#" + PropertiesHandler.EVOSUITE_LOCATION_KEY + "=.");
 
         bw.close();
       } catch (IOException e) {

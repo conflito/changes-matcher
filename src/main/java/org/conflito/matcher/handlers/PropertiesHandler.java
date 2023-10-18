@@ -23,18 +23,12 @@ public class PropertiesHandler {
   public static final String MERGE_CP_DIR_PROPERTY_KEY = "merge.cp.dir";
 
   //Configurable properties
-  public static final String DISTANCE_THRESHOLD_KEY = "distance.threshold";
-  public static final String TIME_BUDGET_KEY = "time.budget";
   public static final String MATCHING_BUDGET_KEY = "matching.budget";
   public static final String THREAD_NUMBER_KEY = "thread.number";
-  public static final String EVOSUITE_LOCATION_KEY = "evosuite.location";
 
   //Default values for configurable properties
-  private static final double DEFAULT_DISTANCE_THRESHOLD = 0.05d;
-  private static final int DEFAULT_TIME_BUDGET = 60;
   private static final int DEFAULT_MATCHING_BUDGET = 120;
   private static final int DEFAULT_THREADS = 2;
-  private static final String DEFAULT_EVOSUITE_LOCATION = "." + File.separator + "evosuite.jar";
 
   private final Properties prop;
 
@@ -97,38 +91,6 @@ public class PropertiesHandler {
     return result;
   }
 
-  public double getDistanceThreshold() {
-		if (!hasDistanceThreshold()) {
-			return DEFAULT_DISTANCE_THRESHOLD;
-		}
-    double result = 0.0d;
-    try {
-      result = Double.parseDouble(prop.getProperty(DISTANCE_THRESHOLD_KEY));
-    } catch (NumberFormatException e) {
-      return DEFAULT_DISTANCE_THRESHOLD;
-    }
-		if (result <= 0) {
-			return DEFAULT_DISTANCE_THRESHOLD;
-		}
-    return result;
-  }
-
-  public int getTimeBudget() {
-		if (!hasTimeBudget()) {
-			return DEFAULT_TIME_BUDGET;
-		}
-    int result = 0;
-    try {
-      result = Integer.parseInt(prop.getProperty(TIME_BUDGET_KEY));
-    } catch (NumberFormatException e) {
-      return DEFAULT_TIME_BUDGET;
-    }
-		if (result <= 0) {
-			return DEFAULT_TIME_BUDGET;
-		}
-    return result;
-  }
-
   public int getMatchingBudget() {
 		if (!hasMatchingBudget()) {
 			return DEFAULT_MATCHING_BUDGET;
@@ -165,31 +127,12 @@ public class PropertiesHandler {
     return result;
   }
 
-  public String getEvoSuiteLocation() {
-		if (!hasEvoSuiteLocation()) {
-			return DEFAULT_EVOSUITE_LOCATION;
-		}
-    return prop.getProperty(EVOSUITE_LOCATION_KEY);
-  }
-
-  private boolean hasEvoSuiteLocation() {
-    return prop.containsKey(EVOSUITE_LOCATION_KEY);
-  }
-
   private boolean hasThreadNumber() {
     return prop.containsKey(THREAD_NUMBER_KEY);
   }
 
   private boolean hasMatchingBudget() {
     return prop.containsKey(MATCHING_BUDGET_KEY);
-  }
-
-  private boolean hasDistanceThreshold() {
-    return prop.containsKey(DISTANCE_THRESHOLD_KEY);
-  }
-
-  private boolean hasTimeBudget() {
-    return prop.containsKey(TIME_BUDGET_KEY);
   }
 
   public static void createInstance(String path) throws ApplicationException {
