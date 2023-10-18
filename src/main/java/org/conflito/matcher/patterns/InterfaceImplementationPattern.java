@@ -4,49 +4,50 @@ import org.conflito.matcher.entities.InterfaceImplementationInstance;
 
 public class InterfaceImplementationPattern {
 
-	private FreeVariable freeVariable;
+  private final FreeVariable freeVariable;
 
-	public InterfaceImplementationPattern(FreeVariable freeVariable) {
-		super();
-		this.freeVariable = freeVariable;
-	}
-	
-	public InterfaceImplementationPattern(InterfaceImplementationPattern 
-			interfaceImplementationPattern) {
-		super();
-		this.freeVariable = new FreeVariable(interfaceImplementationPattern.freeVariable);
-	}
+  public InterfaceImplementationPattern(FreeVariable freeVariable) {
+    super();
+    this.freeVariable = freeVariable;
+  }
 
-	public FreeVariable getFreeVariable() {
-		return freeVariable;
-	}
-	
-	public int getVariableId() {
-		return freeVariable.getId();
-	}
-	
-	public boolean isVariableId(int id) {
-		return getVariableId() == id;
-	}
-	
-	public void clean() {
-		freeVariable.clean();
-	}
-	
-	public void setVariableValue(int id, String value) {
-		if(isVariableId(id))
-			freeVariable.setValue(value);
-	}
-	
-	public boolean filled() {
-		return freeVariable.hasValue();
-	}
-	
-	public boolean matches(InterfaceImplementationInstance i) {
-		return filled() && sameName(i);
-	}
+  public InterfaceImplementationPattern(InterfaceImplementationPattern
+      interfaceImplementationPattern) {
+    super();
+    this.freeVariable = new FreeVariable(interfaceImplementationPattern.freeVariable);
+  }
 
-	private boolean sameName(InterfaceImplementationInstance i) {
-		return i.getName().equals(getFreeVariable().getValue());
-	}
+  public FreeVariable getFreeVariable() {
+    return freeVariable;
+  }
+
+  public int getVariableId() {
+    return freeVariable.getId();
+  }
+
+  public boolean isVariableId(int id) {
+    return getVariableId() == id;
+  }
+
+  public void clean() {
+    freeVariable.clean();
+  }
+
+  public void setVariableValue(int id, String value) {
+    if (isVariableId(id)) {
+      freeVariable.setValue(value);
+    }
+  }
+
+  public boolean filled() {
+    return freeVariable.hasValue();
+  }
+
+  public boolean matches(InterfaceImplementationInstance i) {
+    return filled() && sameName(i);
+  }
+
+  private boolean sameName(InterfaceImplementationInstance i) {
+    return i.getName().equals(getFreeVariable().getValue());
+  }
 }

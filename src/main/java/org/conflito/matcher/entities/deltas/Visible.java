@@ -4,7 +4,7 @@ import org.conflito.matcher.entities.Visibility;
 
 public interface Visible {
 
-	public String getQualifiedName();
+  String getQualifiedName();
 
-	public Visibility getVisibility();
+  Visibility getVisibility();
 }

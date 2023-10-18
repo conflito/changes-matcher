@@ -4,11 +4,14 @@ import java.io.File;
 
 public abstract class AbstractTestMatcher {
 
-	protected static final String RELATIVE_SRC_RESOURCES_DIR_PATH = "src" + File.separator + "main" + File.separator + "resources";
+  protected static final String RELATIVE_SRC_RESOURCES_DIR_PATH =
+      "src" + File.separator + "main" + File.separator + "resources";
 
-  protected static final String RELATIVE_TEST_RESOURCES_DIR_PATH = "src" + File.separator + "test" + File.separator + "resources";
+  protected static final String RELATIVE_TEST_RESOURCES_DIR_PATH =
+      "src" + File.separator + "test" + File.separator + "resources";
 
-  protected static final String RELATIVE_SRC_DIR_PATH = "src" + File.separator + "main" + File.separator + "java";
+  protected static final String RELATIVE_SRC_DIR_PATH =
+      "src" + File.separator + "main" + File.separator + "java";
 
   protected static final String CONFIG_FILE_NAME = "config.properties";
 

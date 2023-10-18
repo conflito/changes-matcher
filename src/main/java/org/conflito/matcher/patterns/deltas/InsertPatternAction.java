@@ -4,8 +4,8 @@ import org.conflito.matcher.entities.deltas.Action;
 
 public abstract class InsertPatternAction extends ActionPattern {
 
-	public InsertPatternAction() {
-		super(Action.INSERT);
-	}
+  public InsertPatternAction() {
+    super(Action.INSERT);
+  }
 
 }

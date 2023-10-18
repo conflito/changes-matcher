@@ -5,66 +5,69 @@ import org.conflito.matcher.entities.MethodInstance;
 
 public class InsertFieldAccessAction extends InsertAction {
 
-	private FieldAccessInstance insertedFieldAccess;
-	
-	private MethodInstance holderMethod;
+  private final FieldAccessInstance insertedFieldAccess;
 
-	public InsertFieldAccessAction(FieldAccessInstance insertedFieldAccess, 
-			MethodInstance holderMethod) {
-		super();
-		this.insertedFieldAccess = insertedFieldAccess;
-		this.holderMethod = holderMethod;
-	}
+  private final MethodInstance holderMethod;
 
-	public FieldAccessInstance getInsertedFieldAccess() {
-		return insertedFieldAccess;
-	}
-	
-	public String getInsertedFieldAccessQualifiedName() {
-		return insertedFieldAccess.getQualifiedName();
-	}
+  public InsertFieldAccessAction(FieldAccessInstance insertedFieldAccess,
+      MethodInstance holderMethod) {
+    super();
+    this.insertedFieldAccess = insertedFieldAccess;
+    this.holderMethod = holderMethod;
+  }
 
-	public MethodInstance getHolderMethod() {
-		return holderMethod;
-	}
+  public FieldAccessInstance getInsertedFieldAccess() {
+    return insertedFieldAccess;
+  }
 
-	public String toString() {
-		StringBuilder result = new StringBuilder("insert " + 
-				insertedFieldAccess.getAccessType().toString().toLowerCase() + " of field ");
-		result.append(insertedFieldAccess.getQualifiedName() + " in ");
-		result.append(holderMethod.getQualifiedName());
-		return result.toString();
-	}
+  public String getInsertedFieldAccessQualifiedName() {
+    return insertedFieldAccess.getQualifiedName();
+  }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((holderMethod == null) ? 0 : holderMethod.hashCode());
-		result = prime * result + ((insertedFieldAccess == null) ? 0 : insertedFieldAccess.hashCode());
-		return result;
-	}
+  public MethodInstance getHolderMethod() {
+    return holderMethod;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof InsertFieldAccessAction))
-			return false;
-		InsertFieldAccessAction other = (InsertFieldAccessAction) obj;
-		if (holderMethod == null) {
-			if (other.holderMethod != null)
-				return false;
-		} else if (!holderMethod.equals(other.holderMethod))
-			return false;
-		if (insertedFieldAccess == null) {
-			if (other.insertedFieldAccess != null)
-				return false;
-		} else if (!insertedFieldAccess.equals(other.insertedFieldAccess))
-			return false;
-		return true;
-	}
+  public String toString() {
+    String result = "insert " +
+        insertedFieldAccess.getAccessType().toString().toLowerCase() + " of field "
+        + insertedFieldAccess.getQualifiedName() + " in "
+        + holderMethod.getQualifiedName();
+    return result;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((holderMethod == null) ? 0 : holderMethod.hashCode());
+    result = prime * result + ((insertedFieldAccess == null) ? 0 : insertedFieldAccess.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (!(obj instanceof InsertFieldAccessAction)) {
+      return false;
+    }
+    InsertFieldAccessAction other = (InsertFieldAccessAction) obj;
+    if (holderMethod == null) {
+      if (other.holderMethod != null) {
+        return false;
+      }
+    } else if (!holderMethod.equals(other.holderMethod)) {
+      return false;
+    }
+    if (insertedFieldAccess == null) {
+      return other.insertedFieldAccess == null;
+    } else
+      return insertedFieldAccess.equals(other.insertedFieldAccess);
+  }
 
 }

@@ -2,5 +2,5 @@ package org.conflito.matcher.processors;
 
 public interface Processor<K, T> {
 
-	public K process(T element);
+  K process(T element);
 }

@@ -5,73 +5,74 @@ import org.conflito.matcher.entities.FieldAccessType;
 
 public class FieldAccessPattern {
 
-	private FreeVariable freeVariable;
-	
-	private FieldAccessType accessType;
+  private final FreeVariable freeVariable;
 
-	public FieldAccessPattern(FreeVariable freeVariable, FieldAccessType accessType) {
-		super();
-		this.freeVariable = freeVariable;
-		this.accessType = accessType;
-	}
-	
-	public FieldAccessPattern(FieldAccessPattern fieldAccessPattern) {
-		super();
-		this.freeVariable = new FreeVariable(fieldAccessPattern.freeVariable);
-		this.accessType = fieldAccessPattern.accessType;
-	}
+  private final FieldAccessType accessType;
 
-	public FreeVariable getFreeVariable() {
-		return freeVariable;
-	}
+  public FieldAccessPattern(FreeVariable freeVariable, FieldAccessType accessType) {
+    super();
+    this.freeVariable = freeVariable;
+    this.accessType = accessType;
+  }
 
-	public FieldAccessType getType() {
-		return accessType;
-	}
-	
-	public int getVariableId() {
-		return freeVariable.getId();
-	}
-	
-	public boolean isVariableId(int id) {
-		return freeVariable.isId(id);
-	}
-	
-	public void setVariableValue(int id, String value) {
-		if(isVariableId(id))
-			freeVariable.setValue(value);
-	}
-	
-	public void clean() {
-		freeVariable.clean();
-	}
-	
-	public boolean isFieldRead() {
-		return accessType == FieldAccessType.READ;
-	}
-	
-	public boolean isFieldWrite() {
-		return accessType == FieldAccessType.WRITE;
-	}
-	
-	public boolean isAnyAccess() {
-		return !isFieldRead() && !isFieldWrite();
-	}
-	
-	public boolean filled() {
-		return freeVariable.hasValue();
-	}
-	
-	public boolean matches(FieldAccessInstance accessInstance) {
-		return filled() && (isAnyAccess() || sameAccess(accessInstance)) && sameName(accessInstance);
-	}
+  public FieldAccessPattern(FieldAccessPattern fieldAccessPattern) {
+    super();
+    this.freeVariable = new FreeVariable(fieldAccessPattern.freeVariable);
+    this.accessType = fieldAccessPattern.accessType;
+  }
 
-	private boolean sameName(FieldAccessInstance accessInstance) {
-		return accessInstance.getQualifiedName().equals(freeVariable.getValue());
-	}
+  public FreeVariable getFreeVariable() {
+    return freeVariable;
+  }
 
-	private boolean sameAccess(FieldAccessInstance accessInstance) {
-		return (isFieldRead() && accessInstance.isFieldRead()) ||
-				(isFieldWrite() && accessInstance.isFieldWrite());
-	}
+  public FieldAccessType getType() {
+    return accessType;
+  }
+
+  public int getVariableId() {
+    return freeVariable.getId();
+  }
+
+  public boolean isVariableId(int id) {
+    return freeVariable.isId(id);
+  }
+
+  public void setVariableValue(int id, String value) {
+    if (isVariableId(id)) {
+      freeVariable.setValue(value);
+    }
+  }
+
+  public void clean() {
+    freeVariable.clean();
+  }
+
+  public boolean isFieldRead() {
+    return accessType == FieldAccessType.READ;
+  }
+
+  public boolean isFieldWrite() {
+    return accessType == FieldAccessType.WRITE;
+  }
+
+  public boolean isAnyAccess() {
+    return !isFieldRead() && !isFieldWrite();
+  }
+
+  public boolean filled() {
+    return freeVariable.hasValue();
+  }
+
+  public boolean matches(FieldAccessInstance accessInstance) {
+    return filled() && (isAnyAccess() || sameAccess(accessInstance)) && sameName(accessInstance);
+  }
+
+  private boolean sameName(FieldAccessInstance accessInstance) {
+    return accessInstance.getQualifiedName().equals(freeVariable.getValue());
+  }
+
+  private boolean sameAccess(FieldAccessInstance accessInstance) {
+    return (isFieldRead() && accessInstance.isFieldRead()) ||
+        (isFieldWrite() && accessInstance.isFieldWrite());
+  }
 }

@@ -7,81 +7,85 @@ import org.conflito.matcher.patterns.TypePattern;
 
 public class UpdateFieldTypePatternAction extends UpdatePatternAction {
 
-	private FieldPattern updatedFieldPattern;
+  private final FieldPattern updatedFieldPattern;
 
-	private TypePattern newType;
+  private TypePattern newType;
 
-	public UpdateFieldTypePatternAction(FieldPattern updatedFieldPattern) {
-		super();
-		this.updatedFieldPattern = updatedFieldPattern;
-	}
+  public UpdateFieldTypePatternAction(FieldPattern updatedFieldPattern) {
+    super();
+    this.updatedFieldPattern = updatedFieldPattern;
+  }
 
-	public UpdateFieldTypePatternAction(FieldPattern updatedFieldPattern, TypePattern newType) {
-		super();
-		this.updatedFieldPattern = updatedFieldPattern;
-		this.newType = newType;
-	}
-	
-	public ActionPattern makeCopy() {
-		FieldPattern fieldCopy = new FieldPattern(updatedFieldPattern);
-		if(hasNewType())
-			return new UpdateFieldTypePatternAction(fieldCopy, new TypePattern(newType));
-		else
-			return new UpdateFieldTypePatternAction(fieldCopy);
-	}
-	
-	public int getUpdatedFieldVariableId() {
-		return updatedFieldPattern.getVariableId();
-	}
+  public UpdateFieldTypePatternAction(FieldPattern updatedFieldPattern, TypePattern newType) {
+    super();
+    this.updatedFieldPattern = updatedFieldPattern;
+    this.newType = newType;
+  }
 
-	public int getNewTypeVariableId() {
-		return newType.getVariableId();
-	}
+  public ActionPattern makeCopy() {
+    FieldPattern fieldCopy = new FieldPattern(updatedFieldPattern);
+    if (hasNewType()) {
+      return new UpdateFieldTypePatternAction(fieldCopy, new TypePattern(newType));
+    } else {
+      return new UpdateFieldTypePatternAction(fieldCopy);
+    }
+  }
 
-	public boolean hasNewType() {
-		return newType != null;
-	}
+  public int getUpdatedFieldVariableId() {
+    return updatedFieldPattern.getVariableId();
+  }
 
-	@Override
-	public boolean filled() {
-		return updatedFieldPattern.filled() && 
-				(newType == null || newType.filled());
-	}
+  public int getNewTypeVariableId() {
+    return newType.getVariableId();
+  }
 
-	@Override
-	public boolean matches(ActionInstance action) {
-		return action instanceof UpdateFieldTypeAction && filled() &&
-				matches((UpdateFieldTypeAction)action);
-	}
+  public boolean hasNewType() {
+    return newType != null;
+  }
 
-	private boolean matches(UpdateFieldTypeAction action) {
-		return getAction() == action.getAction() &&
-				updatedFieldPattern.matches(action.getUpdatedField()) &&
-				(newType == null || newType.matches(action.getNewType()));
-	}
+  @Override
+  public boolean filled() {
+    return updatedFieldPattern.filled() &&
+        (newType == null || newType.filled());
+  }
 
-	@Override
-	public void setVariableValue(int id, String value) {
-		updatedFieldPattern.setVariableValue(id, value);
-		if(newType != null)
-			newType.setVariableValue(id, value);
-	}
+  @Override
+  public boolean matches(ActionInstance action) {
+    return action instanceof UpdateFieldTypeAction && filled() &&
+        matches((UpdateFieldTypeAction) action);
+  }
 
-	@Override
-	public void clean() {
-		updatedFieldPattern.clean();
-		if(newType != null)
-			newType.clean();
-	}
-	
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		result.append("Update field type of field $" + 
-				updatedFieldPattern.getVariableId());
-		if(hasNewType())
-			result.append(" to $" + newType.getVariableId());
-		return result.toString();
-	}
+  private boolean matches(UpdateFieldTypeAction action) {
+    return getAction() == action.getAction() &&
+        updatedFieldPattern.matches(action.getUpdatedField()) &&
+        (newType == null || newType.matches(action.getNewType()));
+  }
+
+  @Override
+  public void setVariableValue(int id, String value) {
+    updatedFieldPattern.setVariableValue(id, value);
+    if (newType != null) {
+      newType.setVariableValue(id, value);
+    }
+  }
+
+  @Override
+  public void clean() {
+    updatedFieldPattern.clean();
+    if (newType != null) {
+      newType.clean();
+    }
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder result = new StringBuilder();
+    result.append("Update field type of field $" +
+        updatedFieldPattern.getVariableId());
+    if (hasNewType()) {
+      result.append(" to $" + newType.getVariableId());
+    }
+    return result.toString();
+  }
 
 }

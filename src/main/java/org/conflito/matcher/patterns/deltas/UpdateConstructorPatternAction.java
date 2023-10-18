@@ -6,50 +6,50 @@ import org.conflito.matcher.patterns.ConstructorPattern;
 
 public class UpdateConstructorPatternAction extends UpdatePatternAction {
 
-	private ConstructorPattern updatedConstructorPattern;
-	
-	public UpdateConstructorPatternAction(ConstructorPattern updatedMethodPattern) {
-		super();
-		this.updatedConstructorPattern = updatedMethodPattern;
-	}
-	
-	public ActionPattern makeCopy() {
-		return new UpdateConstructorPatternAction(new ConstructorPattern(updatedConstructorPattern));
-	}
-	
-	public int getUpdatedConstructorVariableId() {
-		return updatedConstructorPattern.getVariableId();
-	}
+  private final ConstructorPattern updatedConstructorPattern;
 
-	@Override
-	public void setVariableValue(int id, String value) {
-		updatedConstructorPattern.setVariableValue(id, value);
-	}
+  public UpdateConstructorPatternAction(ConstructorPattern updatedMethodPattern) {
+    super();
+    this.updatedConstructorPattern = updatedMethodPattern;
+  }
 
-	@Override
-	public boolean filled() {
-		return updatedConstructorPattern.filled();
-	}
+  public ActionPattern makeCopy() {
+    return new UpdateConstructorPatternAction(new ConstructorPattern(updatedConstructorPattern));
+  }
 
-	@Override
-	public boolean matches(ActionInstance action) {
-		return action instanceof UpdateConstructorAction && filled() &&
-				matches((UpdateConstructorAction) action);
-	}
+  public int getUpdatedConstructorVariableId() {
+    return updatedConstructorPattern.getVariableId();
+  }
 
-	private boolean matches(UpdateConstructorAction action) {
-		return getAction() == action.getAction() &&
-				updatedConstructorPattern.matches(action.getUpdatedConstructorInstance());
-	}
+  @Override
+  public void setVariableValue(int id, String value) {
+    updatedConstructorPattern.setVariableValue(id, value);
+  }
 
-	@Override
-	public void clean() {
-		updatedConstructorPattern.clean();
-	}
+  @Override
+  public boolean filled() {
+    return updatedConstructorPattern.filled();
+  }
 
-	@Override
-	public String toString() {
-		return "Update constructor $" + updatedConstructorPattern.getVariableId();
-	}
+  @Override
+  public boolean matches(ActionInstance action) {
+    return action instanceof UpdateConstructorAction && filled() &&
+        matches((UpdateConstructorAction) action);
+  }
+
+  private boolean matches(UpdateConstructorAction action) {
+    return getAction() == action.getAction() &&
+        updatedConstructorPattern.matches(action.getUpdatedConstructorInstance());
+  }
+
+  @Override
+  public void clean() {
+    updatedConstructorPattern.clean();
+  }
+
+  @Override
+  public String toString() {
+    return "Update constructor $" + updatedConstructorPattern.getVariableId();
+  }
 
 }

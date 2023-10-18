@@ -2,11 +2,10 @@ package org.conflito.matcher.entities;
 
 /**
  * Enum for field, constructor and method accessibility
- * 
- * @author Nuno Castanho
  *
+ * @author Nuno Castanho
  */
 public enum Visibility {
 
-	PUBLIC, PRIVATE, PROTECTED, PACKAGE;
+  PUBLIC, PRIVATE, PROTECTED, PACKAGE
 }
