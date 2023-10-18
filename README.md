@@ -127,13 +127,13 @@ git clone netty-repository.git merge
 
 ```bash
 # Variant 1
-variant_1_classpath=$(cd variant-1; echo $(pwd)/target/classes:$(find .deps -type f -name "*.jar" | sed "s|^|$(pwd)/|g" | tr '\n' ':'))
+variant_1_classpath=$(cd variant-1; echo $(pwd)/target/classes:$(find .deps -type f -name "*.jar" | grep -v "junit" | grep -v "hamcrest" | sed "s|^|$(pwd)/|g" | tr '\n' ':'))
 
 # Variant 2
-variant_2_classpath=$(cd variant-2; echo $(pwd)/target/classes:$(find .deps -type f -name "*.jar" | sed "s|^|$(pwd)/|g" | tr '\n' ':'))
+variant_2_classpath=$(cd variant-2; echo $(pwd)/target/classes:$(find .deps -type f -name "*.jar" | grep -v "junit" | grep -v "hamcrest" | sed "s|^|$(pwd)/|g" | tr '\n' ':'))
 
 # Merge
-merge_classpath=$(cd merge; echo $(pwd)/target/classes:$(find .deps -type f -name "*.jar" | sed "s|^|$(pwd)/|g" | tr '\n' ':'))
+merge_classpath=$(cd merge; echo $(pwd)/target/classes:$(find .deps -type f -name "*.jar" | grep -v "junit" | grep -v "hamcrest" | sed "s|^|$(pwd)/|g" | tr '\n' ':'))
 ```
 
 6. Collect the set of `.java` files involved in the merge commit
@@ -276,7 +276,12 @@ which write to `netty-193acdb-matches.txt` the following content
 
 Each `JSON` object in the returned list above informs the developer which pattern was matched,
 which assignment of values to each each variable matched the pattern, and which
-class and methods should be tested to trigger/reveal the semantic conflict.
+class and methods should be tested to trigger/reveal the semantic conflict.  In
+other words, the ``targetClass`` field of every ``testingGoal`` is the class to
+to be tested.  Each value in the ``coverMethods`` field is a method that should
+be tested in order to reveal/trigger the conflict.  (Note: for simplicity, the
+``coverMethodsLine`` represents the combined string of these methods to ease the
+initialization of the EvoSuite's option ``-Dcover_methods``.)
 
 ## Extending Changes-Matcher
 
