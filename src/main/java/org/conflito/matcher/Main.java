@@ -1,4 +1,4 @@
-package org.conflito.matcher.main;
+package org.conflito.matcher;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,14 +13,13 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.conflito.matcher.Matcher;
 import org.conflito.matcher.exceptions.ApplicationException;
 import org.conflito.matcher.handlers.PropertiesHandler;
-import org.conflito.matcher.main.output.Outputer;
-import org.conflito.matcher.main.output.OutputerFactory;
+import org.conflito.matcher.output.Outputer;
+import org.conflito.matcher.output.OutputerFactory;
 import org.conflito.matcher.utils.Pair;
 
-public class ExecuteMatcher {
+public class Main {
 
   public static void main(String[] args) throws ApplicationException {
 

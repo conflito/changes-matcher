@@ -1,4 +1,4 @@
-package org.conflito.matcher.main.output;
+package org.conflito.matcher.output;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import org.conflito.matcher.exceptions.ApplicationException;
-import org.conflito.matcher.main.output.json.JsonBuilder;
+import org.conflito.matcher.output.json.JsonBuilder;
 import org.conflito.matcher.utils.Pair;
 
 public class FileOutputer implements Outputer {

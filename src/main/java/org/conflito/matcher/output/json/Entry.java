@@ -1,4 +1,4 @@
-package org.conflito.matcher.main.output.json;
+package org.conflito.matcher.output.json;
 
 import java.util.ArrayList;
 import java.util.List;

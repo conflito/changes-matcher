@@ -1,4 +1,4 @@
-package org.conflito.matcher.main.output;
+package org.conflito.matcher.output;
 
 public class OutputerFactory {
 

@@ -1,8 +1,8 @@
-package org.conflito.matcher.main.output;
+package org.conflito.matcher.output;
 
 import java.util.List;
 import org.conflito.matcher.exceptions.ApplicationException;
-import org.conflito.matcher.main.output.json.JsonBuilder;
+import org.conflito.matcher.output.json.JsonBuilder;
 import org.conflito.matcher.utils.Pair;
 
 public class StandardOutputer implements Outputer {

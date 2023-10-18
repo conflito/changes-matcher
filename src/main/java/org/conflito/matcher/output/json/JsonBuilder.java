@@ -1,4 +1,4 @@
-package org.conflito.matcher.main.output.json;
+package org.conflito.matcher.output.json;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;

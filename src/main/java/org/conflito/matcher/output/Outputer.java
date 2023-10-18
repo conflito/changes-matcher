@@ -1,4 +1,4 @@
-package org.conflito.matcher.main.output;
+package org.conflito.matcher.output;
 
 import java.util.List;
 import org.conflito.matcher.exceptions.ApplicationException;
