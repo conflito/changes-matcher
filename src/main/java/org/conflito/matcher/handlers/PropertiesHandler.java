@@ -119,7 +119,7 @@ public class PropertiesHandler {
 		}
     int result = 0;
     try {
-      result = Integer.parseInt(prop.getProperty(DISTANCE_THRESHOLD_KEY));
+      result = Integer.parseInt(prop.getProperty(TIME_BUDGET_KEY));
     } catch (NumberFormatException e) {
       return DEFAULT_TIME_BUDGET;
     }
