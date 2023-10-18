@@ -181,8 +181,7 @@ java -jar target/org.conflito.changes-matcher-0.0.1-SNAPSHOT-jar-with-dependenci
   --base <path>[;<path>] \
   --variant1 <path>[;<path>] \
   --variant2 <path>[;<path>] \
-  --config <path> \
-  --match_only
+  --config <path>
 ```
 
 where
@@ -209,7 +208,6 @@ java -jar target/org.conflito.changes-matcher-0.0.1-SNAPSHOT-jar-with-dependenci
   --variant1 "$variant_1_modified_files" \
   --variant2 "$variant_2_modified_files" \
   --config netty-193acdb-configuration.txt \
-  --match_only \
   --output_file netty-193acdb-matches.txt
 ```
 

@@ -74,7 +74,7 @@ public class MatchingRunnable implements Callable<List<List<Pair<Integer, String
 
     List<List<Pair<Integer, String>>> result;
     ExecutorService executor = Executors.newSingleThreadExecutor(
-        new UnsettleThreadFactory());
+        new MatchingThreadFactory());
     MatchingCallable matcher = new MatchingCallable(mh, ci, cp);
 
     logger.info("Starting matching for " + cp.getConflictName() + "...");

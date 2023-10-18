@@ -56,36 +56,25 @@ public class ExecuteMatcher {
     turnEmptyToNull(var2FilePaths);
     Matcher matcher = new Matcher(configFilePath);
 
-    if (cmd.hasOption("mo")) {
-      List<List<Pair<Integer, String>>> result;
-      if (cmd.hasOption("cn")) {
-        String conflictName = cmd.getOptionValue("cn");
-        result = matcher.matchingAssignments(baseFilePaths, var1FilePaths,
-            var2FilePaths, conflictName);
-      } else {
-        result = matcher.matchingAssignments(baseFilePaths, var1FilePaths,
-            var2FilePaths);
-      }
-
-      Outputer out;
-      if (cmd.hasOption("out")) {
-        out = OutputerFactory.getInstance()
-            .getOutputer(cmd.getOptionValue("out"));
-      } else {
-        out = OutputerFactory.getInstance().getOutputer();
-      }
-
-      out.write(result, matcher.getTestingGoals(), matcher.getMatchedConflicts());
-
+    List<List<Pair<Integer, String>>> result;
+    if (cmd.hasOption("cn")) {
+      String conflictName = cmd.getOptionValue("cn");
+      result = matcher.matchingAssignments(baseFilePaths, var1FilePaths,
+          var2FilePaths, conflictName);
     } else {
-      if (cmd.hasOption("cn")) {
-        String conflictName = cmd.getOptionValue("cn");
-        matcher.match(baseFilePaths, var1FilePaths, var2FilePaths,
-            conflictName);
-      } else {
-        matcher.match(baseFilePaths, var1FilePaths, var2FilePaths);
-      }
+      result = matcher.matchingAssignments(baseFilePaths, var1FilePaths,
+          var2FilePaths);
     }
+
+    Outputer out;
+    if (cmd.hasOption("out")) {
+      out = OutputerFactory.getInstance()
+          .getOutputer(cmd.getOptionValue("out"));
+    } else {
+      out = OutputerFactory.getInstance().getOutputer();
+    }
+
+    out.write(result, matcher.getTestingGoals(), matcher.getMatchedConflicts());
   }
 
   private static void turnEmptyToNull(String[] a) {
@@ -152,9 +141,6 @@ public class ExecuteMatcher {
     Option configFileHelp = new Option("ch", "config_help", false,
         "Dumps the template for the config file");
 
-    Option matchOnly = new Option("mo", "match_only", false,
-        "Only performs the matching, it does not generate tests");
-
     Option conflictName = new Option("cn", "conflict_name", true,
         "The name of the conflict to try to match");
 
@@ -169,7 +155,6 @@ public class ExecuteMatcher {
     options.addOption(secondVariant);
     options.addOption(configFile);
     options.addOption(configFileHelp);
-    options.addOption(matchOnly);
     options.addOption(conflictName);
     options.addOption(outFile);
     options.addOption(listPatterns);

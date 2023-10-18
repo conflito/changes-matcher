@@ -44,78 +44,6 @@ public class Matcher {
     return new ConflictPatternCatalog().getPatternsNames();
   }
 
-  public void match(String[] bases, String[] variants1, String[] variants2)
-      throws ApplicationException {
-    if (bases == null || variants1 == null || variants2 == null) {
-      throw new ApplicationException("Invalid arguments: null");
-    }
-    if (!sameLength(bases, variants1, variants2)) {
-      throw new ApplicationException("Invalid arguments: different array sizes");
-    }
-
-    File[] basesFile = fromStringArray(bases);
-    File[] variants1File = fromStringArray(variants1);
-    File[] variants2File = fromStringArray(variants2);
-
-    SpoonHandler.getInstance().loadLaunchers(basesFile, variants1File,
-        variants2File);
-
-    ExecutorService es = Executors.newFixedThreadPool(
-        PropertiesHandler.getInstance().getNumberThreads(),
-        new UnsettleThreadFactory());
-    Semaphore sem = new Semaphore(1);
-
-    for (ConflictPattern cp : conflictsCatalog.getPatterns()) {
-      UnsettleRunnable ur = new UnsettleRunnable(basesFile, variants1File,
-          variants2File, cp, sem);
-      es.submit(ur);
-    }
-    es.shutdown();
-    try {
-      es.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-    } catch (InterruptedException e) {
-      throw new ApplicationException("Something went wrong generating tests");
-    }
-  }
-
-  public void match(String[] bases, String[] variants1, String[] variants2,
-      String conflictName) throws ApplicationException {
-
-    if (bases == null || variants1 == null || variants2 == null
-        || conflictName == null) {
-      throw new ApplicationException("Invalid arguments: null");
-    }
-
-    if (!sameLength(bases, variants1, variants2)) {
-      throw new ApplicationException("Invalid arguments: different array sizes");
-    }
-
-    if (!conflictsCatalog.hasPattern(conflictName)) {
-      throw new ApplicationException("Unknown pattern name!");
-    }
-
-    File[] basesFile = fromStringArray(bases);
-    File[] variants1File = fromStringArray(variants1);
-    File[] variants2File = fromStringArray(variants2);
-
-    SpoonHandler.getInstance().loadLaunchers(basesFile, variants1File,
-        variants2File);
-
-    ExecutorService es = Executors.newCachedThreadPool(new UnsettleThreadFactory());
-    Semaphore sem = new Semaphore(1);
-    ConflictPattern cp = conflictsCatalog.getPattern(conflictName);
-
-    UnsettleRunnable ur = new UnsettleRunnable(basesFile, variants1File,
-        variants2File, cp, sem);
-    es.submit(ur);
-    es.shutdown();
-    try {
-      es.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-    } catch (InterruptedException e) {
-      throw new ApplicationException("Something went wrong generating tests");
-    }
-  }
-
   public List<List<Pair<Integer, String>>> matchingAssignments(String[] bases,
       String[] variants1, String[] variants2)
       throws ApplicationException {
@@ -138,7 +66,7 @@ public class Matcher {
 
     ExecutorService es = Executors.newFixedThreadPool(
         PropertiesHandler.getInstance().getNumberThreads(),
-        new UnsettleThreadFactory());
+        new MatchingThreadFactory());
 
     List<MatchingRunnable> runnables = new ArrayList<>();
     List<Future<List<List<Pair<Integer, String>>>>> futures = new ArrayList<>();
@@ -216,7 +144,7 @@ public class Matcher {
     SpoonHandler.getInstance().loadLaunchers(basesFile, variants1File,
         variants2File);
 
-    ExecutorService es = Executors.newCachedThreadPool(new UnsettleThreadFactory());
+    ExecutorService es = Executors.newCachedThreadPool(new MatchingThreadFactory());
 
     Semaphore sem = new Semaphore(1);
 
