@@ -38,6 +38,20 @@ To create a binary distribution that includes all dependencies you can also use
 mvn package
 ```
 
+To ease any usage of the [Changes-Matcher](https://github.com/conflito/changes-matcher) tool,
+either in the following example or not, export the following environment variable
+
+```bash
+export CHANGES_MATCHER_JAR="$(pwd)/target/org.conflito.changes-matcher-0.0.1-SNAPSHOT-jar-with-dependencies.jar"
+```
+
+Tip: before going ahead, verify whether the environment variables are correctly
+initialized and pointing to existing files.
+
+```bash
+[ -s "$CHANGES_MATCHER_JAR" ] || echo "$CHANGES_MATCHER_JAR does not exist or it is empty!"
+```
+
 ## Using Changes-Matcher
 
 In a common merge scenario, i.e., a base version, two branches (variant 1 and 2),
@@ -184,7 +198,7 @@ Once the configuration file is in place, the
 executed as
 
 ```bash
-java -jar target/org.conflito.changes-matcher-0.0.1-SNAPSHOT-jar-with-dependencies.jar \
+java -jar "$CHANGES_MATCHER_JAR" \
   --base <path>[;<path>] \
   --variant1 <path>[;<path>] \
   --variant2 <path>[;<path>] \
@@ -210,7 +224,7 @@ use the ``--list_patterns`` option to list the accepted names.
 For the running example, one could run the command above as
 
 ```bash
-java -jar target/org.conflito.changes-matcher-0.0.1-SNAPSHOT-jar-with-dependencies.jar \
+java -jar "$CHANGES_MATCHER_JAR" \
   --base "$base_modified_files" \
   --variant1 "$variant_1_modified_files" \
   --variant2 "$variant_2_modified_files" \
@@ -274,14 +288,18 @@ which write to `netty-193acdb-matches.txt` the following content
 ]
 ```
 
-Each `JSON` object in the returned list above informs the developer which pattern was matched,
-which assignment of values to each each variable matched the pattern, and which
-class and methods should be tested to trigger/reveal the semantic conflict.  In
-other words, the ``targetClass`` field of every ``testingGoal`` is the class to
-to be tested.  Each value in the ``coverMethods`` field is a method that should
-be tested in order to reveal/trigger the conflict.  (Note: for simplicity, the
-``coverMethodsLine`` represents the combined string of these methods to ease the
-initialization of the EvoSuite's option ``-Dcover_methods``.)
+Each `JSON` object in the returned list above informs the developer which
+patterns (i.e., semantic conflict) matched, and for each pattern, which class (``targetClass``) and
+methods (``coverMethods``) should be tested to trigger/reveal the pattern.  For
+the running example, two patterns patched: "Parallel Changes" and "Change Method 3".
+
+- To trigger the "Parallel Changes" pattern, a test generator would have
+to generate tests for the class `org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder`
+and the method `org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder.decode(Lorg/jboss/netty/channel/ChannelHandlerContext;Lorg/jboss/netty/channel/Channel;Lorg/jboss/netty/buffer/ChannelBuffer;)Ljava/lang/Object;`.
+
+- To trigger the "Change Method 3" pattern, a test generator would have
+to generate tests for the class `org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder`
+and the methods `org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder.decode(Lorg/jboss/netty/channel/ChannelHandlerContext;Lorg/jboss/netty/channel/Channel;Lorg/jboss/netty/buffer/ChannelBuffer;)Ljava/lang/Object;` and `org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder.failIfNecessary(Lorg/jboss/netty/channel/ChannelHandlerContext;)V`.
 
 ## Extending Changes-Matcher
 
