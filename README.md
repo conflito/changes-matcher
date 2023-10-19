@@ -1,6 +1,6 @@
 # Changes-Matcher
 
-[![Build Status](https://travis-ci.com/conflito/changes-matcher.svg?token=wh6UiSMNKU6TUu351Tse&branch=master)](https://travis-ci.com/conflito/changes-matcher)
+[![Build Status](https://github.com/conflito/changes-matcher/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/conflito/changes-matcher/actions/workflows/maven.yml)
 
 [Changes-Matcher](https://github.com/conflito/changes-matcher) is a tool that
 aims to identify whether any common cause of semantic conflicts (e.g., parallel
